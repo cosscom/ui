@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "p-drawer-15",
+  "description": "Chat composer pinned above the mobile keyboard",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "@coss/button",
+    "@coss/composer",
+    "@coss/drawer"
+  ],
+  "files": [
+    {
+      "path": "registry/default/particles/p-drawer-15.tsx",
+      "content": "\"use client\";\n\nimport { ArrowUpIcon } from \"lucide-react\";\nimport { useState } from \"react\";\nimport { Button } from \"@/registry/default/ui/button\";\nimport {\n  Composer,\n  ComposerActionGroup,\n  ComposerActions,\n  ComposerInput,\n  ComposerItem,\n  type ComposerItemValue,\n  ComposerList,\n  ComposerPopup,\n  ComposerSubmit,\n  type ComposerValue,\n  getComposerText,\n} from \"@/registry/default/ui/composer\";\nimport {\n  Drawer,\n  DrawerClose,\n  DrawerHeader,\n  DrawerPanel,\n  DrawerPopup,\n  DrawerTitle,\n  DrawerTrigger,\n} from \"@/registry/default/ui/drawer\";\n\nconst people = [\n  { id: \"alex\", label: \"Alex Morgan\" },\n  { id: \"sam\", label: \"Sam Rivera\" },\n];\n\nexport default function Particle() {\n  const [value, setValue] = useState<ComposerValue>([]);\n  const [messages, setMessages] = useState([\"How can I help today?\"]);\n\n  return (\n    <Drawer>\n      <DrawerTrigger render={<Button variant=\"outline\" />}>\n        Open chat drawer\n      </DrawerTrigger>\n      <DrawerPopup keyboardAware showBar>\n        <DrawerHeader className=\"flex items-center justify-between gap-3\">\n          <DrawerTitle>Chat</DrawerTitle>\n          <DrawerClose render={<Button size=\"sm\" variant=\"ghost\" />}>\n            Close\n          </DrawerClose>\n        </DrawerHeader>\n        <div className=\"min-h-0 flex-1\">\n          <DrawerPanel>\n            <div className=\"flex flex-col gap-3\" role=\"log\">\n              {messages.map((message, index) => (\n                <p\n                  className=\"max-w-[85%] rounded-xl bg-muted px-3 py-2 text-sm even:ms-auto even:bg-accent\"\n                  key={`${index}-${message}`}\n                >\n                  {message}\n                </p>\n              ))}\n            </div>\n          </DrawerPanel>\n        </div>\n        <Composer\n          className=\"mx-3 mb-3 shrink-0\"\n          value={value}\n          onValueChange={setValue}\n          onSubmit={(message) => {\n            setMessages((items) => [...items, getComposerText(message)]);\n            setValue([]);\n          }}\n          triggers={[{ character: \"@\", items: people }]}\n        >\n          <ComposerInput aria-label=\"Message\" placeholder=\"Write a message…\" />\n          <ComposerPopup>\n            <ComposerList>\n              {(item: ComposerItemValue) => (\n                <ComposerItem key={item.id} value={item}>\n                  {item.label}\n                </ComposerItem>\n              )}\n            </ComposerList>\n          </ComposerPopup>\n          <ComposerActions>\n            <ComposerActionGroup align=\"end\">\n              <ComposerSubmit\n                render={\n                  <Button aria-label=\"Send message\" size=\"icon\">\n                    <ArrowUpIcon aria-hidden=\"true\" />\n                  </Button>\n                }\n              />\n            </ComposerActionGroup>\n          </ComposerActions>\n        </Composer>\n      </DrawerPopup>\n    </Drawer>\n  );\n}\n",
+      "type": "registry:block"
+    }
+  ],
+  "categories": [
+    "drawer",
+    "composer"
+  ],
+  "type": "registry:block"
+}

@@ -18,6 +18,7 @@ export const ui: Registry["items"] = [
       "@coss/checkbox-group",
       "@coss/collapsible",
       "@coss/combobox",
+      "@coss/composer",
       "@coss/command",
       "@coss/context-menu",
       "@coss/dialog",
@@ -264,6 +265,13 @@ export const ui: Registry["items"] = [
     ],
     name: "combobox",
     registryDependencies: ["@coss/input", "@coss/scroll-area"],
+    type: "registry:ui",
+  },
+  {
+    dependencies: ["@base-ui/react"],
+    files: [{ path: "ui/composer.tsx", type: "registry:ui" }],
+    name: "composer",
+    registryDependencies: ["@coss/composer-editor", "@coss/scroll-area"],
     type: "registry:ui",
   },
   {

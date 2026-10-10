@@ -119,6 +119,7 @@ Popup container that displays the drawer content.
 | `variant`         | `"default" \| "straight" \| "inset"`     | `"default"` | Controls the drawer style. `straight` removes rounded corners, `inset` adds spacing around the drawer on desktop screens |
 | `showCloseButton` | `boolean`                                 | `false`     | When true, displays a close button in the top-right corner |
 | `showBar`         | `boolean`                                 | `false`     | When true, displays a drag bar indicator |
+| `keyboardAware`   | `boolean`                                 | `false`     | On bottom drawers, keeps a footer input above the software keyboard using Base UI's virtual keyboard provider |
 | `portalProps`     | `Drawer.Portal.Props`                     | -           | Props forwarded to the internal portal (`keepMounted`, `container`, etc.); see Base UI Drawer portal API |
 
 **Example:**
@@ -262,6 +263,45 @@ Primitive content wrapper used for polymorphic composition with the `render` pro
 ### Scrollable content
 
 <ComponentPreview name="p-drawer-6" />
+
+### Keyboard aware composer
+
+Set `keyboardAware` on a bottom `DrawerPopup` that contains a footer input. Put the scrolling conversation in `DrawerPanel` and the composer after it, so the header and composer remain outside the conversation scroll area. The popup applies the keyboard inset and safe-area spacing.
+
+<ComponentPreview name="p-drawer-15" />
+
+```tsx
+import {
+  Composer,
+  ComposerActionGroup,
+  ComposerActions,
+  ComposerInput,
+  ComposerSubmit,
+} from "@/components/ui/composer"
+
+<Drawer>
+  <DrawerTrigger>Open chat</DrawerTrigger>
+  <DrawerPopup keyboardAware>
+    <DrawerHeader><DrawerTitle>Chat</DrawerTitle></DrawerHeader>
+    <div className="min-h-0 flex-1">
+      <DrawerPanel>Conversation</DrawerPanel>
+    </div>
+    <Composer
+      className="mx-3 mb-3 shrink-0"
+      value={value}
+      onValueChange={setValue}
+      onSubmit={onSend}
+    >
+      <ComposerInput aria-label="Message" placeholder="Write a message…" />
+      <ComposerActions>
+        <ComposerActionGroup align="end">
+          <ComposerSubmit />
+        </ComposerActionGroup>
+      </ComposerActions>
+    </Composer>
+  </DrawerPopup>
+</Drawer>
+```
 
 ### Nested drawers
 

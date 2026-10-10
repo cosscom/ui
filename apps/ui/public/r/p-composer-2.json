@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "p-composer-2",
+  "description": "Composer with asynchronous mention suggestions",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "@coss/button",
+    "@coss/composer",
+    "@coss/spinner"
+  ],
+  "files": [
+    {
+      "path": "registry/default/particles/p-composer-2.tsx",
+      "content": "\"use client\";\n\nimport { ArrowUpIcon } from \"lucide-react\";\nimport { useEffect, useState } from \"react\";\nimport { Button } from \"@/registry/default/ui/button\";\nimport {\n  Composer,\n  ComposerActionGroup,\n  ComposerActions,\n  ComposerInput,\n  ComposerItem,\n  type ComposerItemValue,\n  ComposerList,\n  ComposerPopup,\n  ComposerStatus,\n  ComposerSubmit,\n  type ComposerValue,\n  useComposerFilter,\n} from \"@/registry/default/ui/composer\";\nimport { Spinner } from \"@/registry/default/ui/spinner\";\n\nconst people = [\n  { id: \"alex\", label: \"Alex Morgan\", description: \"Design\" },\n  { id: \"sam\", label: \"Sam Rivera\", description: \"Engineering\" },\n  { id: \"taylor\", label: \"Taylor Kim\", description: \"Product\" },\n];\n\nexport default function Particle() {\n  const [value, setValue] = useState<ComposerValue>([]);\n  const [queryText, setQueryText] = useState<string | null>(null);\n  const [resultsFor, setResultsFor] = useState<string>();\n  const [items, setItems] = useState<typeof people>([]);\n  const [status, setStatus] = useState<\"ready\" | \"loading\">(\"ready\");\n  const { contains } = useComposerFilter();\n\n  useEffect(() => {\n    if (queryText === null) return;\n    const timer = window.setTimeout(() => {\n      setItems(\n        people.filter(\n          (person) =>\n            contains(person.label, queryText) ||\n            contains(person.description, queryText),\n        ),\n      );\n      setResultsFor(queryText);\n      setStatus(\"ready\");\n    }, 500);\n    return () => window.clearTimeout(timer);\n  }, [queryText, contains]);\n\n  return (\n    <div className=\"flex w-full max-w-xl flex-col gap-3\">\n      <Composer\n        value={value}\n        onValueChange={setValue}\n        onSubmit={() => setValue([])}\n        onQueryChange={(query) => {\n          setQueryText(query?.text ?? null);\n          setStatus(query ? \"loading\" : \"ready\");\n        }}\n        triggers={[\n          { character: \"@\", items, itemsFor: resultsFor, filter: null, status },\n        ]}\n      >\n        <ComposerInput aria-label=\"Message\" placeholder=\"Mention someone…\" />\n        <ComposerPopup aria-busy={status === \"loading\" || undefined}>\n          {status === \"loading\" && (\n            <ComposerStatus>\n              <span className=\"flex items-center justify-between gap-2 text-muted-foreground\">\n                Searching...\n                <Spinner className=\"size-4.5 sm:size-4\" />\n              </span>\n            </ComposerStatus>\n          )}\n          <ComposerList>\n            {(item: ComposerItemValue) => (\n              <ComposerItem key={item.id} value={item}>\n                <span className=\"min-w-0\">\n                  <span className=\"block truncate\">{item.label}</span>\n                  {item.description && (\n                    <span className=\"block truncate text-muted-foreground text-xs\">\n                      {item.description}\n                    </span>\n                  )}\n                </span>\n              </ComposerItem>\n            )}\n          </ComposerList>\n        </ComposerPopup>\n        <ComposerActions>\n          <ComposerActionGroup align=\"end\">\n            <ComposerSubmit\n              render={\n                <Button aria-label=\"Send message\" size=\"icon\">\n                  <ArrowUpIcon aria-hidden=\"true\" />\n                </Button>\n              }\n            />\n          </ComposerActionGroup>\n        </ComposerActions>\n      </Composer>\n\n      <p className=\"text-muted-foreground text-sm\">\n        Search by name or team. Try @design, or @zz for no menu.\n      </p>\n    </div>\n  );\n}\n",
+      "type": "registry:block"
+    }
+  ],
+  "meta": {
+    "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"
+  },
+  "categories": [
+    "composer",
+    "async",
+    "loading"
+  ],
+  "type": "registry:block"
+}

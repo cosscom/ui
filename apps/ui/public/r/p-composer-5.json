@@ -1,0 +1,27 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "p-composer-5",
+  "description": "Composer with a custom suggestion list",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "@coss/button",
+    "@coss/composer"
+  ],
+  "files": [
+    {
+      "path": "registry/default/particles/p-composer-5.tsx",
+      "content": "\"use client\";\n\nimport { ArrowUpIcon } from \"lucide-react\";\nimport { useState } from \"react\";\nimport { Button } from \"@/registry/default/ui/button\";\nimport {\n  Composer,\n  ComposerActionGroup,\n  ComposerActions,\n  ComposerInput,\n  ComposerItem,\n  type ComposerItemValue,\n  ComposerList,\n  ComposerPopup,\n  ComposerSubmit,\n  type ComposerValue,\n  useComposerFilter,\n} from \"@/registry/default/ui/composer\";\n\nconst people = [\n  { id: \"alex\", label: \"Álex Morgan\", description: \"Design\" },\n  { id: \"sam\", label: \"Sam Rivera\", description: \"Engineering\" },\n  { id: \"taylor\", label: \"Taylor Kim\", description: \"Product\" },\n  { id: \"jordan\", label: \"Jordan Lee\", description: \"Marketing\" },\n  { id: \"casey\", label: \"Casey Chen\", description: \"Support\" },\n  { id: \"morgan\", label: \"Morgan Davis\", description: \"Operations\" },\n  { id: \"jamie\", label: \"Jamie Wilson\", description: \"Finance\" },\n  { id: \"riley\", label: \"Riley Patel\", description: \"Research\" },\n];\n\nexport default function Particle() {\n  const [value, setValue] = useState<ComposerValue>([]);\n  const { startsWith } = useComposerFilter();\n\n  return (\n    <Composer\n      className=\"w-full max-w-xl\"\n      value={value}\n      onValueChange={setValue}\n      onSubmit={() => setValue([])}\n      triggers={[\n        {\n          character: \"@\",\n          items: people,\n          filter: (item, query) => startsWith(item.label, query),\n        },\n      ]}\n    >\n      <ComposerInput\n        aria-label=\"Team message\"\n        placeholder=\"Mention a teammate…\"\n      />\n      <ComposerPopup>\n        <ComposerList>\n          {(item: ComposerItemValue) => (\n            <ComposerItem key={item.id} value={item}>\n              <span className=\"flex min-w-0 flex-col\">\n                <span className=\"truncate\">{item.label}</span>\n                <span className=\"truncate text-muted-foreground text-xs\">\n                  {item.description}\n                </span>\n              </span>\n            </ComposerItem>\n          )}\n        </ComposerList>\n      </ComposerPopup>\n      <ComposerActions>\n        <ComposerActionGroup align=\"end\">\n          <ComposerSubmit\n            render={\n              <Button aria-label=\"Send message\" size=\"icon\">\n                <ArrowUpIcon aria-hidden=\"true\" />\n              </Button>\n            }\n          />\n        </ComposerActionGroup>\n      </ComposerActions>\n    </Composer>\n  );\n}\n",
+      "type": "registry:block"
+    }
+  ],
+  "meta": {
+    "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"
+  },
+  "categories": [
+    "composer",
+    "text editor"
+  ],
+  "type": "registry:block"
+}

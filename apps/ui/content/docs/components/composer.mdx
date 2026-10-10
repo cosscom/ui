@@ -1,0 +1,401 @@
+---
+title: Composer
+description: A composer for chat and AI assistant interfaces, with a growing input, persistent actions, and optional mentions or slash commands.
+---
+
+<ComponentPreview name="p-composer-4" />
+
+## Installation
+
+```bash
+npx shadcn@latest add @coss/composer
+```
+
+## Choose an input
+
+`ComposerInput` is the input surface in either case. By default it renders a contenteditable div; give it an accessible name:
+
+```tsx
+<ComposerInput aria-label="Message" />
+```
+
+For a **plain-text message**, render a native textarea in the same `ComposerInput`:
+
+```tsx
+<ComposerInput render={<textarea aria-label="Message" />} />
+```
+
+Both use the same `Composer` and `ComposerActions` composition. For contenteditable editing with a structured draft, give `Composer` a `value` or `defaultValue`. Add `triggers` and the popup parts when you need mentions or slash actions. With a textarea, keep its native string value and `onChange` on the textarea and omit structured draft props on `Composer`; see [Usage](#usage) for a complete example. `Composer` handles Enter and Shift+Enter for the managed contenteditable input and native textarea. An external editor can supply its editable element through `render` and own its document and selection. A Lexical integration has not been verified.
+
+## Anatomy
+
+`Composer` provides the form, editing context, and visual frame. Clicking empty space inside its border focuses the input. `ComposerInput` defaults to contenteditable and contains a ScrollArea. Pass a textarea through `render` for native plain-text editing. The action row stays outside the scrolling draft.
+
+```tsx
+import { ArrowUpIcon } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import {
+  Composer,
+  ComposerActionGroup,
+  ComposerActions,
+  ComposerInput,
+  ComposerSubmit,
+} from "@/components/ui/composer"
+
+<Composer defaultValue={[]} onSubmit={handleSend}>
+  <ComposerInput aria-label="Message" placeholder="Write a message…" />
+  <ComposerActions>
+    <ComposerActionGroup>{/* Optional leading buttons */}</ComposerActionGroup>
+    <ComposerActionGroup align="end">
+      <ComposerSubmit render={
+        <Button aria-label="Send message" size="icon">
+          <ArrowUpIcon aria-hidden="true" />
+        </Button>
+      } />
+    </ComposerActionGroup>
+  </ComposerActions>
+</Composer>
+```
+
+## Usage
+
+The textarea owns its string value. `Composer` submits on Enter and inserts a line break on Shift+Enter by default. Handle submission and disable the button when sending is unavailable.
+
+```tsx
+import { ArrowUpIcon } from "lucide-react"
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import {
+  Composer,
+  ComposerActionGroup,
+  ComposerActions,
+  ComposerInput,
+  ComposerSubmit,
+} from "@/components/ui/composer"
+
+export function MessageComposer({ onSend }: { onSend: (message: string) => void }) {
+  const [value, setValue] = useState("")
+
+  return (
+    <Composer onSubmit={() => {
+      if (!value.trim()) return
+      onSend(value)
+      setValue("")
+    }}>
+      <ComposerInput minRows={3} maxRows={6} render={
+        <textarea
+          aria-label="Message"
+          placeholder="Write a message…"
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
+        />
+      } />
+      <ComposerActions>
+        <ComposerActionGroup align="end">
+          <ComposerSubmit disabled={!value.trim()} render={
+            <Button aria-label="Send message" size="icon">
+              <ArrowUpIcon aria-hidden="true" />
+            </Button>
+          } />
+        </ComposerActionGroup>
+      </ComposerActions>
+    </Composer>
+  )
+}
+```
+
+### Input size
+
+Row limits belong to the `ComposerInput` surface, whether it renders the default contenteditable element or a textarea. By default, the input starts at one row below `md` and two rows from `md` upward, with a maximum of eight rows. The plain Composer example above changes the range to three through six rows. Longer drafts scroll while the controls stay visible. The maximum also stays within half the viewport height. Add attachment, microphone, or other buttons inside `ComposerActions`.
+
+For different limits at each breakpoint, set the row variables on `Composer` instead of passing `minRows` or `maxRows`:
+
+```tsx
+<Composer className="[--composer-min-rows:1] [--composer-max-rows:4] md:[--composer-min-rows:3] md:[--composer-max-rows:8]">
+  <ComposerInput render={<textarea aria-label="Message" />} />
+  <ComposerActions>{/* Buttons */}</ComposerActions>
+</Composer>
+```
+
+Here the input shows one to four rows below `md` and three to eight rows from `md` upward. The row props set inline values, so omit them when using responsive CSS variables.
+
+For an external editor, forward the supplied props and ref to its editable element through `render`. Your editor owns its document, selection, queries, and token insertion. A Lexical integration has not yet been validated.
+
+## Mentions and actions
+
+The same `Composer` composition supports mentions and slash actions.
+
+<ComponentPreview name="p-composer-1" />
+
+To extend the anatomy above, pass `triggers={triggers}` to `Composer` and insert these parts immediately after `ComposerInput`. The demo's Code tab shows the complete composition.
+
+```tsx
+<ComposerPopup>
+  <ComposerList>
+    {(item) => (
+      <ComposerItem key={item.id} value={item}>
+        {item.label}
+      </ComposerItem>
+    )}
+  </ComposerList>
+</ComposerPopup>
+```
+
+Configure only the triggers you need. Queries can contain spaces: `@sam r` finds Sam Rivera. Selecting an item inserts a token into the draft; it does not send the message or execute an action.
+
+```tsx
+const triggers = [
+  { character: "@", items: [{ id: "sam", label: "Sam Rivera" }] },
+  { character: "/", items: [{ id: "summarize", label: "Summarize", type: "action" as const }] },
+]
+```
+
+Omit `triggers` and the popup parts for plain contenteditable text. Use `value` and `onValueChange` for a controlled draft, or `defaultValue` for an uncontrolled draft. Submission does not clear the structured draft automatically.
+
+### Token appearance
+
+By default, selected mentions and actions appear as `text-primary font-medium` text with their trigger (`@Sam Rivera` or `/Summarize`). To change their appearance, render each selected token from `ComposerInput`. This example uses the same people, teams, and actions as the one above, but gives them rounded chips with different icons.
+
+<ComponentPreview name="p-composer-6" />
+
+The selected item's `kind` reaches `renderToken`, so a person and a team selected from the same `@` menu can use different icons or styles. The structured draft keeps `type`, `kind`, `id`, `label`, and `trigger`; `getComposerText(value)` still returns text such as `@Sam Rivera` when a chip hides the trigger visually. An item's `icon` is available to the suggestion list renderer but is not stored in the draft. A native textarea remains plain text and does not render tokens.
+
+### Custom filtering
+
+The default filter ignores case and accents. Set a trigger's `filter` to customize matching. `useComposerFilter` exposes Base UI's `contains`, `startsWith`, and `endsWith` helpers.
+
+<ComponentPreview name="p-composer-5" />
+
+### Async results
+
+Fetch results in response to `onQueryChange`. Use `filter: null` for prefiltered results and `itemsFor` to identify the query they belong to. A completed query with no matches closes the popup.
+
+<ComponentPreview name="p-composer-2" />
+
+### Keyboard shortcuts
+
+While suggestions are open, ↑ and ↓ navigate, Enter selects, Escape dismisses, and Tab moves focus normally. Otherwise, Enter submits and Shift+Enter inserts a line break in the native contenteditable input or textarea. Set `submitOnEnter="desktop"` to submit only with a fine pointer, or `"never"` to let Enter insert a line break. External editors handle their own keys.
+
+## In a drawer
+
+Use `keyboardAware` on a bottom `DrawerPopup`. Place the composer after the scrolling `DrawerPanel` so it stays visible.
+
+<ComponentPreview name="p-composer-3" />
+
+## API Reference
+
+<div className="[&_td]:whitespace-normal">
+
+### Composer
+
+A styled form. Supplying `value`, `defaultValue`, or `triggers` enables native contenteditable editing and suggestions; without them, it behaves as a plain form for a textarea or external editor.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `onSubmit` | `FormEventHandler<HTMLFormElement>` or `(value: ComposerValue) => void` | — | Receives a prevented form event in plain mode or the structured draft in managed mode |
+| `value` | `ComposerValue` | — | Controlled structured draft; enables managed contenteditable editing |
+| `defaultValue` | `ComposerValue` | — | Initial uncontrolled structured draft; enables managed editing |
+| `onValueChange` | `(value: ComposerValue) => void` | — | Called when a managed draft changes |
+| `triggers` | `readonly ComposerTrigger[]` | `[]` | Enabled suggestion sources; enables managed editing when supplied |
+| `onQueryChange` | `(query: { character: string; text: string } \| null) => void` | — | Active suggestion query |
+| `submitOnEnter` | `"desktop" \| "always" \| "never"` | `"always"` | Enter behavior for the managed contenteditable input or native textarea |
+| `disabled` | `boolean` | `false` | Disables managed editing and submission |
+| `render` | Base UI render prop | — | Replaces the form element while preserving Composer props |
+| `className` | `string` | — | Additional classes on the form |
+| `ref` | `Ref<HTMLFormElement>` | — | Ref to the form; can anchor `ComposerPopup` |
+| `...props` | Form props | — | Other native form attributes |
+
+### ComposerInput
+
+An input surface with an internal coss ScrollArea. It connects to managed editing when its parent `Composer` has `value`, `defaultValue`, or `triggers`. Supply a textarea or external editor through `render`, and give the editable element an accessible name.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `render` | Base UI render prop | Contenteditable `div` | Replaces the default element with a textarea or another editor |
+| `minRows` | `number` | `1` below `md`, `2` from `md` | Minimum visible text rows |
+| `maxRows` | `number` | `8` | Maximum visible text rows before scrolling, subject to the `50dvh` cap |
+| `placeholder` | `string` | — | Placeholder for the managed contenteditable input |
+| `renderToken` | `(token: ComposerTokenPart) => ReactNode` | — | Renders each selected token in the managed contenteditable input; defaults to `ComposerToken` |
+| `className` | `string` | — | Additional classes on the editable element |
+| `ref` | `Ref<HTMLDivElement>` | — | Ref to the default div; set other element refs on `render` |
+| `...props` | Div props | — | Other props forwarded to the editable element |
+
+`minRows` and `maxRows` are positive numbers of visible text rows, with vertical padding included in the resulting heights. Keep `minRows` at or below `maxRows`. The minimum defaults to one row below `md` and two rows from `md` upward; the maximum defaults to eight rows. Text is `text-base` below `md` and `text-sm` from `md` upward, and the row limits follow the actual line height at each breakpoint. When rendering a textarea, set the visible row limits on `ComposerInput`; the textarea's native `rows` attribute is unnecessary here. The scroll limit is also capped at `50dvh`; `--composer-max-height` can override the row-based maximum if a fixed height is needed. For a custom contenteditable placeholder, set `data-placeholder` and toggle `data-empty` when the editor is empty.
+
+The default div is contenteditable and has textbox semantics. The parent `Composer` supplies draft state, Enter behavior, and suggestions when managed. A textarea supplied through `render` keeps its native string editing; `Composer` handles Enter submission.
+
+### ComposerToken
+
+A presentational token for the built-in editor's `renderToken` callback, external editors, or read-only previews. Pass the selected token and choose its appearance per item.
+
+```tsx
+import { UserRoundIcon, UsersRoundIcon } from "lucide-react"
+import { ComposerInput, ComposerToken } from "@/components/ui/composer"
+
+<ComposerInput
+  renderToken={(token) => (
+    <ComposerToken
+      token={token}
+      variant="chip"
+      icon={token.kind === "team" ? <UsersRoundIcon /> : <UserRoundIcon />}
+    />
+  )}
+/>
+```
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `"default" \| "chip"` | `"default"` | Text with trigger, or rounded chip without a visible trigger |
+| `token` | `ComposerTokenPart` | required | Selected token, including its trigger, label, and optional kind |
+| `icon` | `ReactNode` | — | Optional icon in the chip variant |
+| `children` | `ReactNode` | token label | Overrides the visible label |
+| `className` | `string` | — | Additional classes on the token |
+| `...props` | Span props | — | Other native span attributes; the token is non-editable |
+
+### ComposerActions
+
+The bottom row for controls. Place it after `ComposerInput` so it remains outside the scrolling draft.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `children` | `ReactNode` | — | Leading and trailing action groups |
+| `className` | `string` | — | Additional classes on the row |
+| `...props` | Div props | — | Other native div attributes |
+
+### ComposerActionGroup
+
+A group of controls within `ComposerActions`.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `align` | `"start" \| "end"` | `"start"` | Pushes the group to the trailing side when set to `"end"` |
+| `children` | `ReactNode` | — | Buttons or other controls |
+| `className` | `string` | — | Additional classes on the group |
+| `...props` | Div props | — | Other native div attributes |
+
+### ComposerSubmit
+
+A submit control that renders a native button by default. Pass a coss `Button` through `render` to choose its appearance, icon, and accessible name. In managed mode it disables the button for an empty or disabled draft unless you explicitly set `disabled`. The managed editor still prevents empty drafts from being submitted. For a plain textarea, set `disabled` based on its value yourself.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `render` | Base UI render prop | Native button | Replaces the button element, for example with a coss `Button` |
+| `disabled` | `boolean` | Managed draft state | Overrides the automatic button disabled state; does not bypass the managed submit guard |
+| `children` | `ReactNode` | — | Button content when using the native button |
+| `...props` | Button element props | — | Native button attributes, including `aria-label`; type is always `"submit"` |
+
+### ComposerPopup
+
+A styled Base UI Popover popup with its portal and positioner included. A managed `Composer` controls its visibility.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `anchor` | Positioner anchor | — | Element or ref used to position and size the popup |
+| `side` | Positioner side | `"top"` | Preferred side of the anchor |
+| `align` | Positioner align | `"start"` | Alignment along the anchor |
+| `sideOffset` | `number` | `4` | Space between popup and anchor |
+| `alignOffset` | `number` | — | Alignment adjustment |
+| `positionerClassName` | `string` | — | Additional classes on the positioner |
+| `portalProps` | Popover portal props | — | Props for the internal portal |
+| `className` | `string` | — | Additional classes on the popup |
+| `...props` | Popover popup props | — | Other popup props, including focus behavior |
+
+In a managed `Composer`, the popup anchors to the form and preserves editor focus automatically. Pass `anchor` to override its position.
+
+### ComposerList
+
+A scrollable result surface. In a managed `Composer`, it supplies listbox semantics and maps its items through a render function.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `children` | `ReactNode` or `(item, index) => ReactNode` | — | Result items or a renderer for the managed suggestions |
+| `render` | Base UI render prop | `div` | Replaces the list element |
+| `className` | `string` | — | Additional classes on the list element |
+| `ref` | `Ref<HTMLDivElement>` | — | Ref to the list element |
+| `...props` | Div props | — | Other props forwarded to the list element |
+
+### ComposerItem
+
+A styled button for a result. Pass `value` to connect selection and keyboard highlighting in a managed `Composer`.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `children` | `ReactNode` | — | Item content |
+| `value` | `ComposerItemValue` | — | Candidate item to select in a managed list |
+| `disabled` | `boolean` | `false` | Prevents selection |
+| `render` | Base UI render prop | `button` | Replaces the button element |
+| `className` | `string` | — | Additional classes on the item |
+| `ref` | `Ref<HTMLButtonElement>` | — | Ref to the button |
+| `...props` | Button element props | — | Other props, including `data-highlighted` and `data-disabled`; type defaults to `"button"` |
+
+### ComposerStatus
+
+A status message inside a popup, such as loading feedback.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `children` | `ReactNode` | — | Status text |
+| `render` | Base UI render prop | `div` | Replaces the status element |
+| `className` | `string` | — | Additional classes on the status |
+| `ref` | `Ref<HTMLDivElement>` | — | Ref to the status element |
+| `...props` | Div props | — | Other props; role defaults to `"status"` |
+
+</div>
+
+## Drafts and triggers
+
+### Draft and trigger types
+
+```ts
+import type { ReactNode } from "react"
+
+type ComposerValue = readonly ComposerPart[]
+
+type ComposerPart =
+  | { type: "text"; text: string }
+  | { type: "mention" | "action"; id: string; label: string; trigger: string; kind?: string }
+
+type ComposerTokenPart = Exclude<ComposerPart, { type: "text" }>
+
+type ComposerItemValue = {
+  id: string
+  label: string
+  description?: string
+  icon?: ReactNode
+  type?: "mention" | "action"
+  kind?: string
+}
+```
+
+`type` defaults to `"mention"`; set `"action"` for slash actions. Use `kind` for your own categories, such as `"person"` and `"team"`, even when both come from `@`. The selected part retains `kind`. `getComposerText(value)` returns the plain-text representation with trigger characters, including when chips hide them visually.
+
+`ComposerTrigger` configures one source:
+
+| Field | Type | Default | Description |
+| --- | --- | --- | --- |
+| `character` | `string` | required | Trigger, such as `"@"` or `"/"` |
+| `items` | `readonly ComposerItemValue[]` | required | Candidate results |
+| `filter` | `((item, query) => boolean) \| null` | label contains query | Custom matching; `null` uses prefiltered results |
+| `itemsFor` | `string` | — | Query the async items belong to |
+| `status` | `"ready" \| "loading" \| "error"` | `"ready"` | Loading/error feedback keeps the popup open; zero ready matches hide it |
+
+### External editors
+
+`ComposerInput` can render an external editable element. That editor owns its document, selection, queries, and insertion. The internal `ComposerSuggestions` provider is available from `@/lib/composer-editor` if you want to reuse the suggestion list behavior with an external editor. A Lexical integration has not been validated.
+
+### useComposerEditor
+
+For custom native editing integrations, import `useComposerEditor` from `@/hooks/use-composer-editor`. It accepts the managed editor options above with required `value` and `onValueChange`; uncontrolled `defaultValue` is not supported by the hook. The hook exposes `tokenHosts` for rendering selected tokens into its contenteditable spans. The `Composer` and `ComposerInput` composition does this automatically.
+
+| Return value | Description |
+| --- | --- |
+| `inputProps` | Editing handlers and ref for the editable element |
+| `formProps` | Form submission handler |
+| `suggestions` | Controlled `items`, `open`, `onOpenChange`, and `onItemSelect` |
+| `isEmpty` | Whether the draft has no visible text |
+| `canSubmit` | Whether the draft can be submitted |
+| `submit()` | Submits when allowed |
+| `status` | Active trigger's loading state |
+| `tokenHosts` | DOM hosts for selected tokens in the native contenteditable input |
+
+`Composer` wires these together for the native contenteditable input. Use the hook directly only for custom editing integrations.

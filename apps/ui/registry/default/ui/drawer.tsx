@@ -143,6 +143,7 @@ export function DrawerPopup({
   position: positionProp,
   variant = "default",
   showBar = false,
+  keyboardAware = false,
   portalProps,
   ...props
 }: DrawerPrimitive.Popup.Props & {
@@ -150,12 +151,13 @@ export function DrawerPopup({
   position?: DrawerPosition;
   variant?: "default" | "straight" | "inset";
   showBar?: boolean;
+  keyboardAware?: boolean;
   portalProps?: DrawerPrimitive.Portal.Props;
 }): React.ReactElement {
   const { position: contextPosition } = useContext(DrawerContext);
   const position = positionProp ?? contextPosition;
 
-  return (
+  const popup = (
     <DrawerPortal {...portalProps}>
       <DrawerBackdrop />
       <DrawerViewport position={position} variant={variant}>
@@ -205,6 +207,9 @@ export function DrawerPopup({
               "data-nested-drawer-open:transform-[translateX(calc(var(--drawer-swipe-movement-x)+var(--stack-peek-offset)))_scale(var(--scale))] origin-right",
             position === "right" &&
               "data-nested-drawer-open:transform-[translateX(calc(var(--drawer-swipe-movement-x)-var(--stack-peek-offset)))_scale(var(--scale))] origin-left",
+            keyboardAware &&
+              position === "bottom" &&
+              "pb-[max(var(--drawer-keyboard-inset,0px),env(safe-area-inset-bottom,0px))] [--drawer-height:calc(100dvh-3rem)]",
             className,
           )}
           data-slot="drawer-popup"
@@ -224,6 +229,14 @@ export function DrawerPopup({
         </DrawerPrimitive.Popup>
       </DrawerViewport>
     </DrawerPortal>
+  );
+
+  return keyboardAware && position === "bottom" ? (
+    <DrawerPrimitive.VirtualKeyboardProvider>
+      {popup}
+    </DrawerPrimitive.VirtualKeyboardProvider>
+  ) : (
+    popup
   );
 }
 
