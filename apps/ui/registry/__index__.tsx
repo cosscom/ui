@@ -10313,6 +10313,24 @@ export const Index: Record<string, any> = {
     categories: undefined,
     meta: undefined,
   },
+  "composer-document": {
+    name: "composer-document",
+    description: "",
+    type: "registry:lib",
+    registryDependencies: ["@coss/composer-query"],
+    files: [{
+      path: "registry/default/lib/composer-document.ts",
+      type: "registry:lib",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/lib/composer-document.ts")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
   "composer-editor": {
     name: "composer-editor",
     description: "",
@@ -10461,7 +10479,7 @@ export const Index: Record<string, any> = {
     name: "use-composer-editor",
     description: "",
     type: "registry:hook",
-    registryDependencies: ["@coss/composer-query"],
+    registryDependencies: ["@coss/composer-document"],
     files: [{
       path: "registry/default/hooks/use-composer-editor.ts",
       type: "registry:hook",

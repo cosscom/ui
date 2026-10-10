@@ -1,94 +1,56 @@
-# Composer and drawer implementation plan
+# Composer and drawer implementation
 
-Build a reusable coss Composer for chat and agent interfaces. The agreed default is a contenteditable input with full-width text and a permanent bottom action row. Prototype editing without adding an editor dependency, and expose opt-in drawer keyboard handling through the existing Base UI integration. Release in coss before migrating Cal.
+Build a reusable coss Composer for chat and agent interfaces: a contenteditable input, optional configurable suggestions, full-width text, and a permanent bottom action row. Release in coss before migrating Cal. External editor integrations are out of scope for this pass.
 
-This is the implementation handoff from the analysis discussion on 10 October 2026. Component and prop names below are provisional; the behavior and scope are the agreed direction.
-
-**Accepted component boundaries**
+## Component boundaries
 
 | Piece | Responsibility |
 | --- | --- |
-| `Composer` | Styled form; activates managed contenteditable editing when given a structured draft or triggers, and remains a plain form for a textarea |
-| `ComposerInput` | Styled input and internal ScrollArea; defaults to contenteditable, accepts a textarea or external editor through `render` |
-| `ComposerPopup`, `ComposerList`, `ComposerItem`, `ComposerStatus` | Styled suggestion parts connected to the managed Composer context |
-| `ComposerActions`, `ComposerActionGroup`, `ComposerSubmit` | Permanent controls row and submit button |
-| `lib/composer-editor.ts` | Internal headless context for native editing, suggestions, keyboard navigation, ARIA, and anchoring |
-| `useComposerEditor` | Native contenteditable document model, query detection, token insertion, history, and submission policy |
-| Drawer integration | Host geometry, keyboard avoidance, and gesture handling |
+| `Composer` | Styled frame and provider; form by default, div through `render` for embedding |
+| `ComposerInput` | Styled native contenteditable or rendered textarea, internal coss ScrollArea, token presentation |
+| `ComposerPopup`, `ComposerList`, `ComposerItem`, `ComposerStatus` | Styled Base UI popover and headless suggestion behavior |
+| `ComposerActions`, `ComposerActionGroup`, `ComposerSubmit` | Permanent controls row and composable submit control |
+| `lib/composer-editor.ts` | Context, item registration, navigation, announcements, anchoring, frame focus, input measurement |
+| `hooks/use-composer-editor.ts` | Controlled editing, history, composition, clipboard, query state, submission policy |
+| `lib/composer-document.ts` | Document types, DOM serialization, selection offsets, query extraction, token insertion |
+| `lib/composer-query.ts` | Pure trigger/query parsing |
+| Drawer | Opt-in keyboard and safe-area handling through Base UI |
 
-The public component names are the same for textarea and managed contenteditable examples: `Composer`, `ComposerInput`, and the optional popup and action parts. The styled UI module depends on a small headless controller, much as other coss wrappers depend on Base UI. Installing `@coss/composer` includes that controller; there is no separate editor component family or installation step. No public viewport or separate textarea wrapper is required.
+Registry files are authoritative. Package copies and registry JSON must match them. The Composer is a custom headless controller with Base UI composition utilities and positioning; Base UI does not provide a contenteditable autocomplete primitive.
 
-The managed Composer supports controlled and uncontrolled drafts. Plain `Composer` uses native form submission events, while managed `Composer.onSubmit` receives the structured draft. Supplying `value`, `defaultValue`, or `triggers` activates managed editing; there is no separate mode prop. Custom editors use the same UI surfaces with `render`; the headless `ComposerSuggestions` provider remains available for controlled suggestion integration. Such integrations own their document, selection, queries, and insertion and explicitly pass the popup anchor.
+## Public contract
 
-Base UI Autocomplete is suitable for Command's native input contract. Its installed input implementation relies on native `.value` and selection APIs; rendering it as contenteditable does not provide the range-based editing contract needed here. Reuse Base UI positioning and filtering without pretending this custom editing behavior is a Base UI primitive. Lexical is optional and no concrete Lexical integration is shipped.
+- One API for both inputs. `Composer` manages an empty draft without activation props. `value`/`onValueChange` controls it; `defaultValue` initializes it. `onSubmit` always receives `ComposerValue`.
+- `ComposerInput` defaults to contenteditable; `render={<textarea />}` chooses native plain text. A textarea uses text parts and has no token suggestions. Keep state on the Composer, not on the rendered textarea.
+- Configure zero or more triggers. `@`, `/`, another character, both, or none are application choices. Multiword matching remains supported. Async results identify their query through `itemsFor`.
+- Suggestion identity is the item's stable `id`, unique within a trigger. Registered items provide disabled state and DOM refs. Navigation skips disabled items and preserves input focus. Empty ready results hide the popup; loading feedback is composed with `ComposerStatus`.
+- Use `ComposerInput.renderToken` to customize each token, including icons or styles by `kind`. `ComposerToken` supplies plain and chip variants. Chips wrap as inline text, with normal weight and decorative icons at opacity 80.
+- Enter submits and Shift+Enter inserts a newline by default. `submitOnEnter` can select desktop-only or newline behavior. User handlers run before the internal handlers.
+- `submitDisabled` is the shared submission gate; `allowEmpty` supports attachment-only messages. `disabled` prevents editing and submitting. `readOnly` preserves selection and copy while blocking edits and submit.
+- `ComposerSubmit` delegates submission while consumers provide the button's appearance through `render`. Its local `disabled` controls the button; the root gate covers keyboard submission too.
+- Standalone submission uses the native form's constraint validation. A div frame calls the same callback without submitting a containing form. `name` serializes canonical text to a hidden field. A native form reset or `useComposerContext().reset()` restores the initial draft; controlled owners receive a reset request.
+- `useComposerContext` exposes the draft, submission and disabled state, active source status, and submit/reset actions for custom controls.
 
-**Layout and sizing**
+## Editing lifecycle
 
-The input always occupies the full available width above the actions. The leading group can contain an attachment button and other controls; the trailing group can contain microphone, submit, or stop controls. All controls appear inside the shared visual frame but outside the editable DOM.
+- Preserve native DOM during accepted typing. Reconcile rejected controlled changes and external values before paint, preserving/clamping selection offsets.
+- Defer external document writes during IME composition. If the controlled document changes during composition, apply it after composition ends.
+- Contenteditable undo/redo stores document and selection snapshots, groups adjacent typing, and includes token insertion, paste, and cut. External replacements and reset clear this local history. Native textareas retain browser editing history.
+- Canonical serialization includes token triggers even when chips hide them. Copy/cut writes plain text. Pasted/dropped strings never acquire reference IDs. Native rich-text formatting is prevented.
+- Editing and serialization do not depend on `document.execCommand`.
 
-- Start with one visible row below `md` and two rows from `md` upward. Expose `minRows` and `maxRows` on `ComposerInput` (and the helper input) to set row limits. Default to eight maximum rows. Use `text-base` below `md` and `text-sm` from `md` upward; measure both limits in their actual line-height units, including vertical padding. Keep the scroll cap within half the viewport height.
-- Let contenteditable grow naturally to a configurable CSS maximum height, expressed in line-height units where useful and constrained by the host's available height.
-- At the limit, scroll the coss ScrollArea viewport around the editing area. Keep the actions visible in their own row.
-- Give the placeholder the same typography and inset as the entered text, and handle the empty state after deletion and clearing.
-- Use CSS Grid or Flexbox for the frame and action groups. Preserve usable control sizes at narrow widths.
+## Layout and drawer
 
-The empty composer is deliberately a little taller because the actions already occupy their own row. The submit button aligns with the other actions, rather than the first or last text line.
+Use CSS for a permanent bottom action row. Do not add a one-line versus multiline layout state machine. Defaults are one input row below `md`, two from `md`, and eight maximum rows. `minRows`/`maxRows` set fixed limits; inherited CSS variables provide breakpoint-specific limits. The scroll cap also respects half the viewport height. A small measurement synchronizes the cap with the editable element's actual typography and padding; it does not choose layout modes.
 
-Do not implement a Gemini-style switch between inline and stacked layouts. There is no line-count measurement, text-width mirror, canvas measurement, ResizeObserver, hysteresis, or layout-mode state for that purpose. The earlier `layout="auto"` proposal and fixed side columns are superseded. Positioning and keyboard infrastructure may still use measurements internally.
+The popup anchors to the frame, uses its width, and defaults to a 4px offset. Actions remain outside the input scroll region. Empty frame space focuses the input without stealing clicks from interactive controls.
 
-**Suggestions and selected content**
+`DrawerPopup keyboardAware` adds Base UI keyboard handling and safe-area spacing only. The example owns its drawer height. The conversation scrolls in `DrawerPanel`; the Composer stays outside it. In constrained layouts the frame and input ScrollArea can shrink, while the action row does not. Avoid `shrink-0` on the frame in a keyboard-aware drawer.
 
-Use autocomplete-style interaction in a non-modal coss Popover, with listbox results and focus remaining in the editor. Anchor it above the whole composer frame, match the frame width, and constrain its height to available space. The result list scrolls independently. Caret-coordinate positioning is unnecessary; the insertion range still follows the active query in the text.
+## Verification status
 
-Configure triggers as zero or more entries. Consumers can enable `@` alone, `/` alone, both, or neither; there is no mandatory trigger. Each enabled trigger has its own result source and selection behavior. With no triggers configured, the input remains an ordinary composer and never opens suggestions. Keep the API open to other single-character triggers without building trigger-specific behavior into `ComposerInput`.
+Checkpoint before this revision: `10d52f65` (`Add composable chat composer and keyboard-aware drawer`).
 
-Recognize only configured triggers at appropriate text boundaries, including when editing in the middle of a draft. Allow multi-word queries, normalize ordinary/nonbreaking spaces for matching, and end queries at newlines, punctuation outside supported name characters, another trigger, or token boundaries. Replace through the current word at the caret without consuming subsequent prose. Do not treat email addresses, ordinary URL slashes, selected ranges, or token interiors as new queries. Keep trigger rules explicit and testable.
+Per the user's instruction, this pass adds and runs no tests and performs no browser/device testing. Type checking, focused lint/format checks, registry dependency validation, registry generation, and package synchronization are the permitted verification steps. Earlier browser checks belong to the checkpoint and do not validate the revised implementation.
 
-Applications supply result data and own fetching. Show ready results, loading feedback, and error feedback; hide the popup when a completed query has no matches. Results from an outdated query must not be selectable. Keep the default API simple enough for a local array of results.
-
-Arrow keys navigate results, Enter selects an available result, Escape dismisses the popup before affecting the host drawer, and Tab follows normal focus navigation. A loading or stale result must not cause accidental submission. Send on Enter by default on all devices, keep this policy configurable, preserve Shift+Enter for newlines, and do not select or submit during IME composition. Pointer and touch selection should preserve editor focus and the mobile keyboard without disabling list scrolling.
-
-Selected references must retain stable IDs where the application needs them. Keep any structured value independent of Lexical and Cal-specific membership or scope types, with a readable plain-text representation. Pasted display names alone must not acquire reference IDs.
-
-The prototype uses indivisible mention and action tokens. Treat that as provisional until whole-token deletion, selection, clipboard behavior, and undo are verified in browsers. Cal migration must explicitly preserve or map its existing token semantics.
-
-Selecting an item inserts a token into the draft, retaining its type, ID, label, trigger, and optional application-defined kind in `ComposerValue`. The trigger controls when suggestions open; kind distinguishes results such as people and teams within the same `@` menu. `ComposerInput.renderToken` can render each selected part with `ComposerToken`, including a different icon or variant per kind. Mentions and actions share insertion and editing behavior. Selection does not submit the message or execute an action; the application handles action parts through `onSubmit` when the user sends the message.
-
-**Dependency-free editing prototype**
-
-Use the browser's native editing capabilities and add the minimum behavior needed for the agreed reference model. Keep DOM ownership deliberate: rewriting contenteditable children from React on every keystroke can disrupt selection, composition, and native undo.
-
-Prove insertion, deletion, undo/redo, paste, and composition before expanding the public API. Preserve selection during suggestion selection and external draft updates; define clearing, restoring drafts, disabled/read-only behavior, and accessible labeling. Define a plain-text external paste policy and a deliberate serialization/form-submission contract instead of treating arbitrary HTML as the value.
-
-If reliable editing requires substantial editor infrastructure, present the specific failures and tradeoff before changing the dependency-free direction. An optional future engine integration remains possible; it is not an assumption for this prototype.
-
-**Drawer keyboard behavior**
-
-Promote the chat demo's existing Base UI `VirtualKeyboardProvider` composition into an opt-in coss API. The installed Base UI version already exposes the provider. Proposed conveniences are `DrawerPopup keyboardAware` and a keyboard-avoiding footer; settle the smallest useful API during implementation.
-
-Keep the drawer frame/header stable, place the conversation in a shrinking scroll region, and keep the composer outside that region above the keyboard. Apply keyboard and safe-area spacing once, with a zero fallback for the keyboard inset. The input's own growth limit must leave room for its actions in a short viewport.
-
-The host owns keyboard avoidance; Composer does not reposition the entire page. Reuse Base UI's focus, viewport, and gesture handling before adding custom listeners. Verify that editing, selecting text, and scrolling suggestions do not trigger drawer dismissal. Preserve nested-drawer focus return and make keyboard behavior opt-in for existing consumers.
-
-**Implementation sequence**
-
-1. Build a focused coss prototype with the permanent action row, contenteditable input, highlighted selection, and frame-anchored suggestions. Establish the mention editing contract and verify the difficult editing interactions first.
-2. Extract the reusable Composer pieces and the minimal suggestion controller. Demonstrate all four configurations: no triggers, `@` only, `/` only, and both. Also demonstrate multiple action buttons, empty/loading results, and long drafts with CSS growth limits.
-3. Extract the drawer keyboard convenience and compose the same Composer inside it. Remove the need for consumers to repeat the demo's provider wrapper and keyboard-padding details.
-4. Validate meaningful behavior across desktop and mobile before release. Test caret insertion, reference deletion and history, external paste, Unicode/IME, stale results, keyboard navigation, screen-reader announcements, and selection across highlighted content. Test real iOS Safari and Android Chrome for keyboard opening/dismissal, long drafts, landscape, suggestion taps, and nested drawers; browser emulation alone is insufficient.
-5. Add coss documentation and particles, then run the applicable type/lint checks and required registry dependency validation, registry build, and UI synchronization. Keep the registry source authoritative for generated/package copies.
-6. Migrate Cal chat and agent consumers after coss behavior is validated. Adapt existing drafts and reference payloads explicitly, preserve application callbacks and runtime ownership, and remove obsolete implementations or dependencies only after their consumers have migrated.
-
-**Current prototype status**
-
-The public `Composer*` parts now serve both native contenteditable and textarea examples. Structured `value` or `defaultValue`, or a `triggers` prop, activates the internal editor controller; textarea examples keep ordinary string state and native form handling. Documentation and particles use one composition throughout.
-
-Earlier Chrome checks covered mention/action selection, multi-word queries, insertion into a sentence, deletion, undo/redo, plain-text paste, trigger configuration, async loading/empty/error states, submission, long-draft scrolling, and drawer dismissal. After this separation, Chrome checks pass for surface-only textarea submission/clearing/ref focus, multi-word mentions, keyboard and pointer token insertion, mixed-token submission, empty results, async results, drawer selection and popup-only Escape, and 24-line draft scrolling capped at 192px with the action row outside it. The popup matches the form at 576px wide and remains 4px above it. App/package TypeScript, focused Biome, four query tests, registry validation/build, package synchronization, generated parity, and the optional dependency boundary checks pass.
-
-Real iOS Safari and Android Chrome keyboard behavior, IME composition, screen-reader behavior, and nested drawers still need device validation before release or Cal migration. The editing prototype uses `document.execCommand` where available to retain browser undo history, with a Range fallback. An actual Lexical integration has not been validated. A previous full Next production build did not finish; type, registry, and interactive checks are used during this refactor.
-
-**Source references for implementation**
-
-- [Drawer primitive](registry/default/ui/drawer.tsx) and the [new Composer prototype](registry/default/ui/composer.tsx). The older coss chat composer and demo files discussed during analysis are absent from this branch of `main`; inspect their original revision if their behavior is needed for migration.
-- Cal's `packages/ai/src/react/ui/agent-mention-composer.tsx`, `composer-value.ts`, `composer-editor-state.ts`, `composer-keyboard.ts`, and `composer-clipboard.ts` for migration behavior. Use these as references rather than copying Cal domain rules into coss.
-- [Base UI drawer keyboard guidance](https://base-ui.com/react/components/drawer#virtual-keyboard-aware) and [WAI autocomplete interaction guidance](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/). Validate the final multiline editor and listbox association with assistive technology.
+Real iOS Safari and Android Chrome keyboard behavior, IME, screen readers, nested drawers, and the revised editing/history interactions still need runtime validation before release or Cal migration. External editor adapters are deferred.

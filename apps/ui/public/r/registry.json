@@ -12195,6 +12195,19 @@
       }
     },
     {
+      "files": [
+        {
+          "path": "registry/default/lib/composer-document.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "name": "composer-document",
+      "registryDependencies": [
+        "@coss/composer-query"
+      ],
+      "type": "registry:lib"
+    },
+    {
       "dependencies": [
         "@base-ui/react"
       ],
@@ -12301,8 +12314,7 @@
     },
     {
       "dependencies": [
-        "@base-ui/react",
-        "react-dom"
+        "@base-ui/react"
       ],
       "files": [
         {
@@ -12312,7 +12324,7 @@
       ],
       "name": "use-composer-editor",
       "registryDependencies": [
-        "@coss/composer-query"
+        "@coss/composer-document"
       ],
       "type": "registry:hook"
     },

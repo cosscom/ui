@@ -46,7 +46,12 @@ export default function Particle() {
       <DrawerTrigger render={<Button variant="outline" />}>
         Open composer drawer
       </DrawerTrigger>
-      <DrawerPopup keyboardAware showBar showCloseButton>
+      <DrawerPopup
+        className="[--drawer-height:calc(100dvh-3rem)]"
+        keyboardAware
+        showBar
+        showCloseButton
+      >
         <DrawerHeader>
           <DrawerTitle>Chat</DrawerTitle>
           {activity && (
@@ -65,7 +70,7 @@ export default function Particle() {
           </DrawerPanel>
         </div>
         <Composer
-          className="mx-3 mb-3 shrink-0"
+          className="mx-3 mb-3"
           value={value}
           onValueChange={setValue}
           onSubmit={(message) => {

@@ -209,7 +209,7 @@ export function DrawerPopup({
               "data-nested-drawer-open:transform-[translateX(calc(var(--drawer-swipe-movement-x)-var(--stack-peek-offset)))_scale(var(--scale))] origin-left",
             keyboardAware &&
               position === "bottom" &&
-              "pb-[max(var(--drawer-keyboard-inset,0px),env(safe-area-inset-bottom,0px))] [--drawer-height:calc(100dvh-3rem)]",
+              "pb-[max(var(--drawer-keyboard-inset,0px),env(safe-area-inset-bottom,0px))]",
             className,
           )}
           data-slot="drawer-popup"

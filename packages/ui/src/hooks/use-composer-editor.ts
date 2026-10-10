@@ -5,301 +5,69 @@ import type {
   ComponentProps,
   FormEvent,
   KeyboardEvent,
-  ReactNode,
+  RefObject,
 } from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { getComposerQuery } from "@coss/ui/lib/composer-query";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+import {
+  type ActiveQuery,
+  type ComposerItemValue,
+  type ComposerPart,
+  type ComposerSelection,
+  type ComposerSnapshot,
+  type ComposerTokenPart,
+  type ComposerTrigger,
+  type ComposerValue,
+  currentQuery,
+  equalValue,
+  getComposerText,
+  getFilteredItems,
+  hasVisibleItems,
+  insertItem,
+  insertPlainText,
+  readSelection,
+  readValue,
+  restoreSelection,
+  writeValue,
+} from "@coss/ui/lib/composer-document";
 
-type ComposerPart =
-  | { type: "text"; text: string }
-  | {
-      type: "mention" | "action";
-      id: string;
-      label: string;
-      trigger: string;
-      kind?: string;
-    };
-
-type ComposerValue = readonly ComposerPart[];
-type ComposerTokenPart = Exclude<ComposerPart, { type: "text" }>;
-
-type ComposerItemValue = {
-  id: string;
-  label: string;
-  description?: string;
-  icon?: ReactNode;
-  type?: "mention" | "action";
-  kind?: string;
+type ComposerChangeDetails = {
+  reason: "input" | "selection" | "history" | "reset";
 };
-
-type ComposerTrigger = {
-  character: string;
-  items: readonly ComposerItemValue[];
-  status?: "ready" | "loading" | "error";
-  itemsFor?: string;
-  filter?: ((item: ComposerItemValue, query: string) => boolean) | null;
-};
-
-type ActiveQuery = {
-  character: string;
-  text: string;
-  node: Text;
-  start: number;
-  end: number;
-  key: string;
-};
-
-function pushText(parts: ComposerPart[], text: string): void {
-  if (!text) return;
-  const previous = parts[parts.length - 1];
-  if (previous?.type === "text") previous.text += text;
-  else parts.push({ type: "text", text });
-}
-
-function readValue(root: HTMLElement): ComposerValue {
-  const parts: ComposerPart[] = [];
-
-  function visit(node: Node): void {
-    if (node.nodeType === Node.TEXT_NODE) {
-      pushText(parts, node.textContent ?? "");
-      return;
-    }
-    if (!(node instanceof HTMLElement)) return;
-    const tokenType = node.dataset.composerToken;
-    if (tokenType === "mention" || tokenType === "action") {
-      parts.push({
-        type: tokenType,
-        id: node.dataset.id ?? "",
-        label: node.dataset.label ?? "",
-        trigger: node.dataset.trigger ?? "@",
-        ...(node.dataset.kind ? { kind: node.dataset.kind } : {}),
-      });
-      return;
-    }
-    if (node.tagName === "BR") {
-      if (node !== root.firstChild || root.childNodes.length > 1)
-        pushText(parts, "\n");
-      return;
-    }
-    const isLine = node.tagName === "DIV" || node.tagName === "P";
-    if (isLine && parts.length) pushText(parts, "\n");
-    node.childNodes.forEach(visit);
-  }
-
-  root.childNodes.forEach(visit);
-  return parts;
-}
-
-function getComposerText(value: ComposerValue): string {
-  return value
-    .map((part) =>
-      part.type === "text" ? part.text : `${part.trigger}${part.label}`,
-    )
-    .join("");
-}
-
-function createToken(part: ComposerTokenPart): HTMLSpanElement {
-  const token = document.createElement("span");
-  token.dataset.composerToken = part.type;
-  token.dataset.id = part.id;
-  token.dataset.label = part.label;
-  token.dataset.trigger = part.trigger;
-  if (part.kind) token.dataset.kind = part.kind;
-  token.contentEditable = "false";
-  const fallback = document.createElement("span");
-  fallback.dataset.slot = "composer-token-fallback";
-  fallback.textContent = `${part.trigger}${part.label}`;
-  const renderer = document.createElement("span");
-  renderer.dataset.slot = "composer-token-renderer";
-  token.append(fallback, renderer);
-  return token;
-}
-
-function writeValue(root: HTMLElement, value: ComposerValue): void {
-  const fragment = document.createDocumentFragment();
-  for (const part of value) {
-    if (part.type !== "text") fragment.append(createToken(part));
-    else if (part.text) fragment.append(document.createTextNode(part.text));
-  }
-  root.replaceChildren(fragment);
-}
-
-function insertPlainText(root: HTMLElement, text: string): void {
-  const selection = window.getSelection();
-  if (!selection?.rangeCount || !root.contains(selection.anchorNode)) return;
-  if (document.execCommand("insertText", false, text)) return;
-  const range = selection.getRangeAt(0);
-  range.deleteContents();
-  const node = document.createTextNode(text);
-  range.insertNode(node);
-  range.setStart(node, node.length);
-  range.collapse(true);
-  selection.removeAllRanges();
-  selection.addRange(range);
-}
-
-function placeCaretAfterToken(
-  root: HTMLElement,
-  selection: Selection | null,
-): void {
-  if (!selection?.rangeCount) return;
-  const range = selection.getRangeAt(0);
-  if (!range.collapsed) return;
-  const anchor = selection.anchorNode;
-  const token = (
-    anchor instanceof Element ? anchor : anchor?.parentElement
-  )?.closest("[data-composer-token]");
-  if (token && root.contains(token)) {
-    const next = token.nextSibling;
-    if (next instanceof Text && /^\s/u.test(next.data)) {
-      selection.collapse(next, 1);
-    } else if (token.parentNode) {
-      selection.collapse(
-        token.parentNode,
-        Array.from(token.parentNode.childNodes).indexOf(token) + 1,
-      );
-    }
-    return;
-  }
-  const { startContainer, startOffset } = range;
-  if (startContainer instanceof Text) {
-    if (/^\s/u.test(startContainer.data.slice(startOffset)))
-      selection.collapse(startContainer, startOffset + 1);
-  } else {
-    const next = startContainer.childNodes[startOffset];
-    if (next instanceof Text && /^\s/u.test(next.data))
-      selection.collapse(next, 1);
-  }
-}
-
-function currentQuery(
-  root: HTMLElement,
-  triggers: readonly ComposerTrigger[],
-): ActiveQuery | null {
-  const selection = window.getSelection();
-  if (!selection?.isCollapsed || !root.contains(selection.anchorNode))
-    return null;
-  const node = selection.anchorNode;
-  if (
-    !(node instanceof Text) ||
-    node.parentElement?.closest("[data-composer-token]")
-  )
-    return null;
-  const caret = selection.anchorOffset;
-  const query = getComposerQuery(
-    node.data,
-    caret,
-    triggers.map((trigger) => trigger.character),
-  );
-  if (!query) return null;
-  if (
-    query.start === 0 &&
-    node.previousSibling?.textContent &&
-    !/\s$/u.test(node.previousSibling.textContent)
-  )
-    return null;
-  return {
-    ...query,
-    node,
-    key: `${query.character}:${query.start}:${caret}:${query.text}`,
-  };
-}
-
-function getFilteredItems(
-  trigger: ComposerTrigger | undefined,
-  query: ActiveQuery | null,
-  defaultFilter: (text: string, query: string) => boolean,
-): readonly ComposerItemValue[] {
-  if (
-    !trigger ||
-    !query ||
-    (trigger.status && trigger.status !== "ready") ||
-    (trigger.itemsFor !== undefined && trigger.itemsFor !== query.text)
-  )
-    return [];
-  if (trigger.filter === null) return trigger.items;
-  return trigger.items.filter((item) =>
-    trigger.filter
-      ? trigger.filter(item, query.text)
-      : defaultFilter(item.label, query.text),
-  );
-}
-
-function hasVisibleItems(
-  trigger: ComposerTrigger | undefined,
-  options: readonly ComposerItemValue[],
-): boolean {
-  return Boolean(
-    trigger &&
-      (options.length ||
-        trigger.status === "loading" ||
-        trigger.status === "error"),
-  );
-}
-
-function insertItem(
-  input: HTMLDivElement,
-  query: ActiveQuery,
-  suggestion: ComposerItemValue,
-): void {
-  const range = document.createRange();
-  range.setStart(query.node, query.start);
-  range.setEnd(query.node, query.end);
-  const selection = window.getSelection();
-  selection?.removeAllRanges();
-  selection?.addRange(range);
-  input.focus({ preventScroll: true });
-  const token = createToken({
-    type: suggestion.type ?? "mention",
-    id: suggestion.id,
-    label: suggestion.label,
-    trigger: query.character,
-    ...(suggestion.kind ? { kind: suggestion.kind } : {}),
-  });
-  const hasSeparator = /^\s/u.test(query.node.data.slice(query.end));
-  const trailingSpace = hasSeparator ? "" : " ";
-  if (
-    document.execCommand(
-      "insertHTML",
-      false,
-      `${token.outerHTML}${trailingSpace}`,
-    )
-  ) {
-    placeCaretAfterToken(input, selection);
-  } else {
-    range.deleteContents();
-    const space = trailingSpace ? document.createTextNode(trailingSpace) : null;
-    if (space) range.insertNode(space);
-    range.insertNode(token);
-    if (space) range.setStart(space, 1);
-    else range.setStartAfter(token);
-    range.collapse(true);
-    selection?.removeAllRanges();
-    selection?.addRange(range);
-    placeCaretAfterToken(input, selection);
-  }
-  input.focus({ preventScroll: true });
-}
-
 type UseComposerEditorOptions = {
   value: ComposerValue;
-  onValueChange: (value: ComposerValue) => void;
+  onValueChange: (value: ComposerValue, details: ComposerChangeDetails) => void;
   onSubmit?: (value: ComposerValue) => void;
   onQueryChange?: (query: { character: string; text: string } | null) => void;
   triggers?: readonly ComposerTrigger[];
   disabled?: boolean;
+  readOnly?: boolean;
+  submitDisabled?: boolean;
+  allowEmpty?: boolean;
   submitOnEnter?: "desktop" | "always" | "never";
 };
 
 type ComposerEditorController = {
+  value: ComposerValue;
   inputProps: ComponentProps<"div">;
   formProps: Pick<ComponentProps<"form">, "onSubmit">;
+  rootRef: RefObject<HTMLFormElement | null>;
   isEmpty: boolean;
+  isComposing: boolean;
   canSubmit: boolean;
+  disabled: boolean;
+  readOnly: boolean;
   submit: () => void;
+  reset: (value?: ComposerValue) => void;
   status: "ready" | "loading" | "error";
   tokenHosts: readonly HTMLSpanElement[];
   suggestions: {
+    enabled: boolean;
     items: readonly ComposerItemValue[];
     open: boolean;
     onOpenChange: (open: boolean) => void;
@@ -314,19 +82,60 @@ export function useComposerEditor({
   onQueryChange,
   triggers = [],
   disabled = false,
+  readOnly = false,
+  submitDisabled = false,
+  allowEmpty = false,
   submitOnEnter = "always",
 }: UseComposerEditorOptions): ComposerEditorController {
   const inputRef = useRef<HTMLDivElement>(null);
+  const [inputElement, setInputElement] = useState<HTMLDivElement | null>(null);
+  const setInputRef = useCallback((element: HTMLDivElement | null): void => {
+    inputRef.current = element;
+    setInputElement(element);
+  }, []);
+  const history = useRef<{
+    current: ComposerSnapshot;
+    past: ComposerSnapshot[];
+    future: ComposerSnapshot[];
+    inputType: string;
+    timestamp: number;
+  }>({
+    current: { value, selection: null },
+    past: [],
+    future: [],
+    inputType: "",
+    timestamp: 0,
+  });
+  const pendingInput = useRef({
+    type: "",
+    selection: null as ComposerSelection | null,
+  });
+  const historyAction = useRef<(direction: "undo" | "redo") => void>(() => {});
+  const rootRef = useRef<HTMLFormElement>(null);
   const composing = useRef(false);
+  const [isComposing, setIsComposing] = useState(false);
+  const compositionValue = useRef(value);
+  const ignoreCompositionInput = useRef(false);
   const dismissedQuery = useRef<string | null>(null);
+  const queryAction = useRef<() => void>(() => {});
   const [query, setQuery] = useState<ActiveQuery | null>(null);
   const [tokenHosts, setTokenHosts] = useState<HTMLSpanElement[]>([]);
+  const [, forceReconcile] = useState(0);
   const trigger = triggers.find((item) => item.character === query?.character);
   const { contains } = useComposerFilter();
   const options = getFilteredItems(trigger, query, contains);
-  const open = !disabled && Boolean(query) && hasVisibleItems(trigger, options);
+  const open =
+    !disabled &&
+    !readOnly &&
+    Boolean(query) &&
+    hasVisibleItems(trigger, options);
   const isEmpty = !getComposerText(value);
-  const canSubmit = !disabled && Boolean(getComposerText(value).trim());
+  const canSubmit =
+    !isComposing &&
+    !disabled &&
+    !readOnly &&
+    !submitDisabled &&
+    (allowEmpty || Boolean(getComposerText(value).trim()));
   const onQueryChangeRef = useRef(onQueryChange);
   onQueryChangeRef.current = onQueryChange;
   const queryCharacter = query?.character;
@@ -357,54 +166,205 @@ export function useComposerEditor({
   useEffect(() => {
     if (
       query &&
-      (disabled || !triggers.some((item) => item.character === query.character))
+      (disabled ||
+        readOnly ||
+        !triggers.some((item) => item.character === query.character))
     )
       setQuery(null);
-  }, [disabled, query, triggers]);
+  }, [disabled, readOnly, query, triggers]);
 
   useEffect(() => {
+    const input = inputElement;
+    if (!input || input instanceof HTMLTextAreaElement) return;
+    const beforeInput = (event: InputEvent) => {
+      if (event.inputType.startsWith("format")) event.preventDefault();
+      if (
+        event.inputType === "historyUndo" ||
+        event.inputType === "historyRedo"
+      ) {
+        event.preventDefault();
+        historyAction.current(
+          event.inputType === "historyUndo" ? "undo" : "redo",
+        );
+      } else if (!composing.current) {
+        pendingInput.current = {
+          type: event.inputType,
+          selection: readSelection(input),
+        };
+      }
+    };
+    input.addEventListener("beforeinput", beforeInput);
+    return () => input.removeEventListener("beforeinput", beforeInput);
+  }, [inputElement]);
+
+  useEffect(() => {
+    const onSelectionChange = () => {
+      const input = inputRef.current;
+      if (input && document.activeElement === input && !composing.current)
+        queryAction.current();
+    };
+    document.addEventListener("selectionchange", onSelectionChange);
+    return () =>
+      document.removeEventListener("selectionchange", onSelectionChange);
+  }, []);
+
+  // Check each commit, including edits the controlled owner rejects without changing value.
+  useLayoutEffect(() => {
     const input = inputRef.current;
-    if (
-      input &&
-      !composing.current &&
-      JSON.stringify(readValue(input)) !== JSON.stringify(value)
-    ) {
-      writeValue(input, value);
+    if (!input || composing.current) return;
+    const expected: ComposerValue =
+      input instanceof HTMLTextAreaElement
+        ? getComposerText(value)
+          ? [{ type: "text", text: getComposerText(value) }]
+          : []
+        : value;
+    if (!equalValue(history.current.current.value, expected)) {
+      history.current = {
+        current: { value: expected, selection: null },
+        past: [],
+        future: [],
+        inputType: "",
+        timestamp: 0,
+      };
+    }
+    if (!equalValue(readValue(input), expected)) {
+      const selection = readSelection(input);
+      writeValue(input, expected);
+      restoreSelection(input, selection);
       syncTokenHosts(input);
       setQuery(null);
       dismissedQuery.current = null;
     }
-  }, [value, syncTokenHosts]);
+    if (input instanceof HTMLTextAreaElement) {
+      input.disabled = disabled;
+      input.readOnly = readOnly;
+    }
+  });
 
   const updateQuery = (): void => {
-    const next = inputRef.current
-      ? currentQuery(inputRef.current, triggers)
-      : null;
+    const input = inputRef.current;
+    const next =
+      input &&
+      triggers.length > 0 &&
+      !disabled &&
+      !readOnly &&
+      !(input instanceof HTMLTextAreaElement)
+        ? currentQuery(input, triggers)
+        : null;
     if (!next || next.key !== dismissedQuery.current)
       dismissedQuery.current = null;
-    setQuery(next?.key === dismissedQuery.current ? null : next);
+    const active = next?.key === dismissedQuery.current ? null : next;
+    setQuery((previous) =>
+      previous?.key === active?.key && previous?.node === active?.node
+        ? previous
+        : active,
+    );
   };
+
+  queryAction.current = updateQuery;
 
   const dismissSuggestions = (): void => {
     dismissedQuery.current = query?.key ?? null;
     setQuery(null);
   };
 
+  const publish = (reason: ComposerChangeDetails["reason"] = "input"): void => {
+    const input = inputRef.current;
+    if (!input || composing.current || disabled || readOnly) return;
+    const next = readValue(input);
+    if (!(input instanceof HTMLTextAreaElement)) {
+      const previous = history.current;
+      if (!equalValue(previous.current.value, next)) {
+        const before = pendingInput.current;
+        const now = Date.now();
+        const group =
+          reason === "input" &&
+          /^(insertText|deleteContentBackward|deleteContentForward)$/.test(
+            before.type,
+          ) &&
+          previous.inputType === before.type &&
+          now - previous.timestamp < 1000 &&
+          before.selection?.anchor === previous.current.selection?.anchor &&
+          before.selection?.focus === previous.current.selection?.focus;
+        if (!group)
+          previous.past.push({
+            ...previous.current,
+            selection: before.selection,
+          });
+        if (previous.past.length > 100) previous.past.shift();
+        previous.future = [];
+        previous.current = { value: next, selection: readSelection(input) };
+        previous.inputType = before.type;
+        previous.timestamp = now;
+      }
+      pendingInput.current = { type: "", selection: null };
+    }
+    onValueChange(next, { reason });
+    forceReconcile((revision) => revision + 1);
+    syncTokenHosts(input);
+    dismissedQuery.current = null;
+    updateQuery();
+  };
+
   const selectItem = (suggestion: ComposerItemValue): void => {
     const input = inputRef.current;
-    if (disabled || !query || !input?.contains(query.node)) return;
+    if (
+      disabled ||
+      readOnly ||
+      suggestion.disabled ||
+      !query ||
+      !input?.contains(query.node)
+    )
+      return;
+    pendingInput.current = {
+      type: "selection",
+      selection: readSelection(input),
+    };
     insertItem(input, query, suggestion);
-    syncTokenHosts(input);
+    publish("selection");
     setQuery(null);
-    dismissedQuery.current = null;
-    onValueChange(readValue(input));
+  };
+
+  historyAction.current = (direction) => {
+    const input = inputRef.current;
+    if (
+      !input ||
+      input instanceof HTMLTextAreaElement ||
+      disabled ||
+      readOnly ||
+      composing.current
+    )
+      return;
+    const state = history.current;
+    const source = direction === "undo" ? state.past : state.future;
+    const destination = direction === "undo" ? state.future : state.past;
+    const snapshot = source.pop();
+    if (!snapshot) return;
+    destination.push({
+      value: readValue(input),
+      selection: readSelection(input),
+    });
+    state.current = snapshot;
+    state.inputType = "";
+    writeValue(input, snapshot.value);
+    restoreSelection(input, snapshot.selection);
+    onValueChange(snapshot.value, { reason: "history" });
+    forceReconcile((revision) => revision + 1);
+    syncTokenHosts(input);
+    dismissSuggestions();
+  };
+
+  const performSubmit = (): void => {
+    if (!canSubmit || composing.current) return;
+    dismissSuggestions();
+    onSubmit?.(value);
   };
 
   const submit = (): void => {
-    if (canSubmit && !composing.current) {
-      dismissSuggestions();
-      onSubmit?.(value);
-    }
+    if (!canSubmit || composing.current) return;
+    const root = rootRef.current;
+    if (root instanceof HTMLFormElement) root.requestSubmit();
+    else performSubmit();
   };
 
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>): void => {
@@ -414,6 +374,19 @@ export function useComposerEditor({
       event.nativeEvent.keyCode === 229
     )
       return;
+    if (
+      !(event.currentTarget instanceof HTMLTextAreaElement) &&
+      (event.metaKey || event.ctrlKey) &&
+      !event.altKey &&
+      (event.key.toLowerCase() === "z" ||
+        (event.ctrlKey && event.key.toLowerCase() === "y"))
+    ) {
+      event.preventDefault();
+      historyAction.current(
+        event.shiftKey || event.key.toLowerCase() === "y" ? "redo" : "undo",
+      );
+      return;
+    }
     if (
       event.key === "Enter" &&
       !event.shiftKey &&
@@ -427,70 +400,190 @@ export function useComposerEditor({
   };
 
   return {
+    value,
     isEmpty,
+    isComposing,
     canSubmit,
+    disabled,
+    readOnly,
     tokenHosts,
     submit,
+    rootRef,
+    reset: (next = []) => {
+      history.current = {
+        current: { value: next, selection: null },
+        past: [],
+        future: [],
+        inputType: "",
+        timestamp: 0,
+      };
+      dismissSuggestions();
+      onValueChange(next, { reason: "reset" });
+      forceReconcile((revision) => revision + 1);
+    },
     formProps: {
       onSubmit: (event: FormEvent<HTMLFormElement>) => {
-        if (event.defaultPrevented) return;
+        if (event.defaultPrevented || event.target !== event.currentTarget)
+          return;
         event.preventDefault();
-        submit();
+        performSubmit();
       },
     },
     inputProps: {
-      ref: inputRef,
-      contentEditable: !disabled,
+      ref: setInputRef,
+      contentEditable: !disabled && !readOnly,
       role: "textbox",
-      tabIndex: 0,
+      tabIndex: disabled ? -1 : 0,
       suppressContentEditableWarning: true,
       "aria-disabled": disabled || undefined,
+      "aria-readonly": readOnly || undefined,
       "aria-multiline": true,
       onKeyDown,
       onKeyUp: (event) => {
         if (!event.defaultPrevented && !composing.current) updateQuery();
       },
       onClick: updateQuery,
-      onInput: (event) => {
-        if (composing.current) return;
-        onValueChange(readValue(event.currentTarget));
-        syncTokenHosts(event.currentTarget);
-        dismissedQuery.current = null;
-        updateQuery();
+      onBlur: dismissSuggestions,
+      onInput: () => {
+        if (ignoreCompositionInput.current) return;
+        publish();
       },
       onCompositionStart: () => {
+        pendingInput.current = {
+          type: "composition",
+          selection: inputRef.current ? readSelection(inputRef.current) : null,
+        };
         composing.current = true;
+        setIsComposing(true);
+        compositionValue.current = value;
         setQuery(null);
       },
-      onCompositionEnd: (event) => {
+      onCompositionEnd: () => {
         composing.current = false;
-        onValueChange(readValue(event.currentTarget));
-        syncTokenHosts(event.currentTarget);
-        updateQuery();
+        setIsComposing(false);
+        ignoreCompositionInput.current = true;
+        queueMicrotask(() => {
+          ignoreCompositionInput.current = false;
+        });
+        if (equalValue(compositionValue.current, value)) publish();
+        forceReconcile((revision) => revision + 1);
+      },
+      onCopy: (event) => {
+        if (
+          event.defaultPrevented ||
+          event.currentTarget instanceof HTMLTextAreaElement
+        )
+          return;
+        const selection = window.getSelection();
+        if (
+          !selection?.rangeCount ||
+          selection.isCollapsed ||
+          !event.currentTarget.contains(selection.anchorNode) ||
+          !event.currentTarget.contains(selection.focusNode)
+        )
+          return;
+        const fragment = document.createElement("div");
+        fragment.append(selection.getRangeAt(0).cloneContents());
+        event.clipboardData.setData(
+          "text/plain",
+          getComposerText(readValue(fragment, false)),
+        );
+        event.preventDefault();
+      },
+      onCut: (event) => {
+        if (
+          event.defaultPrevented ||
+          event.currentTarget instanceof HTMLTextAreaElement
+        )
+          return;
+        const selection = window.getSelection();
+        if (
+          !selection?.rangeCount ||
+          selection.isCollapsed ||
+          !event.currentTarget.contains(selection.anchorNode) ||
+          !event.currentTarget.contains(selection.focusNode)
+        )
+          return;
+        const fragment = document.createElement("div");
+        fragment.append(selection.getRangeAt(0).cloneContents());
+        event.clipboardData.setData(
+          "text/plain",
+          getComposerText(readValue(fragment, false)),
+        );
+        event.preventDefault();
+        if (disabled || readOnly) return;
+        pendingInput.current = {
+          type: "cut",
+          selection: readSelection(event.currentTarget),
+        };
+        selection.getRangeAt(0).deleteContents();
+        publish();
       },
       onPaste: (event) => {
+        if (
+          event.defaultPrevented ||
+          event.currentTarget instanceof HTMLTextAreaElement
+        )
+          return;
         event.preventDefault();
+        if (disabled || readOnly) return;
+        pendingInput.current = {
+          type: "paste",
+          selection: readSelection(event.currentTarget),
+        };
         insertPlainText(
           event.currentTarget,
           event.clipboardData.getData("text/plain"),
         );
-        onValueChange(readValue(event.currentTarget));
-        syncTokenHosts(event.currentTarget);
-        updateQuery();
+        publish();
       },
       onDrop: (event) => {
+        if (
+          event.defaultPrevented ||
+          event.currentTarget instanceof HTMLTextAreaElement
+        )
+          return;
         event.preventDefault();
+        if (disabled || readOnly) return;
+        const documentWithCaret = document as Document & {
+          caretPositionFromPoint?: (
+            x: number,
+            y: number,
+          ) => { offsetNode: Node; offset: number } | null;
+          caretRangeFromPoint?: (x: number, y: number) => Range | null;
+        };
+        const position = documentWithCaret.caretPositionFromPoint?.(
+          event.clientX,
+          event.clientY,
+        );
+        const range = documentWithCaret.caretRangeFromPoint?.(
+          event.clientX,
+          event.clientY,
+        );
+        const node = position?.offsetNode ?? range?.startContainer;
+        const offset = position?.offset ?? range?.startOffset;
+        if (
+          !node ||
+          offset === undefined ||
+          !event.currentTarget.contains(node)
+        )
+          return;
+        window.getSelection()?.collapse(node, offset);
+        event.currentTarget.focus({ preventScroll: true });
+        pendingInput.current = {
+          type: "drop",
+          selection: readSelection(event.currentTarget),
+        };
         insertPlainText(
           event.currentTarget,
           event.dataTransfer.getData("text/plain"),
         );
-        onValueChange(readValue(event.currentTarget));
-        syncTokenHosts(event.currentTarget);
-        updateQuery();
+        publish();
       },
     },
     status: trigger?.status ?? "ready",
     suggestions: {
+      enabled: triggers.length > 0 && !disabled && !readOnly,
       items: options,
       open,
       onOpenChange: (nextOpen) => {
@@ -503,7 +596,6 @@ export function useComposerEditor({
 
 export const useComposerFilter: typeof AutocompletePrimitive.useFilter =
   AutocompletePrimitive.useFilter;
-
 export {
   type ComposerPart,
   type ComposerTokenPart,
@@ -512,5 +604,6 @@ export {
   type ComposerTrigger,
   type UseComposerEditorOptions,
   type ComposerEditorController,
+  type ComposerChangeDetails,
   getComposerText,
 };

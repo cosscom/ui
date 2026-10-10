@@ -5,6 +5,7 @@ import type {
   ComponentProps,
   Context,
   KeyboardEvent,
+  MouseEvent,
   ReactElement,
   ReactNode,
   RefObject,
@@ -12,8 +13,11 @@ import type {
 import {
   createContext,
   createElement,
+  useCallback,
   useContext,
+  useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -31,116 +35,175 @@ type ComposerEditorOptions = Omit<
 > & {
   value?: ComposerValue;
   defaultValue?: ComposerValue;
-  onValueChange?: (value: ComposerValue) => void;
+  onValueChange?: UseComposerEditorOptions["onValueChange"];
+  name?: string;
+  getSuggestionsAnnouncement?: (count: number) => string;
 };
 
-const ComposerEditorContext: Context<ComposerEditorController | null> =
-  createContext<ComposerEditorController | null>(null);
-const ComposerAnchorContext: Context<RefObject<HTMLFormElement | null> | null> =
-  createContext<RefObject<HTMLFormElement | null> | null>(null);
+type ComposerContextValue = ComposerEditorController & { reset: () => void };
+const ComposerEditorContext: Context<ComposerContextValue | null> =
+  createContext<ComposerContextValue | null>(null);
 
-export function useComposerEditorContext(): ComposerEditorController | null {
+function useComposerEditorContext(): ComposerContextValue | null {
   return useContext(ComposerEditorContext);
 }
 
-export function useComposerAnchorContext(): RefObject<HTMLFormElement | null> | null {
-  return useContext(ComposerAnchorContext);
+function useComposerContext(): Pick<
+  ComposerContextValue,
+  | "value"
+  | "isEmpty"
+  | "canSubmit"
+  | "disabled"
+  | "readOnly"
+  | "status"
+  | "submit"
+  | "reset"
+> {
+  const context = useComposerEditorContext();
+  if (!context)
+    throw new Error("useComposerContext must be used within Composer.");
+  const {
+    value,
+    isEmpty,
+    canSubmit,
+    disabled,
+    readOnly,
+    status,
+    submit,
+    reset,
+  } = context;
+  return {
+    value,
+    isEmpty,
+    canSubmit,
+    disabled,
+    readOnly,
+    status,
+    submit,
+    reset,
+  };
 }
 
-export function ComposerEditorProvider({
+function useComposerAnchorContext():
+  | RefObject<HTMLFormElement | null>
+  | undefined {
+  return useComposerEditorContext()?.rootRef;
+}
+
+const emptyValue: ComposerValue = [];
+
+function ComposerEditorProvider({
   value: controlledValue,
-  defaultValue = [],
+  defaultValue = emptyValue,
   onValueChange,
-  onSubmit,
-  onQueryChange,
-  triggers,
-  disabled,
-  submitOnEnter,
+  getSuggestionsAnnouncement,
   children,
-}: ComposerEditorOptions & {
-  children: ReactNode;
-}): ReactElement {
+  ...options
+}: ComposerEditorOptions & { children: ReactNode }): ReactElement {
   const [uncontrolledValue, setUncontrolledValue] = useState(defaultValue);
-  const anchorRef = useRef<HTMLFormElement>(null);
   const editor = useComposerEditor({
+    ...options,
     value: controlledValue ?? uncontrolledValue,
-    onValueChange: (nextValue) => {
+    onValueChange: (nextValue, details) => {
       if (controlledValue === undefined) setUncontrolledValue(nextValue);
-      onValueChange?.(nextValue);
+      onValueChange?.(nextValue, details);
     },
-    onSubmit,
-    onQueryChange,
-    triggers,
-    disabled,
-    submitOnEnter,
+  });
+  const reset = () => editor.reset(defaultValue);
+  const resetRef = useRef(reset);
+  resetRef.current = reset;
+  useEffect(() => {
+    const form = editor.rootRef.current?.closest("form");
+    if (!form) return;
+    const onReset = (event: Event) => {
+      queueMicrotask(() => {
+        if (!event.defaultPrevented) resetRef.current();
+      });
+    };
+    form.addEventListener("reset", onReset);
+    return () => form.removeEventListener("reset", onReset);
   });
 
   return createElement(
     ComposerEditorContext.Provider,
-    { value: editor },
+    { value: { ...editor, reset } },
     createElement(
-      ComposerAnchorContext.Provider,
-      { value: anchorRef },
-      createElement(
-        ComposerSuggestions<ComposerItemValue>,
-        { ...editor.suggestions },
-        children,
-      ),
+      ComposerSuggestions,
+      { ...editor.suggestions, getSuggestionsAnnouncement },
+      children,
     ),
   );
 }
 
+type RegisteredItem = { element: HTMLElement; disabled: boolean };
 type SuggestionsContextValue = {
-  items: readonly unknown[];
+  items: readonly ComposerItemValue[];
   listId: string;
-  highlightedIndex: number;
+  highlightedId: string | undefined;
   inputProps: ComponentProps<"div">;
-  highlightItem: (value: unknown) => void;
-  selectItem: (value: unknown) => void;
+  registerItem: (id: string, item: RegisteredItem | null) => void;
+  registerList: (element: HTMLElement | null) => void;
+  highlightItem: (value: ComposerItemValue) => void;
+  selectItem: (value: ComposerItemValue) => void;
 };
-
 const ComposerSuggestionsContext: Context<SuggestionsContextValue | null> =
   createContext<SuggestionsContextValue | null>(null);
-
-export function useComposerSuggestionsContext(): SuggestionsContextValue | null {
+function useComposerSuggestionsContext(): SuggestionsContextValue | null {
   return useContext(ComposerSuggestionsContext);
 }
 
-export function ComposerSuggestions<ItemValue>({
+function defaultAnnouncement(count: number): string {
+  return `${count} suggestion${count === 1 ? "" : "s"} available. Use the up and down arrow keys to navigate.`;
+}
+
+function ComposerSuggestions({
+  enabled,
   items,
   open,
   onOpenChange,
   onItemSelect,
+  getSuggestionsAnnouncement = defaultAnnouncement,
   children,
 }: {
-  items: readonly ItemValue[];
+  enabled: boolean;
+  items: readonly ComposerItemValue[];
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onItemSelect: (item: ItemValue) => void;
+  onItemSelect: (item: ComposerItemValue) => void;
+  getSuggestionsAnnouncement?: (count: number) => string;
   children?: ReactNode;
 }): ReactElement {
   const listId = useId();
-  const [highlightedValue, setHighlightedValue] = useState<unknown>();
-  const highlightedIndex = items.length
-    ? Math.max(
-        0,
-        items.findIndex((item) => Object.is(item, highlightedValue)),
-      )
-    : -1;
+  const [highlightedValue, setHighlightedValue] = useState<string>();
+  const [registered, setRegistered] = useState<
+    ReadonlyMap<string, RegisteredItem>
+  >(() => new Map());
+  const [listElement, registerList] = useState<HTMLElement | null>(null);
+  const registerItem = useCallback(
+    (id: string, item: RegisteredItem | null) => {
+      setRegistered((previous) => {
+        const next = new Map(previous);
+        if (item) next.set(id, item);
+        else next.delete(id);
+        return next;
+      });
+    },
+    [],
+  );
+  const enabledItems = items.filter(
+    (item) =>
+      !item.disabled &&
+      registered.has(item.id) &&
+      !registered.get(item.id)?.disabled,
+  );
+  const highlightedId =
+    enabledItems.find((item) => item.id === highlightedValue)?.id ??
+    enabledItems[0]?.id;
+  const itemId = (id: string) => `${listId}-${encodeURIComponent(id)}`;
 
-  function isDisabled(index: number): boolean {
-    return (
-      document
-        .getElementById(`${listId}-${index}`)
-        ?.hasAttribute("data-disabled") ?? false
-    );
-  }
-
-  function selectItem(value: unknown): void {
-    const index = items.findIndex((item) => Object.is(item, value));
-    if (!open || index < 0 || isDisabled(index)) return;
-    const item = items[index];
-    if (item === undefined) return;
+  function selectItem(value: ComposerItemValue): void {
+    const item = enabledItems.find((item) => item.id === value.id);
+    if (!open || !item) return;
     onItemSelect(item);
     onOpenChange(false);
     setHighlightedValue(undefined);
@@ -159,31 +222,24 @@ export function ComposerSuggestions<ItemValue>({
       event.stopPropagation();
       onOpenChange(false);
       setHighlightedValue(undefined);
-      return;
-    }
-    if (event.key === "Tab") {
+    } else if (event.key === "Tab") {
       onOpenChange(false);
-      return;
-    }
-    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-      if (!items.length) return;
+    } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
       event.preventDefault();
+      if (!enabledItems.length) return;
       const direction = event.key === "ArrowDown" ? 1 : -1;
-      let index = highlightedIndex;
-      for (let count = 0; count < items.length; count++) {
-        index = (index + direction + items.length) % items.length;
-        if (!isDisabled(index)) break;
-      }
-      if (isDisabled(index)) return;
-      setHighlightedValue(() => items[index]);
-      document
-        .getElementById(`${listId}-${index}`)
-        ?.scrollIntoView({ block: "nearest" });
-      return;
-    }
-    if (event.key === "Enter" && !event.shiftKey) {
+      const index = enabledItems.findIndex((item) => item.id === highlightedId);
+      const item =
+        enabledItems[
+          (index + direction + enabledItems.length) % enabledItems.length
+        ];
+      if (!item) return;
+      setHighlightedValue(item.id);
+      registered.get(item.id)?.element.scrollIntoView({ block: "nearest" });
+    } else if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
-      if (highlightedIndex >= 0) selectItem(items[highlightedIndex]);
+      const item = enabledItems.find((item) => item.id === highlightedId);
+      if (item) selectItem(item);
     }
   }
 
@@ -193,18 +249,20 @@ export function ComposerSuggestions<ItemValue>({
       value: {
         items,
         listId,
-        highlightedIndex,
+        highlightedId,
+        registerItem,
+        registerList,
         inputProps: {
-          "aria-autocomplete": "list",
-          "aria-expanded": open,
-          "aria-controls": open ? listId : undefined,
+          "aria-autocomplete": enabled ? "list" : undefined,
+          "aria-haspopup": enabled ? "listbox" : undefined,
+          "aria-controls": open && listElement ? listId : undefined,
           "aria-activedescendant":
-            open && highlightedIndex >= 0
-              ? `${listId}-${highlightedIndex}`
+            open && listElement && highlightedId
+              ? itemId(highlightedId)
               : undefined,
-          onKeyDownCapture: onKeyDown,
+          onKeyDown,
         },
-        highlightItem: (value) => setHighlightedValue(() => value),
+        highlightItem: (value) => setHighlightedValue(value.id),
         selectItem,
       },
     },
@@ -218,11 +276,132 @@ export function ComposerSuggestions<ItemValue>({
         },
       },
       children,
+      createElement(
+        "span",
+        {
+          role: "status",
+          "aria-atomic": true,
+          style: {
+            position: "absolute",
+            width: 1,
+            height: 1,
+            padding: 0,
+            margin: -1,
+            overflow: "hidden",
+            clipPath: "inset(50%)",
+            whiteSpace: "nowrap",
+          },
+        },
+        open && listElement && enabledItems.length
+          ? getSuggestionsAnnouncement(enabledItems.length)
+          : "",
+      ),
     ),
   );
 }
 
+function useComposerItem(
+  value: ComposerItemValue | undefined,
+  disabled: boolean,
+) {
+  const suggestions = useComposerSuggestionsContext();
+  const registerItem = suggestions?.registerItem;
+  const id = value?.id;
+  const ref = useCallback(
+    (element: HTMLElement | null) => {
+      if (id !== undefined)
+        registerItem?.(id, element ? { element, disabled } : null);
+    },
+    [id, disabled, registerItem],
+  );
+  const highlighted = id !== undefined && id === suggestions?.highlightedId;
+  return {
+    ref,
+    highlighted,
+    props: {
+      id:
+        id !== undefined && suggestions
+          ? `${suggestions.listId}-${encodeURIComponent(id)}`
+          : undefined,
+      role: suggestions ? "option" : undefined,
+      tabIndex: suggestions ? -1 : undefined,
+      "aria-selected": suggestions ? highlighted : undefined,
+      "aria-disabled": disabled || undefined,
+      "data-highlighted": highlighted ? "" : undefined,
+      "data-disabled": disabled ? "" : undefined,
+      onPointerMove: () => {
+        if (!disabled && value) suggestions?.highlightItem(value);
+      },
+      onClick: () => {
+        if (!disabled && value) suggestions?.selectItem(value);
+      },
+      onMouseDown: (event: MouseEvent<HTMLButtonElement>) => {
+        if (suggestions) event.preventDefault();
+      },
+    },
+  };
+}
+
+function focusComposerInput(
+  event: MouseEvent<HTMLFormElement>,
+  preventDefault: boolean,
+): void {
+  if (event.defaultPrevented || !(event.target instanceof Element)) return;
+  const interactive = event.target.closest(
+    "button, a, input, select, textarea, label, summary, [data-slot='composer-input'], [contenteditable], [role='button'], [role='combobox'], [role='menuitem'], [tabindex]:not([tabindex='-1'])",
+  );
+  if (
+    interactive &&
+    interactive !== event.currentTarget &&
+    event.currentTarget.contains(interactive)
+  )
+    return;
+  const input = event.currentTarget.querySelector<HTMLElement>(
+    '[data-slot="composer-input"]',
+  );
+  if (!input || input.matches(":disabled, [aria-disabled='true']")) return;
+  if (preventDefault) event.preventDefault();
+  input.focus();
+}
+
+function useComposerInputLayout() {
+  const editor = useComposerEditorContext();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    for (const host of editor?.tokenHosts ?? []) {
+      const fallback = host.previousElementSibling;
+      if (fallback instanceof HTMLElement) fallback.hidden = true;
+    }
+  }, [editor?.tokenHosts]);
+  useLayoutEffect(() => {
+    const scroll = scrollRef.current;
+    const input = scroll?.querySelector<HTMLElement>(
+      '[data-slot="composer-input"]',
+    );
+    if (!scroll || !input) return;
+    function measure() {
+      if (!scroll || !input) return;
+      const style = getComputedStyle(input);
+      scroll.style.setProperty("--composer-line-height", style.lineHeight);
+      scroll.style.setProperty(
+        "--composer-input-padding",
+        `${Number.parseFloat(style.paddingTop) + Number.parseFloat(style.paddingBottom)}px`,
+      );
+    }
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(input);
+    window.addEventListener("resize", measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+    };
+  });
+  return scrollRef;
+}
+
 export {
+  type ComposerChangeDetails,
   type ComposerItemValue,
   type ComposerPart,
   type ComposerTokenPart,
@@ -232,3 +411,14 @@ export {
   useComposerFilter,
 } from "@coss/ui/hooks/use-composer-editor";
 export type { ComposerEditorOptions };
+
+export {
+  useComposerEditorContext,
+  useComposerContext,
+  useComposerAnchorContext,
+  ComposerEditorProvider,
+  useComposerSuggestionsContext,
+  useComposerItem,
+  focusComposerInput,
+  useComposerInputLayout,
+};

@@ -2,10 +2,10 @@ import type { Registry } from "shadcn/schema";
 
 export const hooks: Registry["items"] = [
   {
-    dependencies: ["@base-ui/react", "react-dom"],
+    dependencies: ["@base-ui/react"],
     files: [{ path: "hooks/use-composer-editor.ts", type: "registry:hook" }],
     name: "use-composer-editor",
-    registryDependencies: ["@coss/composer-query"],
+    registryDependencies: ["@coss/composer-document"],
     type: "registry:hook",
   },
   {

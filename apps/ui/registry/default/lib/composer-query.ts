@@ -17,6 +17,7 @@ export function getComposerQuery(
     return null;
 
   const beforeCaret = text.slice(start + character.length, caret);
+  if (/^\s/u.test(beforeCaret)) return null;
   if (!/^[\p{L}\p{M}\p{N}\p{Zs}_.’'-]*$/u.test(beforeCaret)) return null;
 
   // Complete the word at the caret without consuming subsequent prose.

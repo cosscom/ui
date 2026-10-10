@@ -1,26 +1,29 @@
 "use client";
 
+import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import { mergeProps } from "@base-ui/react/merge-props";
 import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
 import { useRender } from "@base-ui/react/use-render";
 import type {
   ComponentProps,
   CSSProperties,
-  FormEvent,
-  KeyboardEvent,
   MouseEvent,
   ReactElement,
   ReactNode,
 } from "react";
-import { useLayoutEffect } from "react";
+import { isValidElement } from "react";
 import { createPortal } from "react-dom";
 import {
   type ComposerEditorOptions,
   ComposerEditorProvider,
   type ComposerItemValue,
   type ComposerTokenPart,
+  focusComposerInput,
+  getComposerText,
   useComposerAnchorContext,
   useComposerEditorContext,
+  useComposerInputLayout,
+  useComposerItem,
   useComposerSuggestionsContext,
 } from "@/registry/default/lib/composer-editor";
 import { cn } from "@/registry/default/lib/utils";
@@ -39,160 +42,97 @@ type ComposerPopupProps = ComponentProps<typeof PopoverPrimitive.Popup> & {
 };
 
 type ComposerFormProps = useRender.ComponentProps<"form">;
-export type ComposerTokenVariant = "default" | "chip";
+type ComposerTokenVariant = "default" | "chip";
 const composerTokenClassName =
-  "inline align-baseline font-normal text-primary data-[variant=default]:font-medium data-[variant=chip]:box-decoration-clone data-[variant=chip]:rounded-md data-[variant=chip]:bg-accent data-[variant=chip]:px-1.5 data-[variant=chip]:py-px data-[variant=chip]:text-accent-foreground [&_[data-slot=composer-token-icon]:empty]:hidden [&_[data-slot=composer-token-icon]>svg]:size-3.5";
-
-type ComposerManagedProps = Omit<
-  ComposerFormProps,
-  "defaultValue" | "onSubmit"
-> &
-  ComposerEditorOptions &
-  (
-    | { value: NonNullable<ComposerEditorOptions["value"]> }
-    | { defaultValue: NonNullable<ComposerEditorOptions["defaultValue"]> }
-    | { triggers: NonNullable<ComposerEditorOptions["triggers"]> }
-    | { onValueChange: NonNullable<ComposerEditorOptions["onValueChange"]> }
-  );
-type ComposerPlainProps = Omit<ComposerFormProps, "defaultValue"> & {
-  defaultValue?: never;
-  value?: never;
-  onValueChange?: never;
-  triggers?: never;
-  submitOnEnter?: ComposerEditorOptions["submitOnEnter"];
-};
-
-export function Composer(props: ComposerPlainProps): ReactElement;
-export function Composer(props: ComposerManagedProps): ReactElement;
-export function Composer(
-  props: ComposerManagedProps | ComposerPlainProps,
-): ReactElement {
-  const {
-    value,
-    defaultValue,
-    onValueChange,
-    onSubmit,
-    onQueryChange,
-    triggers,
-    disabled,
-    submitOnEnter,
-    ...frameProps
-  } = props as ComposerManagedProps;
-  const managed =
-    value !== undefined ||
-    Array.isArray(defaultValue) ||
-    onValueChange !== undefined ||
-    triggers !== undefined;
-  if (managed) {
-    return (
-      <ComposerEditorProvider
-        value={value}
-        defaultValue={defaultValue}
-        onValueChange={onValueChange}
-        onSubmit={onSubmit}
-        onQueryChange={onQueryChange}
-        triggers={triggers}
-        disabled={disabled}
-        submitOnEnter={submitOnEnter}
-      >
-        <ComposerFrame {...frameProps} />
-      </ComposerEditorProvider>
-    );
-  }
-  const plainOnSubmit = (props as ComposerPlainProps).onSubmit;
-  return (
-    <ComposerFrame
-      {...frameProps}
-      submitOnEnter={submitOnEnter}
-      onSubmit={(event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        plainOnSubmit?.(event);
-      }}
-    />
-  );
-}
-
-function focusComposerInput(
-  event: MouseEvent<HTMLFormElement>,
-  preventDefault: boolean,
-): void {
-  if (event.defaultPrevented || !(event.target instanceof Element)) return;
-  const interactive = event.target.closest(
-    "button, a, input, select, textarea, label, summary, [data-slot='composer-input'], [contenteditable], [role='button'], [role='combobox'], [role='menuitem'], [tabindex]:not([tabindex='-1'])",
-  );
-  if (
-    interactive &&
-    interactive !== event.currentTarget &&
-    event.currentTarget.contains(interactive)
-  )
-    return;
-
-  const input = event.currentTarget.querySelector<HTMLElement>(
-    '[data-slot="composer-input"]',
-  );
-  if (!input || input.matches(":disabled, [aria-disabled='true']")) return;
-  if (preventDefault) event.preventDefault();
-  input.focus();
-}
+  "wrap-break-word inline cursor-text align-baseline font-normal text-primary data-[variant=default]:font-medium data-[variant=chip]:box-decoration-clone data-[variant=chip]:rounded-md data-[variant=chip]:bg-accent data-[variant=chip]:px-1.5 data-[variant=chip]:py-px data-[variant=chip]:text-accent-foreground [&_[data-slot=composer-token-icon]:empty]:hidden [&_[data-slot=composer-token-icon]>svg]:size-3.5";
 
 function ComposerFrame({
   className,
-  onClick,
-  onMouseDown,
   render,
   ref,
-  submitOnEnter = "always",
+  name,
+  children,
   ...props
-}: ComposerFormProps & {
-  submitOnEnter?: ComposerEditorOptions["submitOnEnter"];
-}): ReactElement {
+}: ComposerFormProps): ReactElement {
   const editor = useComposerEditorContext();
   const anchorRef = useComposerAnchorContext();
   const defaultProps = {
     "data-slot": "composer",
     "data-base-ui-swipe-ignore": "",
     onMouseDown: (event: MouseEvent<HTMLFormElement>): void => {
-      onMouseDown?.(event);
       focusComposerInput(event, true);
     },
     onClick: (event: MouseEvent<HTMLFormElement>): void => {
-      onClick?.(event);
       focusComposerInput(event, false);
     },
-    onKeyDown: editor
-      ? undefined
-      : (event: KeyboardEvent<HTMLFormElement>): void => {
-          const target = event.target;
-          if (
-            event.defaultPrevented ||
-            !(target instanceof HTMLTextAreaElement) ||
-            target.dataset.slot !== "composer-input" ||
-            event.nativeEvent.isComposing ||
-            event.nativeEvent.keyCode === 229
-          )
-            return;
-          if (
-            event.key === "Enter" &&
-            !event.shiftKey &&
-            (submitOnEnter === "always" ||
-              (submitOnEnter === "desktop" &&
-                window.matchMedia("(pointer: fine)").matches))
-          ) {
-            event.preventDefault();
-            event.currentTarget.requestSubmit();
-          }
-        },
+    "data-disabled": editor?.disabled ? "" : undefined,
+    "data-readonly": editor?.readOnly ? "" : undefined,
+    children: (
+      <>
+        {children}
+        {name && (
+          <input
+            type="hidden"
+            name={name}
+            value={getComposerText(editor?.value ?? [])}
+            disabled={editor?.disabled}
+          />
+        )}
+      </>
+    ),
     className: cn(
-      "relative flex min-w-0 cursor-text flex-col rounded-xl border border-input bg-background p-2 text-foreground shadow-xs/5 transition-shadow has-[[data-slot=composer-input]:focus-visible]:border-ring has-[[data-slot=composer-input]:focus-visible]:ring-[3px] has-[[data-slot=composer-input]:focus-visible]:ring-ring/24",
+      "relative flex min-h-0 min-w-0 cursor-text flex-col rounded-xl border border-input bg-background p-2 text-foreground shadow-xs/5 transition-shadow has-[[data-slot=composer-input]:focus-visible]:border-ring has-[[data-slot=composer-input]:focus-visible]:ring-[3px] has-[[data-slot=composer-input]:focus-visible]:ring-ring/24",
       className,
     ),
   };
   return useRender({
     defaultTagName: "form",
     render,
-    ref: [anchorRef, ref ?? null],
+    ref: [anchorRef ?? null, ref ?? null],
     props: mergeProps<"form">(defaultProps, editor?.formProps ?? {}, props),
   });
+}
+
+export type ComposerProps = Omit<
+  ComposerFormProps,
+  "defaultValue" | "onSubmit" | "name"
+> &
+  ComposerEditorOptions;
+
+export function Composer({
+  value,
+  defaultValue,
+  onValueChange,
+  onSubmit,
+  onQueryChange,
+  triggers,
+  disabled,
+  readOnly,
+  submitDisabled,
+  allowEmpty,
+  submitOnEnter,
+  name,
+  getSuggestionsAnnouncement,
+  ...frameProps
+}: ComposerProps): ReactElement {
+  return (
+    <ComposerEditorProvider
+      value={value}
+      defaultValue={defaultValue}
+      onValueChange={onValueChange}
+      onSubmit={onSubmit}
+      onQueryChange={onQueryChange}
+      triggers={triggers}
+      disabled={disabled}
+      readOnly={readOnly}
+      submitDisabled={submitDisabled}
+      allowEmpty={allowEmpty}
+      submitOnEnter={submitOnEnter}
+      getSuggestionsAnnouncement={getSuggestionsAnnouncement}
+    >
+      <ComposerFrame {...frameProps} name={name} />
+    </ComposerEditorProvider>
+  );
 }
 
 export function ComposerInput({
@@ -213,12 +153,8 @@ export function ComposerInput({
   const editor = useComposerEditorContext();
   const suggestions = useComposerSuggestionsContext();
   const tokenHosts = editor?.tokenHosts;
-  useLayoutEffect(() => {
-    for (const host of tokenHosts ?? []) {
-      const fallback = host.previousElementSibling;
-      if (fallback instanceof HTMLElement) fallback.hidden = true;
-    }
-  }, [tokenHosts]);
+  const scrollRef = useComposerInputLayout();
+  const textarea = isValidElement(render) && render.type === "textarea";
   const { ref: editorRef, ...editorProps } = editor?.inputProps ?? {};
   const defaultProps = {
     "data-slot": "composer-input",
@@ -230,7 +166,9 @@ export function ComposerInput({
           suppressContentEditableWarning: true,
         }
       : {}),
-    "data-empty": editor?.isEmpty ? "" : undefined,
+    "data-empty":
+      !textarea && editor?.isEmpty && !editor.isComposing ? "" : undefined,
+    ...(textarea ? { placeholder } : {}),
     "data-placeholder": placeholder,
     "aria-placeholder": editor ? placeholder : undefined,
     style:
@@ -242,6 +180,13 @@ export function ComposerInput({
       className,
     ),
   };
+  const inputBehaviorProps = textarea
+    ? {
+        contentEditable: undefined,
+        disabled: editor?.disabled,
+        readOnly: editor?.readOnly,
+      }
+    : (suggestions?.inputProps ?? {});
   const input = useRender({
     defaultTagName: "div",
     render,
@@ -249,14 +194,15 @@ export function ComposerInput({
     props: mergeProps<"div">(
       defaultProps,
       editorProps,
+      inputBehaviorProps,
       props,
-      suggestions?.inputProps ?? {},
     ),
   });
   return (
     <>
       <ScrollArea
-        className="h-auto! min-w-0 text-base **:data-[slot=scroll-area-viewport]:h-auto! **:data-[slot=scroll-area-viewport]:max-h-[min(var(--composer-max-height,calc(var(--composer-max-rows,8)*1lh+--spacing(2))),50dvh)] md:text-sm"
+        ref={scrollRef}
+        className="flex h-auto! min-w-0 flex-col text-base **:data-[slot=scroll-area-viewport]:h-auto! **:data-[slot=scroll-area-viewport]:max-h-[min(var(--composer-max-height,calc(var(--composer-max-rows,8)*var(--composer-line-height,1lh)+var(--composer-input-padding,--spacing(2)))),50dvh)] **:data-[slot=scroll-area-viewport]:min-h-0 md:text-sm"
         data-slot="composer-scroll-area"
         overscrollContain
         style={
@@ -312,7 +258,7 @@ export function ComposerToken({
       {variant === "chip" && icon && (
         <span
           aria-hidden="true"
-          className="me-1 inline-block align-[-0.125em] leading-none opacity-80"
+          className="inline whitespace-nowrap opacity-80 after:content-['\2060\00a0'] [&>svg]:inline-block [&>svg]:align-[-0.125em]"
           data-slot="composer-token-icon"
         >
           {icon}
@@ -397,7 +343,7 @@ export function ComposerList({
   const list = useRender({
     defaultTagName: "div",
     render,
-    ref,
+    ref: [suggestions?.registerList ?? null, ref ?? null],
     props: mergeProps<"div">(defaultProps, props),
   });
   return (
@@ -415,7 +361,7 @@ export function ComposerList({
 export function ComposerItem({
   className,
   value,
-  disabled = false,
+  disabled: disabledProp,
   render,
   ref,
   ...props
@@ -428,31 +374,14 @@ export function ComposerItem({
 > & {
   value?: ComposerItemValue;
 }): ReactElement {
-  const suggestions = useComposerSuggestionsContext();
-  const index =
-    suggestions && value !== undefined
-      ? suggestions.items.findIndex((item) => Object.is(item, value))
-      : -1;
-  const highlighted = index >= 0 && index === suggestions?.highlightedIndex;
+  const disabled = Boolean(disabledProp || value?.disabled);
+  const item = useComposerItem(value, disabled);
+  const { highlighted } = item;
   const defaultProps = {
+    ...item.props,
     type: "button" as const,
     "data-slot": "composer-item",
-    id: index >= 0 ? `${suggestions?.listId}-${index}` : undefined,
-    role: suggestions ? "option" : undefined,
-    tabIndex: suggestions ? -1 : undefined,
     disabled,
-    "aria-selected": suggestions ? highlighted : undefined,
-    "data-highlighted": highlighted ? "" : undefined,
-    "data-disabled": disabled ? "" : undefined,
-    onPointerMove: () => {
-      if (!disabled && value !== undefined) suggestions?.highlightItem(value);
-    },
-    onClick: () => {
-      if (!disabled && value !== undefined) suggestions?.selectItem(value);
-    },
-    onMouseDown: (event: MouseEvent<HTMLButtonElement>) => {
-      if (suggestions) event.preventDefault();
-    },
     className: cn(
       "flex min-h-8 w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1 text-start text-base outline-none data-disabled:pointer-events-none data-highlighted:bg-accent data-highlighted:text-accent-foreground data-disabled:opacity-64 sm:min-h-7 sm:text-sm",
       className,
@@ -461,7 +390,7 @@ export function ComposerItem({
   return useRender({
     defaultTagName: "button",
     render,
-    ref,
+    ref: [item.ref, ref ?? null],
     state: { highlighted, disabled },
     props: mergeProps<"button">(defaultProps, props),
   });
@@ -495,7 +424,10 @@ export function ComposerActions({
 }: ComponentProps<"div">): ReactElement {
   return (
     <div
-      className={cn("flex items-center justify-between gap-2", className)}
+      className={cn(
+        "flex shrink-0 items-center justify-between gap-2",
+        className,
+      )}
       data-slot="composer-actions"
       {...props}
     />
@@ -522,32 +454,44 @@ export function ComposerActionGroup({
 
 export function ComposerSubmit({
   disabled,
+  className,
+  style,
   render,
   ref,
   ...props
-}: Omit<useRender.ComponentProps<"button">, "type">): ReactElement {
+}: Omit<ComponentProps<typeof ButtonPrimitive>, "type">): ReactElement {
   const editor = useComposerEditorContext();
   const defaultProps = {
     "data-slot": "composer-submit",
-    type: "submit" as const,
-    disabled: disabled ?? (editor ? !editor.canSubmit : undefined),
+    type: "button" as const,
+    disabled: disabled ?? !editor?.canSubmit,
+    onClick: (event: MouseEvent<HTMLButtonElement>): void => {
+      if (event.defaultPrevented || disabled) return;
+      event.preventDefault();
+      editor?.submit();
+    },
   };
-  return useRender({
-    defaultTagName: "button",
-    render,
-    ref,
-    props: mergeProps<"button">(defaultProps, props),
-  });
+  return (
+    <ButtonPrimitive
+      {...mergeProps<"button">(defaultProps, props)}
+      className={className}
+      style={style}
+      render={render}
+      ref={ref}
+    />
+  );
 }
 
-export type { ComposerPopupProps };
-export type { ComposerManagedProps, ComposerPlainProps };
+export type { ComposerPopupProps, ComposerTokenVariant };
+
 export {
+  type ComposerChangeDetails,
   type ComposerItemValue,
   type ComposerPart,
   type ComposerTokenPart,
   type ComposerTrigger,
   type ComposerValue,
   getComposerText,
+  useComposerContext,
   useComposerFilter,
 } from "@/registry/default/lib/composer-editor";

@@ -40,7 +40,11 @@ export default function Particle() {
       <DrawerTrigger render={<Button variant="outline" />}>
         Open chat drawer
       </DrawerTrigger>
-      <DrawerPopup keyboardAware showBar>
+      <DrawerPopup
+        className="[--drawer-height:calc(100dvh-3rem)]"
+        keyboardAware
+        showBar
+      >
         <DrawerHeader className="flex items-center justify-between gap-3">
           <DrawerTitle>Chat</DrawerTitle>
           <DrawerClose render={<Button size="sm" variant="ghost" />}>
@@ -62,7 +66,7 @@ export default function Particle() {
           </DrawerPanel>
         </div>
         <Composer
-          className="mx-3 mb-3 shrink-0"
+          className="mx-3 mb-3"
           value={value}
           onValueChange={setValue}
           onSubmit={(message) => {

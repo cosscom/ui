@@ -9,28 +9,29 @@ import {
   ComposerActions,
   ComposerInput,
   ComposerSubmit,
+  type ComposerValue,
+  getComposerText,
 } from "@/registry/default/ui/composer";
 
 export default function Particle() {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState<ComposerValue>([]);
   const [notice, setNotice] = useState("");
 
   return (
     <div className="flex w-full max-w-xl flex-col gap-3">
       <Composer
-        onSubmit={() => {
-          if (!value.trim()) return;
-          setNotice(`Sent: ${value}`);
-          setValue("");
+        value={value}
+        onValueChange={setValue}
+        onSubmit={(draft) => {
+          setNotice(`Sent: ${getComposerText(draft)}`);
+          setValue([]);
         }}
       >
         <ComposerInput
           render={
             <textarea
               aria-label="Plain message"
-              onChange={(event) => setValue(event.target.value)}
               placeholder="Write a message…"
-              value={value}
             />
           }
         />
@@ -48,7 +49,6 @@ export default function Particle() {
           </ComposerActionGroup>
           <ComposerActionGroup align="end">
             <ComposerSubmit
-              disabled={!value.trim()}
               render={
                 <Button aria-label="Send message" size="icon">
                   <ArrowUpIcon aria-hidden="true" />
