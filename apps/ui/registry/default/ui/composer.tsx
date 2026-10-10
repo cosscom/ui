@@ -11,7 +11,6 @@ import type {
   ReactElement,
   ReactNode,
 } from "react";
-import { isValidElement } from "react";
 import { createPortal } from "react-dom";
 import {
   type ComposerEditorOptions,
@@ -154,7 +153,7 @@ export function ComposerInput({
   const suggestions = useComposerSuggestionsContext();
   const tokenHosts = editor?.tokenHosts;
   const scrollRef = useComposerInputLayout();
-  const textarea = isValidElement(render) && render.type === "textarea";
+  const textarea = editor?.isTextarea ?? false;
   const { ref: editorRef, ...editorProps } = editor?.inputProps ?? {};
   const defaultProps = {
     "data-slot": "composer-input",

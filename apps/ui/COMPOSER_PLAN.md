@@ -21,7 +21,7 @@ Registry files are authoritative. Package copies and registry JSON must match th
 ## Public contract
 
 - One API for both inputs. `Composer` manages an empty draft without activation props. `value`/`onValueChange` controls it; `defaultValue` initializes it. `onSubmit` always receives `ComposerValue`.
-- `ComposerInput` defaults to contenteditable; `render={<textarea />}` chooses native plain text. A textarea uses text parts and has no token suggestions. Keep state on the Composer, not on the rendered textarea.
+- `ComposerInput` defaults to contenteditable; `render={<textarea />}` chooses native plain text. Detection uses the mounted element, including render callbacks and custom components that forward props and ref. A textarea uses text parts and has no token suggestions. Keep state on the Composer, not on the rendered textarea.
 - Configure zero or more triggers. `@`, `/`, another character, both, or none are application choices. Multiword matching remains supported. Async results identify their query through `itemsFor`.
 - Suggestion identity is the item's stable `id`, unique within a trigger. Registered items provide disabled state and DOM refs. Navigation skips disabled items and preserves input focus. Empty ready results hide the popup; loading feedback is composed with `ComposerStatus`.
 - Use `ComposerInput.renderToken` to customize each token, including icons or styles by `kind`. `ComposerToken` supplies plain and chip variants. Chips wrap as inline text, with normal weight and decorative icons at opacity 80.
@@ -49,8 +49,18 @@ The popup anchors to the frame, uses its width, and defaults to a 4px offset. Ac
 
 ## Verification status
 
-Checkpoint before this revision: `10d52f65` (`Add composable chat composer and keyboard-aware drawer`).
+Checkpoint before this stabilization pass: `fb145489` (`Use default arrow cursor for composer tokens`).
 
-Per the user's instruction, this pass adds and runs no tests and performs no browser/device testing. Type checking, focused lint/format checks, registry dependency validation, registry generation, and package synchronization are the permitted verification steps. Earlier browser checks belong to the checkpoint and do not validate the revised implementation.
+Per the user's instruction, this pass adds and runs no tests. Type checking, focused lint/format checks, registry dependency validation, registry generation, and package synchronization provide static verification. Targeted Chrome checks previously verified token wrapping; they do not validate the revised editing behavior or other browsers.
 
 Real iOS Safari and Android Chrome keyboard behavior, IME, screen readers, nested drawers, and the revised editing/history interactions still need runtime validation before release or Cal migration. External editor adapters are deferred.
+
+## Stabilization changes
+
+- Detect native textareas from the mounted ref, including render callbacks and custom components. Refresh token portal hosts when an input is replaced.
+- Keep suggestions and submission inactive during IME composition, and avoid reopening suggestions from an unfocused input.
+- Ignore duplicate document notifications when an input event leaves the value unchanged.
+- Preserve token markup when dropping text over a token; normalize pasted/dropped line endings and require both selection endpoints to stay inside the input.
+- Reference the rendered list and option IDs for accessibility, including consumer-supplied IDs.
+
+Before a stable release, validate undo/redo, multiline selection, token deletion, clipboard behavior, controlled updates, and textarea render variants across supported browsers. Verify IME/autocorrect/dictation, screen-reader navigation and announcements, and real mobile keyboard/drawer interactions separately. These remain release checks, not claims of verified support.

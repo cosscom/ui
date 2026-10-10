@@ -58,6 +58,7 @@ type ComposerEditorController = {
   formProps: Pick<ComponentProps<"form">, "onSubmit">;
   rootRef: RefObject<HTMLFormElement | null>;
   isEmpty: boolean;
+  isTextarea: boolean;
   isComposing: boolean;
   canSubmit: boolean;
   disabled: boolean;
@@ -93,6 +94,7 @@ export function useComposerEditor({
     inputRef.current = element;
     setInputElement(element);
   }, []);
+  const isTextarea = inputElement?.tagName === "TEXTAREA";
   const history = useRef<{
     current: ComposerSnapshot;
     past: ComposerSnapshot[];
@@ -125,6 +127,8 @@ export function useComposerEditor({
   const { contains } = useComposerFilter();
   const options = getFilteredItems(trigger, query, contains);
   const open =
+    !isTextarea &&
+    !isComposing &&
     !disabled &&
     !readOnly &&
     Boolean(query) &&
@@ -177,7 +181,11 @@ export function useComposerEditor({
     const input = inputElement;
     if (!input || input instanceof HTMLTextAreaElement) return;
     const beforeInput = (event: InputEvent) => {
-      if (event.inputType.startsWith("format")) event.preventDefault();
+      if (event.defaultPrevented) return;
+      if (disabled || readOnly || event.inputType.startsWith("format")) {
+        event.preventDefault();
+        return;
+      }
       if (
         event.inputType === "historyUndo" ||
         event.inputType === "historyRedo"
@@ -195,7 +203,7 @@ export function useComposerEditor({
     };
     input.addEventListener("beforeinput", beforeInput);
     return () => input.removeEventListener("beforeinput", beforeInput);
-  }, [inputElement]);
+  }, [inputElement, disabled, readOnly]);
 
   useEffect(() => {
     const onSelectionChange = () => {
@@ -231,10 +239,10 @@ export function useComposerEditor({
       const selection = readSelection(input);
       writeValue(input, expected);
       restoreSelection(input, selection);
-      syncTokenHosts(input);
       setQuery(null);
       dismissedQuery.current = null;
     }
+    syncTokenHosts(input);
     if (input instanceof HTMLTextAreaElement) {
       input.disabled = disabled;
       input.readOnly = readOnly;
@@ -245,6 +253,8 @@ export function useComposerEditor({
     const input = inputRef.current;
     const next =
       input &&
+      !composing.current &&
+      document.activeElement === input &&
       triggers.length > 0 &&
       !disabled &&
       !readOnly &&
@@ -299,7 +309,7 @@ export function useComposerEditor({
       }
       pendingInput.current = { type: "", selection: null };
     }
-    onValueChange(next, { reason });
+    if (!equalValue(next, value)) onValueChange(next, { reason });
     forceReconcile((revision) => revision + 1);
     syncTokenHosts(input);
     dismissedQuery.current = null;
@@ -311,6 +321,7 @@ export function useComposerEditor({
     if (
       disabled ||
       readOnly ||
+      composing.current ||
       suggestion.disabled ||
       !query ||
       !input?.contains(query.node)
@@ -370,6 +381,7 @@ export function useComposerEditor({
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>): void => {
     if (
       event.defaultPrevented ||
+      composing.current ||
       event.nativeEvent.isComposing ||
       event.nativeEvent.keyCode === 229
     )
@@ -402,6 +414,7 @@ export function useComposerEditor({
   return {
     value,
     isEmpty,
+    isTextarea,
     isComposing,
     canSubmit,
     disabled,
@@ -431,7 +444,7 @@ export function useComposerEditor({
     },
     inputProps: {
       ref: setInputRef,
-      contentEditable: !disabled && !readOnly,
+      contentEditable: isTextarea ? undefined : !disabled && !readOnly,
       role: "textbox",
       tabIndex: disabled ? -1 : 0,
       suppressContentEditableWarning: true,
@@ -511,7 +524,7 @@ export function useComposerEditor({
           getComposerText(readValue(fragment, false)),
         );
         event.preventDefault();
-        if (disabled || readOnly) return;
+        if (disabled || readOnly || composing.current) return;
         pendingInput.current = {
           type: "cut",
           selection: readSelection(event.currentTarget),
@@ -526,7 +539,7 @@ export function useComposerEditor({
         )
           return;
         event.preventDefault();
-        if (disabled || readOnly) return;
+        if (disabled || readOnly || composing.current) return;
         pendingInput.current = {
           type: "paste",
           selection: readSelection(event.currentTarget),
@@ -544,7 +557,9 @@ export function useComposerEditor({
         )
           return;
         event.preventDefault();
-        if (disabled || readOnly) return;
+        if (disabled || readOnly || composing.current) return;
+        const text = event.dataTransfer.getData("text/plain");
+        if (!text) return;
         const documentWithCaret = document as Document & {
           caretPositionFromPoint?: (
             x: number,
@@ -568,22 +583,36 @@ export function useComposerEditor({
           !event.currentTarget.contains(node)
         )
           return;
-        window.getSelection()?.collapse(node, offset);
+        const token = (
+          node instanceof Element ? node : node.parentElement
+        )?.closest("[data-composer-token]");
+        if (token) {
+          const afterToken = document.createRange();
+          afterToken.setStartAfter(token);
+          afterToken.collapse(true);
+          const selection = window.getSelection();
+          selection?.removeAllRanges();
+          selection?.addRange(afterToken);
+        } else {
+          window.getSelection()?.collapse(node, offset);
+        }
         event.currentTarget.focus({ preventScroll: true });
         pendingInput.current = {
           type: "drop",
           selection: readSelection(event.currentTarget),
         };
-        insertPlainText(
-          event.currentTarget,
-          event.dataTransfer.getData("text/plain"),
-        );
+        insertPlainText(event.currentTarget, text);
         publish();
       },
     },
     status: trigger?.status ?? "ready",
     suggestions: {
-      enabled: triggers.length > 0 && !disabled && !readOnly,
+      enabled:
+        triggers.length > 0 &&
+        !isTextarea &&
+        !isComposing &&
+        !disabled &&
+        !readOnly,
       items: options,
       open,
       onOpenChange: (nextOpen) => {

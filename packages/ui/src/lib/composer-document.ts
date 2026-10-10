@@ -179,10 +179,15 @@ function writeValue(root: HTMLElement, value: ComposerValue): void {
 
 function insertPlainText(root: HTMLElement, text: string): void {
   const selection = window.getSelection();
-  if (!selection?.rangeCount || !root.contains(selection.anchorNode)) return;
+  if (
+    !selection?.rangeCount ||
+    !root.contains(selection.anchorNode) ||
+    !root.contains(selection.focusNode)
+  )
+    return;
   const range = selection.getRangeAt(0);
   range.deleteContents();
-  const node = document.createTextNode(text);
+  const node = document.createTextNode(text.replace(/\r\n?/g, "\n"));
   range.insertNode(node);
   range.setStart(node, node.length);
   range.collapse(true);

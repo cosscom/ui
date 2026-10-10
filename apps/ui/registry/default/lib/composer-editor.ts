@@ -199,7 +199,6 @@ function ComposerSuggestions({
   const highlightedId =
     enabledItems.find((item) => item.id === highlightedValue)?.id ??
     enabledItems[0]?.id;
-  const itemId = (id: string) => `${listId}-${encodeURIComponent(id)}`;
 
   function selectItem(value: ComposerItemValue): void {
     const item = enabledItems.find((item) => item.id === value.id);
@@ -255,10 +254,10 @@ function ComposerSuggestions({
         inputProps: {
           "aria-autocomplete": enabled ? "list" : undefined,
           "aria-haspopup": enabled ? "listbox" : undefined,
-          "aria-controls": open && listElement ? listId : undefined,
+          "aria-controls": open ? listElement?.id || undefined : undefined,
           "aria-activedescendant":
             open && listElement && highlightedId
-              ? itemId(highlightedId)
+              ? registered.get(highlightedId)?.element.id || undefined
               : undefined,
           onKeyDown,
         },

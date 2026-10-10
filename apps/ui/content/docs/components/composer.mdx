@@ -25,6 +25,16 @@ For a **plain-text message**, render a native textarea in the same `ComposerInpu
 <ComposerInput render={<textarea aria-label="Message" />} />
 ```
 
+You can also use a render callback or a custom component that forwards its props and ref to the textarea:
+
+```tsx
+<ComposerInput
+  aria-label="Message"
+  placeholder="Write a message…"
+  render={(props) => <textarea {...props} />}
+/>
+```
+
 Both use the same composition and draft API. `Composer` manages an empty draft by default. Add `triggers` and the popup parts for mentions or actions; these require the default contenteditable input. Use a textarea when the message should remain plain text. Put `value`, `defaultValue`, and `onValueChange` on `Composer`, rather than on the rendered textarea.
 
 ## Anatomy
