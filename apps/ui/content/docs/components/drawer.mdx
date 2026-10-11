@@ -119,7 +119,6 @@ Popup container that displays the drawer content.
 | `variant`         | `"default" \| "straight" \| "inset"`     | `"default"` | Controls the drawer style. `straight` removes rounded corners, `inset` adds spacing around the drawer on desktop screens |
 | `showCloseButton` | `boolean`                                 | `false`     | When true, displays a close button in the top-right corner |
 | `showBar`         | `boolean`                                 | `false`     | When true, displays a drag bar indicator |
-| `keyboardAware`   | `boolean`                                 | `false`     | On bottom drawers, keeps a footer input above the software keyboard using Base UI's virtual keyboard provider |
 | `portalProps`     | `Drawer.Portal.Props`                     | -           | Props forwarded to the internal portal (`keepMounted`, `container`, etc.); see Base UI Drawer portal API |
 
 **Example:**
@@ -264,9 +263,11 @@ Primitive content wrapper used for polymorphic composition with the `render` pro
 
 <ComponentPreview name="p-drawer-6" />
 
-### Keyboard aware composer
+### Software keyboard
 
-Set `keyboardAware` on a bottom `DrawerPopup` that contains a footer input. Put the scrolling conversation in `DrawerPanel` and the composer after it, so the header and composer remain outside the conversation scroll area. The popup applies the keyboard inset and safe-area spacing without setting its height. Set `--drawer-height` on the popup when the layout needs a fixed height.
+Bottom drawers automatically handle software-keyboard focus and spacing for inputs, textareas, and contenteditable fields. No additional prop is needed. Drawers without a focused input keep their normal layout. With snap points, the drawer moves up as needed while the keyboard is open and returns to the selected snap point when it closes.
+
+Put the scrolling conversation in `DrawerPanel` and the composer after it, so the header and composer remain outside the conversation scroll area. The popup applies the keyboard inset and safe-area spacing without setting its height. Set `--drawer-height` on the popup when the layout needs a fixed height.
 
 <ComponentPreview name="p-drawer-15" />
 
@@ -283,7 +284,7 @@ import {
 
 <Drawer>
   <DrawerTrigger>Open chat</DrawerTrigger>
-  <DrawerPopup keyboardAware className="[--drawer-height:calc(100dvh-3rem)]">
+  <DrawerPopup className="[--drawer-height:calc(100dvh-3rem)]">
     <DrawerHeader><DrawerTitle>Chat</DrawerTitle></DrawerHeader>
     <div className="min-h-0 flex-1">
       <DrawerPanel>Conversation</DrawerPanel>

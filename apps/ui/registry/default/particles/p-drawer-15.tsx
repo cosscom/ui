@@ -44,11 +44,7 @@ export default function Particle() {
       <DrawerTrigger render={<Button variant="outline" />}>
         Open chat drawer
       </DrawerTrigger>
-      <DrawerPopup
-        className="[--drawer-height:calc(100dvh-3rem)]"
-        keyboardAware
-        showBar
-      >
+      <DrawerPopup className="[--drawer-height:calc(100dvh-3rem)]" showBar>
         <DrawerHeader>
           <DrawerTitle>Chat</DrawerTitle>
         </DrawerHeader>
