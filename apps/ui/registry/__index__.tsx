@@ -4489,6 +4489,24 @@ export const Index: Record<string, any> = {
     categories: ["composer","textarea"],
     meta: {"className":"**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"},
   },
+  "p-composer-9": {
+    name: "p-composer-9",
+    description: "Rounded adaptive composer with circular actions",
+    type: "registry:block",
+    registryDependencies: ["@coss/button","@coss/composer"],
+    files: [{
+      path: "registry/default/particles/p-composer-9.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-composer-9.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["composer","text editor"],
+    meta: {"className":"**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"},
+  },
   "p-command-1": {
     name: "p-command-1",
     description: "Command palette with dialog",

@@ -2173,6 +2173,19 @@ export const particles: ParticleItem[] = [
     type: "registry:block",
   },
   {
+    categories: categories("composer", "text editor"),
+    dependencies: ["lucide-react"],
+    description: "Rounded adaptive composer with circular actions",
+    files: [{ path: "particles/p-composer-9.tsx", type: "registry:block" }],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl",
+    },
+    name: "p-composer-9",
+    registryDependencies: ["@coss/button", "@coss/composer"],
+    type: "registry:block",
+  },
+  {
     categories: categories("command", "dialog"),
     dependencies: ["lucide-react"],
     description: "Command palette with dialog",
