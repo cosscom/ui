@@ -2186,6 +2186,33 @@ export const particles: ParticleItem[] = [
     type: "registry:block",
   },
   {
+    categories: categories("composer", "text editor"),
+    dependencies: ["lucide-react"],
+    description: "Composer with leading buttons for mentions and slash actions",
+    files: [{ path: "particles/p-composer-10.tsx", type: "registry:block" }],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl",
+    },
+    name: "p-composer-10",
+    registryDependencies: ["@coss/button", "@coss/composer"],
+    type: "registry:block",
+  },
+  {
+    categories: categories("composer", "text editor"),
+    dependencies: ["lucide-react"],
+    description:
+      "Compact rounded adaptive composer with a circular send button",
+    files: [{ path: "particles/p-composer-11.tsx", type: "registry:block" }],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl",
+    },
+    name: "p-composer-11",
+    registryDependencies: ["@coss/button", "@coss/composer"],
+    type: "registry:block",
+  },
+  {
     categories: categories("command", "dialog"),
     dependencies: ["lucide-react"],
     description: "Command palette with dialog",

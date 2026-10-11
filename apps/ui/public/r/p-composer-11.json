@@ -1,0 +1,27 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "p-composer-11",
+  "description": "Compact rounded adaptive composer with a circular send button",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "@coss/button",
+    "@coss/composer"
+  ],
+  "files": [
+    {
+      "path": "registry/default/particles/p-composer-11.tsx",
+      "content": "\"use client\";\n\nimport { ArrowUpIcon } from \"lucide-react\";\nimport { useState } from \"react\";\nimport { Button } from \"@/registry/default/ui/button\";\nimport {\n  Composer,\n  ComposerActionGroup,\n  ComposerActions,\n  ComposerInput,\n  ComposerSubmit,\n  type ComposerValue,\n  getComposerText,\n} from \"@/registry/default/ui/composer\";\n\nexport default function Particle() {\n  const [value, setValue] = useState<ComposerValue>([]);\n  const [notice, setNotice] = useState(\"\");\n\n  return (\n    <div className=\"flex w-full max-w-xl flex-col gap-2\">\n      <Composer\n        className=\"rounded-[calc(--spacing(5.5)+1px)] py-1 data-[layout=adaptive]:not-data-multiline:px-1 sm:rounded-[calc(--spacing(5)+1px)]\"\n        layout=\"adaptive\"\n        value={value}\n        onValueChange={setValue}\n        onSubmit={(draft) => {\n          setNotice(`Sent: ${getComposerText(draft)}`);\n          setValue([]);\n        }}\n      >\n        <ComposerInput\n          aria-label=\"Message\"\n          className=\"px-2\"\n          placeholder=\"Write a message…\"\n        />\n        <ComposerActions className=\"mx-1\">\n          <ComposerActionGroup align=\"end\">\n            <ComposerSubmit\n              render={\n                <Button\n                  aria-label=\"Send message\"\n                  className=\"rounded-full\"\n                  size=\"icon\"\n                >\n                  <ArrowUpIcon aria-hidden=\"true\" />\n                </Button>\n              }\n            />\n          </ComposerActionGroup>\n        </ComposerActions>\n      </Composer>\n      <p className=\"min-h-5 text-muted-foreground text-sm\" role=\"status\">\n        {notice}\n      </p>\n    </div>\n  );\n}\n",
+      "type": "registry:block"
+    }
+  ],
+  "meta": {
+    "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"
+  },
+  "categories": [
+    "composer",
+    "text editor"
+  ],
+  "type": "registry:block"
+}

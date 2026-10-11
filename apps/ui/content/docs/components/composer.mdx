@@ -139,7 +139,7 @@ Render `Composer` as a div to avoid nested forms. `name` adds the canonical mess
 
 In this composition, the outer form owns saving. If you also add `ComposerSubmit` or enable Enter submission, those call the Composer's own `onSubmit`; they do not submit the outer form. Standalone `Composer` renders a form and runs native constraint validation before its `onSubmit` callback. Required-field validation is available on a rendered textarea; contenteditable does not support native `required` validation.
 
-Resetting the containing form restores `defaultValue` (or an empty draft). Controlled owners receive `onValueChange` with `reason: "reset"` and decide whether to accept it. For custom controls within Composer, `useComposerContext()` exposes the draft, `canSubmit`, `submit()`, and `reset()`.
+Resetting the containing form restores `defaultValue` (or an empty draft). Controlled owners receive `onValueChange` with `reason: "reset"` and decide whether to accept it. For custom controls within Composer, `useComposerContext()` exposes the draft, `canSubmit`, `submit()`, `insertTrigger()`, and `reset()`.
 
 ### Input size
 
@@ -189,6 +189,8 @@ To extend the anatomy above, pass `triggers={triggers}` to `Composer` and insert
 ```
 
 Configure only the triggers you need. Queries can contain spaces: `@sam r` finds Sam Rivera. A space immediately after the trigger closes the suggestions. Selecting an item inserts a token into the draft; it does not send the message or execute an action.
+
+To open a trigger from a button inside `ComposerActions`, call `useComposerContext().insertTrigger("@")` or `insertTrigger("/")`. The trigger is inserted at the caret and opens the same suggestions as typing it.
 
 ```tsx
 const triggers = [
@@ -463,6 +465,7 @@ function ClearMessage() {
 | `readOnly` | Whether editing is read-only |
 | `status` | Active trigger's loading state |
 | `submit()` | Requests submission, including native validation for a form frame |
+| `insertTrigger(character)` | Inserts a configured trigger at the caret, separating it from surrounding text when needed, then opens its suggestions. Available with the contenteditable input. |
 | `reset()` | Restores the initial draft, or requests a reset from the controlled owner |
 
 Input event handlers run before Composer's handlers. Call `event.preventDefault()` to override a supported keyboard or clipboard action. Base UI's `event.preventBaseUIHandler()` also stops the merged internal handler. Keep application business rules on Composer so they apply to both keyboard and pointer submission.

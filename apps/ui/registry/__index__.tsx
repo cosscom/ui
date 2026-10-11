@@ -4507,6 +4507,42 @@ export const Index: Record<string, any> = {
     categories: ["composer","text editor"],
     meta: {"className":"**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"},
   },
+  "p-composer-10": {
+    name: "p-composer-10",
+    description: "Composer with leading buttons for mentions and slash actions",
+    type: "registry:block",
+    registryDependencies: ["@coss/button","@coss/composer"],
+    files: [{
+      path: "registry/default/particles/p-composer-10.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-composer-10.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["composer","text editor"],
+    meta: {"className":"**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"},
+  },
+  "p-composer-11": {
+    name: "p-composer-11",
+    description: "Compact rounded adaptive composer with a circular send button",
+    type: "registry:block",
+    registryDependencies: ["@coss/button","@coss/composer"],
+    files: [{
+      path: "registry/default/particles/p-composer-11.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-composer-11.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["composer","text editor"],
+    meta: {"className":"**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"},
+  },
   "p-command-1": {
     name: "p-command-1",
     description: "Command palette with dialog",

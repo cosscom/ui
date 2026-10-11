@@ -64,6 +64,7 @@ type ComposerEditorController = {
   disabled: boolean;
   readOnly: boolean;
   submit: () => void;
+  insertTrigger: (character: string) => void;
   reset: (value?: ComposerValue) => void;
   status: "ready" | "loading" | "error";
   tokenHosts: readonly HTMLSpanElement[];
@@ -112,6 +113,7 @@ export function useComposerEditor({
     type: "",
     selection: null as ComposerSelection | null,
   });
+  const lastSelection = useRef<ComposerSelection | null>(null);
   const historyAction = useRef<(direction: "undo" | "redo") => void>(() => {});
   const rootRef = useRef<HTMLFormElement>(null);
   const composing = useRef(false);
@@ -208,8 +210,10 @@ export function useComposerEditor({
   useEffect(() => {
     const onSelectionChange = () => {
       const input = inputRef.current;
-      if (input && document.activeElement === input && !composing.current)
+      if (input && document.activeElement === input && !composing.current) {
+        lastSelection.current = readSelection(input);
         queryAction.current();
+      }
     };
     document.addEventListener("selectionchange", onSelectionChange);
     return () =>
@@ -227,6 +231,7 @@ export function useComposerEditor({
           : []
         : value;
     if (!equalValue(history.current.current.value, expected)) {
+      lastSelection.current = null;
       history.current = {
         current: { value: expected, selection: null },
         past: [],
@@ -336,6 +341,41 @@ export function useComposerEditor({
     setQuery(null);
   };
 
+  const insertTrigger = (character: string): void => {
+    const input = inputRef.current;
+    if (
+      !input ||
+      input instanceof HTMLTextAreaElement ||
+      disabled ||
+      readOnly ||
+      composing.current ||
+      !triggers.some((trigger) => trigger.character === character)
+    )
+      return;
+    const text = getComposerText(readValue(input));
+    const selection = readSelection(input) ??
+      lastSelection.current ?? {
+        anchor: text.length,
+        focus: text.length,
+      };
+    input.focus({ preventScroll: true });
+    restoreSelection(input, selection);
+    const start = Math.min(selection.anchor, selection.focus);
+    const end = Math.max(selection.anchor, selection.focus);
+    const preceding = text.slice(0, start);
+    const following = text.slice(end);
+    const prefix = preceding && !/\s$/u.test(preceding) ? " " : "";
+    const suffix = following && !/^\s/u.test(following) ? " " : "";
+    pendingInput.current = { type: "trigger", selection: readSelection(input) };
+    insertPlainText(input, `${prefix}${character}${suffix}`);
+    if (suffix) {
+      const caret = start + prefix.length + character.length;
+      restoreSelection(input, { anchor: caret, focus: caret });
+    }
+    publish();
+    lastSelection.current = readSelection(input);
+  };
+
   historyAction.current = (direction) => {
     const input = inputRef.current;
     if (
@@ -421,8 +461,10 @@ export function useComposerEditor({
     readOnly,
     tokenHosts,
     submit,
+    insertTrigger,
     rootRef,
     reset: (next = []) => {
+      lastSelection.current = null;
       history.current = {
         current: { value: next, selection: null },
         past: [],
@@ -456,7 +498,11 @@ export function useComposerEditor({
         if (!event.defaultPrevented && !composing.current) updateQuery();
       },
       onClick: updateQuery,
-      onBlur: dismissSuggestions,
+      onBlur: (event) => {
+        lastSelection.current =
+          readSelection(event.currentTarget) ?? lastSelection.current;
+        dismissSuggestions();
+      },
       onInput: () => {
         if (ignoreCompositionInput.current) return;
         publish();

@@ -57,6 +57,7 @@ function useComposerContext(): Pick<
   | "readOnly"
   | "status"
   | "submit"
+  | "insertTrigger"
   | "reset"
 > {
   const context = useComposerEditorContext();
@@ -70,6 +71,7 @@ function useComposerContext(): Pick<
     readOnly,
     status,
     submit,
+    insertTrigger,
     reset,
   } = context;
   return {
@@ -80,6 +82,7 @@ function useComposerContext(): Pick<
     readOnly,
     status,
     submit,
+    insertTrigger,
     reset,
   };
 }
