@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
 import { getComposerQuery } from "@coss/ui/lib/composer-query";
+import type { ReactNode } from "react";
 
 type ComposerPart =
   | { type: "text"; text: string }

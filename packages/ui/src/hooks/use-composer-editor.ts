@@ -1,19 +1,6 @@
 "use client";
 
 import { Autocomplete as AutocompletePrimitive } from "@base-ui/react/autocomplete";
-import type {
-  ComponentProps,
-  FormEvent,
-  KeyboardEvent,
-  RefObject,
-} from "react";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
 import {
   type ActiveQuery,
   type ComposerItemValue,
@@ -35,6 +22,19 @@ import {
   restoreSelection,
   writeValue,
 } from "@coss/ui/lib/composer-document";
+import type {
+  ComponentProps,
+  FormEvent,
+  KeyboardEvent,
+  RefObject,
+} from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 
 type ComposerChangeDetails = {
   reason: "input" | "selection" | "history" | "reset";

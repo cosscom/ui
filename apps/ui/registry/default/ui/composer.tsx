@@ -82,7 +82,7 @@ function ComposerFrame({
       </>
     ),
     className: cn(
-      "relative flex min-h-0 min-w-0 cursor-text flex-col rounded-xl border border-input bg-background pb-(--composer-padding) text-foreground shadow-xs/5 transition-shadow [--composer-padding:--spacing(2)] [--composer-max-rows:4] has-[[data-slot=composer-input]:focus-visible]:border-ring has-[[data-slot=composer-input]:focus-visible]:ring-[3px] has-[[data-slot=composer-input]:focus-visible]:ring-ring/24 md:[--composer-max-rows:8]",
+      "relative flex min-h-0 min-w-0 cursor-text flex-col rounded-xl border border-input bg-background pb-(--composer-padding) text-foreground shadow-xs/5 transition-shadow [--composer-max-rows:4] [--composer-padding:--spacing(2)] has-[[data-slot=composer-input]:focus-visible]:border-ring has-[[data-slot=composer-input]:focus-visible]:ring-[3px] has-[[data-slot=composer-input]:focus-visible]:ring-ring/24 md:[--composer-max-rows:8]",
       "data-[layout=adaptive]:data-multiline:grid-rows-[minmax(0,1fr)_auto] data-[layout=adaptive]:grid data-[layout=adaptive]:grid-cols-[auto_minmax(0,1fr)_auto] data-[layout=adaptive]:items-center data-[layout=adaptive]:not-data-multiline:px-2 data-[layout=adaptive]:not-data-multiline:pt-(--composer-padding)",
       className,
     ),

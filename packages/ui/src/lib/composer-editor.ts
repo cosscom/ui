@@ -1,6 +1,13 @@
 "use client";
 
 import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
+import {
+  type ComposerEditorController,
+  type ComposerItemValue,
+  type ComposerValue,
+  type UseComposerEditorOptions,
+  useComposerEditor,
+} from "@coss/ui/hooks/use-composer-editor";
 import type {
   ComponentProps,
   Context,
@@ -21,13 +28,6 @@ import {
   useRef,
   useState,
 } from "react";
-import {
-  type ComposerEditorController,
-  type ComposerItemValue,
-  type ComposerValue,
-  type UseComposerEditorOptions,
-  useComposerEditor,
-} from "@coss/ui/hooks/use-composer-editor";
 
 type ComposerEditorOptions = Omit<
   UseComposerEditorOptions,
