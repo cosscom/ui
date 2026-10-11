@@ -263,6 +263,12 @@ Primitive content wrapper used for polymorphic composition with the `render` pro
 
 <ComponentPreview name="p-drawer-6" />
 
+### Software keyboard
+
+Bottom drawers automatically handle software-keyboard focus and spacing for inputs, textareas, and contenteditable fields. No additional prop is needed. Drawers without a focused input keep their normal layout. With snap points, the drawer moves up as needed while the keyboard is open and returns to the selected snap point when it closes.
+
+Put scrolling fields in `DrawerPanel`. For a persistent input or action row, place it after the panel, outside its scroll area. Set `--drawer-height` on `DrawerPopup` when the layout needs a fixed height; keyboard handling does not set the drawer height.
+
 ### Nested drawers
 
 <ComponentPreview name="p-drawer-7" />
