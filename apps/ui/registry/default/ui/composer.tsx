@@ -6,7 +6,6 @@ import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
 import { useRender } from "@base-ui/react/use-render";
 import type {
   ComponentProps,
-  CSSProperties,
   MouseEvent,
   ReactElement,
   ReactNode,
@@ -83,8 +82,8 @@ function ComposerFrame({
       </>
     ),
     className: cn(
-      "relative flex min-h-0 min-w-0 cursor-text flex-col rounded-xl border border-input bg-background py-2 text-foreground shadow-xs/5 transition-shadow has-[[data-slot=composer-input]:focus-visible]:border-ring has-[[data-slot=composer-input]:focus-visible]:ring-[3px] has-[[data-slot=composer-input]:focus-visible]:ring-ring/24",
-      "data-[layout=adaptive]:data-multiline:grid-rows-[minmax(0,1fr)_auto] data-[layout=adaptive]:grid data-[layout=adaptive]:grid-cols-[auto_minmax(0,1fr)_auto] data-[layout=adaptive]:items-center data-[layout=adaptive]:not-data-multiline:px-2",
+      "relative flex min-h-0 min-w-0 cursor-text flex-col rounded-xl border border-input bg-background pb-(--composer-padding) text-foreground shadow-xs/5 transition-shadow [--composer-padding:--spacing(2)] [--composer-max-rows:4] has-[[data-slot=composer-input]:focus-visible]:border-ring has-[[data-slot=composer-input]:focus-visible]:ring-[3px] has-[[data-slot=composer-input]:focus-visible]:ring-ring/24 md:[--composer-max-rows:8]",
+      "data-[layout=adaptive]:data-multiline:grid-rows-[minmax(0,1fr)_auto] data-[layout=adaptive]:grid data-[layout=adaptive]:grid-cols-[auto_minmax(0,1fr)_auto] data-[layout=adaptive]:items-center data-[layout=adaptive]:not-data-multiline:px-2 data-[layout=adaptive]:not-data-multiline:pt-(--composer-padding)",
       className,
     ),
   };
@@ -141,16 +140,12 @@ export function Composer({
 
 export function ComposerInput({
   className,
-  minRows,
-  maxRows,
   placeholder,
   renderToken,
   render,
   ref,
   ...props
 }: useRender.ComponentProps<"div"> & {
-  minRows?: number;
-  maxRows?: number;
   placeholder?: string;
   renderToken?: (token: ComposerTokenPart) => ReactNode;
 }): ReactElement {
@@ -175,10 +170,6 @@ export function ComposerInput({
     ...(textarea ? { placeholder } : {}),
     "data-placeholder": placeholder,
     "aria-placeholder": editor ? placeholder : undefined,
-    style:
-      minRows === undefined
-        ? undefined
-        : ({ "--composer-min-rows": minRows } as CSSProperties),
     className: cn(
       "field-sizing-content wrap-anywhere relative block min-h-[calc(var(--composer-min-rows,1)*1lh+--spacing(2))] w-full min-w-0 resize-none whitespace-pre-wrap border-0 bg-transparent in-[[data-layout=adaptive]:not([data-multiline])]:px-1 px-3 py-1 outline-none placeholder:text-muted-foreground/72 data-empty:before:pointer-events-none data-empty:before:absolute data-empty:before:text-muted-foreground/72 data-empty:before:content-[attr(data-placeholder)] md:in-data-[layout=adaptive]:min-h-[calc(var(--composer-min-rows,1)*1lh+--spacing(2))] md:min-h-[calc(var(--composer-min-rows,2)*1lh+--spacing(2))]",
       className,
@@ -207,14 +198,10 @@ export function ComposerInput({
       {/* The drawer reserves keyboard space; its nested input scroller needs no extra bottom padding. */}
       <ScrollArea
         ref={scrollRef}
-        className="in-[[data-layout=adaptive][data-multiline]]:col-span-full in-[[data-layout=adaptive][data-multiline]]:col-start-1 in-data-[layout=adaptive]:col-start-2 in-data-[layout=adaptive]:row-start-1 flex h-auto! min-h-0 min-w-0 flex-col in-[[data-layout=adaptive][data-multiline]]:self-stretch text-base **:data-[slot=scroll-area-viewport]:h-auto! **:data-[slot=scroll-area-viewport]:max-h-[min(var(--composer-max-height,calc(var(--composer-max-rows,8)*var(--composer-line-height,1lh)+var(--composer-input-padding,--spacing(2)))),50dvh)] **:data-[slot=scroll-area-viewport]:min-h-0 **:data-[slot=scroll-area-viewport]:pb-0! md:text-sm"
+        className="in-[[data-layout=adaptive][data-multiline]]:col-span-full in-[[data-layout=adaptive][data-multiline]]:col-start-1 in-data-[layout=adaptive]:col-start-2 in-data-[layout=adaptive]:row-start-1 flex h-auto! min-h-0 min-w-0 flex-col in-[[data-layout=adaptive][data-multiline]]:self-stretch rounded-t-[inherit] text-base [--composer-scroll-padding:var(--composer-padding)] in-[[data-layout=adaptive]:not([data-multiline])]:[--composer-scroll-padding:0px] **:data-[slot=scroll-area-viewport]:h-auto! **:data-[slot=scroll-area-viewport]:max-h-[min(var(--composer-max-height,calc(var(--composer-max-rows,8)*var(--composer-line-height,1lh)+var(--composer-input-padding,--spacing(2))+var(--composer-scroll-padding))),50dvh)] **:data-[slot=scroll-area-viewport]:min-h-0 **:data-[slot=scroll-area-content]:pt-(--composer-scroll-padding) **:data-[slot=scroll-area-viewport]:pb-0! md:text-sm"
         data-slot="composer-scroll-area"
         overscrollContain
-        style={
-          maxRows === undefined
-            ? undefined
-            : ({ "--composer-max-rows": maxRows } as CSSProperties)
-        }
+        scrollFade
       >
         {input}
       </ScrollArea>

@@ -93,7 +93,7 @@ export function MessageComposer({ onSend }: { onSend: (message: string) => void 
       onSend(getComposerText(draft))
       setValue([])
     }}>
-      <ComposerInput minRows={3} maxRows={6} render={
+      <ComposerInput render={
         <textarea aria-label="Message" placeholder="Write a message…" />
       } />
       <ComposerActions>
@@ -143,24 +143,24 @@ Resetting the containing form restores `defaultValue` (or an empty draft). Contr
 
 ### Input size
 
-Row limits belong to the `ComposerInput` surface, whether it renders the default contenteditable element or a textarea. By default, the input starts at one row below `md` and two rows from `md` upward, with a maximum of eight rows. The example above changes the range to three through six rows. Longer drafts scroll while the controls stay visible. The maximum also stays within half the viewport height. Add attachment, microphone, or other buttons inside `ComposerActions`.
+Set row limits with CSS variables on `Composer`. They apply to both the default contenteditable input and a rendered textarea. By default, the input starts at one row below `md` and two rows from `md` upward. It grows to four rows below `md` and eight rows from `md` upward. Longer drafts scroll while the controls stay visible. The maximum also stays within half the viewport height. Add attachment, microphone, or other buttons inside `ComposerActions`.
 
-For different limits at each breakpoint, set the row variables on `Composer` instead of passing `minRows` or `maxRows`:
+Use responsive classes to change the limits at each breakpoint:
 
 ```tsx
-<Composer className="[--composer-min-rows:1] [--composer-max-rows:4] md:[--composer-min-rows:3] md:[--composer-max-rows:8]">
+<Composer className="[--composer-min-rows:2] [--composer-max-rows:3] md:[--composer-min-rows:3] md:[--composer-max-rows:6]">
   <ComposerInput render={<textarea aria-label="Message" />} />
   <ComposerActions>{/* Buttons */}</ComposerActions>
 </Composer>
 ```
 
-Here the input shows one to four rows below `md` and three to eight rows from `md` upward. The row props set inline values, so omit them when using responsive CSS variables.
+Here the input shows two to three rows below `md` and three to six rows from `md` upward. Keep the minimum at or below the maximum at each breakpoint. Set these variables on `Composer` so both the input and its scroll area inherit them.
 
 ### Controls beside a short message
 
 Set `layout="adaptive"` to place controls beside a one-line draft. When text wraps or you add a line break, the input takes the full width and the controls move below it. Both layouts use the same composition: `ComposerInput` followed by `ComposerActions`, with action groups aligned to `start` and `end`. Only the `layout` prop changes.
 
-The adaptive layout starts at one visible row; setting `minRows` above one keeps the controls below. Keyboard focus follows the same order in both layouts: input, leading actions, then trailing actions.
+The adaptive layout starts at one visible row; setting `--composer-min-rows` above one keeps the controls below. Keyboard focus follows the same order in both layouts: input, leading actions, then trailing actions.
 
 <ComponentPreview name="p-composer-7" />
 
@@ -267,15 +267,22 @@ The editable input with an internal coss ScrollArea. It connects to its parent C
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `render` | Base UI render prop | Contenteditable `div` | Replaces the default element with a native textarea |
-| `minRows` | `number` | `1` below `md`, `2` from `md`; `1` in adaptive layout | Minimum visible text rows |
-| `maxRows` | `number` | `8` | Maximum visible text rows before scrolling, subject to the `50dvh` cap |
 | `placeholder` | `string` | — | Placeholder for the input |
 | `renderToken` | `(token: ComposerTokenPart) => ReactNode` | — | Renders each selected token in the contenteditable input; defaults to `ComposerToken` |
 | `className` | `string` | — | Additional classes on the editable element |
 | `ref` | `Ref<HTMLDivElement>` | — | Ref to the default div; set other element refs on `render` |
 | `...props` | Div props | — | Other props forwarded to the editable element |
 
-`minRows` and `maxRows` are positive numbers of visible text rows, with vertical padding included in the resulting heights. Keep `minRows` at or below `maxRows`. In the stacked layout, the minimum defaults to one row below `md` and two rows from `md` upward. The adaptive layout defaults to one row at every breakpoint. The maximum defaults to eight rows in either layout. Text is `text-base` below `md` and `text-sm` from `md` upward, and the row limits follow the actual line height at each breakpoint. When rendering a textarea, set the visible row limits on `ComposerInput`; the textarea's native `rows` attribute is unnecessary here. The scroll limit is also capped at `50dvh`; `--composer-max-height` can override the row-based maximum if a fixed height is needed.
+Set the following CSS variables on `Composer` using `className`. Row counts follow the input's actual line height, including the change from `text-base` below `md` to `text-sm` on larger screens. Vertical padding is included automatically. A rendered textarea does not need a native `rows` attribute.
+
+| CSS variable | Default | Description |
+| --- | --- | --- |
+| `--composer-min-rows` | `1` below `md`, `2` from `md`; `1` in adaptive layout | Minimum visible text rows |
+| `--composer-max-rows` | `4` below `md`, `8` from `md` | Maximum visible text rows before scrolling |
+| `--composer-padding` | `--spacing(2)` | Top content spacing and bottom control spacing; the top spacing scrolls with the text |
+| `--composer-max-height` | Calculated from maximum rows and padding | Optional CSS height that replaces the row-based maximum |
+
+The maximum height is also capped at `50dvh`. The four-row mobile default leaves more room for surrounding content, such as a conversation inside a drawer.
 
 The default div has multiline textbox semantics. A rendered textarea uses the same parent-owned draft and submission policy. Use one `ComposerInput` per `Composer`. Forward supplied props and the ref when rendering a custom wrapper around the native textarea.
 

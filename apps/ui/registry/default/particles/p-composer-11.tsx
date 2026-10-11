@@ -20,7 +20,7 @@ export default function Particle() {
   return (
     <div className="flex w-full max-w-xl flex-col gap-2">
       <Composer
-        className="rounded-[calc(--spacing(5.5)+1px)] py-1 data-[layout=adaptive]:not-data-multiline:px-1 sm:rounded-[calc(--spacing(5)+1px)]"
+        className="rounded-[calc(--spacing(5.5)+1px)] [--composer-padding:--spacing(1)] data-[layout=adaptive]:not-data-multiline:px-1 sm:rounded-[calc(--spacing(5)+1px)]"
         layout="adaptive"
         value={value}
         onValueChange={setValue}
