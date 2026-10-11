@@ -888,24 +888,46 @@ export const tableThumbnail = (
 );
 
 // Tabs
+const segmentedControlVisual = (
+  <div className="flex rounded-lg bg-muted-foreground/12 p-0.5">
+    <div className="rounded-[calc(var(--radius-lg)-1px)] bg-linear-to-b from-card to-card/90 p-3 shadow-xs/5 dark:from-background/90 dark:to-background">
+      <Text className="w-6 bg-primary" />
+    </div>
+    <div className="rounded-[calc(var(--radius-lg)-1px)] p-3">
+      <Text className="w-6" variant="secondary" />
+    </div>
+    <div className="rounded-[calc(var(--radius-lg)-1px)] p-3">
+      <Text className="w-6" variant="secondary" />
+    </div>
+  </div>
+);
+
+// Segmented Control
+export const segmentedControlThumbnail = (
+  <div className="max-w-50">{segmentedControlVisual}</div>
+);
+
+// Tabs
 export const tabsThumbnail = (
   <div className="flex max-w-50 flex-col gap-4">
-    <div className="flex rounded-lg bg-muted-foreground/12 p-0.5">
-      <div className="rounded-[calc(var(--radius-lg)-1px)] bg-linear-to-b from-card to-card/90 p-3 shadow-xs/5 dark:from-background/90 dark:to-background">
-        <Text className="w-6 bg-primary" />
-      </div>
-      <div className="rounded-[calc(var(--radius-lg)-1px)] p-3">
-        <Text className="w-6" variant="secondary" />
-      </div>
-      <div className="rounded-[calc(var(--radius-lg)-1px)] p-3">
-        <Text className="w-6" variant="secondary" />
-      </div>
-    </div>
+    {segmentedControlVisual}
     <div className="flex flex-col gap-2">
       <Text className="w-[70%]" />
       <Text variant="secondary" />
     </div>
   </div>
+);
+
+// Composer
+export const composerThumbnail = (
+  <Card className="[--radius-2xl:14px]" withGradient={false}>
+    <CardPanel className="flex flex-col px-4 py-3">
+      <Text className="w-[60%]" />
+      <div className="mt-4 flex justify-end">
+        <div className="size-6 rounded-md bg-linear-to-b from-(--btn-from) to-(--btn-to)" />
+      </div>
+    </CardPanel>
+  </Card>
 );
 
 // Textarea
@@ -1027,6 +1049,7 @@ export const categoryThumbnails: Record<string, ReactNode> = {
   "checkbox-group": checkboxGroupThumbnail,
   collapsible: collapsibleThumbnail,
   combobox: comboboxThumbnail,
+  composer: composerThumbnail,
   command: commandThumbnail,
   "context-menu": contextMenuThumbnail,
   "date-picker": datePickerThumbnail,
@@ -1053,6 +1076,7 @@ export const categoryThumbnails: Record<string, ReactNode> = {
   "radio-group": radioGroupThumbnail,
   "scroll-area": scrollAreaThumbnail,
   select: selectThumbnail,
+  "segmented-control": segmentedControlThumbnail,
   separator: separatorThumbnail,
   sheet: sheetThumbnail,
   skeleton: skeletonThumbnail,

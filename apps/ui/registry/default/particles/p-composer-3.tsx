@@ -14,7 +14,6 @@ import {
   ComposerPopup,
   ComposerSubmit,
   type ComposerValue,
-  getComposerText,
 } from "@/registry/default/ui/composer";
 import {
   Drawer,
@@ -39,7 +38,6 @@ const actions = [
 
 export default function Particle() {
   const [value, setValue] = useState<ComposerValue>([]);
-  const [activity, setActivity] = useState("");
 
   return (
     <Drawer>
@@ -50,15 +48,9 @@ export default function Particle() {
         className="[--drawer-height:calc(100dvh-3rem)]"
         keyboardAware
         showBar
-        showCloseButton
       >
         <DrawerHeader>
           <DrawerTitle>Chat</DrawerTitle>
-          {activity && (
-            <p className="text-muted-foreground text-xs" role="status">
-              {activity}
-            </p>
-          )}
         </DrawerHeader>
         <div className="min-h-0 flex-1">
           <DrawerPanel>
@@ -73,10 +65,7 @@ export default function Particle() {
           className="mx-3 mb-3"
           value={value}
           onValueChange={setValue}
-          onSubmit={(message) => {
-            setActivity(`Sent: ${getComposerText(message)}`);
-            setValue([]);
-          }}
+          onSubmit={() => setValue([])}
           triggers={[
             { character: "@", items: people },
             { character: "/", items: actions },
