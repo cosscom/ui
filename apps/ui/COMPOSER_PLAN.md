@@ -41,7 +41,7 @@ Registry files are authoritative. Package copies and registry JSON must match th
 
 ## Layout and drawer
 
-Use CSS for a permanent bottom action row. Do not add a one-line versus multiline layout state machine. Defaults are one input row below `md`, two from `md`, and eight maximum rows. `minRows`/`maxRows` set fixed limits; inherited CSS variables provide breakpoint-specific limits. The scroll cap also respects half the viewport height. A small measurement synchronizes the cap with the editable element's actual typography and padding; it does not choose layout modes.
+The default layout keeps a permanent bottom action row. Both layouts use the same composition: ComposerInput followed by ComposerActions containing leading and trailing action groups. The opt-in adaptive layout places those groups beside a one-line input, then moves them to opposite sides below a full-width input when text wraps. DOM and keyboard order remain input, leading actions, trailing actions in both layouts; controls are not moved or remounted. Its layout hook measures the input at the narrower inline width for both textarea and contenteditable, so the mode stays stable even if full-width text would fit on one line. CSS owns placement; measurement sets the multiline data attribute. A persistent ResizeObserver watches the input, frame, and action groups; input events, React commits, font loads, and resize notifications are coalesced into one measurement per animation frame. The observer reconnects only when the actual input element changes. Defaults are one input row below `md`, two from `md` in the standard layout, one at every breakpoint in the adaptive layout, and eight maximum rows. `minRows`/`maxRows` set fixed limits; inherited CSS variables provide breakpoint-specific limits. The scroll cap also respects half the viewport height.
 
 The popup anchors to the frame, uses its width, and defaults to a 4px offset. Actions remain outside the input scroll region. Empty frame space focuses the input without stealing clicks from interactive controls.
 
@@ -84,3 +84,23 @@ Outstanding findings:
 - After Select All and Delete on the multiline contenteditable draft, the input became visually empty and Send disabled, but the placeholder was absent. Typing and deleting one character with the software keyboard restored it. The underlying cause is not yet established.
 
 Limits: token chip wrapping, multiword query matching, paste, undo/redo, IME, dictation, and VoiceOver have not been validated on this simulator. Host text injection of @ opened Safari Find, and host clipboard paste did not populate the field, so neither is counted as a component failure or a passing clipboard check.
+
+
+## Adaptive layout regression audit — 2026-10-11
+
+Used a temporary local audit page, removed after the check. No automated test files or test-suite runs were added.
+
+Verified with browser-driven checks:
+- 48 combinations of 390px, 767px, 768px, and 1280px widths; stacked/adaptive layouts; contenteditable/textarea; and default/fixed/responsive row limits. Short-draft minimum heights and long-draft scroll caps matched the computed 24px mobile and 20px desktop line heights, including the change at `md`. Repeated the full matrix after the CSS correction below.
+- 12 constrained-height combinations at 120px passed after the correction: both layouts and input types, with all three row configurations. The input viewport shrank to 66px and the 36px controls remained within the frame.
+- Leading/trailing, trailing-only, no-action, and wider leading-action compositions updated input width correctly for both inputs.
+- Both input types scrolled a long draft to the caret, and desktop Enter policies (`always`, `desktop`, `never`) produced the intended submit/newline behavior. Disabled, read-only, and submission-disabled states disabled Send with the expected input editability.
+- Multiword `@sam r` matched Sam Rivera; selection inserted a mention. `/sea` selected a Search action token. An immediate trigger-space or no matching results hid the list. An explicit Shift+Enter expanded the adaptive input.
+
+Corrected a regression: adaptive grid rows kept their content height inside a constrained frame, so the input and Send overflowed its border. The multiline layout now uses a shrinkable input track plus an automatic action track; the input scroll region has a zero minimum height and stretches within its multiline track. This is a CSS-only correction, with no API or controller changes. Compact input/button vertical alignment remains unchanged.
+
+Device Hub evidence: iPhone 18 Pro simulator, iOS 27.0 Safari. Its development stylesheet was stale; re-fetching that stylesheet restored adaptive inline placement without a component change. Verified compact contenteditable placement, expansion with a long draft and the three-row mobile cap, and the published drawer's input/Send visibility above the portrait software keyboard. A simple multiline Select All/Delete check restored the placeholder; the earlier long-draft deletion finding is not conclusively closed.
+
+Release blocker still reproduced: landscape with the software keyboard open. Safari reported `innerHeight=338`, `visualViewport.height=46`, and a 292px keyboard inset. The drawer's top gap/header and stacked composer cannot fit that visible area; the composer collapsed to an 18px frame with its input clipped. Returning to portrait during keyboard use also needs further investigation. This occurs in the existing stacked drawer particle, independently of the new adaptive layout. No speculative Drawer change was made. A constrained-height/focus fallback needs a separate validated solution before mobile release.
+
+These checks do not establish physical-device, Android, VoiceOver, IME/dictation/autocorrect, or comprehensive clipboard/history support. Keep those release checks open.

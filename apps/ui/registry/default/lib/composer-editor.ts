@@ -366,6 +366,8 @@ function focusComposerInput(
 function useComposerInputLayout() {
   const editor = useComposerEditorContext();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [input, setInput] = useState<HTMLElement | null>(null);
+  const scheduleMeasureRef = useRef<(() => void) | null>(null);
   useLayoutEffect(() => {
     for (const host of editor?.tokenHosts ?? []) {
       const fallback = host.previousElementSibling;
@@ -374,29 +376,108 @@ function useComposerInputLayout() {
   }, [editor?.tokenHosts]);
   useLayoutEffect(() => {
     const scroll = scrollRef.current;
-    const input = scroll?.querySelector<HTMLElement>(
-      '[data-slot="composer-input"]',
-    );
     if (!scroll || !input) return;
-    function measure() {
+    const frame = scroll.closest<HTMLElement>('[data-slot="composer"]');
+    const controls = new Set<HTMLElement>();
+    let animationFrame: number | null = null;
+
+    function scheduleMeasure(): void {
+      if (animationFrame !== null) return;
+      animationFrame = requestAnimationFrame(() => {
+        animationFrame = null;
+        measure();
+      });
+    }
+
+    const observer = new ResizeObserver(scheduleMeasure);
+
+    function measure(): void {
       if (!scroll || !input) return;
+      // Observe the groups themselves: their wrapper has no box in compact mode.
+      // Reconcile here so conditional controls don't require a new observer.
+      const nextControls = new Set(
+        frame?.querySelectorAll<HTMLElement>(
+          ':scope > [data-slot="composer-actions"] > [data-slot="composer-action-group"]',
+        ),
+      );
+      for (const control of controls) {
+        if (!nextControls.has(control)) {
+          observer.unobserve(control);
+          controls.delete(control);
+        }
+      }
+      for (const control of nextControls) {
+        if (!controls.has(control)) {
+          observer.observe(control);
+          controls.add(control);
+        }
+      }
       const style = getComputedStyle(input);
-      scroll.style.setProperty("--composer-line-height", style.lineHeight);
-      scroll.style.setProperty(
-        "--composer-input-padding",
-        `${Number.parseFloat(style.paddingTop) + Number.parseFloat(style.paddingBottom)}px`,
+      const lineHeight =
+        Number.parseFloat(style.lineHeight) ||
+        Number.parseFloat(style.fontSize) * 1.2;
+      const padding =
+        Number.parseFloat(style.paddingTop) +
+        Number.parseFloat(style.paddingBottom);
+      for (const [property, value] of [
+        ["--composer-line-height", `${lineHeight}px`],
+        ["--composer-input-padding", `${padding}px`],
+      ] as const) {
+        if (scroll.style.getPropertyValue(property) !== value) {
+          scroll.style.setProperty(property, value);
+        }
+      }
+      if (!frame || frame.dataset.layout !== "adaptive" || !controls.size) {
+        frame?.removeAttribute("data-multiline");
+        return;
+      }
+      const minRows = Number.parseFloat(
+        style.getPropertyValue("--composer-min-rows"),
+      );
+      if (minRows > 1) {
+        frame.toggleAttribute("data-multiline", true);
+        return;
+      }
+
+      // Measure at the narrow, one-line width even after the actions move below.
+      // This keeps the layout from oscillating when full-width text fits one line.
+      frame.removeAttribute("data-multiline");
+      const minHeight = input.style.getPropertyValue("min-height");
+      const minHeightPriority = input.style.getPropertyPriority("min-height");
+      input.style.setProperty("min-height", "0px", "important");
+      const contentHeight = input.scrollHeight;
+      if (minHeight) {
+        input.style.setProperty("min-height", minHeight, minHeightPriority);
+      } else {
+        input.style.removeProperty("min-height");
+      }
+      frame.toggleAttribute(
+        "data-multiline",
+        contentHeight > lineHeight * 1.5 + padding,
       );
     }
+    scheduleMeasureRef.current = scheduleMeasure;
     measure();
-    const observer = new ResizeObserver(measure);
     observer.observe(input);
-    window.addEventListener("resize", measure);
+    if (frame) observer.observe(frame);
+    input.addEventListener("input", scheduleMeasure);
+    window.addEventListener("resize", scheduleMeasure);
+    document.fonts.addEventListener("loadingdone", scheduleMeasure);
     return () => {
+      scheduleMeasureRef.current = null;
+      if (animationFrame !== null) cancelAnimationFrame(animationFrame);
       observer.disconnect();
-      window.removeEventListener("resize", measure);
+      input.removeEventListener("input", scheduleMeasure);
+      window.removeEventListener("resize", scheduleMeasure);
+      document.fonts.removeEventListener("loadingdone", scheduleMeasure);
     };
+  }, [input]);
+  // Controlled drafts, layout props, and conditional actions can change without
+  // an input event. Coalesce these commits with input and resize notifications.
+  useLayoutEffect(() => {
+    scheduleMeasureRef.current?.();
   });
-  return scrollRef;
+  return { scrollRef, inputRef: setInput };
 }
 
 export {

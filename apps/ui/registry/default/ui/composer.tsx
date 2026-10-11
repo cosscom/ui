@@ -41,22 +41,25 @@ type ComposerPopupProps = ComponentProps<typeof PopoverPrimitive.Popup> & {
 };
 
 type ComposerFormProps = useRender.ComponentProps<"form">;
+type ComposerLayout = "stacked" | "adaptive";
 type ComposerTokenVariant = "default" | "chip";
 const composerTokenClassName =
   "wrap-break-word inline cursor-default align-baseline font-normal text-primary data-[variant=default]:font-medium data-[variant=chip]:box-decoration-clone data-[variant=chip]:rounded-md data-[variant=chip]:bg-accent data-[variant=chip]:px-1.5 data-[variant=chip]:py-px data-[variant=chip]:text-accent-foreground [&_[data-slot=composer-token-icon]:empty]:hidden [&_[data-slot=composer-token-icon]>svg]:size-3.5";
 
 function ComposerFrame({
   className,
+  layout = "stacked",
   render,
   ref,
   name,
   children,
   ...props
-}: ComposerFormProps): ReactElement {
+}: ComposerFormProps & { layout?: ComposerLayout }): ReactElement {
   const editor = useComposerEditorContext();
   const anchorRef = useComposerAnchorContext();
   const defaultProps = {
     "data-slot": "composer",
+    "data-layout": layout,
     "data-base-ui-swipe-ignore": "",
     onMouseDown: (event: MouseEvent<HTMLFormElement>): void => {
       focusComposerInput(event, true);
@@ -81,6 +84,7 @@ function ComposerFrame({
     ),
     className: cn(
       "relative flex min-h-0 min-w-0 cursor-text flex-col rounded-xl border border-input bg-background p-2 text-foreground shadow-xs/5 transition-shadow has-[[data-slot=composer-input]:focus-visible]:border-ring has-[[data-slot=composer-input]:focus-visible]:ring-[3px] has-[[data-slot=composer-input]:focus-visible]:ring-ring/24",
+      "data-[layout=adaptive]:data-multiline:grid-rows-[minmax(0,1fr)_auto] data-[layout=adaptive]:grid data-[layout=adaptive]:grid-cols-[auto_minmax(0,1fr)_auto] data-[layout=adaptive]:items-center",
       className,
     ),
   };
@@ -96,9 +100,10 @@ export type ComposerProps = Omit<
   ComposerFormProps,
   "defaultValue" | "onSubmit" | "name"
 > &
-  ComposerEditorOptions;
+  ComposerEditorOptions & { layout?: ComposerLayout };
 
 export function Composer({
+  layout,
   value,
   defaultValue,
   onValueChange,
@@ -129,7 +134,7 @@ export function Composer({
       submitOnEnter={submitOnEnter}
       getSuggestionsAnnouncement={getSuggestionsAnnouncement}
     >
-      <ComposerFrame {...frameProps} name={name} />
+      <ComposerFrame {...frameProps} layout={layout} name={name} />
     </ComposerEditorProvider>
   );
 }
@@ -152,7 +157,7 @@ export function ComposerInput({
   const editor = useComposerEditorContext();
   const suggestions = useComposerSuggestionsContext();
   const tokenHosts = editor?.tokenHosts;
-  const scrollRef = useComposerInputLayout();
+  const { scrollRef, inputRef: layoutInputRef } = useComposerInputLayout();
   const textarea = editor?.isTextarea ?? false;
   const { ref: editorRef, ...editorProps } = editor?.inputProps ?? {};
   const defaultProps = {
@@ -175,7 +180,7 @@ export function ComposerInput({
         ? undefined
         : ({ "--composer-min-rows": minRows } as CSSProperties),
     className: cn(
-      "field-sizing-content wrap-anywhere relative block min-h-[calc(var(--composer-min-rows,1)*1lh+--spacing(2))] w-full min-w-0 resize-none whitespace-pre-wrap border-0 bg-transparent px-1 py-1 outline-none placeholder:text-muted-foreground/72 data-empty:before:pointer-events-none data-empty:before:absolute data-empty:before:text-muted-foreground/72 data-empty:before:content-[attr(data-placeholder)] md:min-h-[calc(var(--composer-min-rows,2)*1lh+--spacing(2))]",
+      "field-sizing-content wrap-anywhere relative block min-h-[calc(var(--composer-min-rows,1)*1lh+--spacing(2))] w-full min-w-0 resize-none whitespace-pre-wrap border-0 bg-transparent px-1 py-1 outline-none placeholder:text-muted-foreground/72 data-empty:before:pointer-events-none data-empty:before:absolute data-empty:before:text-muted-foreground/72 data-empty:before:content-[attr(data-placeholder)] md:in-data-[layout=adaptive]:min-h-[calc(var(--composer-min-rows,1)*1lh+--spacing(2))] md:min-h-[calc(var(--composer-min-rows,2)*1lh+--spacing(2))]",
       className,
     ),
   };
@@ -189,7 +194,7 @@ export function ComposerInput({
   const input = useRender({
     defaultTagName: "div",
     render,
-    ref: [editorRef ?? null, ref ?? null],
+    ref: [editorRef ?? null, layoutInputRef, ref ?? null],
     props: mergeProps<"div">(
       defaultProps,
       editorProps,
@@ -202,7 +207,7 @@ export function ComposerInput({
       {/* The drawer reserves keyboard space; its nested input scroller needs no extra bottom padding. */}
       <ScrollArea
         ref={scrollRef}
-        className="flex h-auto! min-w-0 flex-col text-base **:data-[slot=scroll-area-viewport]:h-auto! **:data-[slot=scroll-area-viewport]:max-h-[min(var(--composer-max-height,calc(var(--composer-max-rows,8)*var(--composer-line-height,1lh)+var(--composer-input-padding,--spacing(2)))),50dvh)] **:data-[slot=scroll-area-viewport]:min-h-0 **:data-[slot=scroll-area-viewport]:pb-0! md:text-sm"
+        className="in-[[data-layout=adaptive][data-multiline]]:col-span-full in-[[data-layout=adaptive][data-multiline]]:col-start-1 in-data-[layout=adaptive]:col-start-2 in-data-[layout=adaptive]:row-start-1 flex h-auto! min-h-0 min-w-0 flex-col in-[[data-layout=adaptive][data-multiline]]:self-stretch text-base **:data-[slot=scroll-area-viewport]:h-auto! **:data-[slot=scroll-area-viewport]:max-h-[min(var(--composer-max-height,calc(var(--composer-max-rows,8)*var(--composer-line-height,1lh)+var(--composer-input-padding,--spacing(2)))),50dvh)] **:data-[slot=scroll-area-viewport]:min-h-0 **:data-[slot=scroll-area-viewport]:pb-0! md:text-sm"
         data-slot="composer-scroll-area"
         overscrollContain
         style={
@@ -425,7 +430,7 @@ export function ComposerActions({
   return (
     <div
       className={cn(
-        "flex shrink-0 items-center justify-between gap-2",
+        "in-data-[layout=adaptive]:col-span-full in-data-[layout=adaptive]:row-start-2 flex in-[[data-layout=adaptive]:not([data-multiline])]:contents shrink-0 items-center justify-between gap-2",
         className,
       )}
       data-slot="composer-actions"
@@ -442,10 +447,13 @@ export function ComposerActionGroup({
   return (
     <div
       className={cn(
-        "flex min-w-0 flex-wrap items-center gap-1",
-        align === "end" && "ms-auto justify-end",
+        "in-[[data-layout=adaptive]:not([data-multiline])]:row-start-1 flex min-w-0 flex-wrap items-center gap-1",
+        align === "start"
+          ? "in-[[data-layout=adaptive]:not([data-multiline])]:col-start-1 in-[[data-layout=adaptive]:not([data-multiline])]:me-2"
+          : "in-[[data-layout=adaptive]:not([data-multiline])]:col-start-3 in-[[data-layout=adaptive]:not([data-multiline])]:ms-2 ms-auto justify-end",
         className,
       )}
+      data-align={align}
       data-slot="composer-action-group"
       {...props}
     />

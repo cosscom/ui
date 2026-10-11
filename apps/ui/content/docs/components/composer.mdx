@@ -156,6 +156,18 @@ For different limits at each breakpoint, set the row variables on `Composer` ins
 
 Here the input shows one to four rows below `md` and three to eight rows from `md` upward. The row props set inline values, so omit them when using responsive CSS variables.
 
+### Controls beside a short message
+
+Set `layout="adaptive"` to place controls beside a one-line draft. When text wraps or you add a line break, the input takes the full width and the controls move below it. Both layouts use the same composition: `ComposerInput` followed by `ComposerActions`, with action groups aligned to `start` and `end`. Only the `layout` prop changes.
+
+The adaptive layout starts at one visible row; setting `minRows` above one keeps the controls below. Keyboard focus follows the same order in both layouts: input, leading actions, then trailing actions.
+
+<ComponentPreview name="p-composer-7" />
+
+For a native textarea, use the same layout and render the textarea in `ComposerInput`:
+
+<ComponentPreview name="p-composer-8" />
+
 ## Mentions and actions
 
 The same `Composer` composition supports mentions and slash actions.
@@ -234,6 +246,7 @@ The styled frame and state owner for one input. It renders a form by default and
 | `triggers` | `readonly ComposerTrigger[]` | `[]` | Suggestion sources for contenteditable; omit for plain text |
 | `onQueryChange` | `(query: { character: string; text: string } \| null) => void` | — | Active suggestion query |
 | `submitOnEnter` | `"desktop" \| "always" \| "never"` | `"always"` | Enter behavior for either input |
+| `layout` | `"stacked" \| "adaptive"` | `"stacked"` | Keep actions below the input, or place them beside a one-line draft and move them below when it wraps |
 | `disabled` | `boolean` | `false` | Disables editing, suggestions, and submission |
 | `readOnly` | `boolean` | `false` | Allows selection and copying, but prevents editing and submission |
 | `submitDisabled` | `boolean` | `false` | Blocks all submission while allowing editing |
@@ -252,7 +265,7 @@ The editable input with an internal coss ScrollArea. It connects to its parent C
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `render` | Base UI render prop | Contenteditable `div` | Replaces the default element with a native textarea |
-| `minRows` | `number` | `1` below `md`, `2` from `md` | Minimum visible text rows |
+| `minRows` | `number` | `1` below `md`, `2` from `md`; `1` in adaptive layout | Minimum visible text rows |
 | `maxRows` | `number` | `8` | Maximum visible text rows before scrolling, subject to the `50dvh` cap |
 | `placeholder` | `string` | — | Placeholder for the input |
 | `renderToken` | `(token: ComposerTokenPart) => ReactNode` | — | Renders each selected token in the contenteditable input; defaults to `ComposerToken` |
@@ -260,7 +273,7 @@ The editable input with an internal coss ScrollArea. It connects to its parent C
 | `ref` | `Ref<HTMLDivElement>` | — | Ref to the default div; set other element refs on `render` |
 | `...props` | Div props | — | Other props forwarded to the editable element |
 
-`minRows` and `maxRows` are positive numbers of visible text rows, with vertical padding included in the resulting heights. Keep `minRows` at or below `maxRows`. The minimum defaults to one row below `md` and two rows from `md` upward; the maximum defaults to eight rows. Text is `text-base` below `md` and `text-sm` from `md` upward, and the row limits follow the actual line height at each breakpoint. When rendering a textarea, set the visible row limits on `ComposerInput`; the textarea's native `rows` attribute is unnecessary here. The scroll limit is also capped at `50dvh`; `--composer-max-height` can override the row-based maximum if a fixed height is needed.
+`minRows` and `maxRows` are positive numbers of visible text rows, with vertical padding included in the resulting heights. Keep `minRows` at or below `maxRows`. In the stacked layout, the minimum defaults to one row below `md` and two rows from `md` upward. The adaptive layout defaults to one row at every breakpoint. The maximum defaults to eight rows in either layout. Text is `text-base` below `md` and `text-sm` from `md` upward, and the row limits follow the actual line height at each breakpoint. When rendering a textarea, set the visible row limits on `ComposerInput`; the textarea's native `rows` attribute is unnecessary here. The scroll limit is also capped at `50dvh`; `--composer-max-height` can override the row-based maximum if a fixed height is needed.
 
 The default div has multiline textbox semantics. A rendered textarea uses the same parent-owned draft and submission policy. Use one `ComposerInput` per `Composer`. Forward supplied props and the ref when rendering a custom wrapper around the native textarea.
 
@@ -294,7 +307,7 @@ import { ComposerInput, ComposerToken } from "@/components/ui/composer"
 
 ### ComposerActions
 
-The bottom row for controls. Place it after `ComposerInput` so it remains outside the scrolling draft.
+Contains the action groups in either layout. Place it after `ComposerInput` so controls remain outside the scrolling draft. The standard layout always shows a bottom row; the adaptive layout places its groups beside short drafts and below longer ones. Apply button spacing and appearance to the groups and buttons.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -304,11 +317,11 @@ The bottom row for controls. Place it after `ComposerInput` so it remains outsid
 
 ### ComposerActionGroup
 
-A group of controls within `ComposerActions`.
+A group of controls within `ComposerActions`. Put the leading group first and the trailing group after it in both layouts.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `align` | `"start" \| "end"` | `"start"` | Pushes the group to the trailing side when set to `"end"` |
+| `align` | `"start" \| "end"` | `"start"` | Places the group on the leading or trailing side of the input in the compact layout, or of the bottom row when expanded |
 | `children` | `ReactNode` | — | Buttons or other controls |
 | `className` | `string` | — | Additional classes on the group |
 | `...props` | Div props | — | Other native div attributes |
