@@ -64,3 +64,23 @@ Real iOS Safari and Android Chrome keyboard behavior, IME, screen readers, neste
 - Reference the rendered list and option IDs for accessibility, including consumer-supplied IDs.
 
 Before a stable release, validate undo/redo, multiline selection, token deletion, clipboard behavior, controlled updates, and textarea render variants across supported browsers. Verify IME/autocorrect/dictation, screen-reader navigation and announcements, and real mobile keyboard/drawer interactions separately. These remain release checks, not claims of verified support.
+
+## iPhone simulator check — 2026-10-10
+
+Device Hub: iPhone 17, iOS 27.0, Safari, software keyboard enabled for the check. This is simulator evidence, not a physical-device sign-off. No automated tests were added or run.
+
+Verified manually:
+- Plain textarea Return submits; Shift+Return creates a new line.
+- Native @ opens suggestions; an immediate space closes them; deleting the space reopens them.
+- Tapping a mention or slash action inserts the appropriate token and keeps the keyboard open.
+- A 12-line contenteditable draft caps at eight visible rows and scrolls to the caret with Send reachable.
+- In portrait, keyboard dismissal/reopening restores the drawer layout.
+
+Found and corrected:
+- The keyboard provider added bottom padding to the composer ScrollArea viewport, inflating an empty input and hiding the conversation. The viewport now prevents this extra padding, since the drawer already reserves the keyboard inset. Verified the compact input and visible conversation in portrait after the change.
+
+Outstanding findings:
+- Landscape rotation with the software keyboard open collapses the drawer composer to a thin strip; input and Send are not accessible. Reproduce by opening the drawer, focusing its empty input, then rotating left.
+- After Select All and Delete on the multiline contenteditable draft, the input became visually empty and Send disabled, but the placeholder was absent. Typing and deleting one character with the software keyboard restored it. The underlying cause is not yet established.
+
+Limits: token chip wrapping, multiword query matching, paste, undo/redo, IME, dictation, and VoiceOver have not been validated on this simulator. Host text injection of @ opened Safari Find, and host clipboard paste did not populate the field, so neither is counted as a component failure or a passing clipboard check.

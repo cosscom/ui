@@ -199,9 +199,10 @@ export function ComposerInput({
   });
   return (
     <>
+      {/* The drawer reserves keyboard space; its nested input scroller needs no extra bottom padding. */}
       <ScrollArea
         ref={scrollRef}
-        className="flex h-auto! min-w-0 flex-col text-base **:data-[slot=scroll-area-viewport]:h-auto! **:data-[slot=scroll-area-viewport]:max-h-[min(var(--composer-max-height,calc(var(--composer-max-rows,8)*var(--composer-line-height,1lh)+var(--composer-input-padding,--spacing(2)))),50dvh)] **:data-[slot=scroll-area-viewport]:min-h-0 md:text-sm"
+        className="flex h-auto! min-w-0 flex-col text-base **:data-[slot=scroll-area-viewport]:h-auto! **:data-[slot=scroll-area-viewport]:max-h-[min(var(--composer-max-height,calc(var(--composer-max-rows,8)*var(--composer-line-height,1lh)+var(--composer-input-padding,--spacing(2)))),50dvh)] **:data-[slot=scroll-area-viewport]:min-h-0 **:data-[slot=scroll-area-viewport]:pb-0! md:text-sm"
         data-slot="composer-scroll-area"
         overscrollContain
         style={
