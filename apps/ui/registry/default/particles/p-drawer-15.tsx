@@ -14,11 +14,9 @@ import {
   ComposerPopup,
   ComposerSubmit,
   type ComposerValue,
-  getComposerText,
 } from "@/registry/default/ui/composer";
 import {
   Drawer,
-  DrawerClose,
   DrawerHeader,
   DrawerPanel,
   DrawerPopup,
@@ -26,14 +24,20 @@ import {
   DrawerTrigger,
 } from "@/registry/default/ui/drawer";
 
+const blocks = Array.from({ length: 32 }, (_, index) => `block-${index}`);
+
 const people = [
   { id: "alex", label: "Alex Morgan" },
   { id: "sam", label: "Sam Rivera" },
 ];
 
+const actions = [
+  { id: "summarize", label: "Summarize", type: "action" as const },
+  { id: "rewrite", label: "Rewrite", type: "action" as const },
+];
+
 export default function Particle() {
   const [value, setValue] = useState<ComposerValue>([]);
-  const [messages, setMessages] = useState(["How can I help today?"]);
 
   return (
     <Drawer>
@@ -45,22 +49,14 @@ export default function Particle() {
         keyboardAware
         showBar
       >
-        <DrawerHeader className="flex items-center justify-between gap-3">
+        <DrawerHeader>
           <DrawerTitle>Chat</DrawerTitle>
-          <DrawerClose render={<Button size="sm" variant="ghost" />}>
-            Close
-          </DrawerClose>
         </DrawerHeader>
         <div className="min-h-0 flex-1">
           <DrawerPanel>
-            <div className="flex flex-col gap-3" role="log">
-              {messages.map((message, index) => (
-                <p
-                  className="max-w-[85%] rounded-xl bg-muted px-3 py-2 text-sm even:ms-auto even:bg-accent"
-                  key={`${index}-${message}`}
-                >
-                  {message}
-                </p>
+            <div aria-hidden="true" className="flex flex-col gap-2">
+              {blocks.map((key) => (
+                <div className="h-12 shrink-0 rounded-xl bg-muted" key={key} />
               ))}
             </div>
           </DrawerPanel>
@@ -69,11 +65,11 @@ export default function Particle() {
           className="mx-3 mb-3"
           value={value}
           onValueChange={setValue}
-          onSubmit={(message) => {
-            setMessages((items) => [...items, getComposerText(message)]);
-            setValue([]);
-          }}
-          triggers={[{ character: "@", items: people }]}
+          onSubmit={() => setValue([])}
+          triggers={[
+            { character: "@", items: people },
+            { character: "/", items: actions },
+          ]}
         >
           <ComposerInput aria-label="Message" placeholder="Write a message…" />
           <ComposerPopup>
