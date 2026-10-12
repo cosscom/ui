@@ -121,7 +121,8 @@ export function DrawerViewport({
       className={cn(
         "fixed inset-0 z-50 [--bleed:--spacing(12)] [--inset:0px]",
         "touch-none",
-        position === "bottom" && "grid grid-rows-[1fr_auto] pt-12",
+        position === "bottom" &&
+          "grid grid-rows-[1fr_auto] pt-[max(--spacing(2),env(safe-area-inset-top,0px))]",
         position === "top" && "grid grid-rows-[auto_1fr] pb-12",
         position === "left" && "flex justify-start",
         position === "right" && "flex justify-end",
@@ -295,10 +296,7 @@ export function DrawerTitle({
 }: DrawerPrimitive.Title.Props): React.ReactElement {
   return (
     <DrawerPrimitive.Title
-      className={cn(
-        "font-heading font-semibold text-xl leading-none",
-        className,
-      )}
+      className={cn("font-bold font-heading text-xl leading-none", className)}
       data-slot="drawer-title"
       {...props}
     />
