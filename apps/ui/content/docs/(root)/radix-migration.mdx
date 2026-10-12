@@ -268,7 +268,9 @@ Ensure you have the following variables imported in your CSS file:
 ### Button
 
 **Quick Checklist:**
-- Replace `asChild` → `render` on `Button`
+- Do **not** migrate `Button asChild` / `Button render={<Link />}` — style links with `buttonVariants` instead
+- Keep using `render={<Button … />}` on triggers (`MenuTrigger`, `DialogTrigger`, etc.)
+- Prefer the built-in `loading` prop for async actions (`focusableWhenDisabled` defaults to `true` while loading)
 
 **Size Comparison:**
 
@@ -294,7 +296,9 @@ We've added a new `destructive-outline` variant for better UX patterns:
 - **Primary actions**: Use `destructive` (solid red) for the main destructive action
 - **Secondary triggers**: Use `destructive-outline` (outline red) to avoid alarming red buttons in the main interface
 
-**Comparison Example:**
+**Link Comparison:**
+
+`Button` wraps [Base UI Button](https://base-ui.com/react/components/button), which enforces button semantics and should not wrap links. Style the link with `buttonVariants` (same idea as shadcn’s `buttonVariants` on `<a>` / `Link`).
 
 <span data-lib="radix-ui">
 ```tsx title="shadcn/ui"
@@ -307,8 +311,12 @@ We've added a new `destructive-outline` variant for better UX patterns:
 
 <span data-lib="base-ui">
 ```tsx title="coss ui"
-// [!code word:render]
-<Button render={<Link href="/login" />}>Login</Button>
+// [!code word:buttonVariants]
+import { buttonVariants } from "@/components/ui/button"
+
+<Link className={buttonVariants()} href="/login">
+  Login
+</Link>
 ```
 </span>
 

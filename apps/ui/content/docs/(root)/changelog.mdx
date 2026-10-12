@@ -58,6 +58,54 @@ No change required for those composed parts after upgrading. For custom nested s
 After upgrading @coss/scroll-area, ScrollArea no longer applies overscroll-contain by default. Add overscrollContain only on nested scroll surfaces where wheel/touch should not chain to a parent scroller (dialogs, sheets, drawers, popups, sidebars, command panels). DialogPanel, SheetPanel, DrawerPanel, ComboboxList, AutocompleteList, and SidebarContent already pass overscrollContain—update local copies of those components if you vendor them.
 ```
 
+## July 30, 2026
+
+### Button
+
+**`Button`** now wraps [Base UI Button](https://base-ui.com/react/components/button) instead of a custom `useRender` wrapper. Variants, sizes, and the built-in `loading` spinner are unchanged.
+
+Do **not** use `Button` for links. Base UI Button enforces button semantics, so links should be styled with **`buttonVariants`** on a plain `<a>` or router `Link` — the same approach as [shadcn/ui](https://ui.shadcn.com/docs/components/button#as-link).
+
+When `loading` is `true`, `focusableWhenDisabled` defaults to `true` so focus is not lost during async actions. Disabled styles use `data-disabled` so they remain correct while the button is focusable.
+
+See the [Button](/ui/docs/components/button) docs and [migration guide](/ui/docs/radix-migration#button).
+
+**Migration:**
+
+```diff
+  import Link from "next/link"
+- import { Button } from "@/components/ui/button"
++ import { buttonVariants } from "@/components/ui/button"
+
+- <Button render={<Link href="/login" />}>Login</Button>
++ <Link className={buttonVariants()} href="/login">
++   Login
++ </Link>
+```
+
+With variant/size:
+
+```diff
+- <Button variant="outline" size="sm" render={<Link href="/docs" />}>
+-   Docs
+- </Button>
++ <Link className={buttonVariants({ variant: "outline", size: "sm" })} href="/docs">
++   Docs
++ </Link>
+```
+
+Trigger composition is unchanged — keep putting `Button` on the **other** component’s `render` prop:
+
+```tsx
+<MenuTrigger render={<Button variant="outline" />}>Open</MenuTrigger>
+```
+
+**Agent migration prompt:**
+
+```text
+coss Button now wraps @base-ui/react/button. Stop using <Button render={<Link|a … />}> for navigation — style Link or <a> with buttonVariants({ variant, size, className }) instead. Keep Button for real button actions. loading still works and defaults focusableWhenDisabled to true; disabled styles use data-disabled. MenuTrigger/DialogTrigger/etc. render={<Button />} composition is unchanged. See Button docs and radix-migration#button.
+```
+
 ## July 26, 2026
 
 ### React DayPicker 10

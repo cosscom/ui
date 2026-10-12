@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/registry/default/ui/button";
+import { Button, buttonVariants } from "@/registry/default/ui/button";
 import {
   Drawer,
   DrawerClose,
@@ -25,10 +25,12 @@ export default function Particle() {
             <DrawerClose
               nativeButton={false}
               render={
-                <Button
-                  className="justify-start"
-                  render={<Link href="#" />}
-                  variant="ghost"
+                <Link
+                  className={buttonVariants({
+                    className: "justify-start",
+                    variant: "ghost",
+                  })}
+                  href="#"
                 />
               }
             >
@@ -37,10 +39,12 @@ export default function Particle() {
             <DrawerClose
               nativeButton={false}
               render={
-                <Button
-                  className="justify-start"
-                  render={<Link href="#" />}
-                  variant="ghost"
+                <Link
+                  className={buttonVariants({
+                    className: "justify-start",
+                    variant: "ghost",
+                  })}
+                  href="#"
                 />
               }
             >
@@ -49,10 +53,12 @@ export default function Particle() {
             <DrawerClose
               nativeButton={false}
               render={
-                <Button
-                  className="justify-start"
-                  render={<Link href="#" />}
-                  variant="ghost"
+                <Link
+                  className={buttonVariants({
+                    className: "justify-start",
+                    variant: "ghost",
+                  })}
+                  href="#"
                 />
               }
             >
@@ -61,10 +67,12 @@ export default function Particle() {
             <DrawerClose
               nativeButton={false}
               render={
-                <Button
-                  className="justify-start"
-                  render={<Link href="#" />}
-                  variant="ghost"
+                <Link
+                  className={buttonVariants({
+                    className: "justify-start",
+                    variant: "ghost",
+                  })}
+                  href="#"
                 />
               }
             >

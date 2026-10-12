@@ -1,4 +1,4 @@
-import { Button } from "@coss/ui/components/button";
+import { buttonVariants } from "@coss/ui/components/button";
 import {
   PageHeader,
   PageHeaderDescription,
@@ -24,19 +24,13 @@ export default function NotFound() {
           moved.
         </PageHeaderDescription>
         <div className="mt-4">
-          <Button
-            className="group"
-            render={
-              <Link href="/">
-                <ArrowLeftIcon
-                  aria-hidden="true"
-                  className="-ms-1 opacity-60 transition-transform group-hover:-translate-x-0.5"
-                />
-                Back to Home
-              </Link>
-            }
-            size="lg"
-          />
+          <Link className={buttonVariants({ className: "group" })} href="/">
+            <ArrowLeftIcon
+              aria-hidden="true"
+              className="-ms-1 opacity-60 transition-transform group-hover:-translate-x-0.5"
+            />
+            Back to Home
+          </Link>
         </div>
       </PageHeader>
     </div>

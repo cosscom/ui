@@ -9,7 +9,7 @@
   "files": [
     {
       "path": "registry/default/particles/p-button-18.tsx",
-      "content": "import { Button } from \"@/registry/default/ui/button\";\nimport { Spinner } from \"@/registry/default/ui/spinner\";\n\nexport default function Particle() {\n  return (\n    <Button disabled>\n      <Spinner />\n      Loading...\n    </Button>\n  );\n}\n",
+      "content": "import { Button } from \"@/registry/default/ui/button\";\nimport { Spinner } from \"@/registry/default/ui/spinner\";\n\nexport default function Particle() {\n  return (\n    <Button disabled focusableWhenDisabled>\n      <Spinner />\n      Loading...\n    </Button>\n  );\n}\n",
       "type": "registry:block"
     }
   ],

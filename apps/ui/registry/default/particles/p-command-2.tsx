@@ -19,7 +19,7 @@ import {
   useState,
 } from "react";
 import { useAutocompleteFilter } from "@/registry/default/ui/autocomplete";
-import { Button } from "@/registry/default/ui/button";
+import { Button, buttonVariants } from "@/registry/default/ui/button";
 import {
   Command,
   CommandCollection,
@@ -568,14 +568,16 @@ export default function PCommand2() {
                         {aiState.referenceLinks.length > 0 && (
                           <div className="mt-4 flex flex-wrap gap-2">
                             {aiState.referenceLinks.map((link, index) => (
-                              <Button
+                              <Link
+                                className={buttonVariants({
+                                  size: "sm",
+                                  variant: "secondary",
+                                })}
+                                href={link.url}
                                 key={`${link.url}-${index}`}
-                                render={<Link href={link.url} />}
-                                size="sm"
-                                variant="secondary"
                               >
                                 {link.title}
-                              </Button>
+                              </Link>
                             ))}
                           </div>
                         )}

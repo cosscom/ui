@@ -43,4 +43,5 @@ Only specific composed wrappers (and `ToastProvider` / `AnchoredToastProvider` f
 
 - Building bespoke dropdown/dialog behavior instead of using primitives.
 - Mixing APIs from other ecosystems (`asChild`-only mental model) without checking coss equivalents.
+- Using `<Button render={<Link|a … />}>` for navigation — style the link with `buttonVariants` instead (triggers may still use `render={<Button />}`).
 - Omitting key subcomponents that preserve accessibility and layout conventions.

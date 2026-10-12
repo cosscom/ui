@@ -1,81 +1,70 @@
 import { beforeEach, describe, expect, mock, test } from "bun:test";
-import * as React from "react";
+import type * as React from "react";
 
-type UseRenderConfig = {
-  defaultTagName: string;
-  render?: (...args: unknown[]) => unknown;
-  props: Record<string, unknown>;
+type ButtonPrimitiveProps = Record<string, unknown> & {
+  children?: React.ReactNode;
 };
 
-const useRenderCalls: UseRenderConfig[] = [];
-const mergePropsCalls: Array<
-  [Record<string, unknown>, Record<string, unknown>]
-> = [];
+const buttonPrimitiveCalls: ButtonPrimitiveProps[] = [];
 
-function useRenderMock(config: UseRenderConfig) {
-  useRenderCalls.push(config);
+function mockButtonPrimitive(props: ButtonPrimitiveProps) {
+  buttonPrimitiveCalls.push(props);
   return null;
 }
 
-function mergePropsMock(
-  defaults: Record<string, unknown>,
-  overrides: Record<string, unknown> = {},
-) {
-  mergePropsCalls.push([defaults, overrides]);
-  return { ...defaults, ...overrides };
-}
-
-mock.module("@base-ui/react/use-render", () => ({
-  useRender: useRenderMock,
+mock.module("@base-ui/react/button", () => ({
+  Button: mockButtonPrimitive,
 }));
 
-mock.module("@base-ui/react/merge-props", () => ({
-  mergeProps: mergePropsMock,
-}));
+const { Button: ButtonComponent } = await import("../../src/components/button");
 
-const { Button } = await import("../../src/components/button");
-
-function lastUseRenderCall() {
-  const lastCall = useRenderCalls[useRenderCalls.length - 1];
-  if (!lastCall) {
-    throw new Error("useRender was not called");
-  }
-  return lastCall;
+function Button(props: Parameters<typeof ButtonComponent>[0]) {
+  const element = ButtonComponent(props);
+  (element.type as (props: unknown) => unknown)(element.props);
 }
 
-function lastMergePropsCall() {
-  const lastCall = mergePropsCalls[mergePropsCalls.length - 1];
+function lastButtonPrimitiveCall() {
+  const lastCall = buttonPrimitiveCalls[buttonPrimitiveCalls.length - 1];
   if (!lastCall) {
-    throw new Error("mergeProps was not called");
+    throw new Error("ButtonPrimitive was not called");
   }
   return lastCall;
 }
 
 describe("Button", () => {
   beforeEach(() => {
-    useRenderCalls.length = 0;
-    mergePropsCalls.length = 0;
+    buttonPrimitiveCalls.length = 0;
   });
 
-  test("sets base attributes and defaults type to button", () => {
+  test("sets base attributes and forwards children", () => {
     Button({ children: "Default label" });
 
-    const call = lastUseRenderCall();
-    expect(call.defaultTagName).toBe("button");
-    expect(call.props["data-slot"]).toBe("button");
-    expect(call.props.type).toBe("button");
+    const call = lastButtonPrimitiveCall();
+    expect(call["data-slot"]).toBe("button");
+    expect(call.disabled).toBe(false);
+    expect(call.focusableWhenDisabled).toBe(false);
+    expect(call.children).toBeDefined();
   });
 
-  test("omits the default type when a custom render is provided", () => {
-    const render = () => React.createElement("div");
-    Button({ render, type: "submit" });
+  test("disables and stays focusable while loading", () => {
+    Button({ children: "Submit", loading: true });
 
-    const [defaults, overrides] = lastMergePropsCall();
-    expect(defaults.type).toBeUndefined();
-    expect(overrides.type).toBe("submit");
+    const call = lastButtonPrimitiveCall();
+    expect(call.disabled).toBe(true);
+    expect(call.focusableWhenDisabled).toBe(true);
+    expect(call["data-loading"]).toBe("");
+  });
 
-    const call = lastUseRenderCall();
-    expect(call.render).toBe(render);
+  test("respects an explicit focusableWhenDisabled override", () => {
+    Button({
+      children: "Submit",
+      focusableWhenDisabled: false,
+      loading: true,
+    });
+
+    const call = lastButtonPrimitiveCall();
+    expect(call.disabled).toBe(true);
+    expect(call.focusableWhenDisabled).toBe(false);
   });
 
   test("merges variants, sizes, and custom className", () => {
@@ -85,8 +74,8 @@ describe("Button", () => {
       variant: "destructive",
     });
 
-    const call = lastUseRenderCall();
-    const className = call.props.className as string;
+    const call = lastButtonPrimitiveCall();
+    const className = call.className as string;
     expect(className).toContain("border-destructive");
     expect(className).toContain("h-10");
     expect(className).toContain("custom-class");

@@ -1,4 +1,4 @@
-import { Button } from "@coss/ui/components/button";
+import { Button, buttonVariants } from "@coss/ui/components/button";
 import {
   Card,
   CardFrame,
@@ -36,12 +36,12 @@ export default function NewWebhookPage() {
             </CardPanel>
           </Card>
           <CardFrameFooter className="flex justify-end gap-2">
-            <Button
-              render={<Link href="/settings/developer/webhooks" />}
-              variant="outline"
+            <Link
+              className={buttonVariants({ variant: "outline" })}
+              href="/settings/developer/webhooks"
             >
               Cancel
-            </Button>
+            </Link>
             <Button>Save</Button>
           </CardFrameFooter>
         </CardFrame>

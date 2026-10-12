@@ -2547,7 +2547,7 @@ export const Index: Record<string, any> = {
   },
   "p-button-17": {
     name: "p-button-17",
-    description: "Link rendered as button",
+    description: "Link styled with buttonVariants",
     type: "registry:block",
     registryDependencies: ["@coss/button"],
     files: [{

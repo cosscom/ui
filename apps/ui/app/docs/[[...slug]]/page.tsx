@@ -2,7 +2,7 @@ import { LinkSquare02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Button } from "@/registry/default/ui/button";
+import { buttonVariants } from "@/registry/default/ui/button";
 import { Card, CardFrame, CardPanel } from "@/registry/default/ui/card";
 import { ScrollArea } from "@/registry/default/ui/scroll-area";
 import { DocsCopyPage } from "@/components/docs-copy-page";
@@ -77,23 +77,21 @@ export default async function Page(props: {
                     </div>
                     <div className="flex items-center space-x-2 pt-4">
                       {links?.doc && (
-                        <Button
-                          render={
-                            <Link
-                              href={links.doc}
-                              rel="noreferrer"
-                              target="_blank"
-                            >
-                              <HugeiconsIcon
-                                icon={LinkSquare02Icon}
-                                strokeWidth={2.5}
-                              />
-                              API Reference
-                            </Link>
-                          }
-                          size="xs"
-                          variant="outline"
-                        />
+                        <Link
+                          className={buttonVariants({
+                            size: "xs",
+                            variant: "outline",
+                          })}
+                          href={links.doc}
+                          rel="noreferrer"
+                          target="_blank"
+                        >
+                          <HugeiconsIcon
+                            icon={LinkSquare02Icon}
+                            strokeWidth={2.5}
+                          />
+                          API Reference
+                        </Link>
                       )}
                       <DocsCopyPage page={rawContent} />
                     </div>

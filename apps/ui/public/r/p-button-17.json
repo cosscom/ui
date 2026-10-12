@@ -1,14 +1,14 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "p-button-17",
-  "description": "Link rendered as button",
+  "description": "Link styled with buttonVariants",
   "registryDependencies": [
     "@coss/button"
   ],
   "files": [
     {
       "path": "registry/default/particles/p-button-17.tsx",
-      "content": "import Link from \"next/link\";\nimport { Button } from \"@/registry/default/ui/button\";\n\nexport default function Particle() {\n  return <Button render={<Link href=\"/\" />}>Link</Button>;\n}\n",
+      "content": "import Link from \"next/link\";\nimport { buttonVariants } from \"@/registry/default/ui/button\";\n\nexport default function Particle() {\n  return (\n    <Link className={buttonVariants()} href=\"/\">\n      Link\n    </Link>\n  );\n}\n",
       "type": "registry:block"
     }
   ],

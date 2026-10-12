@@ -1,7 +1,7 @@
 "use client";
 
 import { Badge } from "@coss/ui/components/badge";
-import { Button } from "@coss/ui/components/button";
+import { Button, buttonVariants } from "@coss/ui/components/button";
 import {
   Card,
   CardFrame,
@@ -201,15 +201,17 @@ export function BookingsList() {
                         </p>
                       </div>
                       {locationLabel && (
-                        <Button
-                          className="pointer-events-auto"
-                          render={<Link href="#join" />}
-                          size="xs"
-                          variant="outline"
+                        <Link
+                          className={buttonVariants({
+                            className: "pointer-events-auto",
+                            size: "xs",
+                            variant: "outline",
+                          })}
+                          href="#join"
                         >
                           <VideoIcon />
                           {locationLabel}
-                        </Button>
+                        </Link>
                       )}
                     </div>
                   </div>

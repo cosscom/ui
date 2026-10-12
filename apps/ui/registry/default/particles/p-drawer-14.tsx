@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/registry/default/ui/button";
+import { buttonVariants } from "@/registry/default/ui/button";
 import {
   Drawer,
   DrawerHeader,
@@ -31,34 +31,42 @@ export default function Particle() {
           </DrawerHeader>
           <DrawerPanel>
             <nav className="-mx-[calc(--spacing(3)-1px)] flex flex-col gap-0.5">
-              <Button
-                className="justify-start"
-                render={<Link href="#" />}
-                variant="ghost"
+              <Link
+                className={buttonVariants({
+                  className: "justify-start",
+                  variant: "ghost",
+                })}
+                href="#"
               >
                 Home
-              </Button>
-              <Button
-                className="justify-start"
-                render={<Link href="#" />}
-                variant="ghost"
+              </Link>
+              <Link
+                className={buttonVariants({
+                  className: "justify-start",
+                  variant: "ghost",
+                })}
+                href="#"
               >
                 Profile
-              </Button>
-              <Button
-                className="justify-start"
-                render={<Link href="#" />}
-                variant="ghost"
+              </Link>
+              <Link
+                className={buttonVariants({
+                  className: "justify-start",
+                  variant: "ghost",
+                })}
+                href="#"
               >
                 Settings
-              </Button>
-              <Button
-                className="justify-start"
-                render={<Link href="#" />}
-                variant="ghost"
+              </Link>
+              <Link
+                className={buttonVariants({
+                  className: "justify-start",
+                  variant: "ghost",
+                })}
+                href="#"
               >
                 Sign out
-              </Button>
+              </Link>
             </nav>
           </DrawerPanel>
         </DrawerPopup>

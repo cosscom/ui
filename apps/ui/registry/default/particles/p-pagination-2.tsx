@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/registry/default/ui/button";
+import { Button, buttonVariants } from "@/registry/default/ui/button";
 import {
   Pagination,
   PaginationContent,
@@ -16,30 +16,32 @@ export default function Particle({ currentPage, totalPages }: PaginationProps) {
     <Pagination>
       <PaginationContent className="w-full justify-between gap-2">
         <PaginationItem>
-          <Button
-            disabled={currentPage === 1}
-            render={
-              currentPage === 1 ? undefined : (
-                <Link href={`#/page/${currentPage - 1}`} />
-              )
-            }
-            variant="outline"
-          >
-            Previous
-          </Button>
+          {currentPage === 1 ? (
+            <Button disabled variant="outline">
+              Previous
+            </Button>
+          ) : (
+            <Link
+              className={buttonVariants({ variant: "outline" })}
+              href={`#/page/${currentPage - 1}`}
+            >
+              Previous
+            </Link>
+          )}
         </PaginationItem>
         <PaginationItem>
-          <Button
-            disabled={currentPage === totalPages}
-            render={
-              currentPage === totalPages ? undefined : (
-                <Link href={`#/page/${currentPage + 1}`} />
-              )
-            }
-            variant="outline"
-          >
-            Next
-          </Button>
+          {currentPage === totalPages ? (
+            <Button disabled variant="outline">
+              Next
+            </Button>
+          ) : (
+            <Link
+              className={buttonVariants({ variant: "outline" })}
+              href={`#/page/${currentPage + 1}`}
+            >
+              Next
+            </Link>
+          )}
         </PaginationItem>
       </PaginationContent>
     </Pagination>

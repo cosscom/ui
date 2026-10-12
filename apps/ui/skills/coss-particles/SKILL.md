@@ -207,7 +207,7 @@ Total: **508 particles** across **54 component types**
 - Small icon button | [JSON](https://coss.com/ui/r/p-button-14.json)
 - Large icon button | [JSON](https://coss.com/ui/r/p-button-15.json)
 - Button with icon | [JSON](https://coss.com/ui/r/p-button-16.json)
-- Link rendered as button | [JSON](https://coss.com/ui/r/p-button-17.json)
+- Link styled with buttonVariants | [JSON](https://coss.com/ui/r/p-button-17.json)
 - Button using the built-in loading prop | [JSON](https://coss.com/ui/r/p-button-41.json)
 - Custom loading button with manual Spinner | [JSON](https://coss.com/ui/r/p-button-18.json)
 - Expandable show more/less toggle button | [JSON](https://coss.com/ui/r/p-button-19.json)

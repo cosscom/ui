@@ -9,7 +9,7 @@ import {
   AlertDialogPopup,
   AlertDialogTitle,
 } from "@coss/ui/components/alert-dialog";
-import { Button } from "@coss/ui/components/button";
+import { Button, buttonVariants } from "@coss/ui/components/button";
 import {
   Card,
   CardFrame,
@@ -127,12 +127,13 @@ export function AttributesSection({
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
-          <Button
-            render={<Link href="/settings/organizations/attributes/new" />}
+          <Link
+            className={buttonVariants()}
+            href="/settings/organizations/attributes/new"
           >
             <PlusIcon aria-hidden="true" />
             New attribute
-          </Button>
+          </Link>
         </EmptyContent>
       </Empty>
     );
@@ -144,14 +145,13 @@ export function AttributesSection({
         <CardFrameHeader>
           <CardFrameTitle>Custom</CardFrameTitle>
           <CardFrameAction>
-            <Button
-              render={<Link href="/settings/organizations/attributes/new" />}
-              type="button"
-              variant="outline"
+            <Link
+              className={buttonVariants({ variant: "outline" })}
+              href="/settings/organizations/attributes/new"
             >
               <PlusIcon aria-hidden="true" />
               Add
-            </Button>
+            </Link>
           </CardFrameAction>
         </CardFrameHeader>
         <Card className="rounded-b-none!">

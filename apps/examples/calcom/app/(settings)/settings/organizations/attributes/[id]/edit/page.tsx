@@ -1,4 +1,4 @@
-import { Button } from "@coss/ui/components/button";
+import { Button, buttonVariants } from "@coss/ui/components/button";
 import {
   Card,
   CardFrame,
@@ -25,14 +25,13 @@ export default async function EditAttributePage({
     <>
       <AppHeader>
         <div className="flex min-w-0 items-start gap-3">
-          <Button
+          <Link
             aria-label="Go back"
-            render={<Link href="/settings/organizations/attributes" />}
-            size="icon-sm"
-            variant="ghost"
+            className={buttonVariants({ size: "icon-sm", variant: "ghost" })}
+            href="/settings/organizations/attributes"
           >
             <ArrowLeftIcon aria-hidden="true" />
-          </Button>
+          </Link>
           <AppHeaderContent title="Edit attribute">
             <AppHeaderDescription>
               Update a custom attribute for your team members.

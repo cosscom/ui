@@ -811,7 +811,8 @@ When creating a particle equivalent to an origin component:
    - Understand why certain classes were used in origin
 4. **Look at existing particles** in the same category for consistency
 5. **Understand the differences:**
-   - `asChild` → `render` prop
+   - `asChild` → `render` prop (triggers / composed parts — not Button-as-link)
+   - Button links → `buttonVariants` on `<a>` / `Link` (not `Button render`)
    - `*Content` → `*Popup` or `*Panel`
    - `onSelect` → `onClick` (Menu)
    - `type="multiple"` → `multiple={true}`
@@ -819,7 +820,7 @@ When creating a particle equivalent to an origin component:
 
 ### Key Migration Patterns
 
-**asChild → render:**
+**asChild → render (triggers / composed parts):**
 
 ```tsx
 // Origin (Radix)
@@ -829,6 +830,23 @@ When creating a particle equivalent to an origin component:
 
 // coss (Base UI)
 <MenuTrigger render={<Button />}>Open</MenuTrigger>
+```
+
+**Button links → `buttonVariants` (not `Button render`):**
+
+```tsx
+// Origin (Radix / older coss)
+<Button asChild>
+  <Link href="/login">Login</Link>
+</Button>
+// or: <Button render={<Link href="/login" />}>Login</Button>
+
+// coss (Base UI Button)
+import { buttonVariants } from "@/registry/default/ui/button";
+
+<Link className={buttonVariants()} href="/login">
+  Login
+</Link>
 ```
 
 **Component naming:**
@@ -1019,7 +1037,8 @@ const handleSubmit = async () => {
 
 - Avoid Next.js-specific APIs (`next/link`, `next/image`) unless the particle specifically demonstrates Next.js integration
 - Use standard HTML elements and React patterns
-- For navigation, use standard `<a>` tags or demonstrate with `render` prop
+- For navigation that should look like a button, style `<a>` / `Link` with `buttonVariants` — do not use `<Button render={<a|Link />}>`
+- Other primitives may still use `render` for links (for example `BreadcrumbLink`, `Badge`, `MenuLinkItem`)
 
 ---
 

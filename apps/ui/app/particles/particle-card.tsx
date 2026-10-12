@@ -3,7 +3,7 @@ import { InformationCircleIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { cache } from "react";
 import { Index } from "@/registry/__index__";
-import { Button } from "@/registry/default/ui/button";
+import { Button, buttonVariants } from "@/registry/default/ui/button";
 import {
   Drawer,
   DrawerContent,
@@ -84,9 +84,11 @@ export async function ParticleCard({
             />
             <Drawer position="right">
               <DrawerTrigger
-                render={
-                  <Button className="text-sm" size="sm" variant="outline" />
-                }
+                className={buttonVariants({
+                  className: "text-sm",
+                  size: "sm",
+                  variant: "outline",
+                })}
               >
                 View code
               </DrawerTrigger>
@@ -115,19 +117,15 @@ export async function ParticleCard({
                       <h2 className="mt-6 mb-4 font-heading font-semibold text-xl">
                         Code
                       </h2>
-                      <Button
-                        render={
-                          <a
-                            href={`https://v0.dev/chat/api/open?url=${encodeURIComponent(`${cossuiUrl}/r/${name}.json`)}`}
-                            rel="noopener noreferrer"
-                            target="_blank"
-                          >
-                            Open in<span className="sr-only">v0</span>
-                            <Icons.v0 className="size-5" />
-                          </a>
-                        }
-                        variant="outline"
-                      />
+                      <a
+                        className={buttonVariants({ variant: "outline" })}
+                        href={`https://v0.dev/chat/api/open?url=${encodeURIComponent(`${cossuiUrl}/r/${name}.json`)}`}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      >
+                        Open in<span className="sr-only">v0</span>
+                        <Icons.v0 className="size-5" />
+                      </a>
                     </div>
                     <ComponentSource
                       className="flex min-h-0 flex-1 flex-col *:data-rehype-pretty-code-figure:mt-0"

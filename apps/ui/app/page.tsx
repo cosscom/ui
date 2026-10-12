@@ -7,7 +7,7 @@ import { SiteFooter } from "@coss/ui/shared/site-footer";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Badge } from "@/registry/default/ui/badge";
-import { Button } from "@/registry/default/ui/button";
+import { buttonVariants } from "@/registry/default/ui/button";
 import {
   Card,
   CardFrame,
@@ -39,16 +39,15 @@ export default function Page() {
           </PageHeaderHeading>
           <PageHeaderDescription>{description}</PageHeaderDescription>
           <div className="mt-2 flex gap-2">
-            <Button render={<Link href="/docs" />} size="lg">
+            <Link className={buttonVariants({ size: "lg" })} href="/docs">
               Get started
-            </Button>
-            <Button
-              render={<Link href="/particles" />}
-              size="lg"
-              variant="outline"
+            </Link>
+            <Link
+              className={buttonVariants({ size: "lg", variant: "outline" })}
+              href="/particles"
             >
               Browse {particleCount} particles
-            </Button>
+            </Link>
           </div>
         </PageHeader>
       </div>

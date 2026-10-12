@@ -291,7 +291,7 @@ export function SidebarTrigger({
       className={cn("size-7", className)}
       data-sidebar="trigger"
       data-slot="sidebar-trigger"
-      onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+      onClick={(event) => {
         onClick?.(event);
         toggleSidebar();
       }}

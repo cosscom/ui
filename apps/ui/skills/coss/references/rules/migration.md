@@ -17,6 +17,7 @@ coss is close to shadcn ergonomically, but its primitives and composition model 
 - When only Base UI helpers are needed (`useRender`, `mergeProps`, `CSPProvider`, `DirectionProvider`), prefer `@coss/ui/base-ui/*` re-exports over direct `@base-ui/react` dependency.
 - For Select migration, replace children-only option derivation with an `items`-first pattern where possible, then map options consistently in `SelectPopup`.
 - For OTP fields, migrate off the `input-otp` package to coss `@coss/otp-field`: rename components (`OTPField`, `OTPFieldInput`, `OTPFieldSeparator`), use `length` and `onValueChange`, and drop `InputOTPGroup` / slot `index` (see example below).
+- For buttons-as-links, do **not** use `Button asChild` / `Button render={<Link />}` — style `Link` / `<a>` with `buttonVariants` (see example below). Trigger composition (`DialogTrigger render={<Button />}`) is unchanged.
 
 ## Practical migration examples
 
@@ -35,6 +36,26 @@ Use these snippets as fast conversion templates when migrating shadcn/Radix code
 // coss/Base UI
 <DialogTrigger render={<Button variant="outline" />}>Open</DialogTrigger>
 ```
+
+### Button links: `asChild` / `render` → `buttonVariants`
+
+```tsx
+// shadcn/Radix
+<Button asChild>
+  <Link href="/login">Login</Link>
+</Button>
+```
+
+```tsx
+// coss / Base UI Button (and shadcn’s recommended link pattern)
+import { buttonVariants } from "@/components/ui/button"
+
+<Link className={buttonVariants()} href="/login">
+  Login
+</Link>
+```
+
+Do not write `<Button render={<Link href="..." />}>`. Keep `Button` for real `<button>` actions.
 
 ### Menu actions: `onSelect` -> `onClick`
 

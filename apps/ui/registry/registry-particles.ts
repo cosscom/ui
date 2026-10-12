@@ -845,7 +845,7 @@ export const particles: ParticleItem[] = [
   },
   {
     categories: categories("button"),
-    description: "Link rendered as button",
+    description: "Link styled with buttonVariants",
     files: [{ path: "particles/p-button-17.tsx", type: "registry:block" }],
     name: "p-button-17",
     registryDependencies: ["@coss/button"],

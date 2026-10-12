@@ -1,9 +1,14 @@
 ---
 title: Button
 description: A button or a component that looks like a button.
+
+links:
+  doc: https://base-ui.com/react/components/button
 ---
 
 <ComponentPreview name="p-button-1" />
+
+This component wraps [Base UI Button](https://base-ui.com/react/components/button).
 
 ## Installation
 
@@ -71,40 +76,64 @@ import { Button } from "@/components/ui/button"
 
 ## Link
 
-You can use the [`render`](https://base-ui.com/react/utils/use-render#migrating-from-radix-ui) prop to make another component look like a button. Here's an example of a link that looks like a button.
+Do not use `Button` for links. Base UI Button enforces button semantics (`role="button"`, keyboard interaction, disabled state), so it should not wrap an `<a>` or router `Link`.
+
+To make a link look like a button, apply `buttonVariants` to the link element:
 
 ```tsx
 import Link from "next/link"
 
-import { Button } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
 
 export function LinkAsButton() {
-  return <Button render={<Link href="/login" />}>Login</Button>
+  return (
+    <Link className={buttonVariants()} href="/login">
+      Login
+    </Link>
+  )
 }
+```
+
+Pass variant and size options the same way as on `Button`:
+
+```tsx
+<Link className={buttonVariants({ variant: "outline", size: "sm" })} href="/docs">
+  Docs
+</Link>
 ```
 
 ## API Reference
 
-This is a custom component using Base UI's `useRender` hook, not a direct Base UI wrapper.
+This component is built on [Base UI Button](https://base-ui.com/react/components/button). It accepts the same props as Base UI `Button`, plus the coss styling and loading helpers below.
 
 ### Button
 
 A button component with variant, size, and loading states.
 
-| Prop      | Type                                                                                                              | Default     | Description                                                                 |
-| --------- | ----------------------------------------------------------------------------------------------------------------- | ----------- | --------------------------------------------------------------------------- |
-| `variant` | `"default" \| "destructive" \| "destructive-outline" \| "ghost" \| "link" \| "outline" \| "secondary"`         | `"default"` | Controls the button styling                                                 |
-| `size`    | `"default" \| "icon" \| "icon-lg" \| "icon-sm" \| "icon-xl" \| "icon-xs" \| "lg" \| "sm" \| "xl" \| "xs"`     | `"default"` | Controls the button size                                                    |
-| `loading` | `boolean`                                                                                                         | `false`     | Shows a spinner and forces disabled button behavior while loading           |
-| `render`  | `React.ReactElement`                                                                                              | -           | Render as a different element (e.g., Link)                                  |
+| Prop                     | Type                                                                                                          | Default     | Description                                                                 |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------- | ----------- | --------------------------------------------------------------------------- |
+| `variant`                | `"default" \| "destructive" \| "destructive-outline" \| "ghost" \| "link" \| "outline" \| "secondary"`     | `"default"` | Controls the button styling                                                 |
+| `size`                   | `"default" \| "icon" \| "icon-lg" \| "icon-sm" \| "icon-xl" \| "icon-xs" \| "lg" \| "sm" \| "xl" \| "xs"` | `"default"` | Controls the button size                                                    |
+| `loading`                | `boolean`                                                                                                     | `false`     | Shows a spinner and disables the button while loading                       |
+| `focusableWhenDisabled`  | `boolean`                                                                                                     | `false`\*   | Keeps the button focusable while disabled (Base UI). Defaults to `true` when `loading` is `true` |
+| `disabled`               | `boolean`                                                                                                     | `false`     | Disables the button                                                         |
+| `nativeButton`           | `boolean`                                                                                                     | `true`      | Set to `false` when rendering a non-`<button>` tag via Base UI `render`     |
+
+\* When `loading` is `true`, `focusableWhenDisabled` defaults to `true` so focus is not lost during async actions. Pass `focusableWhenDisabled={false}` to override.
 
 When `loading` is `true`, the component:
 
 - Renders a spinner (`data-slot="button-loading-indicator"`)
 - Adds `data-loading` on the button root
-- Forces the native `disabled` attribute
-- Sets `aria-disabled="true"`
+- Sets `disabled` (and Base UI `data-disabled`)
+- Defaults `focusableWhenDisabled` to `true`
 - Preserves button width by hiding content visually instead of unmounting it
+
+Disabled styles target `data-disabled` so they still apply when the button is focusable while disabled.
+
+### buttonVariants
+
+Exported `cva` helper used by `Button`. Use it to style non-button elements (for example `Link` or `<a>`) with the same variants and sizes.
 
 ## Examples
 
@@ -183,3 +212,7 @@ When `loading` is `true`, the component:
 ### Loading (Custom Composition)
 
 <ComponentPreview name="p-button-18" />
+
+## Changelog
+
+- [July 30, 2026](/ui/docs/changelog#button) — **`Button`** now wraps [Base UI Button](https://base-ui.com/react/components/button); style links with **`buttonVariants`** instead of **`Button render={<Link />}`**

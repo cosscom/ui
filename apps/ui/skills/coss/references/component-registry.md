@@ -75,4 +75,4 @@ For optional **`portalProps`** on composed `*Popup` components and **toast** pro
 - **Skeleton** — Loading placeholder. `./references/primitives/skeleton.md`
 
 ## Actions
-- **Button** — Primary/secondary action trigger. `./references/primitives/button.md`
+- **Button** — Primary/secondary action trigger (Base UI Button + `buttonVariants` for links). `./references/primitives/button.md`

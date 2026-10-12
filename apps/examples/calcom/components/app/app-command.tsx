@@ -1,7 +1,7 @@
 "use client";
 
 import { useAutocompleteFilter } from "@coss/ui/components/autocomplete";
-import { Button } from "@coss/ui/components/button";
+import { Button, buttonVariants } from "@coss/ui/components/button";
 import {
   Command,
   CommandCollection,
@@ -696,14 +696,16 @@ export function AppCommand(): React.ReactElement {
                       {aiState.referenceLinks.length > 0 && (
                         <div className="mt-8 flex flex-wrap gap-2">
                           {aiState.referenceLinks.map((link, index) => (
-                            <Button
+                            <Link
+                              className={buttonVariants({
+                                size: "sm",
+                                variant: "secondary",
+                              })}
+                              href={link.url}
                               key={`${link.url}-${index}`}
-                              render={<Link href={link.url} />}
-                              size="sm"
-                              variant="secondary"
                             >
                               {link.title}
-                            </Button>
+                            </Link>
                           ))}
                         </div>
                       )}
