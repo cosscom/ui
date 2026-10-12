@@ -1,0 +1,118 @@
+---
+title: Agent Composer
+description: A controlled text composer with shared keyboard and button submission rules.
+---
+
+<ComponentPreview name="p-agent-composer-1" />
+
+This preview shows the composer’s appearance and text editing; it does not submit messages. Try Send, streaming, and Stop in the [connected conversation](/ui/docs/agent-ui/connected-conversation).
+
+## Installation
+
+This component is in preview. The registry name becomes available when this branch is deployed.
+
+```bash
+npx shadcn@latest add @coss/agent-composer
+```
+
+For a local checkout on port 4000, point the `@coss` registry in `components.json` at `http://localhost:4000/ui/r/{name}.json`. See [getting started](/ui/docs/get-started) for the coss theme setup.
+
+<ComponentSource name="agent-composer" title="components/ui/agent-composer.tsx" />
+
+## Usage
+
+```tsx
+import { AgentComposer } from "@/components/ui/agent-composer"
+
+<AgentComposer
+  value={draft}
+  onValueChange={setDraft}
+  onSubmit={handleSubmit}
+  onStop={handleStop}
+  isBusy={isBusy}
+  inputLabel="Message"
+  sendLabel="Send message"
+  stopLabel="Stop response"
+  textareaProps={{ placeholder: "Ask anything…" }}
+/>
+```
+
+`onSubmit(value)` receives the exact controlled string, including its whitespace. Your application owns clearing the draft, starting requests, setting busy state, cancellation, and errors. Set `isBusy` synchronously when accepting a submission to prevent subsequent sends; the component does not await a returned promise or infer network state.
+
+## Submission rules
+
+The arrow and unmodified Enter share one guard: a non-whitespace value, not disabled, not busy, and no active IME composition. Empty or whitespace-only drafts cannot submit. Held Enter does not repeatedly submit. Shift + Enter and modified Enter combinations keep their native textarea behavior.
+
+While busy, the arrow becomes Stop and Enter cannot submit another message. Typing remains available so the user can prepare a next draft. Stop only calls `onStop`; your application must abort the request and update `isBusy`. Setting `disabled` disables the textarea and both built-in actions, including Stop.
+
+During IME composition, Enter remains available for candidate selection. The composer checks composition events, the native composing flag, and the legacy 229 key code. Do not override these handlers with your own submission path. A custom `textareaProps.onKeyDown` runs first and can call `preventDefault()` to take ownership of a key.
+
+The composer is an input group, not a form. Its action button has `type="button"`, so it can sit inside a larger form without submitting it. Native form validation is not a submission gate here; validate application-specific constraints in your handler. No autofocus is applied unless you opt in through `textareaProps`.
+
+## Actions and composition
+
+For a simple layout, use `leadingActions` and `trailingActions` on `AgentComposer`. For more control, compose the same parts:
+
+```tsx
+import {
+  AgentComposerRoot,
+  AgentComposerTextarea,
+  AgentComposerActions,
+  AgentComposerSubmit,
+} from "@/components/ui/agent-composer"
+
+<AgentComposerRoot
+  value={draft}
+  onValueChange={setDraft}
+  onSubmit={handleSubmit}
+  onStop={handleStop}
+  isBusy={isBusy}
+  inputLabel="Message"
+  sendLabel="Send message"
+  stopLabel="Stop response"
+>
+  <AgentComposerTextarea placeholder="Ask anything…" />
+  <AgentComposerActions>
+    {customActions}
+    <AgentComposerSubmit className="ms-auto" />
+  </AgentComposerActions>
+</AgentComposerRoot>
+```
+
+Keep the textarea before the actions in DOM order. The parts share the same submission policy. Place hints, request errors, or other application feedback outside the input group.
+
+The plain composer does not manage queued messages, attachments, mentions, or slash commands. There is no implicit queue when submitting while busy; those submissions are blocked. A queue needs an explicit application policy and is not implemented by the connected recipe.
+
+## Long drafts
+
+The textarea grows with the controlled value and wrapping width, up to a 192px scroll viewport by default. Content beyond that stays scrollable with coss scrollbars and fades. JavaScript autosizing also supports browsers without CSS `field-sizing` support. `textareaProps.scrollAreaClassName` can change the cap, for example `max-h-64`.
+
+`textareaProps.ref` points to the native textarea, allowing your application to restore focus when appropriate. Use `name`, `maxLength`, `aria-describedby`, and other native textarea props there. The component reserves controlled value, change handling, and disabling for its root.
+
+## API Reference
+
+### AgentComposer and AgentComposerRoot
+
+Both accept native input-group `div` props except `onSubmit`, including `className`, `ref`, and `dir`. The ref points to the input group. `AgentComposerRoot` accepts composed children; `AgentComposer` supplies the textarea and action row.
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `value` | `string` | Required controlled draft. |
+| `onValueChange` | `(value: string) => void` | Required controlled update callback. |
+| `onSubmit` | `(value: string) => void` | Required send intent callback. |
+| `onStop` | `() => void` | Required stop intent callback; called only while busy and enabled. |
+| `inputLabel`, `sendLabel`, `stopLabel` | `string` | Required accessible labels and action tooltip text. |
+| `isBusy` | `boolean` | Shows Stop and blocks sends; defaults to false. |
+| `disabled` | `boolean` | Disables input and built-in actions; defaults to false. |
+| `textareaProps` | `AgentComposerTextareaProps` | Convenience composer only; native input settings and scroll styling. |
+| `leadingActions`, `trailingActions` | `ReactNode` | Convenience composer only; content around the submit control. |
+
+### Composable parts
+
+| Part | Props and behavior |
+| --- | --- |
+| `AgentComposerTextarea` | InputGroupTextarea props except `children`, `value`, `defaultValue`, `onChange`, and `disabled`; plus `scrollAreaClassName`. `className` styles the textarea wrapper; `ref` points to the native textarea. Defaults to `rows={5}` and `autoComplete="off"`. |
+| `AgentComposerActions` | InputGroupAddon props; defaults to the bottom action row. |
+| `AgentComposerSubmit` | Button props except `children`, `onClick`, `disabled`, `loading`, `size`, `variant`, `type`, and `render`. Uses the root's labels, eligibility, and Send/Stop behavior. |
+
+The root retains the existing `data-slot="input-group"` styling contract and adds `data-agent-composer` for targeting the composer specifically.

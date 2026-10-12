@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "p-agent-message-2",
+  "description": "Long user message with optional text disclosure",
+  "registryDependencies": [
+    "@coss/agent-message"
+  ],
+  "files": [
+    {
+      "path": "registry/default/particles/p-agent-message-2.tsx",
+      "content": "import {\n  AgentMessage,\n  AgentMessageContent,\n  AgentMessageText,\n} from \"@/registry/default/ui/agent-message\";\n\nconst message = `Help me plan a small team workshop next Thursday.\n\nWe’ll have six people and about two hours. The goal is to choose one improvement to our onboarding flow.\n\nHere’s the rough agenda:\n\n1. Share what we’ve heard from new customers.\n2. Walk through the current sign-up experience.\n3. Sketch a few ideas individually.\n4. Pick one idea to try next week.\n\nPlease leave time for a short break halfway through. We’ll be working remotely, so keep the exercises easy to follow on a video call.\n\nI’d like to finish with a clear owner and a small next step, rather than a long list of tasks.`;\n\nexport default function Particle() {\n  return (\n    <AgentMessage aria-label=\"You\" author=\"user\">\n      <AgentMessageContent>\n        <AgentMessageText showLessLabel=\"Show less\" showMoreLabel=\"Show more\">\n          {message}\n        </AgentMessageText>\n      </AgentMessageContent>\n    </AgentMessage>\n  );\n}\n",
+      "type": "registry:block"
+    }
+  ],
+  "meta": {
+    "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg"
+  },
+  "categories": [
+    "agent"
+  ],
+  "type": "registry:block"
+}

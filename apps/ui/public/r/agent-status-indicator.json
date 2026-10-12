@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "agent-status-indicator",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "@coss/spinner",
+    "@coss/utils"
+  ],
+  "files": [
+    {
+      "path": "registry/default/ui/agent-status-indicator.tsx",
+      "content": "import {\n  CircleCheckIcon,\n  CircleIcon,\n  CircleXIcon,\n  InfoIcon,\n  type LucideIcon,\n  SparklesIcon,\n} from \"lucide-react\";\nimport type { ComponentProps, ReactElement } from \"react\";\nimport { cn } from \"@/registry/default/lib/utils\";\nimport { Spinner } from \"@/registry/default/ui/spinner\";\n\ntype AgentStatus =\n  | \"idle\"\n  | \"thinking\"\n  | \"working\"\n  | \"needs-input\"\n  | \"complete\"\n  | \"error\";\n\ntype AgentStatusIndicatorProps = Omit<\n  ComponentProps<\"span\">,\n  \"aria-busy\" | \"aria-label\" | \"aria-live\" | \"children\" | \"role\"\n> & {\n  announce?: boolean;\n  wrap?: boolean;\n  label: string;\n  status: AgentStatus;\n};\n\nconst statusClassNames: Record<AgentStatus, string> = {\n  idle: \"text-muted-foreground\",\n  thinking: \"text-muted-foreground\",\n  working: \"text-muted-foreground\",\n  \"needs-input\": \"text-warning-foreground\",\n  complete: \"text-success-foreground\",\n  error: \"text-destructive-foreground\",\n};\n\nconst statusIcons: Record<Exclude<AgentStatus, \"working\">, LucideIcon> = {\n  idle: CircleIcon,\n  thinking: SparklesIcon,\n  \"needs-input\": InfoIcon,\n  complete: CircleCheckIcon,\n  error: CircleXIcon,\n};\n\n/** A presentation-only status treatment for AI agent surfaces. */\nexport function AgentStatusIndicator({\n  announce = true,\n  wrap = false,\n  className,\n  label,\n  status,\n  ...props\n}: AgentStatusIndicatorProps): ReactElement {\n  const isActive = status === \"thinking\" || status === \"working\";\n  let statusIcon = (\n    <Spinner\n      aria-hidden=\"true\"\n      aria-label={undefined}\n      role=\"presentation\"\n      className=\"size-3.5 shrink-0 motion-reduce:animate-none\"\n    />\n  );\n  if (status !== \"working\") {\n    const Icon = statusIcons[status];\n    statusIcon = <Icon aria-hidden=\"true\" className=\"size-3.5 shrink-0\" />;\n  }\n\n  let accessibilityProps: Pick<\n    ComponentProps<\"span\">,\n    \"aria-busy\" | \"aria-label\" | \"aria-live\" | \"role\"\n  > = {};\n  if (announce) {\n    accessibilityProps = {\n      \"aria-label\": label,\n      \"aria-live\": \"polite\",\n      role: \"status\",\n    };\n  }\n\n  return (\n    <span\n      {...props}\n      {...accessibilityProps}\n      className={cn(\n        \"inline-flex min-w-0 items-center gap-1.5 text-xs\",\n        wrap && \"items-start\",\n        statusClassNames[status],\n        className,\n      )}\n      data-slot=\"agent-status-indicator\"\n      data-status={status}\n    >\n      <span className=\"flex h-lh shrink-0 items-center\">{statusIcon}</span>\n      <span\n        className={cn(\n          \"min-w-0\",\n          wrap ? \"whitespace-normal [overflow-wrap:anywhere]\" : \"truncate\",\n          isActive &&\n            \"animate-[skeleton_1.2s_-0.6s_infinite_linear] bg-clip-text text-transparent [background-image:linear-gradient(105deg,transparent_12%,--alpha(var(--color-info-foreground)/72%)_32%,--alpha(var(--color-purple-500)/76%)_50%,--alpha(var(--color-rose-500)/68%)_68%,transparent_88%),linear-gradient(var(--color-muted-foreground),var(--color-muted-foreground))] [background-size:200%_100%,100%_100%] motion-reduce:animate-none motion-reduce:bg-none motion-reduce:text-muted-foreground forced-colors:animate-none forced-colors:bg-none forced-colors:text-current\",\n          status === \"error\" && \"font-medium\",\n        )}\n        data-slot=\"agent-status-indicator-label\"\n      >\n        {label}\n      </span>\n    </span>\n  );\n}\n\nexport type { AgentStatus, AgentStatusIndicatorProps };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

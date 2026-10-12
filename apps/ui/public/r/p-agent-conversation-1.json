@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "p-agent-conversation-1",
+  "description": "Conversation scrolling with a new reply and jump-to-latest control",
+  "registryDependencies": [
+    "@coss/agent-conversation",
+    "@coss/agent-message",
+    "@coss/button"
+  ],
+  "files": [
+    {
+      "path": "registry/default/particles/p-agent-conversation-1.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport {\n  AgentConversation,\n  AgentConversationTimestamp,\n} from \"@/registry/default/ui/agent-conversation\";\nimport {\n  AgentMessage,\n  AgentMessageContent,\n} from \"@/registry/default/ui/agent-message\";\nimport { Button } from \"@/registry/default/ui/button\";\n\nconst messages = [\n  {\n    id: \"request\",\n    author: \"user\",\n    text: \"Find a time for a 30-minute call with Sam next week.\",\n  },\n  {\n    id: \"options\",\n    author: \"assistant\",\n    text: \"You’re both free on Tuesday at 10:00 and Thursday at 14:00.\",\n  },\n  {\n    id: \"choice\",\n    author: \"user\",\n    text: \"Tuesday works. Let’s use a video call.\",\n  },\n  {\n    id: \"summary\",\n    author: \"assistant\",\n    text: \"Tuesday at 10:00, for 30 minutes, with Sam. I’ll include a video link.\",\n  },\n  {\n    id: \"agenda\",\n    author: \"user\",\n    text: \"Add a short agenda: introductions, a product walkthrough, and questions.\",\n  },\n  {\n    id: \"reply\",\n    author: \"assistant\",\n    text: \"Here’s the agenda:\\n\\n• Introductions — 5 minutes\\n• Product walkthrough — 15 minutes\\n• Questions — 10 minutes\",\n  },\n] as const;\n\nexport default function Particle() {\n  const [showReply, setShowReply] = useState(false);\n  const [revision, setRevision] = useState(0);\n\n  return (\n    <div className=\"flex w-full flex-col gap-4\">\n      <AgentConversation\n        className=\"h-72\"\n        key={revision}\n        label=\"Scheduling conversation\"\n        scrollToLatestLabel=\"Scroll to latest message\"\n      >\n        <AgentConversationTimestamp dateTime=\"2026-09-21\">\n          Today\n        </AgentConversationTimestamp>\n        {messages.slice(0, showReply ? 6 : 5).map((message) => (\n          <AgentMessage\n            aria-label={message.author === \"user\" ? \"You\" : \"Assistant\"}\n            author={message.author}\n            key={message.id}\n          >\n            <AgentMessageContent className=\"whitespace-pre-wrap\">\n              {message.text}\n            </AgentMessageContent>\n          </AgentMessage>\n        ))}\n      </AgentConversation>\n      <div className=\"flex flex-wrap items-center justify-between gap-2 border-t pt-3\">\n        <Button\n          disabled={showReply}\n          onClick={() => setShowReply(true)}\n          size=\"xs\"\n          variant=\"outline\"\n        >\n          Add reply\n        </Button>\n        <Button\n          onClick={() => {\n            setShowReply(false);\n            setRevision((value) => value + 1);\n          }}\n          size=\"xs\"\n          variant=\"ghost\"\n        >\n          Reset demo\n        </Button>\n      </div>\n    </div>\n  );\n}\n",
+      "type": "registry:block"
+    }
+  ],
+  "meta": {
+    "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg"
+  },
+  "categories": [
+    "agent"
+  ],
+  "type": "registry:block"
+}

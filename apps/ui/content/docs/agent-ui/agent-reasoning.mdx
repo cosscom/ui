@@ -1,0 +1,88 @@
+---
+title: Agent Reasoning
+description: A compact disclosure for an agent’s reasoning text.
+---
+
+<ComponentPreview name="p-agent-reasoning-1" />
+
+Use **Add detail**, then **Finish**, to simulate incoming text. Collapse or expand the section between updates: your choice stays unchanged, including when you restart. The text is a local fixture, not output from a model.
+
+## Installation
+
+This component is in preview. Its registry name becomes available when this branch is deployed.
+
+```bash
+npx shadcn@latest add @coss/agent-reasoning
+```
+
+For a local checkout, point `@coss` in `components.json` at `http://localhost:4000/ui/r/{name}.json`.
+
+<ComponentSource name="agent-reasoning" title="components/ui/agent-reasoning.tsx" />
+
+## Usage
+
+```tsx
+import { AgentReasoning } from "@/components/ui/agent-reasoning"
+
+<AgentReasoning
+  completedLabel="Considered availability"
+  streamingLabel="Considering availability…"
+  isStreaming={isStreaming}
+>
+  {reasoningText}
+</AgentReasoning>
+```
+
+Pass text or rendered content from your application. This component does not generate reasoning, parse a provider response, or depend on an AI SDK. Only render reasoning content your provider exposes for display.
+
+## Expansion and streaming
+
+Without `open`, the component manages its own disclosure state. Its initial state is `defaultOpen ?? isStreaming`: streaming content starts expanded, completed content starts collapsed, and an explicit `defaultOpen` wins.
+
+Subsequent content and streaming changes never open or close the disclosure. Completion does **not** start a timer or automatically hide the text. This intentionally differs from Cal’s one-second automatic close policy, which could interrupt reading. A new reasoning item can receive its own stable message/part key; do not change that key for each text update.
+
+## Controlled state
+
+Use `open` and `onOpenChange` to own the disclosure state:
+
+```tsx
+const [open, setOpen] = useState(false)
+
+<AgentReasoning
+  open={open}
+  onOpenChange={setOpen}
+  isStreaming={isStreaming}
+  streamingLabel="Considering availability…"
+  completedLabel="Considered availability"
+>
+  {reasoningText}
+</AgentReasoning>
+```
+
+Automatic closing, if required by your product, belongs in this controlled state. Cancel pending closes when the user interacts or a new stream begins. Avoid switching between controlled and uncontrolled modes during the component’s lifetime.
+
+## Accessibility
+
+The trigger is a button with `aria-expanded` and a panel relationship. Enter and Space toggle it; `disabled` blocks interaction. Streaming content is marked `aria-busy`, without announcing each token. The label inside the trigger is not a nested live region.
+
+The shimmer and disclosure transitions respect reduced motion. Labels and long content wrap, indentation follows text direction, and coarse pointers receive a larger trigger target.
+
+## API Reference
+
+### AgentReasoning
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `streamingLabel` | `string` | — | Required label while streaming. |
+| `completedLabel` | `string` | — | Required label otherwise. |
+| `isStreaming` | `boolean` | `false` | Updates the label, shimmer, and content busy state. |
+| `defaultOpen` | `boolean` | Initial `isStreaming` | Initial uncontrolled expansion. |
+| `open` | `boolean` | — | Controlled expansion. |
+| `onOpenChange` | Collapsible callback | — | Receives the requested state and Base UI event details. |
+| `disabled` | `boolean` | `false` | Disables the trigger. |
+| `children` | `ReactNode` | — | Reasoning content. |
+| `className` | `string` | — | Styles the root. |
+| `triggerClassName` | `string` | — | Styles the trigger. |
+| `contentClassName` | `string` | — | Styles the content. |
+
+Other [Collapsible](/ui/docs/components/collapsible) root props, including `ref`, `dir`, and data attributes, are forwarded. Slots: `agent-reasoning`, `agent-reasoning-trigger`, `agent-reasoning-panel`, and `agent-reasoning-content`.

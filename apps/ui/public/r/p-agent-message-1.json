@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "p-agent-message-1",
+  "description": "A short exchange with a copy action",
+  "registryDependencies": [
+    "@coss/agent-message",
+    "@coss/agent-message-actions"
+  ],
+  "files": [
+    {
+      "path": "registry/default/particles/p-agent-message-1.tsx",
+      "content": "\"use client\";\n\nimport {\n  AgentMessage,\n  AgentMessageContent,\n} from \"@/registry/default/ui/agent-message\";\nimport {\n  AgentMessageActions,\n  AgentMessageCopyAction,\n} from \"@/registry/default/ui/agent-message-actions\";\n\nconst response =\n  \"Hi Sam,\\n\\nThanks for joining the demo today. I’ve attached a quick overview for your team. Let me know if you’d like to explore anything in more detail.\";\n\nexport default function Particle() {\n  return (\n    <div className=\"flex w-full flex-col gap-8\">\n      <AgentMessage aria-label=\"You\" author=\"user\">\n        <AgentMessageContent>\n          Write a short follow-up email after a product demo.\n        </AgentMessageContent>\n      </AgentMessage>\n      <AgentMessage aria-label=\"Assistant\" author=\"assistant\">\n        <AgentMessageContent>\n          <p>Hi Sam,</p>\n          <p>\n            Thanks for joining the demo today. I’ve attached a quick overview\n            for your team. Let me know if you’d like to explore anything in more\n            detail.\n          </p>\n        </AgentMessageContent>\n        <AgentMessageActions alwaysVisible label=\"Response actions\">\n          <AgentMessageCopyAction\n            copiedLabel=\"Copied\"\n            copyLabel=\"Copy response\"\n            errorLabel=\"Could not copy. Try again.\"\n            text={response}\n          />\n        </AgentMessageActions>\n      </AgentMessage>\n    </div>\n  );\n}\n",
+      "type": "registry:block"
+    }
+  ],
+  "meta": {
+    "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg"
+  },
+  "categories": [
+    "agent"
+  ],
+  "type": "registry:block"
+}

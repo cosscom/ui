@@ -1,0 +1,133 @@
+---
+title: Connected Conversation
+description: Connect messages and a composer with streaming, cancellation, and retry.
+---
+
+<ComponentPreview name="p-agent-conversation-2" />
+
+Send the warmer version, or ask for a shorter reminder. Stop interrupts the response and keeps the text received so far. You can keep drafting while a response arrives.
+
+This preview streams sample text from a local HTTP endpoint. It does not call a model or send a reminder. **Try an error** interrupts the next response; **Retry** replaces that incomplete answer without duplicating your prompt. Demo controls sit below the conversation.
+
+This is the recommended starting point for a model-connected text conversation. See [Building an Agent UI](/ui/docs/agent-ui/composition) for component selection, state ownership, and adapting this recipe to a panel.
+
+## Installation
+
+This optional recipe uses AI SDK 7 and `@ai-sdk/react` 4. The message, conversation, and composer components remain independent of AI SDK.
+
+The registry name becomes available when this branch is deployed.
+
+```bash
+npx shadcn@latest add @coss/agent-chat
+```
+
+In a local checkout, set the `@coss` registry in `components.json` to `http://localhost:4000/ui/r/{name}.json`.
+
+The recipe installs `components/agent-chat.tsx`, `app/api/chat/route.ts`, and the UI components it uses. Start from a coss-themed React 19 / Next.js App Router application. Review an existing `/api/chat` route before replacing it.
+
+<ComponentSource name="agent-chat" title="components/agent-chat.tsx" />
+
+## Connect a model
+
+The installed server route calls AI SDK's model gateway. Set server-only environment variables:
+
+```bash
+AI_GATEWAY_API_KEY=your_gateway_key
+AI_MODEL=provider/model-id
+```
+
+Choose an available model ID from your gateway account. Alternatively, replace the route's `model` with your provider's SDK model instance and configure that provider's credentials.
+
+```tsx
+import AgentChat from "@/components/agent-chat"
+
+export default function Page() {
+  return (
+    <main className="mx-auto w-full max-w-2xl">
+      <AgentChat />
+    </main>
+  )
+}
+```
+
+The installed recipe starts with an empty conversation. The docs preview supplies the sample transcript and its separate sample endpoint; those responses are not part of the model-backed route.
+
+For a custom endpoint, create a stable transport outside the component or with `useState`:
+
+```tsx
+"use client"
+
+import { DefaultChatTransport } from "ai"
+import AgentChat from "@/components/agent-chat"
+
+const transport = new DefaultChatTransport({ api: "/api/my-assistant" })
+
+export default function Page() {
+  return <AgentChat transport={transport} />
+}
+```
+
+Include your deployment's base path in the endpoint URL when applicable. The server must return AI SDK UI message streams, not raw text chunks.
+
+## Layout
+
+The scroll viewport and composer sit inside one column with **12px horizontal insets**. Messages have another **4px of padding on each side**, bringing their horizontal inset to 16px. The transcript keeps 16px top padding, 32px between messages, and 32px bottom padding. The composer sits immediately below the viewport, with 12px bottom padding.
+
+The scrollbar stays at the scroll viewport’s edge. `scrollbarGutter` reserves 10px on the scrollbar side when content overflows, preventing messages from overlapping it. The message content retains 4px padding on each side inside the remaining space. This gutter does not change the outer viewport or composer width.
+
+The recipe overrides transcript padding through `contentClassName`; the standalone `AgentConversation` defaults are unchanged. The 480px height belongs to this editable example. Adapt it to your host's available height when embedding it in an application.
+
+There is no visible completion label. Streaming and completion are announced through a visually hidden status. A failed response exposes a short error and Retry inside the transcript, after the interrupted answer (or after the user prompt if no answer arrived). The composer remains available for drafting.
+
+## Request behavior
+
+- **Send:** appends one user message, clears that submitted draft, and follows the new turn. Empty and busy submissions are blocked.
+- **Draft during streaming:** the textarea stays editable. Enter cannot send a second request while busy.
+- **Stop:** aborts the request, preserves received text and any new draft, and returns focus to the input. Cancellation is forwarded to the server's model request.
+- **Retry:** regenerates the failed turn, replacing a partial assistant reply. It preserves any unsent draft and does not append another user prompt.
+- **Edit:** user-message actions appear on hover, keyboard focus, or touch. Editing restores that prompt to the composer and removes it and subsequent replies, matching Cal’s example. It replaces any unsent draft. Editing is disabled during a response; sending the revised draft starts a new turn.
+- **Copy:** copies the text of a user message or assistant reply; partial stopped replies can also be copied.
+- **Reset:** a docs-only control remounts the example and aborts any active stream.
+
+The recipe supports user and assistant text parts. The route rejects system messages and non-text parts. Tools, approvals, attachments, persistence, and multiple sessions are separate integrations.
+
+## Optional Markdown
+
+Plain React text is the default. Rich rendering is an independent choice; it does not belong in the message primitive. Install a renderer only when needed:
+
+```bash
+npm install react-markdown
+```
+
+```tsx
+"use client"
+
+import Markdown from "react-markdown"
+import AgentChat from "@/components/agent-chat"
+
+export default function Page() {
+  return (
+    <AgentChat
+      renderResponse={(text) => (
+        <div className="space-y-3 [&_a]:underline [&_li]:ms-4 [&_ol]:list-decimal [&_ul]:list-disc [&_pre]:overflow-x-auto [&_pre]:rounded-md [&_pre]:bg-muted [&_pre]:p-3">
+          <Markdown skipHtml>{text}</Markdown>
+        </div>
+      )}
+    />
+  )
+}
+```
+
+Update the route's plain-text instruction if you enable Markdown. Keep the renderer's default URL filtering and avoid raw HTML plugins. This basic integration renders partial Markdown as it arrives; syntax highlighting, tables, math, and specialized streaming formatting are not included.
+
+## Application responsibilities
+
+Add your application's authentication, authorization, rate limits, and request budget before deploying the model route. Model credentials stay on the server. The sample route never calls a paid service.
+
+History and drafts live in memory for this recipe. Mount one controller per conversation identity; remounting resets its state. Add server-owned history and session access checks in your application.
+
+The route validates the supported message shape, caps history at 100 messages and individual text parts at 20,000 characters, and returns generic errors. Those example bounds do not replace application-specific request-body and token limits.
+
+The docs sample verifies transport behavior without credentials. A live provider must be configured and tested in the consuming application.
+
+See [AI SDK's chat guide](https://ai-sdk.dev/docs/ai-sdk-ui/chatbot) and [react-markdown](https://github.com/remarkjs/react-markdown) for integration details.

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "agent-reasoning",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "@coss/agent-status-indicator",
+    "@coss/collapsible",
+    "@coss/utils"
+  ],
+  "files": [
+    {
+      "path": "registry/default/ui/agent-reasoning.tsx",
+      "content": "\"use client\";\n\nimport { ChevronRightIcon } from \"lucide-react\";\nimport { type ComponentProps, type ReactElement, useState } from \"react\";\nimport { cn } from \"@/registry/default/lib/utils\";\nimport { AgentStatusIndicator } from \"@/registry/default/ui/agent-status-indicator\";\nimport {\n  Collapsible,\n  CollapsiblePanel,\n  CollapsibleTrigger,\n} from \"@/registry/default/ui/collapsible\";\n\nexport interface AgentReasoningProps\n  extends ComponentProps<typeof Collapsible> {\n  streamingLabel: string;\n  completedLabel: string;\n  isStreaming?: boolean;\n  triggerClassName?: string;\n  contentClassName?: string;\n}\n\nexport function AgentReasoning({\n  children,\n  className,\n  streamingLabel,\n  completedLabel,\n  isStreaming = false,\n  defaultOpen,\n  triggerClassName,\n  contentClassName,\n  ...props\n}: AgentReasoningProps): ReactElement {\n  // Streaming only sets the initial default. Later updates preserve the reader's choice.\n  const [initialOpen] = useState(defaultOpen ?? isStreaming);\n  return (\n    <Collapsible\n      {...props}\n      defaultOpen={initialOpen}\n      className={cn(\"flex min-w-0 flex-col\", className)}\n      data-slot=\"agent-reasoning\"\n    >\n      <CollapsibleTrigger\n        className={cn(\n          \"flex pointer-coarse:min-h-11 w-fit min-w-0 max-w-full items-center gap-1.5 rounded-sm text-start text-muted-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background\",\n          triggerClassName,\n        )}\n        data-slot=\"agent-reasoning-trigger\"\n      >\n        <AgentStatusIndicator\n          announce={false}\n          className=\"text-muted-foreground\"\n          wrap\n          label={isStreaming ? streamingLabel : completedLabel}\n          status={isStreaming ? \"thinking\" : \"idle\"}\n        />\n        <ChevronRightIcon\n          aria-hidden=\"true\"\n          className=\"size-3.5 shrink-0 in-data-panel-open:rotate-90 transition-transform motion-reduce:transition-none rtl:in-data-panel-open:rotate-90 rtl:rotate-180\"\n        />\n      </CollapsibleTrigger>\n      <CollapsiblePanel\n        className=\"motion-reduce:transition-none\"\n        data-slot=\"agent-reasoning-panel\"\n      >\n        <div\n          aria-busy={isStreaming}\n          className={cn(\n            \"whitespace-pre-wrap ps-5 pt-2 text-muted-foreground text-xs/relaxed [overflow-wrap:anywhere]\",\n            contentClassName,\n          )}\n          data-slot=\"agent-reasoning-content\"\n        >\n          {children}\n        </div>\n      </CollapsiblePanel>\n    </Collapsible>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

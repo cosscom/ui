@@ -7,6 +7,204 @@ import * as React from "react"
 
 // biome-ignore lint/suspicious/noExplicitAny: Auto-generated registry index with dynamic component types
 export const Index: Record<string, any> = {
+  "agent-response-feedback": {
+    name: "agent-response-feedback",
+    description: "",
+    type: "registry:ui",
+    registryDependencies: ["@coss/agent-status-indicator","@coss/button","@coss/dialog","@coss/field","@coss/fieldset","@coss/form","@coss/textarea","@coss/toggle","@coss/tooltip","@coss/utils"],
+    files: [{
+      path: "registry/default/ui/agent-response-feedback.tsx",
+      type: "registry:ui",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/ui/agent-response-feedback.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "agent-panel": {
+    name: "agent-panel",
+    description: "",
+    type: "registry:ui",
+    registryDependencies: ["@coss/button","@coss/tooltip","@coss/utils"],
+    files: [{
+      path: "registry/default/ui/agent-panel.tsx",
+      type: "registry:ui",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/ui/agent-panel.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "agent-action-bar": {
+    name: "agent-action-bar",
+    description: "",
+    type: "registry:ui",
+    registryDependencies: ["@coss/button","@coss/toolbar","@coss/utils"],
+    files: [{
+      path: "registry/default/ui/agent-action-bar.tsx",
+      type: "registry:ui",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/ui/agent-action-bar.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "agent-reasoning": {
+    name: "agent-reasoning",
+    description: "",
+    type: "registry:ui",
+    registryDependencies: ["@coss/agent-status-indicator","@coss/collapsible","@coss/utils"],
+    files: [{
+      path: "registry/default/ui/agent-reasoning.tsx",
+      type: "registry:ui",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/ui/agent-reasoning.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "agent-status-indicator": {
+    name: "agent-status-indicator",
+    description: "",
+    type: "registry:ui",
+    registryDependencies: ["@coss/spinner","@coss/utils"],
+    files: [{
+      path: "registry/default/ui/agent-status-indicator.tsx",
+      type: "registry:ui",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/ui/agent-status-indicator.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "agent-tool-activity": {
+    name: "agent-tool-activity",
+    description: "",
+    type: "registry:ui",
+    registryDependencies: ["@coss/agent-status-indicator","@coss/collapsible","@coss/utils"],
+    files: [{
+      path: "registry/default/ui/agent-tool-activity.tsx",
+      type: "registry:ui",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/ui/agent-tool-activity.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "agent-composer": {
+    name: "agent-composer",
+    description: "",
+    type: "registry:ui",
+    registryDependencies: ["@coss/button","@coss/input-group","@coss/scroll-area","@coss/tooltip","@coss/utils"],
+    files: [{
+      path: "registry/default/ui/agent-composer.tsx",
+      type: "registry:ui",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/ui/agent-composer.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "agent-conversation": {
+    name: "agent-conversation",
+    description: "",
+    type: "registry:ui",
+    registryDependencies: ["@coss/button","@coss/scroll-area","@coss/utils"],
+    files: [{
+      path: "registry/default/ui/agent-conversation.tsx",
+      type: "registry:ui",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/ui/agent-conversation.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "agent-message": {
+    name: "agent-message",
+    description: "",
+    type: "registry:ui",
+    registryDependencies: ["@coss/utils"],
+    files: [{
+      path: "registry/default/ui/agent-message.tsx",
+      type: "registry:ui",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/ui/agent-message.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "agent-message-actions": {
+    name: "agent-message-actions",
+    description: "",
+    type: "registry:ui",
+    registryDependencies: ["@coss/button","@coss/tooltip","@coss/utils"],
+    files: [{
+      path: "registry/default/ui/agent-message-actions.tsx",
+      type: "registry:ui",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/ui/agent-message-actions.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "agent-approval": {
+    name: "agent-approval",
+    description: "",
+    type: "registry:ui",
+    registryDependencies: ["@coss/badge","@coss/button","@coss/card","@coss/utils"],
+    files: [{
+      path: "registry/default/ui/agent-approval.tsx",
+      type: "registry:ui",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/ui/agent-approval.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
   "accordion": {
     name: "accordion",
     description: "",
@@ -996,6 +1194,284 @@ export const Index: Record<string, any> = {
     }),
     categories: undefined,
     meta: undefined,
+  },
+  "agent-chat": {
+    name: "agent-chat",
+    description: "Optional AI SDK conversation with streaming, cancellation, and retry",
+    type: "registry:block",
+    registryDependencies: ["@coss/agent-status-indicator","@coss/agent-composer","@coss/agent-conversation","@coss/agent-message","@coss/agent-message-actions","@coss/button"],
+    files: [{
+      path: "registry/default/blocks/agent-chat/agent-chat.tsx",
+      type: "registry:component",
+      target: "components/agent-chat.tsx"
+    },{
+      path: "registry/default/blocks/agent-chat/route.ts",
+      type: "registry:file",
+      target: "app/api/chat/route.ts"
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/blocks/agent-chat/agent-chat.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "p-agent-response-feedback-1": {
+    name: "p-agent-response-feedback-1",
+    description: "Response feedback with optional reasons and retryable submission",
+    type: "registry:block",
+    registryDependencies: ["@coss/agent-response-feedback","@coss/agent-message","@coss/button"],
+    files: [{
+      path: "registry/default/particles/p-agent-response-feedback-1.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-agent-response-feedback-1.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["agent"],
+    meta: {"className":"**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg **:data-[align=center]:min-h-64"},
+  },
+  "p-agent-panel-1": {
+    name: "p-agent-panel-1",
+    description: "Assistant panel and launcher with a persistent local draft",
+    type: "registry:block",
+    registryDependencies: ["@coss/agent-panel","@coss/agent-action-bar","@coss/agent-composer","@coss/agent-conversation","@coss/agent-message"],
+    files: [{
+      path: "registry/default/particles/p-agent-panel-1.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-agent-panel-1.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["agent"],
+    meta: {"className":"**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-md **:data-[align=center]:h-auto"},
+  },
+  "p-agent-reasoning-1": {
+    name: "p-agent-reasoning-1",
+    description: "Reasoning disclosure that preserves user choice as content arrives",
+    type: "registry:block",
+    registryDependencies: ["@coss/agent-reasoning","@coss/button"],
+    files: [{
+      path: "registry/default/particles/p-agent-reasoning-1.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-agent-reasoning-1.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["agent"],
+    meta: {"className":"**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg **:data-[align=center]:min-h-80"},
+  },
+  "p-agent-status-indicator-1": {
+    name: "p-agent-status-indicator-1",
+    description: "Compact status indicator with six presentation states",
+    type: "registry:block",
+    registryDependencies: ["@coss/agent-status-indicator","@coss/button"],
+    files: [{
+      path: "registry/default/particles/p-agent-status-indicator-1.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-agent-status-indicator-1.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["agent"],
+    meta: {"className":"**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg **:data-[align=center]:min-h-64"},
+  },
+  "p-agent-tool-activity-1": {
+    name: "p-agent-tool-activity-1",
+    description: "Tool activity with running, completed, declined, failed, mixed, and unknown states",
+    type: "registry:block",
+    registryDependencies: ["@coss/agent-status-indicator","@coss/agent-tool-activity","@coss/button"],
+    files: [{
+      path: "registry/default/particles/p-agent-tool-activity-1.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-agent-tool-activity-1.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["agent"],
+    meta: {"className":"**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg **:data-[align=center]:min-h-80"},
+  },
+  "p-agent-conversation-2": {
+    name: "p-agent-conversation-2",
+    description: "Connected conversation with streaming, Stop, and retry",
+    type: "registry:block",
+    registryDependencies: ["@coss/agent-chat","@coss/button"],
+    files: [{
+      path: "registry/default/particles/p-agent-conversation-2.tsx",
+      type: "registry:block",
+      target: ""
+    },{
+      path: "registry/default/blocks/agent-chat-demo/route.ts",
+      type: "registry:file",
+      target: "app/api/agent-chat-demo/route.ts"
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-agent-conversation-2.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["agent"],
+    meta: {"className":"**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg **:data-[align=center]:min-h-[640px] **:data-[slot=code]:**:[pre]:h-full"},
+  },
+  "p-agent-composer-1": {
+    name: "p-agent-composer-1",
+    description: "Plain text composer",
+    type: "registry:block",
+    registryDependencies: ["@coss/agent-composer"],
+    files: [{
+      path: "registry/default/particles/p-agent-composer-1.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-agent-composer-1.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["agent"],
+    meta: {"className":"**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg"},
+  },
+  "p-agent-conversation-1": {
+    name: "p-agent-conversation-1",
+    description: "Conversation scrolling with a new reply and jump-to-latest control",
+    type: "registry:block",
+    registryDependencies: ["@coss/agent-conversation","@coss/agent-message","@coss/button"],
+    files: [{
+      path: "registry/default/particles/p-agent-conversation-1.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-agent-conversation-1.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["agent"],
+    meta: {"className":"**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg"},
+  },
+  "p-agent-message-1": {
+    name: "p-agent-message-1",
+    description: "A short exchange with a copy action",
+    type: "registry:block",
+    registryDependencies: ["@coss/agent-message","@coss/agent-message-actions"],
+    files: [{
+      path: "registry/default/particles/p-agent-message-1.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-agent-message-1.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["agent"],
+    meta: {"className":"**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg"},
+  },
+  "p-agent-message-2": {
+    name: "p-agent-message-2",
+    description: "Long user message with optional text disclosure",
+    type: "registry:block",
+    registryDependencies: ["@coss/agent-message"],
+    files: [{
+      path: "registry/default/particles/p-agent-message-2.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-agent-message-2.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["agent"],
+    meta: {"className":"**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg"},
+  },
+  "p-agent-message-3": {
+    name: "p-agent-message-3",
+    description: "Message actions revealed on hover and keyboard focus",
+    type: "registry:block",
+    registryDependencies: ["@coss/agent-message","@coss/agent-message-actions"],
+    files: [{
+      path: "registry/default/particles/p-agent-message-3.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-agent-message-3.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["agent"],
+    meta: {"className":"**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg"},
+  },
+  "p-agent-approval-3": {
+    name: "p-agent-approval-3",
+    description: "Grouped approval for two event types",
+    type: "registry:block",
+    registryDependencies: ["@coss/agent-status-indicator","@coss/agent-approval","@coss/button"],
+    files: [{
+      path: "registry/default/particles/p-agent-approval-3.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-agent-approval-3.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["agent"],
+    meta: {"className":"**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg"},
+  },
+  "p-agent-approval-1": {
+    name: "p-agent-approval-1",
+    description: "Email approval with a message preview",
+    type: "registry:block",
+    registryDependencies: ["@coss/agent-status-indicator","@coss/agent-approval","@coss/button"],
+    files: [{
+      path: "registry/default/particles/p-agent-approval-1.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-agent-approval-1.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["agent"],
+    meta: {"className":"**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg"},
+  },
+  "p-agent-approval-2": {
+    name: "p-agent-approval-2",
+    description: "Event approval with time, attendee, and location",
+    type: "registry:block",
+    registryDependencies: ["@coss/agent-status-indicator","@coss/agent-approval","@coss/button"],
+    files: [{
+      path: "registry/default/particles/p-agent-approval-2.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-agent-approval-2.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["agent"],
+    meta: {"className":"**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg"},
   },
   "p-accordion-1": {
     name: "p-accordion-1",

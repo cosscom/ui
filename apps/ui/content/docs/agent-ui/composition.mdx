@@ -1,0 +1,60 @@
+---
+title: Building an Agent UI
+description: Choose a starting point, compose the interface, and connect application state.
+---
+
+Start with [Connected Conversation](/ui/docs/agent-ui/connected-conversation) for a working text chat. It combines messages, Copy/Edit actions, scrolling, a composer, streaming, Stop, and Retry in an editable recipe. Use the individual components when connecting another runtime or adding agent interactions to an existing interface.
+
+These components are in preview. Registry names become available when this branch is deployed; the connected recipe documents local installation.
+
+## Choose a starting point
+
+| What you are building | Start here | What you supply |
+| --- | --- | --- |
+| A text conversation connected to a model | [Connected Conversation](/ui/docs/agent-ui/connected-conversation) | A model endpoint, application access controls, and persistence if needed. |
+| A conversation using your existing runtime | [Agent Conversation](/ui/docs/agent-ui/agent-conversation), [Agent Message](/ui/docs/agent-ui/agent-message), and [Agent Composer](/ui/docs/agent-ui/agent-composer) | Message mapping, draft state, and Send/Stop/Retry handlers. |
+| An assistant inside an existing app | [Agent Panel](/ui/docs/agent-ui/agent-panel) | Visibility, focus restoration, and a conversation controller that survives hiding. |
+
+The connected recipe uses AI SDK. The presentation components do not require it. The panel demo stores local messages only; it is a layout and visibility example, not a second model integration.
+
+## Compose the conversation
+
+Keep the transcript and composer as siblings in a height-constrained column. `AgentConversation` already contains its scroll area and jump-to-latest button. Place messages inside it and keep the composer outside the scrolling content.
+
+`AgentMessage` defines the author and layout. Put text in `AgentMessageContent`, then place `AgentMessageActions` below it. Use `AgentMessageCopyAction` for clipboard behavior and `AgentMessageAction` for application actions such as Edit. See the [user-message example](/ui/docs/agent-ui/agent-message#user-message-copy-and-edit).
+
+The composer receives the draft, change handler, request state, and Send/Stop handlers. It does not own the message history or start a model request itself. Preserve an unsent draft when stopping or retrying a response. The connected recipe demonstrates those behaviors together.
+
+## Adapt the layout
+
+Give the conversation a bounded height and keep the composer outside its scroll area. For a full-page view, adapt the [connected recipe](/ui/docs/agent-ui/connected-conversation#layout) to the available space. For an embedded assistant, use the [panel’s conversation and composer slots](/ui/docs/agent-ui/agent-panel#usage) with the same request logic.
+
+## Add only the interactions you need
+
+| Component | Where it belongs | Application responsibility |
+| --- | --- | --- |
+| [Status indicator](/ui/docs/agent-ui/agent-status-indicator) | Beside the operation it describes. Waiting and response errors belong in the transcript. | Map request states to a clear label; place Retry with the failed response. |
+| [Tool activity](/ui/docs/agent-ui/agent-tool-activity) | Within the assistant turn that performs the work. | Map tool names and outcomes, including failures and unknown tools. |
+| [Reasoning](/ui/docs/agent-ui/agent-reasoning) | Within the relevant assistant turn. | Supply displayable reasoning text and streaming state. Disclosure preserves the reader's choice. |
+| [Approval](/ui/docs/agent-ui/agent-approval) | At the point where a proposed action needs a decision. | Persist the decision and authorize execution on the server. |
+| [Response feedback](/ui/docs/agent-ui/agent-response-feedback) | Alongside the assistant response being rated. | Associate the rating with that response and save it; reject the callback when saving fails. |
+
+A visible “Response complete” label below the composer is unnecessary. The connected recipe announces completion through a visually hidden status. Keep one live region per announcement: if an enclosing alert or status already announces the text, use `announce={false}` on its status indicator.
+
+Keep the waiting placeholder until visible response text replaces it. A stream can start before the first text arrives; removing the placeholder at stream start can briefly shrink the transcript and cause a scroll jump.
+
+## Decide what the application owns
+
+The components provide presentation, local interactions, and callbacks. Your application owns conversation identity, messages, drafts, request lifecycle, persistence, routing, and tool execution.
+
+The connected recipe supplies one concrete edit policy: restore a user prompt into the composer, replace any unsent draft, and remove that turn and subsequent replies. It blocks edits during a request. Change that policy in your application if you need inline editing, confirmation before replacing a draft, or branching history.
+
+Keep the conversation controller above a panel that can be hidden if drafts and messages should survive closing. The panel's Close and Minimize callbacks report intent; they do not delete history. Full-page navigation also needs application-owned continuity.
+
+The connected recipe currently handles user and assistant text only. Installing tool, approval, or feedback components does not connect them to its transport. Extend the message mapping and server contract when adding those features. Attachments, session switching, history management, queues, and structured composer input are not included.
+
+## Check your integration
+
+Before shipping, exercise the interface with a long transcript and a multiline draft at a narrow width. Confirm that only the intended transcript and textarea scroll, and that reading earlier messages is not interrupted by incoming text.
+
+Send a message, stop a partial reply, retry a failure, copy text, and edit an earlier prompt. Check keyboard focus and draft preservation in each case. For a panel, also hide and reopen it. Finally, test your actual model endpoint: the documentation demo streams deterministic sample text and does not verify your provider configuration.

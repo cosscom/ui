@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "agent-tool-activity",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "@coss/agent-status-indicator",
+    "@coss/collapsible",
+    "@coss/utils"
+  ],
+  "files": [
+    {
+      "path": "registry/default/ui/agent-tool-activity.tsx",
+      "content": "\"use client\";\n\nimport { ChevronRightIcon, SparklesIcon } from \"lucide-react\";\nimport type { ComponentProps, ReactElement, ReactNode } from \"react\";\nimport { cn } from \"@/registry/default/lib/utils\";\nimport {\n  type AgentStatus,\n  AgentStatusIndicator,\n} from \"@/registry/default/ui/agent-status-indicator\";\nimport {\n  Collapsible,\n  CollapsiblePanel,\n  CollapsibleTrigger,\n} from \"@/registry/default/ui/collapsible\";\n\nexport interface AgentToolActivityGroupProps\n  extends ComponentProps<typeof Collapsible> {\n  summary: string;\n  status: AgentStatus;\n  triggerClassName?: string;\n  contentClassName?: string;\n}\n\nexport function AgentToolActivityGroup({\n  children,\n  className,\n  summary,\n  status,\n  triggerClassName,\n  contentClassName,\n  ...props\n}: AgentToolActivityGroupProps): ReactElement {\n  return (\n    <Collapsible\n      {...props}\n      className={cn(\"min-w-0\", className)}\n      data-slot=\"agent-tool-activity-group\"\n    >\n      <CollapsibleTrigger\n        className={cn(\n          \"flex pointer-coarse:min-h-11 w-fit min-w-0 max-w-full items-center gap-1.5 rounded-sm text-start text-muted-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background\",\n          triggerClassName,\n        )}\n        data-slot=\"agent-tool-activity-trigger\"\n      >\n        <AgentStatusIndicator\n          announce={false}\n          className=\"text-muted-foreground\"\n          wrap\n          label={summary}\n          status={status}\n        />\n        <ChevronRightIcon\n          aria-hidden=\"true\"\n          className=\"size-3.5 shrink-0 in-data-panel-open:rotate-90 transition-transform motion-reduce:transition-none rtl:in-data-panel-open:rotate-90 rtl:rotate-180\"\n        />\n      </CollapsibleTrigger>\n      <CollapsiblePanel\n        className=\"motion-reduce:transition-none\"\n        data-slot=\"agent-tool-activity-panel\"\n      >\n        <div\n          className={cn(\"flex flex-col gap-1.5 ps-5 pt-1.5\", contentClassName)}\n        >\n          {children}\n        </div>\n      </CollapsiblePanel>\n    </Collapsible>\n  );\n}\n\nexport interface AgentToolActivityRowProps extends ComponentProps<\"div\"> {\n  icon?: ReactNode;\n}\n\nexport function AgentToolActivityRow({\n  children,\n  className,\n  icon = <SparklesIcon />,\n  ...props\n}: AgentToolActivityRowProps): ReactElement {\n  return (\n    <div\n      {...props}\n      className={cn(\"flex min-w-0 gap-1.5 text-foreground text-xs\", className)}\n      data-slot=\"agent-tool-activity-row\"\n    >\n      {icon != null && (\n        <span\n          aria-hidden=\"true\"\n          className=\"flex h-lh shrink-0 items-center text-muted-foreground [&_svg]:size-3.5\"\n        >\n          {icon}\n        </span>\n      )}\n      <div className=\"min-w-0 [overflow-wrap:anywhere]\">{children}</div>\n    </div>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

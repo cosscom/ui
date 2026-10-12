@@ -1,0 +1,26 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "p-agent-message-3",
+  "description": "Message actions revealed on hover and keyboard focus",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "@coss/agent-message",
+    "@coss/agent-message-actions"
+  ],
+  "files": [
+    {
+      "path": "registry/default/particles/p-agent-message-3.tsx",
+      "content": "\"use client\";\n\nimport { BookmarkIcon } from \"lucide-react\";\nimport { useState } from \"react\";\nimport {\n  AgentMessage,\n  AgentMessageContent,\n} from \"@/registry/default/ui/agent-message\";\nimport {\n  AgentMessageAction,\n  AgentMessageActions,\n  AgentMessageCopyAction,\n} from \"@/registry/default/ui/agent-message-actions\";\n\nconst response =\n  \"Start with a 15-minute intro call. It gives you time to understand what someone needs before booking a longer session.\";\n\nexport default function Particle() {\n  const [saved, setSaved] = useState(false);\n\n  return (\n    <AgentMessage aria-label=\"Assistant\" author=\"assistant\">\n      <AgentMessageContent>{response}</AgentMessageContent>\n      <AgentMessageActions label=\"Suggestion actions\">\n        <AgentMessageCopyAction\n          copiedLabel=\"Copied\"\n          copyLabel=\"Copy suggestion\"\n          errorLabel=\"Could not copy. Try again.\"\n          text={response}\n        />\n        <AgentMessageAction\n          aria-pressed={saved}\n          label=\"Save suggestion\"\n          onClick={() => setSaved(!saved)}\n        >\n          <BookmarkIcon\n            aria-hidden=\"true\"\n            className={saved ? \"fill-current\" : undefined}\n          />\n        </AgentMessageAction>\n      </AgentMessageActions>\n    </AgentMessage>\n  );\n}\n",
+      "type": "registry:block"
+    }
+  ],
+  "meta": {
+    "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg"
+  },
+  "categories": [
+    "agent"
+  ],
+  "type": "registry:block"
+}

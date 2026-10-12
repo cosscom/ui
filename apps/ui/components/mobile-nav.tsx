@@ -13,7 +13,7 @@ import {
   DrawerPopup,
   DrawerTrigger,
 } from "@/registry/default/ui/drawer";
-import { PAGES_NEW } from "@/lib/docs";
+import { GROUPS_NEW, PAGES_NEW } from "@/lib/docs";
 import type { source } from "@/lib/source";
 import { cn } from "@/lib/utils";
 
@@ -73,7 +73,13 @@ export function MobileNav({
               if (group.type === "folder") {
                 return (
                   <div className="flex flex-col gap-3" key={group.$id}>
-                    <div className="font-medium text-sm">{group.name}</div>
+                    <div className="flex items-center gap-2 font-medium text-sm">
+                      {group.name}
+                      {typeof group.name === "string" &&
+                        GROUPS_NEW.includes(group.name) && (
+                          <Badge variant="info">New</Badge>
+                        )}
+                    </div>
                     <div className="flex flex-col gap-0.5">
                       {group.children.map((item) => {
                         if (item.type === "page") {

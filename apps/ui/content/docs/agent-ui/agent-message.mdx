@@ -1,0 +1,190 @@
+---
+title: Agent Message
+description: User and assistant messages with optional actions and text disclosure.
+---
+
+<ComponentPreview name="p-agent-message-1" />
+
+## Installation
+
+These components are in preview. The registry names become available when this branch is deployed.
+
+```bash
+npx shadcn@latest add @coss/agent-message @coss/agent-message-actions
+```
+
+Install `@coss/agent-message` alone if you do not need actions. For a local checkout on port 4000, point the `@coss` registry in `components.json` at `http://localhost:4000/ui/r/{name}.json`. See [getting started](/ui/docs/get-started) for the coss theme setup.
+
+<ComponentSource name="agent-message" title="components/ui/agent-message.tsx" />
+<ComponentSource name="agent-message-actions" title="components/ui/agent-message-actions.tsx" />
+
+## Usage
+
+```tsx
+import { AgentMessage, AgentMessageContent } from "@/components/ui/agent-message"
+
+<AgentMessage author="user" aria-label="You">
+  <AgentMessageContent>Find a time for a quick call.</AgentMessageContent>
+</AgentMessage>
+<AgentMessage author="assistant" aria-label="Assistant">
+  <AgentMessageContent>
+    <p>Tuesday at 10:00 or Thursday at 14:00 would work.</p>
+    <p>Which do you prefer?</p>
+  </AgentMessageContent>
+</AgentMessage>
+```
+
+User messages sit in a muted bubble aligned to the end. Assistant responses stay open. Each message defaults to an article role. Use `author` for appearance; the native `role` prop retains its normal accessibility meaning. Supply author labels in your application's language when needed.
+
+Content accepts your own paragraphs, links, code, or rich-response renderer. These components do not parse Markdown, execute tools, manage messages, or scroll a conversation. Use stable message IDs as React keys.
+
+## Actions
+
+Place `AgentMessageActions` after `AgentMessageContent`, as a direct child of the message. Each action has an accessible label and a tooltip. The group uses normal Tab navigation.
+
+```tsx
+import {
+  AgentMessageActions,
+  AgentMessageCopyAction,
+} from "@/components/ui/agent-message-actions"
+
+<AgentMessageActions alwaysVisible label="Response actions">
+  <AgentMessageCopyAction
+    text={responseText}
+    copyLabel="Copy response"
+    copiedLabel="Copied"
+    errorLabel="Could not copy. Try again."
+    disabled={isStreaming}
+  />
+</AgentMessageActions>
+```
+
+Pass the exact plain text you want copied. Copy is disabled for empty text and while a write is pending. Success is announced and shown for two seconds. Clipboard failures are announced and remain visible on the action until retry; `onCopyError` can also display an application message. Clipboard access requires a supported, secure browser context. No fallback copy is attempted.
+
+Actions default to appearing on message hover or keyboard focus. On devices with a coarse pointer they stay visible and use 44px controls. Their row remains in the layout, avoiding overlap with the next message. Use `alwaysVisible` for the latest response or wherever the controls should remain discoverable.
+
+### User-message copy and edit
+
+Use the same action parts beneath a user message. The group aligns to the end of the bubble automatically:
+
+```tsx
+import { PencilIcon } from "lucide-react"
+import { AgentMessage, AgentMessageContent } from "@/components/ui/agent-message"
+import {
+  AgentMessageAction,
+  AgentMessageActions,
+  AgentMessageCopyAction,
+} from "@/components/ui/agent-message-actions"
+
+<AgentMessage author="user" aria-label="You">
+  <AgentMessageContent className="whitespace-pre-wrap">
+    {messageText}
+  </AgentMessageContent>
+  <AgentMessageActions label="Message actions">
+    <AgentMessageCopyAction
+      text={messageText}
+      copyLabel="Copy message"
+      copiedLabel="Message copied"
+      errorLabel="Could not copy. Try again."
+    />
+    <AgentMessageAction
+      label="Edit message"
+      disabled={isBusy}
+      onClick={() => editMessage(messageId, messageText)}
+    >
+      <PencilIcon aria-hidden="true" />
+    </AgentMessageAction>
+  </AgentMessageActions>
+</AgentMessage>
+```
+
+There is no separate `AgentMessageEditAction`: the generic `AgentMessageAction` supplies the button and tooltip; `editMessage` is your application's handler. Guard that handler while a request is active as well as disabling the button.
+
+The [connected conversation example](/ui/docs/agent-ui/connected-conversation#request-behavior) demonstrates Cal's edit policy: restore the selected prompt into the composer, replace any unsent draft, remove that prompt and all later replies, and focus the composer. Sending the revised draft starts a new turn. This policy belongs to the recipe, not the message components; an application can instead provide an inline editor or preserve conversation branches.
+
+### Custom actions
+
+<ComponentPreview name="p-agent-message-3" />
+
+Hover over the suggestion or Tab to its actions. The bookmark toggles a local saved state. On touch devices the actions stay visible.
+
+Use `AgentMessageAction` with an icon and your own handler for save, edit, retry, or other application behavior. Toggle actions should use a stable label and `aria-pressed`:
+
+```tsx
+<AgentMessageAction
+  label="Save suggestion"
+  aria-pressed={saved}
+  onClick={() => setSaved(!saved)}
+>
+  <BookmarkIcon aria-hidden="true" />
+</AgentMessageAction>
+```
+
+Your application owns editing, regeneration, persistence, and disabled states. There is no built-in edit form or feedback menu.
+
+## Long text
+
+<ComponentPreview name="p-agent-message-2" />
+
+`AgentMessageText` optionally limits a **plain-text string** to a 240px preview. The disclosure appears only when the text exceeds that height. It remeasures when content or width changes. Short messages need only `AgentMessageContent`.
+
+```tsx
+<AgentMessageContent>
+  <AgentMessageText
+    showMoreLabel="Show more"
+    showLessLabel="Show less"
+    isStreaming={isStreaming}
+  >
+    {messageText}
+  </AgentMessageText>
+</AgentMessageContent>
+```
+
+While `isStreaming` is true, the full text is visible and the disclosure control is hidden. When streaming ends, the previous expanded preference applies. Use `defaultExpanded`, or controlled `expanded` and `onExpandedChange`, to choose a different policy. Expansion changes do not manage conversation following; the callback can coordinate with your own viewport. Collapsing keeps the disclosure button in view.
+
+The preview is visual truncation: the full text remains available to assistive technology. Rich content belongs directly in `AgentMessageContent`, so clipping cannot hide focusable links or controls. Key the component by message ID when switching to a different message to reset its local expanded preference.
+
+## Timestamps
+
+`AgentMessageTimestamp` is a styled native `time` element. Place it where it fits your message layout and supply a machine-readable `dateTime`:
+
+```tsx
+<AgentMessageTimestamp dateTime="2026-09-21T10:30:00Z">
+  12:30
+</AgentMessageTimestamp>
+```
+
+## API Reference
+
+### Message parts
+
+All parts accept their native element props, including `className`, `ref`, and `dir`.
+
+| Part | Props and behavior |
+| --- | --- |
+| `AgentMessage` | A `div` with required `author: "user" \| "assistant"`. Contains content and optional actions. |
+| `AgentMessageContent` | A `div` styled according to its parent message's author. Supports rich children. |
+| `AgentMessageTimestamp` | A native `time` element with muted, compact text. |
+
+### AgentMessageText
+
+Accepts native `div` props except `children`; the ref points to the outer wrapper.
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `children` | `string` | Required plain text; whitespace is preserved. |
+| `showMoreLabel`, `showLessLabel` | `string` | Required disclosure labels. |
+| `isStreaming` | `boolean` | Shows all text and hides the toggle; defaults to false. |
+| `expanded` | `boolean` | Controlled expanded preference. |
+| `defaultExpanded` | `boolean` | Initial uncontrolled preference; defaults to false. |
+| `onExpandedChange` | `(expanded: boolean) => void` | Called when the user activates the disclosure. |
+
+### Action parts
+
+| Part | Props and behavior |
+| --- | --- |
+| `AgentMessageActions` | Native `div` props except `role`, plus required `label` and optional `alwaysVisible` (false). Provides tooltips and an accessible group. |
+| `AgentMessageAction` | Required `label`, icon children, and Button props except `size`, `variant`, and `type`. Uses a compact ghost button. Supports `ref`, `disabled`, and custom `render`. |
+| `AgentMessageCopyAction` | Action props except `label`, `children`, `onClick`, and `render`; required `text`, `copyLabel`, `copiedLabel`, and `errorLabel`; optional `onCopied()` and `onCopyError(error: unknown)`. |
+
+Custom action renders must preserve button semantics and keyboard behavior. Copy always uses a native button. Actions can also be used outside a message, where they remain visible.

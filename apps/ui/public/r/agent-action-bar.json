@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "agent-action-bar",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "@coss/button",
+    "@coss/toolbar",
+    "@coss/utils"
+  ],
+  "files": [
+    {
+      "path": "registry/default/ui/agent-action-bar.tsx",
+      "content": "\"use client\";\n\nimport { SendIcon } from \"lucide-react\";\nimport type { ComponentProps, ReactElement } from \"react\";\nimport { cn } from \"@/registry/default/lib/utils\";\nimport { Button } from \"@/registry/default/ui/button\";\nimport { Toolbar, ToolbarButton } from \"@/registry/default/ui/toolbar\";\n\nexport interface AgentActionBarProps extends ComponentProps<typeof Toolbar> {\n  \"aria-label\": string;\n}\n\nexport function AgentActionBar({\n  className,\n  ...props\n}: AgentActionBarProps): ReactElement {\n  return (\n    <Toolbar\n      {...props}\n      className={cn(\n        \"max-w-full items-center justify-end gap-1 rounded-none border-0 bg-transparent p-0 shadow-none\",\n        className,\n      )}\n      data-slot=\"agent-action-bar\"\n    />\n  );\n}\n\nexport type AgentActionBarLauncherProps = Omit<\n  ComponentProps<typeof ToolbarButton>,\n  \"render\" | \"nativeButton\"\n>;\n\nexport function AgentActionBarLauncher({\n  children,\n  className,\n  ...props\n}: AgentActionBarLauncherProps): ReactElement {\n  return (\n    <ToolbarButton\n      {...props}\n      className={cn(\n        \"pointer-coarse:min-h-11 gap-1.5 text-muted-foreground hover:text-foreground data-popup-open:bg-accent data-popup-open:text-foreground\",\n        className,\n      )}\n      data-slot=\"agent-action-bar-launcher\"\n      render={<Button size=\"xs\" type=\"button\" variant=\"ghost\" />}\n    >\n      <SendIcon aria-hidden=\"true\" />\n      {children}\n    </ToolbarButton>\n  );\n}\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "p-agent-composer-1",
+  "description": "Plain text composer",
+  "registryDependencies": [
+    "@coss/agent-composer"
+  ],
+  "files": [
+    {
+      "path": "registry/default/particles/p-agent-composer-1.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { AgentComposer } from \"@/registry/default/ui/agent-composer\";\n\nexport default function Particle() {\n  const [value, setValue] = useState(\"\");\n  return (\n    <AgentComposer\n      inputLabel=\"Message\"\n      onStop={() => {}}\n      onSubmit={() => {}}\n      onValueChange={setValue}\n      sendLabel=\"Send message\"\n      stopLabel=\"Stop response\"\n      textareaProps={{ placeholder: \"Ask anything…\" }}\n      value={value}\n    />\n  );\n}\n",
+      "type": "registry:block"
+    }
+  ],
+  "meta": {
+    "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg"
+  },
+  "categories": [
+    "agent"
+  ],
+  "type": "registry:block"
+}

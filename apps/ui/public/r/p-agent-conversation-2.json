@@ -1,0 +1,32 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "p-agent-conversation-2",
+  "description": "Connected conversation with streaming, Stop, and retry",
+  "dependencies": [
+    "ai"
+  ],
+  "registryDependencies": [
+    "@coss/agent-chat",
+    "@coss/button"
+  ],
+  "files": [
+    {
+      "path": "registry/default/particles/p-agent-conversation-2.tsx",
+      "content": "\"use client\";\n\nimport { DefaultChatTransport, type UIMessage } from \"ai\";\nimport { useRef, useState } from \"react\";\nimport AgentChat from \"@/registry/default/blocks/agent-chat/agent-chat\";\nimport { Button } from \"@/registry/default/ui/button\";\n\nconst initialMessages: UIMessage[] = [\n  {\n    id: \"prompt\",\n    role: \"user\",\n    parts: [\n      { type: \"text\", text: \"Write a short reminder for tomorrow’s meeting.\" },\n    ],\n  },\n  {\n    id: \"reply\",\n    role: \"assistant\",\n    parts: [\n      {\n        type: \"text\",\n        text: \"Hi Alex,\\n\\nJust a quick reminder about our meeting tomorrow at 10 AM. Let me know if you need to reschedule.\\n\\nSee you then!\",\n      },\n    ],\n  },\n];\n\nexport default function Particle() {\n  const [revision, setRevision] = useState(0);\n  const [failNext, setFailNext] = useState(false);\n  const failRef = useRef(false);\n  const [transport] = useState(\n    () =>\n      new DefaultChatTransport({\n        api: `${process.env.NEXT_PUBLIC_BASE_PATH || \"\"}/api/agent-chat-demo`,\n        fetch: (url, init) => {\n          const demoFailure = failRef.current;\n          failRef.current = false;\n          setFailNext(false);\n          return fetch(url, {\n            ...init,\n            body: JSON.stringify({\n              ...JSON.parse(String(init?.body)),\n              demoFailure,\n            }),\n          });\n        },\n      }),\n  );\n\n  return (\n    <div className=\"flex w-full flex-col gap-4\">\n      <AgentChat\n        initialDraft=\"Make it a little warmer.\"\n        initialMessages={initialMessages}\n        key={revision}\n        transport={transport}\n      />\n      <div className=\"flex flex-wrap items-center justify-between gap-2 border-t pt-3\">\n        <p className=\"text-muted-foreground text-xs\">\n          Sample responses · No model connected\n        </p>\n        <div className=\"flex items-center gap-1\">\n          <Button\n            aria-pressed={failNext}\n            onClick={() => {\n              failRef.current = !failRef.current;\n              setFailNext(failRef.current);\n            }}\n            size=\"xs\"\n            type=\"button\"\n            variant=\"ghost\"\n          >\n            {failNext ? \"Next response will fail\" : \"Try an error\"}\n          </Button>\n          <Button\n            onClick={() => {\n              failRef.current = false;\n              setFailNext(false);\n              setRevision((value) => value + 1);\n            }}\n            size=\"xs\"\n            type=\"button\"\n            variant=\"ghost\"\n          >\n            Reset\n          </Button>\n        </div>\n      </div>\n    </div>\n  );\n}\n",
+      "type": "registry:block"
+    },
+    {
+      "path": "registry/default/blocks/agent-chat-demo/route.ts",
+      "content": "import {\n  createUIMessageStream,\n  createUIMessageStreamResponse,\n  type UIMessage,\n  validateUIMessages,\n} from \"ai\";\n\nexport async function POST(request: Request) {\n  let messages: UIMessage[];\n  let fail: boolean;\n  try {\n    const body = await request.json();\n    messages = await validateUIMessages({ messages: body.messages });\n    fail = body.demoFailure === true;\n    if (\n      messages.length === 0 ||\n      messages.length > 100 ||\n      messages.some(\n        (message) =>\n          message.role === \"system\" ||\n          message.parts.some(\n            (part) => part.type !== \"text\" || part.text.length > 20000,\n          ),\n      )\n    ) {\n      return new Response(\"Invalid messages.\", { status: 400 });\n    }\n  } catch {\n    return new Response(\"Invalid messages.\", { status: 400 });\n  }\n\n  const prompt =\n    messages\n      .at(-1)\n      ?.parts.filter((part) => part.type === \"text\")\n      .map((part) => part.text)\n      .join(\"\")\n      .toLowerCase() ?? \"\";\n  const reply = prompt.includes(\"short\")\n    ? \"Hi Alex, just a reminder about our meeting tomorrow at 10 AM. Looking forward to it!\"\n    : prompt.includes(\"warm\") || prompt.includes(\"friendly\")\n      ? \"Hi Alex,\\n\\nI’m looking forward to catching up tomorrow at 10 AM! Just sending a quick reminder in case it helps with planning your day.\\n\\nSee you then!\"\n      : \"Hi Alex,\\n\\nJust a quick reminder about our meeting tomorrow at 10 AM. Let me know if you need to reschedule.\\n\\nSee you then!\";\n  const stream = createUIMessageStream({\n    execute: async ({ writer }) => {\n      writer.write({ type: \"start\", messageId: crypto.randomUUID() });\n      writer.write({ type: \"text-start\", id: \"reply\" });\n      const words = reply.match(/\\S+\\s*/g) ?? [];\n      for (const [index, word] of words.entries()) {\n        // The delay is a server-side sample stream, not a client typing animation.\n        try {\n          await new Promise<void>((resolve, reject) => {\n            const abort = () => {\n              clearTimeout(timer);\n              reject(request.signal.reason);\n            };\n            const timer = setTimeout(() => {\n              request.signal.removeEventListener(\"abort\", abort);\n              resolve();\n            }, 90);\n            if (request.signal.aborted) abort();\n            else\n              request.signal.addEventListener(\"abort\", abort, { once: true });\n          });\n        } catch {\n          return;\n        }\n        if (fail && index === 10) throw new Error(\"Demo interruption\");\n        writer.write({ type: \"text-delta\", id: \"reply\", delta: word });\n      }\n      writer.write({ type: \"text-end\", id: \"reply\" });\n      writer.write({ type: \"finish\", finishReason: \"stop\" });\n    },\n    onError: () => \"The sample response was interrupted.\",\n  });\n  return createUIMessageStreamResponse({ stream });\n}\n",
+      "type": "registry:file",
+      "target": "app/api/agent-chat-demo/route.ts"
+    }
+  ],
+  "meta": {
+    "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg **:data-[align=center]:min-h-[640px] **:data-[slot=code]:**:[pre]:h-full"
+  },
+  "categories": [
+    "agent"
+  ],
+  "type": "registry:block"
+}

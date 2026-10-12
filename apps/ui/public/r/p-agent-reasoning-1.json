@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "p-agent-reasoning-1",
+  "description": "Reasoning disclosure that preserves user choice as content arrives",
+  "registryDependencies": [
+    "@coss/agent-reasoning",
+    "@coss/button"
+  ],
+  "files": [
+    {
+      "path": "registry/default/particles/p-agent-reasoning-1.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { AgentReasoning } from \"@/registry/default/ui/agent-reasoning\";\nimport { Button } from \"@/registry/default/ui/button\";\n\nconst steps = [\n  \"I’ll look for a time when everyone is free.\",\n  \"I’ll look for a time when everyone is free.\\nI’ll allow 30 minutes for the meeting.\",\n  \"I’ll look for a time when everyone is free.\\nI’ll allow 30 minutes for the meeting.\\nTomorrow afternoon has a matching slot.\",\n];\n\nexport default function Particle() {\n  const [step, setStep] = useState(0);\n  const isStreaming = step < steps.length - 1;\n  return (\n    <div className=\"flex w-full flex-col gap-4\">\n      <div className=\"min-h-36\">\n        <AgentReasoning\n          completedLabel=\"Considered availability\"\n          isStreaming={isStreaming}\n          streamingLabel=\"Considering availability…\"\n        >\n          {steps[step]}\n        </AgentReasoning>\n      </div>\n      <div className=\"flex items-center gap-2 border-t pt-3\">\n        <Button\n          onClick={() => setStep((value) => value + 1)}\n          disabled={!isStreaming}\n          size=\"xs\"\n          variant=\"outline\"\n        >\n          {step === 0 ? \"Add detail\" : \"Finish\"}\n        </Button>\n        <Button\n          onClick={() => setStep(0)}\n          disabled={step === 0}\n          size=\"xs\"\n          variant=\"ghost\"\n        >\n          Restart\n        </Button>\n      </div>\n    </div>\n  );\n}\n",
+      "type": "registry:block"
+    }
+  ],
+  "meta": {
+    "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg **:data-[align=center]:min-h-80"
+  },
+  "categories": [
+    "agent"
+  ],
+  "type": "registry:block"
+}

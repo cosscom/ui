@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@ai-sdk/react": "4.0.112",
     "@base-ui/react": "1.8.0",
     "@coss/ui": "workspace:*",
     "@daypicker/react": "10.0.1",
@@ -7,6 +8,7 @@
     "@hugeicons/react": "^1.1.1",
     "@remixicon/react": "^4.7.0",
     "@tanstack/react-table": "^9.2.4",
+    "ai": "7.0.109",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "p-agent-status-indicator-1",
+  "description": "Compact status indicator with six presentation states",
+  "registryDependencies": [
+    "@coss/agent-status-indicator",
+    "@coss/button"
+  ],
+  "files": [
+    {
+      "path": "registry/default/particles/p-agent-status-indicator-1.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport {\n  type AgentStatus,\n  AgentStatusIndicator,\n} from \"@/registry/default/ui/agent-status-indicator\";\nimport { Button } from \"@/registry/default/ui/button\";\n\nconst states = [\n  { status: \"idle\", name: \"Idle\", label: \"Ready to help\" },\n  { status: \"thinking\", name: \"Thinking\", label: \"Thinking…\" },\n  { status: \"working\", name: \"Working\", label: \"Checking calendars…\" },\n  {\n    status: \"needs-input\",\n    name: \"Needs input\",\n    label: \"Waiting for your approval\",\n  },\n  { status: \"complete\", name: \"Complete\", label: \"Calendars checked\" },\n  { status: \"error\", name: \"Error\", label: \"Couldn’t check the calendar\" },\n] as const satisfies readonly {\n  status: AgentStatus;\n  name: string;\n  label: string;\n}[];\n\nexport default function Particle() {\n  const [selected, setSelected] = useState<(typeof states)[number]>(states[1]);\n  return (\n    <div className=\"flex w-full flex-col gap-4\">\n      <div className=\"flex min-h-24 items-center justify-center\">\n        <AgentStatusIndicator label={selected.label} status={selected.status} />\n      </div>\n      <div\n        aria-label=\"Example status\"\n        className=\"flex flex-wrap justify-center gap-1 border-t pt-3\"\n        role=\"group\"\n      >\n        {states.map((state) => (\n          <Button\n            aria-pressed={selected.status === state.status}\n            key={state.status}\n            onClick={() => setSelected(state)}\n            size=\"xs\"\n            type=\"button\"\n            variant=\"ghost\"\n          >\n            {state.name}\n          </Button>\n        ))}\n      </div>\n    </div>\n  );\n}\n",
+      "type": "registry:block"
+    }
+  ],
+  "meta": {
+    "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg **:data-[align=center]:min-h-64"
+  },
+  "categories": [
+    "agent"
+  ],
+  "type": "registry:block"
+}

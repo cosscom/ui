@@ -13,6 +13,254 @@ function categories<T extends RegistryCategory[]>(...categories: T): T {
 
 export const particles: ParticleItem[] = [
   {
+    name: "p-agent-response-feedback-1",
+    type: "registry:block",
+    categories: categories("agent"),
+    description:
+      "Response feedback with optional reasons and retryable submission",
+    registryDependencies: [
+      "@coss/agent-response-feedback",
+      "@coss/agent-message",
+      "@coss/button",
+    ],
+    files: [
+      {
+        path: "particles/p-agent-response-feedback-1.tsx",
+        type: "registry:block",
+      },
+    ],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg **:data-[align=center]:min-h-64",
+    },
+  },
+  {
+    name: "p-agent-panel-1",
+    type: "registry:block",
+    categories: categories("agent"),
+    description: "Assistant panel and launcher with a persistent local draft",
+    registryDependencies: [
+      "@coss/agent-panel",
+      "@coss/agent-action-bar",
+      "@coss/agent-composer",
+      "@coss/agent-conversation",
+      "@coss/agent-message",
+    ],
+    files: [{ path: "particles/p-agent-panel-1.tsx", type: "registry:block" }],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-md **:data-[align=center]:h-auto",
+    },
+  },
+  {
+    name: "p-agent-reasoning-1",
+    type: "registry:block",
+    categories: categories("agent"),
+    description:
+      "Reasoning disclosure that preserves user choice as content arrives",
+    registryDependencies: ["@coss/agent-reasoning", "@coss/button"],
+    files: [
+      { path: "particles/p-agent-reasoning-1.tsx", type: "registry:block" },
+    ],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg **:data-[align=center]:min-h-80",
+    },
+  },
+  {
+    name: "p-agent-status-indicator-1",
+    type: "registry:block",
+    categories: categories("agent"),
+    description: "Compact status indicator with six presentation states",
+    registryDependencies: ["@coss/agent-status-indicator", "@coss/button"],
+    files: [
+      {
+        path: "particles/p-agent-status-indicator-1.tsx",
+        type: "registry:block",
+      },
+    ],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg **:data-[align=center]:min-h-64",
+    },
+  },
+  {
+    name: "p-agent-tool-activity-1",
+    type: "registry:block",
+    categories: categories("agent"),
+    description:
+      "Tool activity with running, completed, declined, failed, mixed, and unknown states",
+    dependencies: ["lucide-react"],
+    registryDependencies: [
+      "@coss/agent-status-indicator",
+      "@coss/agent-tool-activity",
+      "@coss/button",
+    ],
+    files: [
+      { path: "particles/p-agent-tool-activity-1.tsx", type: "registry:block" },
+    ],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg **:data-[align=center]:min-h-80",
+    },
+  },
+  {
+    categories: categories("agent"),
+    dependencies: ["ai"],
+    description: "Connected conversation with streaming, Stop, and retry",
+    files: [
+      { path: "particles/p-agent-conversation-2.tsx", type: "registry:block" },
+      {
+        path: "blocks/agent-chat-demo/route.ts",
+        type: "registry:file",
+        target: "app/api/agent-chat-demo/route.ts",
+      },
+    ],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg **:data-[align=center]:min-h-[640px] **:data-[slot=code]:**:[pre]:h-full",
+    },
+    name: "p-agent-conversation-2",
+    registryDependencies: ["@coss/agent-chat", "@coss/button"],
+    type: "registry:block",
+  },
+  {
+    categories: categories("agent"),
+    description: "Plain text composer",
+    files: [
+      { path: "particles/p-agent-composer-1.tsx", type: "registry:block" },
+    ],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg",
+    },
+    name: "p-agent-composer-1",
+    registryDependencies: ["@coss/agent-composer"],
+    type: "registry:block",
+  },
+  {
+    categories: categories("agent"),
+    description:
+      "Conversation scrolling with a new reply and jump-to-latest control",
+    files: [
+      { path: "particles/p-agent-conversation-1.tsx", type: "registry:block" },
+    ],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg",
+    },
+    name: "p-agent-conversation-1",
+    registryDependencies: [
+      "@coss/agent-conversation",
+      "@coss/agent-message",
+      "@coss/button",
+    ],
+    type: "registry:block",
+  },
+  {
+    categories: categories("agent"),
+    description: "A short exchange with a copy action",
+    files: [
+      { path: "particles/p-agent-message-1.tsx", type: "registry:block" },
+    ],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg",
+    },
+    name: "p-agent-message-1",
+    registryDependencies: [
+      "@coss/agent-message",
+      "@coss/agent-message-actions",
+    ],
+    type: "registry:block",
+  },
+  {
+    categories: categories("agent"),
+    description: "Long user message with optional text disclosure",
+    files: [
+      { path: "particles/p-agent-message-2.tsx", type: "registry:block" },
+    ],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg",
+    },
+    name: "p-agent-message-2",
+    registryDependencies: ["@coss/agent-message"],
+    type: "registry:block",
+  },
+  {
+    categories: categories("agent"),
+    description: "Message actions revealed on hover and keyboard focus",
+    files: [
+      { path: "particles/p-agent-message-3.tsx", type: "registry:block" },
+    ],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg",
+    },
+    name: "p-agent-message-3",
+    registryDependencies: [
+      "@coss/agent-message",
+      "@coss/agent-message-actions",
+    ],
+    dependencies: ["lucide-react"],
+    type: "registry:block",
+  },
+  {
+    categories: categories("agent"),
+    description: "Grouped approval for two event types",
+    files: [
+      { path: "particles/p-agent-approval-3.tsx", type: "registry:block" },
+    ],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg",
+    },
+    name: "p-agent-approval-3",
+    registryDependencies: [
+      "@coss/agent-status-indicator",
+      "@coss/agent-approval",
+      "@coss/button",
+    ],
+    type: "registry:block",
+  },
+  {
+    categories: categories("agent"),
+    description: "Email approval with a message preview",
+    files: [
+      { path: "particles/p-agent-approval-1.tsx", type: "registry:block" },
+    ],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg",
+    },
+    name: "p-agent-approval-1",
+    registryDependencies: [
+      "@coss/agent-status-indicator",
+      "@coss/agent-approval",
+      "@coss/button",
+    ],
+    type: "registry:block",
+  },
+  {
+    categories: categories("agent"),
+    description: "Event approval with time, attendee, and location",
+    files: [
+      { path: "particles/p-agent-approval-2.tsx", type: "registry:block" },
+    ],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg",
+    },
+    name: "p-agent-approval-2",
+    registryDependencies: [
+      "@coss/agent-status-indicator",
+      "@coss/agent-approval",
+      "@coss/button",
+    ],
+    type: "registry:block",
+  },
+  {
     categories: categories("accordion"),
     description: "Basic accordion",
     files: [{ path: "particles/p-accordion-1.tsx", type: "registry:block" }],

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "p-agent-approval-3",
+  "description": "Grouped approval for two event types",
+  "registryDependencies": [
+    "@coss/agent-status-indicator",
+    "@coss/agent-approval",
+    "@coss/button"
+  ],
+  "files": [
+    {
+      "path": "registry/default/particles/p-agent-approval-3.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { AgentApprovalGroupCard } from \"@/registry/default/ui/agent-approval\";\nimport { AgentStatusIndicator } from \"@/registry/default/ui/agent-status-indicator\";\nimport { Button } from \"@/registry/default/ui/button\";\n\nconst items = [\n  { id: \"intro-call\", title: \"Intro call\", context: \"15 minutes · Video call\" },\n  {\n    id: \"product-demo\",\n    title: \"Product demo\",\n    context: \"30 minutes · Video call\",\n  },\n];\n\nexport default function Particle() {\n  const [decision, setDecision] = useState<{\n    ids: string[];\n    approved: boolean;\n  } | null>(null);\n\n  return (\n    <div className=\"flex w-full flex-col gap-4\">\n      <AgentApprovalGroupCard\n        approveLabel=\"Create both\"\n        disabled={decision !== null}\n        items={items}\n        onRespond={(ids, approved) => setDecision({ ids, approved })}\n        question=\"Create these event types?\"\n        rejectLabel=\"Skip both\"\n      />\n      <div className=\"flex min-h-5 items-center\" role=\"status\">\n        {decision && (\n          <AgentStatusIndicator\n            announce={false}\n            status={decision.approved ? \"complete\" : \"idle\"}\n            label={`You ${decision.approved ? \"approved\" : \"skipped\"} ${decision.ids.length} event types.`}\n          />\n        )}\n      </div>\n      <div className=\"flex justify-end border-t pt-3\">\n        <Button\n          disabled={decision === null}\n          onClick={() => setDecision(null)}\n          size=\"xs\"\n          variant=\"ghost\"\n        >\n          Reset demo\n        </Button>\n      </div>\n    </div>\n  );\n}\n",
+      "type": "registry:block"
+    }
+  ],
+  "meta": {
+    "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg"
+  },
+  "categories": [
+    "agent"
+  ],
+  "type": "registry:block"
+}

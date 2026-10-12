@@ -1,0 +1,174 @@
+---
+title: Agent Approval
+description: A framed request for a user to approve or skip an agent's proposed action.
+---
+
+<ComponentPreview name="p-agent-approval-1" />
+
+## Installation
+
+This component is in preview. The registry name below becomes available when this branch is deployed.
+
+```bash
+npx shadcn@latest add @coss/agent-approval
+```
+
+For a local checkout running on port 4000, point the `@coss` registry in your `components.json` at `http://localhost:4000/ui/r/{name}.json` before installing. See [getting started](/ui/docs/get-started) for the coss theme setup.
+
+<ComponentSource name="agent-approval" title="components/ui/agent-approval.tsx" />
+
+## Usage
+
+```tsx
+import { AgentApprovalCard } from "@/components/ui/agent-approval"
+
+<AgentApprovalCard
+  question="Send this email?"
+  approveLabel="Send"
+  rejectLabel="Skip"
+  disabled={isPending}
+  onRespond={handleRespond}
+/>
+```
+
+All visible strings come from your application. The component has no dependency on an AI SDK, tool schema, session store, or localization provider.
+
+## Decisions
+
+`onRespond(true)` reports approval; `onRespond(false)` reports rejection. Use `disabled` to prevent either decision while your application is processing it.
+
+The card only presents the request and reports a decision. Your application owns execution, errors, and what replaces the card afterward. There is no built-in success or error feedback; the footer contains only the two actions.
+
+The demos keep the proposed action visible after a choice. A short response appears below the card; the separate Reset demo control lets you try again. No email is sent and no event is created.
+
+## With details
+
+<ComponentPreview name="p-agent-approval-2" />
+
+## Grouped approvals
+
+Use a group when several proposed actions make sense to review together. Supply the heading and button labels explicitly; the component does not infer grouping from matching questions.
+
+<ComponentPreview name="p-agent-approval-3" />
+
+```tsx
+import { AgentApprovalGroupCard } from "@/components/ui/agent-approval"
+
+<AgentApprovalGroupCard
+  question="Create these event types?"
+  items={[
+    { id: "intro", title: "Intro call", context: "15 minutes · Video call" },
+    { id: "demo", title: "Product demo", context: "30 minutes · Video call" },
+  ]}
+  approveLabel="Create both"
+  rejectLabel="Skip both"
+  disabled={isPending}
+  onRespond={(ids, approved) => handleDecisions(ids, approved)}
+/>
+```
+
+Each activation reports **one callback** with the eligible IDs in display order and the decision. It does not loop over callbacks, execute actions, or promise that the group succeeds atomically. Each item must have a unique, stable ID. An empty group renders nothing.
+
+### Pending and partial results
+
+Set the group's `disabled` prop synchronously while saving a batch. For independently managed items, set an item's `disabled` to exclude it from both group actions while it is pending or after its decision has been accepted. The item remains visible; provide meaningful context if its availability needs explaining.
+
+If only part of a batch succeeds, keep accepted items disabled and enable only those that can safely be retried. Update the button labels to describe the remaining action:
+
+```tsx
+<AgentApprovalGroupCard
+  question="Approve the remaining event type?"
+  items={[
+    { id: "intro", title: "Intro call", context: "Already approved", disabled: true },
+    { id: "demo", title: "Product demo", context: "30 minutes · Video call" },
+  ]}
+  approveLabel="Approve remaining"
+  rejectLabel="Skip remaining"
+  onRespond={handleDecisions}
+/>
+```
+
+Both buttons now report only `["demo"]`. When every item is disabled, both buttons are disabled. Your application owns error messages, which requests are safe to retry, server-side deduplication, and tool execution. An accepted approval and a successfully executed tool are separate outcomes. Place any feedback in your surrounding interface; group footers contain only actions.
+
+## Composition
+
+Use `children` on `AgentApprovalCard` to add rich content below the question and optional chip. For a custom content layout, compose the same frame, content, and decision footer directly:
+
+```tsx
+import { useId } from "react"
+import {
+  AgentApproval,
+  AgentApprovalActions,
+  AgentApprovalContent,
+} from "@/components/ui/agent-approval"
+
+const questionId = useId()
+
+<AgentApproval aria-labelledby={questionId} role="group">
+  <AgentApprovalContent>
+    <p className="font-medium text-sm" id={questionId}>
+      Send this email?
+    </p>
+    {/* Your email preview. */}
+  </AgentApprovalContent>
+  <AgentApprovalActions
+    approveLabel="Send"
+    rejectLabel="Skip"
+    disabled={isPending}
+    onRespond={handleRespond}
+  />
+</AgentApproval>
+```
+
+Keep one `AgentApprovalContent` and one `AgentApprovalActions` as direct children of the frame. When composing, associate the group with your visible question using `aria-labelledby`. The convenience card does this automatically.
+
+## API Reference
+
+### AgentApprovalCard
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `question` | `ReactNode` | Required visible question; inline content. |
+| `context` | `ReactNode` | Optional inline context beside an information icon. |
+| `details` | `readonly string[]` | Optional bulleted summary; use unique detail strings. |
+| `chip` | `ReactNode` | Optional secondary badge content. |
+| `children` | `ReactNode` | Extra content below the summary and chip. |
+| `approveLabel` | `string` | Required approval button text. |
+| `rejectLabel` | `string` | Required rejection button text. |
+| `onRespond` | `(approved: boolean) => void` | Required intent callback. |
+| `disabled` | `boolean` | Disables both decisions. |
+
+The card also accepts frame props, including `className`, `ref`, `dir`, and `render`. Its ref points to the outer frame. Use inline content for `question` and `context`; use `children` for block content.
+
+### Composable parts
+
+| Part | Props and behavior |
+| --- | --- |
+| `AgentApproval` | Styled `CardFrame`; accepts its props, including `ref` and `render`. |
+| `AgentApprovalContent` | Inner `Card` and padded `CardPanel`; props, ref, and render apply to the panel. |
+| `AgentApprovalActions` | Decision footer; accepts both labels, `onRespond`, and `disabled`, plus `CardFrameFooter` props except `children`. |
+
+Pass `disabled` to the actions or convenience card. If you replace the actions entirely, your custom controls own their disabling and decision behavior.
+
+### AgentApprovalGroupCard
+
+Accepts frame props, `question`, `children`, both action labels, and `disabled`, like the single card. Its content comes from `items` instead of the single-card `context`, `details`, and `chip` props.
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `items` | `readonly AgentApprovalGroupItem[]` | Required items in display order. An empty array renders nothing. |
+| `onRespond` | `(ids: string[], approved: boolean) => void` | One callback containing the currently eligible IDs. |
+
+### AgentApprovalGroupItem
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | `string` | Required stable, unique approval identity. |
+| `title` | `ReactNode` | Required inline name, displayed as a secondary badge. |
+| `context` | `ReactNode` | Optional inline detail next to the name. |
+| `details` | `readonly string[]` | Optional bulleted summary; use unique detail strings. |
+| `disabled` | `boolean` | Excludes this item from both group decisions. Defaults to false. |
+
+### AgentApprovalGroupActions
+
+Use with `AgentApproval` and `AgentApprovalContent` when you need custom group rows. Accepts the same props as `AgentApprovalActions`, with an additional `items` array containing `{ id, disabled? }` and the group `onRespond(ids, approved)` signature. Render the same items you pass to the actions so the decision always matches what the user sees. Frame and footer refs/render props follow the single-card parts.

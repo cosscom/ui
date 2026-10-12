@@ -1,4 +1,4 @@
 {
-  "pages": ["(root)", "components", "hooks", "resources"],
+  "pages": ["(root)", "components", "agent-ui", "hooks", "resources"],
   "root": true
 }

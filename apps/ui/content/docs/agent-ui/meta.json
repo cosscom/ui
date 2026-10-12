@@ -1,0 +1,16 @@
+{
+  "title": "Agent UI",
+  "pages": [
+    "composition",
+    "agent-approval",
+    "agent-message",
+    "agent-conversation",
+    "agent-composer",
+    "connected-conversation",
+    "agent-status-indicator",
+    "agent-tool-activity",
+    "agent-reasoning",
+    "agent-response-feedback",
+    "agent-panel"
+  ]
+}

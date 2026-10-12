@@ -1,0 +1,141 @@
+---
+title: Agent Conversation
+description: A conversation viewport that follows new content while keeping earlier messages readable.
+---
+
+<ComponentPreview name="p-agent-conversation-1" />
+
+Scroll up, then choose **Add reply**. Your position stays put and the arrow takes you to the new reply. Reset the demo and add the reply while at the bottom to see automatic following.
+
+## Installation
+
+This component is in preview. The registry name becomes available when this branch is deployed.
+
+```bash
+npx shadcn@latest add @coss/agent-conversation
+```
+
+Message styling is separate: add `@coss/agent-message` if needed. For a local checkout on port 4000, point the `@coss` registry in `components.json` at `http://localhost:4000/ui/r/{name}.json`. See [getting started](/ui/docs/get-started) for the coss theme setup.
+
+<ComponentSource name="agent-conversation" title="components/ui/agent-conversation.tsx" />
+
+## Usage
+
+```tsx
+import { AgentConversation } from "@/components/ui/agent-conversation"
+import { AgentMessage, AgentMessageContent } from "@/components/ui/agent-message"
+
+<AgentConversation
+  className="h-96"
+  label="Conversation"
+  scrollToLatestLabel="Scroll to latest message"
+>
+  {messages.map((message) => (
+    <AgentMessage author={message.author} key={message.id}>
+      <AgentMessageContent>{message.text}</AgentMessageContent>
+    </AgentMessage>
+  ))}
+</AgentConversation>
+```
+
+Give the conversation a bounded height. Use `h-full min-h-0` inside a flex layout with a bounded parent, or an explicit height such as `h-96`. The viewport is a labeled, keyboard-focusable region; scrolling remains native. Message rendering, input, and persistence belong to your application.
+
+## Following new content
+
+The viewport starts at the latest content, including when messages arrive after an initially empty render. While following, it stays at the bottom when messages are appended, a response grows, an image loads, or the viewport changes height.
+
+Scrolling away pauses following. Appending content below the reading position does not move it. Scrolling back within 24px of the bottom resumes following. The arrow appears whenever the viewport is farther from the bottom; activating it jumps immediately, resumes following, and returns keyboard focus to the viewport.
+
+Scrolling is immediate, including with reduced motion. There is no smooth-scroll animation competing with streamed updates. The transcript is not a live region by default; choose a separate announcement strategy for your application's streaming and completion states.
+
+## Expanding a message
+
+When a user expands content, pause following **before** changing its height. This keeps the viewport from jumping to the end of the expanded message. The API ref also lets your application jump to the latest content after an explicit action, such as sending a message.
+
+```tsx
+import { useRef } from "react"
+import {
+  AgentConversation,
+  type AgentConversationHandle,
+} from "@/components/ui/agent-conversation"
+import {
+  AgentMessage,
+  AgentMessageContent,
+  AgentMessageText,
+} from "@/components/ui/agent-message"
+
+const conversation = useRef<AgentConversationHandle>(null)
+
+<AgentConversation
+  apiRef={conversation}
+  className="h-96"
+  label="Conversation"
+  scrollToLatestLabel="Scroll to latest message"
+>
+  <AgentMessage author="user">
+    <AgentMessageContent>
+      <AgentMessageText
+        showMoreLabel="Show more"
+        showLessLabel="Show less"
+        onExpandedChange={() => conversation.current?.pauseFollowing()}
+      >
+        {messageText}
+      </AgentMessageText>
+    </AgentMessageContent>
+  </AgentMessage>
+</AgentConversation>
+```
+
+`pauseFollowing()` does not scroll or move focus. `scrollToLatest()` resumes following and scrolls without moving focus. Only the built-in arrow moves focus back to the viewport, because that button disappears once you reach the bottom.
+
+## Changing conversations
+
+Use a React key to reset the viewport when switching sessions:
+
+```tsx
+<AgentConversation
+  key={conversationId}
+  label="Conversation"
+  scrollToLatestLabel="Scroll to latest message"
+>
+  {children}
+</AgentConversation>
+```
+
+Use stable keys for messages within a session. This component supports appended content and resizing; it does not implement history pagination, virtualization, or anchoring a particular message while content is prepended or reordered. While reading, the scroll offset is preserved rather than tracking a message identity through layout changes.
+
+## Timestamps
+
+Place `AgentConversationTimestamp` between messages for a centered date or time separator. It accepts native `time` props, including `dateTime`.
+
+```tsx
+<AgentConversationTimestamp dateTime="2026-09-21">
+  Today
+</AgentConversationTimestamp>
+```
+
+## API Reference
+
+### AgentConversation
+
+Accepts native outer `div` props, including `ref`, `className`, and `dir`. The root ref points to the outer container; `apiRef` exposes the scroll methods.
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `label` | `string` | Required accessible name for the scrollable region. |
+| `scrollToLatestLabel` | `string` | Required accessible name for the floating arrow. |
+| `children` | `ReactNode` | Messages or other conversation content. |
+| `contentClassName` | `string` | Classes for the content container. Defaults to 16px padding and a 32px gap. |
+| `scrollbarGutter` | `boolean` | Defaults to `false`. Reserves 10px at the inline end for vertical overflow and at the bottom for horizontal overflow, matching ScrollArea. |
+| `viewportClassName` | `string` | Classes for the scroll viewport. |
+| `apiRef` | `Ref<AgentConversationHandle>` | Optional `scrollToLatest()` and `pauseFollowing()` methods. |
+
+`ResizeObserver` handles content and viewport size changes. Without it, parent-rendered updates still follow, but independently resizing descendants do not trigger automatic following.
+
+### AgentConversationScrollButton
+
+The same arrow button is available separately for custom layouts. It requires `label` and accepts Button props except `children`, `size`, `variant`, and `type`. Its ref and `className` apply to the button. Supply your own `onClick`; this standalone button does not find or control a viewport automatically.
+
+### AgentConversationTimestamp
+
+A centered native `time` element with muted text. Supports native props and ref forwarding.

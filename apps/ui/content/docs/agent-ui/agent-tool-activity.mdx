@@ -1,0 +1,88 @@
+---
+title: Agent Tool Activity
+description: A compact disclosure for tool progress and results.
+---
+
+<ComponentPreview name="p-agent-tool-activity-1" />
+
+Expand or collapse the activity and switch between the example states. Your disclosure choice stays unchanged when the state updates. This preview uses local fixtures; it does not access a calendar or retry a request.
+
+## Installation
+
+This component is in preview. Its registry name becomes available when this branch is deployed.
+
+```bash
+npx shadcn@latest add @coss/agent-tool-activity
+```
+
+For a local checkout, point `@coss` in `components.json` at `http://localhost:4000/ui/r/{name}.json`.
+
+<ComponentSource name="agent-tool-activity" title="components/ui/agent-tool-activity.tsx" />
+
+## Usage
+
+```tsx
+import { CalendarIcon } from "lucide-react"
+import {
+  AgentToolActivityGroup,
+  AgentToolActivityRow,
+} from "@/components/ui/agent-tool-activity"
+
+<AgentToolActivityGroup status="working" summary="Checking 2 calendars">
+  <AgentToolActivityRow icon={<CalendarIcon />}>
+    Checking your calendar…
+  </AgentToolActivityRow>
+  <AgentToolActivityRow icon={<CalendarIcon />}>
+    Checking the team calendar…
+  </AgentToolActivityRow>
+</AgentToolActivityGroup>
+```
+
+The group is collapsed by default. The preview opts into `defaultOpen` to show the rows. Use `open` and `onOpenChange` for controlled disclosure. Changes to status or summary never force the group open or closed.
+
+The group uses the status indicator’s icon and active shimmer with a muted summary, matching Cal’s compact activity treatment. Rows accept ordinary React content, including results or product-owned recovery actions. The default row icon is decorative sparkles; supply `icon` to replace it, or `null` to omit it.
+
+## Mapping runtime states
+
+The components accept presentation props, not SDK objects. The preview illustrates a caller-owned mapping:
+
+| Runtime state | Example interpretation |
+| --- | --- |
+| `input-streaming`, `input-available` | Running; active summary and pending row label |
+| `output-available` | Completed; show the result or a completed action label |
+| `output-denied` | Declined; strike through the action and include “declined” |
+| `output-error` | Failed; retain the action and explain a safe recovery path |
+| Unrecognized state | Status unknown; show a neutral explanation rather than claiming success |
+
+This is a text-tool example, not a full SDK adapter. Handle approval requests as a separate needs-input state in your application and render the appropriate [approval component](/ui/docs/agent-ui/agent-approval). Missing output does not establish success.
+
+For mixed results, include every outcome in the summary—for example, **1 running · 1 completed · 1 failed**. The example keeps the working icon while any step is active; once all steps are terminal, an error takes priority over completion. Declined work uses a neutral icon, not a success check.
+
+An unknown tool must remain visible. Fall back to its name and known state if a custom renderer is missing; if the state is also unknown, say so. Avoid displaying arbitrary tool output or raw server errors. Stable tool-call IDs should key rows when multiple calls use the same tool name.
+
+## Accessibility
+
+The trigger is a Base UI disclosure button with keyboard activation and expanded-state semantics. Its summary wraps at narrow widths. There is no nested status live region inside the button; add a separate status announcement if your product needs automatic progress announcements.
+
+The chevron and row icons are decorative. Reduced motion disables the panel and chevron transitions. Coarse-pointer triggers have a 44px minimum height, and indentation follows text direction.
+
+## API
+
+### AgentToolActivityGroup
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `summary` | `string` | Required caller-owned summary, including mixed outcomes. |
+| `status` | `AgentStatus` | Required presentation state for the summary icon and shimmer. |
+| `children` | `ReactNode` | Tool rows or other disclosure content. |
+| `open`, `defaultOpen`, `onOpenChange` | Collapsible props | Controlled or uncontrolled disclosure; defaults to closed. |
+| `disabled` | `boolean` | Disables the disclosure trigger. |
+| `className` | `string` | Styles the root. |
+| `triggerClassName` | `string` | Styles the trigger. |
+| `contentClassName` | `string` | Styles the indented row stack. |
+
+Other Collapsible root props, including `ref`, are forwarded. Slots: `agent-tool-activity-group`, `agent-tool-activity-trigger`, and `agent-tool-activity-panel`.
+
+### AgentToolActivityRow
+
+Accepts native div props, including `ref`, `className`, and `children`. `icon?: ReactNode` replaces the decorative icon. The slot is `agent-tool-activity-row`.

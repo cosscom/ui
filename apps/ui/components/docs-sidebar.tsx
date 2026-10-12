@@ -13,7 +13,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/registry/default/ui/sidebar";
-import { PAGES_NEW } from "@/lib/docs";
+import { GROUPS_NEW, PAGES_NEW } from "@/lib/docs";
 import type { source } from "@/lib/source";
 
 export function DocsSidebar({
@@ -32,8 +32,12 @@ export function DocsSidebar({
         <div className="h-(--top-spacing) shrink-0" />
         {tree.children.map((item) => (
           <SidebarGroup className="gap-1" key={item.$id}>
-            <SidebarGroupLabel className="h-7 px-0 text-sidebar-accent-foreground">
+            <SidebarGroupLabel className="h-7 gap-2 px-0 text-sidebar-accent-foreground">
               {item.name}
+              {typeof item.name === "string" &&
+                GROUPS_NEW.includes(item.name) && (
+                  <Badge variant="info">New</Badge>
+                )}
             </SidebarGroupLabel>
             <SidebarGroupContent>
               {item.type === "folder" && (

@@ -51,6 +51,14 @@ function parseImports(content: string): {
     importPaths.push(importPath);
     match = importRegex.exec(content);
 
+    const blockMatch = importPath.match(
+      /@\/registry\/default\/blocks\/([^/]+)/,
+    );
+    if (blockMatch) {
+      registryDeps.add(getRegistryPackageName(blockMatch[1]));
+      continue;
+    }
+
     // Check if it's a registry UI component import (@/registry/default/ui/*)
     const registryUIMatch = importPath.match(
       /@\/registry\/default\/ui\/([^/]+)/,

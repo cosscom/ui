@@ -1,0 +1,61 @@
+---
+title: Agent Status Indicator
+description: A compact label for an agent’s current state.
+---
+
+<ComponentPreview name="p-agent-status-indicator-1" />
+
+Choose a state to preview its icon and label. These controls change local presentation only; no request runs.
+
+## Installation
+
+This component is in preview. Its registry name becomes available when this branch is deployed.
+
+```bash
+npx shadcn@latest add @coss/agent-status-indicator
+```
+
+For a local checkout, point `@coss` in `components.json` at `http://localhost:4000/ui/r/{name}.json`.
+
+<ComponentSource name="agent-status-indicator" title="components/ui/agent-status-indicator.tsx" />
+
+## Usage
+
+```tsx
+import { AgentStatusIndicator } from "@/components/ui/agent-status-indicator"
+
+<AgentStatusIndicator status="working" label="Checking calendars…" />
+```
+
+The caller supplies the state and its visible label. The component does not start work, infer completion, or depend on AI SDK. Labels can be translated and should describe the actual operation.
+
+| State | Treatment |
+| --- | --- |
+| `idle` | Muted circle and label |
+| `thinking` | Sparkles and animated shimmer |
+| `working` | Spinner and animated shimmer |
+| `needs-input` | Information icon and warning color |
+| `complete` | Check icon and success color |
+| `error` | Error icon and emphasized error label |
+
+Place transient status where the work is happening. A completed response does not need a persistent completion label between the transcript and composer.
+
+## Announcements and motion
+
+By default the indicator is a polite live region. Keep it mounted and update its label when the state changes. It does not mark itself `aria-busy`, so the running label is not deferred until work ends. Actual announcement timing depends on the assistive technology.
+
+Set `announce={false}` when the label is inside another announcing surface or an interactive control, such as the tool activity disclosure. Icons are decorative; the label communicates the state without relying on color.
+
+Reduced-motion preferences disable shimmer and spinner animation while retaining readable labels and icons. Forced-colors mode removes the text gradient. Long labels truncate by default. Set `wrap` for errors, translated labels, or disclosure summaries that must remain fully readable. Wrapping also breaks long unspaced text without widening its container.
+
+## API
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `status` | `AgentStatus` | Required | One of the six presentation states above. |
+| `label` | `string` | Required | Visible and accessible state description. |
+| `announce` | `boolean` | `true` | Enables the polite status live region. |
+| `wrap` | `boolean` | `false` | Wraps the full label instead of truncating it. |
+| `className` | `string` | — | Styles the outer span. |
+
+Native span props, including `ref`, `dir`, and data attributes, are forwarded. The component owns its children, accessible label, live-region role, and busy semantics. Slots: `agent-status-indicator` and `agent-status-indicator-label`.

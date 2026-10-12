@@ -1,0 +1,94 @@
+---
+title: Agent Panel
+description: A compact assistant panel with a conversation, composer, and launcher.
+---
+
+<ComponentPreview name="p-agent-panel-1" />
+
+Type a draft, minimize or close the panel, then reopen it with **Assistant**. The example preserves your draft and messages and returns focus to the launcher when hidden. Sending appends your message locally; it does not call a model or book a meeting.
+
+## Installation
+
+These components are in preview. Their registry names become available when this branch is deployed.
+
+```bash
+npx shadcn@latest add @coss/agent-panel @coss/agent-action-bar
+```
+
+For a local checkout, point `@coss` in `components.json` at `http://localhost:4000/ui/r/{name}.json`.
+
+The conversation, messages, and composer are separate installations. Installing the panel or action bar does not install an AI runtime.
+
+<ComponentSource name="agent-panel" title="components/ui/agent-panel.tsx" />
+
+## Usage
+
+```tsx
+<AgentPanel
+  className="h-[480px]"
+  title="Assistant"
+  labels={{
+    close: "Close assistant",
+    minimize: "Minimize assistant",
+    openFullPage: "Open full page",
+  }}
+  onClose={closePanel}
+  onMinimize={minimizePanel}
+  composer={composer}
+>
+  {conversation}
+</AgentPanel>
+```
+
+The header and composer stay fixed while the content area can shrink to fit its parent. Give the panel a bounded height and use a scroll container for the conversation. The panel does not add a second scroll area.
+
+Let the conversation viewport span the panel width so its scrollbar sits near the panel edge. In the example, the conversation wrapper uses `flex min-h-0 flex-1 flex-col` without horizontal padding, and `AgentConversation` uses `className="flex-1"`, `contentClassName="px-4 pt-4 pb-8"`, and `scrollbarGutter`. The 16px message padding stays inside the scrollable content, 4px beyond the composer’s 12px inset. The gutter reserves additional room when a scrollbar appears.
+
+## Actions and ownership
+
+`onClose` and `onMinimize` report intent. The application decides whether to hide, retain, or dispose of a conversation. This example hides it in both cases and keeps its state outside the panel. Closing is not a deletion API.
+
+The full-page action is omitted unless `openFullPageHref` or `onOpenFullPage` is supplied. A supplied URL takes precedence and renders a link; a handler renders a button. Routing, session continuity, history, unread state, and persistence belong to the application and are not implemented by this preview.
+
+This is a non-modal section. It does not trap focus or automatically move focus on mount. The example moves focus into the composer when launched and returns it to the launcher when hidden. Applications should implement that focus policy alongside their own visibility state. For modal presentation, compose an appropriate Dialog or Sheet instead.
+
+## Action bar
+
+<ComponentSource name="agent-action-bar" title="components/ui/agent-action-bar.tsx" />
+
+```tsx
+<AgentActionBar aria-label="Assistant controls">
+  <AgentActionBarLauncher onClick={openPanel}>
+    Assistant
+  </AgentActionBarLauncher>
+</AgentActionBar>
+```
+
+The action bar uses coss Toolbar for roving keyboard focus. Its launcher preserves Cal’s compact ghost-button treatment. Use `ToolbarButton` or `ToolbarLink` to compose additional actions. Session tabs and session menus are deferred to a later increment.
+
+## API Reference
+
+### AgentPanel
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `title` | `string` | Required heading and accessible section name. |
+| `labels` | `{ close: string; minimize: string; openFullPage: string }` | Required accessible labels and tooltips. |
+| `onClose` | `() => void` | Required close intent handler. |
+| `onMinimize` | `() => void` | Required minimize intent handler. |
+| `openFullPageHref` | `string` | Optional full-page link; takes precedence over handler. |
+| `onOpenFullPage` | `() => void` | Optional full-page intent handler. |
+| `titleActions` | `ReactNode` | Optional controls beside the title. |
+| `composer` | `ReactNode` | Optional fixed composer slot. |
+| `children` | `ReactNode` | Content area, usually a conversation. |
+| `className` | `string` | Root styling, including the bounded height. |
+
+Native section props and `ref` are forwarded. Slots: `agent-panel`, `agent-panel-header`, `agent-panel-content`, and `agent-panel-composer`. The application supplies borders, surfaces, positioning, and responsive sizing.
+
+### AgentActionBar
+
+Accepts coss Toolbar root props, plus a required `aria-label`. It does not own fixed positioning or session state. Slot: `agent-action-bar`.
+
+### AgentActionBarLauncher
+
+Accepts ToolbarButton props, including `onClick`, `disabled`, `ref`, and ARIA attributes. Its native button composition and compact sizing are fixed; `children` supplies the visible label. Slot: `agent-action-bar-launcher`.

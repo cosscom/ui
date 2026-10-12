@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "p-agent-response-feedback-1",
+  "description": "Response feedback with optional reasons and retryable submission",
+  "registryDependencies": [
+    "@coss/agent-response-feedback",
+    "@coss/agent-message",
+    "@coss/button"
+  ],
+  "files": [
+    {
+      "path": "registry/default/particles/p-agent-response-feedback-1.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport {\n  AgentMessage,\n  AgentMessageContent,\n} from \"@/registry/default/ui/agent-message\";\nimport { AgentResponseFeedback } from \"@/registry/default/ui/agent-response-feedback\";\nimport { Button } from \"@/registry/default/ui/button\";\n\nexport default function Particle() {\n  const [failNext, setFailNext] = useState(false);\n  return (\n    <div className=\"flex w-full flex-col gap-6\">\n      <AgentMessage aria-label=\"Assistant\" author=\"assistant\" className=\"gap-2\">\n        <AgentMessageContent>\n          You’re free tomorrow at 2:00 PM for a 30-minute meeting.\n        </AgentMessageContent>\n        <AgentResponseFeedback\n          labels={{\n            goodResponse: \"Good response\",\n            badResponse: \"Bad response\",\n            dialogTitle: \"What could be better?\",\n            dialogDescription:\n              \"Share what went wrong. Reasons and details are optional.\",\n            reasonPrompt: \"What was the issue?\",\n            details: \"Additional details\",\n            detailsPlaceholder: \"Tell us more…\",\n            cancel: \"Cancel\",\n            submit: \"Send feedback\",\n            submitError: \"Couldn’t save your feedback. Please try again.\",\n            thankYou: \"Thanks for your feedback.\",\n          }}\n          reasons={[\n            { value: \"incorrect\", label: \"Incorrect\" },\n            { value: \"unclear\", label: \"Unclear\" },\n            { value: \"unhelpful\", label: \"Not helpful\" },\n          ]}\n          onFeedback={async () => {\n            await new Promise((resolve) => setTimeout(resolve, 700));\n            if (failNext) {\n              setFailNext(false);\n              throw new Error(\"Demo failure\");\n            }\n          }}\n        />\n      </AgentMessage>\n      <div className=\"flex justify-end border-t pt-3\">\n        <Button\n          aria-pressed={failNext}\n          onClick={() => setFailNext((value) => !value)}\n          size=\"xs\"\n          variant=\"ghost\"\n        >\n          {failNext ? \"Next save will fail\" : \"Fail next save\"}\n        </Button>\n      </div>\n    </div>\n  );\n}\n",
+      "type": "registry:block"
+    }
+  ],
+  "meta": {
+    "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-lg **:data-[align=center]:min-h-64"
+  },
+  "categories": [
+    "agent"
+  ],
+  "type": "registry:block"
+}

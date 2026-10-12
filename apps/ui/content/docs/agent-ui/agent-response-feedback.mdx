@@ -1,0 +1,103 @@
+---
+title: Agent Response Feedback
+description: Optional response ratings with reasons, details, and retryable submission.
+---
+
+<ComponentPreview name="p-agent-response-feedback-1" />
+
+Rate the response or use **Fail next save** to try failure recovery. This example simulates a short save locally; nothing is sent to a service.
+
+## Installation
+
+This component is in preview. Its registry name becomes available when this branch is deployed.
+
+```bash
+npx shadcn@latest add @coss/agent-response-feedback
+```
+
+For local development, point `@coss` in `components.json` at `http://localhost:4000/ui/r/{name}.json`.
+
+<ComponentSource name="agent-response-feedback" title="components/ui/agent-response-feedback.tsx" />
+
+## Usage
+
+```tsx
+<AgentResponseFeedback
+  labels={feedbackLabels}
+  reasons={[
+    { value: "incorrect", label: "Incorrect" },
+    { value: "unhelpful", label: "Not helpful" },
+  ]}
+  onFeedback={(feedback) => saveFeedback(messageId, feedback)}
+/>
+```
+
+Place it with the response’s actions. It is independently installed and is not automatically added to messages, approvals, or the composer.
+
+Positive feedback saves immediately. Negative feedback opens a dialog; reasons and details are optional. Clicking the selected rating again calls `onFeedback(null)` to clear it. The callback must resolve only when the save succeeds and reject on failure.
+
+## Combine with Copy
+
+Keep the action group full-width and top-aligned, and let feedback take the remaining space. This keeps Copy beside the rating buttons when a save error wraps below them.
+
+```tsx
+<AgentMessageActions label="Response actions" className="w-full items-start">
+  <AgentMessageCopyAction
+    text={responseText}
+    copyLabel="Copy response"
+    copiedLabel="Copied"
+    errorLabel="Could not copy. Try again."
+  />
+  <AgentResponseFeedback
+    className="flex-1"
+    labels={feedbackLabels}
+    onFeedback={(feedback) => saveFeedback(messageId, feedback)}
+  />
+</AgentMessageActions>
+```
+
+Reason choices and dialog actions wrap long labels. Preserve concise labels where possible; translated strings should not need fixed widths.
+
+## State and submission
+
+Without `value`, selection updates only after a successful save. `defaultValue` sets the initial rating. In controlled mode, pass `value` (including `null`) and update it from your application after saving:
+
+```tsx
+const [rating, setRating] = useState<AgentResponseFeedbackRating | null>(null)
+
+<AgentResponseFeedback
+  value={rating}
+  labels={feedbackLabels}
+  onFeedback={async (feedback) => {
+    await saveFeedback(messageId, feedback)
+    setRating(feedback?.rating ?? null)
+  }}
+/>
+```
+
+An in-flight guard blocks duplicate saves, including rapid repeated clicks. Rating controls and dialog inputs are disabled while pending; dialog dismissal is also blocked until the callback settles. Ensure your save has an appropriate timeout and rejects on failure.
+
+Failures leave the selected rating unchanged and display a localized error. Negative-feedback reasons and details remain available for retry. Cancel discards the unsaved dialog draft. Success closes the dialog and announces thanks without requiring a global toast provider. Focus returns to the negative-rating button after closing.
+
+The application owns persistence, message identity, authorization, and request cancellation. Use a stable message key, and do not reuse a mounted feedback component for a different response or change between controlled and uncontrolled modes.
+
+## Optional fields
+
+Omit `reasons` to hide the reason choices; set `showDetails={false}` to hide the text field. Neither field is required to submit. The callback receives `{ rating, reasons, details }`, with trimmed details, or `null` when clearing a rating. Reasons use your supplied stable values, not their translated labels.
+
+## API Reference
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `labels` | `AgentResponseFeedbackLabels` | — | Required accessible and visible strings. |
+| `onFeedback` | `(value: AgentResponseFeedbackValue \| null) => void \| Promise<void>` | — | Required save callback; rejection enables retry. |
+| `value` | `"positive" \| "negative" \| null` | — | Controlled selection. |
+| `defaultValue` | Same as `value` | `null` | Initial uncontrolled selection. |
+| `disabled` | `boolean` | `false` | Blocks rating and submission actions. |
+| `reasons` | `{ value: string; label: string }[]` | `[]` | Optional reason choices. |
+| `showDetails` | `boolean` | `true` | Displays the optional details field. |
+| `className` | `string` | — | Styles the root. |
+
+Native div props and `ref` are forwarded. Root slot: `agent-response-feedback`. Labels: `goodResponse`, `badResponse`, `dialogTitle`, `dialogDescription`, `reasonPrompt`, `details`, `detailsPlaceholder`, `cancel`, `submit`, `submitError`, and `thankYou`.
+
+The component uses coss Dialog for keyboard focus management, labeled toggle buttons for reasons, and a labeled textarea. Errors use AgentStatusIndicator with its own announcement disabled inside a single alert; successful saves use a polite status announcement. Coarse pointers receive larger rating targets. Provider-specific feedback APIs are outside this component.

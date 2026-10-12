@@ -1,0 +1,26 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "p-agent-panel-1",
+  "description": "Assistant panel and launcher with a persistent local draft",
+  "registryDependencies": [
+    "@coss/agent-panel",
+    "@coss/agent-action-bar",
+    "@coss/agent-composer",
+    "@coss/agent-conversation",
+    "@coss/agent-message"
+  ],
+  "files": [
+    {
+      "path": "registry/default/particles/p-agent-panel-1.tsx",
+      "content": "\"use client\";\n\nimport { useId, useRef, useState } from \"react\";\nimport {\n  AgentActionBar,\n  AgentActionBarLauncher,\n} from \"@/registry/default/ui/agent-action-bar\";\nimport { AgentComposer } from \"@/registry/default/ui/agent-composer\";\nimport { AgentConversation } from \"@/registry/default/ui/agent-conversation\";\nimport {\n  AgentMessage,\n  AgentMessageContent,\n} from \"@/registry/default/ui/agent-message\";\nimport { AgentPanel } from \"@/registry/default/ui/agent-panel\";\n\nexport default function Particle() {\n  const [open, setOpen] = useState(true);\n  const [draft, setDraft] = useState(\"\");\n  const [messages, setMessages] = useState<{ id: string; text: string }[]>([]);\n  const launcher = useRef<HTMLButtonElement>(null);\n  const textarea = useRef<HTMLTextAreaElement>(null);\n  const id = useId();\n  function hidePanel() {\n    setOpen(false);\n    launcher.current?.focus();\n  }\n  return (\n    <div className=\"flex w-full flex-col gap-3\">\n      <div className=\"h-[480px] rounded-xl border bg-background\">\n        {open ? (\n          <AgentPanel\n            className=\"h-full\"\n            id={id}\n            title=\"Assistant\"\n            labels={{\n              close: \"Close assistant\",\n              minimize: \"Minimize assistant\",\n              openFullPage: \"Open full page\",\n            }}\n            onClose={hidePanel}\n            onMinimize={hidePanel}\n            composer={\n              <AgentComposer\n                value={draft}\n                onValueChange={setDraft}\n                onSubmit={(value) => {\n                  setMessages((items) => [\n                    ...items,\n                    { id: crypto.randomUUID(), text: value },\n                  ]);\n                  setDraft(\"\");\n                }}\n                onStop={() => {}}\n                inputLabel=\"Message\"\n                sendLabel=\"Send message\"\n                stopLabel=\"Stop response\"\n                textareaProps={{\n                  ref: textarea,\n                  placeholder: \"Ask a follow-up…\",\n                  rows: 3,\n                }}\n              />\n            }\n          >\n            <div className=\"flex min-h-0 flex-1 flex-col\">\n              <AgentConversation\n                className=\"flex-1\"\n                contentClassName=\"px-4 pt-4 pb-8\"\n                scrollbarGutter\n                label=\"Messages\"\n                scrollToLatestLabel=\"Jump to latest\"\n              >\n                <AgentMessage aria-label=\"You\" author=\"user\">\n                  <AgentMessageContent>\n                    Find 30 minutes tomorrow.\n                  </AgentMessageContent>\n                </AgentMessage>\n                <AgentMessage aria-label=\"Assistant\" author=\"assistant\">\n                  <AgentMessageContent>\n                    You’re free at 2:00 PM. Would you like to use that time?\n                  </AgentMessageContent>\n                </AgentMessage>\n                {messages.map((message) => (\n                  <AgentMessage aria-label=\"You\" author=\"user\" key={message.id}>\n                    <AgentMessageContent className=\"whitespace-pre-wrap\">\n                      {message.text}\n                    </AgentMessageContent>\n                  </AgentMessage>\n                ))}\n              </AgentConversation>\n            </div>\n          </AgentPanel>\n        ) : (\n          <div className=\"flex h-full items-center justify-center text-muted-foreground text-sm\">\n            Open the assistant to continue.\n          </div>\n        )}\n      </div>\n      <AgentActionBar aria-label=\"Assistant controls\">\n        <AgentActionBarLauncher\n          ref={launcher}\n          aria-controls={open ? id : undefined}\n          aria-expanded={open}\n          onClick={() => {\n            setOpen(true);\n            requestAnimationFrame(() => textarea.current?.focus());\n          }}\n        >\n          Assistant\n        </AgentActionBarLauncher>\n      </AgentActionBar>\n    </div>\n  );\n}\n",
+      "type": "registry:block"
+    }
+  ],
+  "meta": {
+    "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-md **:data-[align=center]:h-auto"
+  },
+  "categories": [
+    "agent"
+  ],
+  "type": "registry:block"
+}
