@@ -5,7 +5,7 @@ import * as React from "react";
 // The link and its stars are coss's repository unless a product says
 // which of its own (apps/shipyard: cosscom/shipyard).
 export function GitHubLink({
-  repo = "cosscom/coss",
+  repo = "cosscom/ui",
   href,
 }: {
   repo?: string;
@@ -23,7 +23,7 @@ export function GitHubLink({
   );
 }
 
-export async function StarsCount({ repo = "cosscom/coss" }: { repo?: string }) {
+export async function StarsCount({ repo = "cosscom/ui" }: { repo?: string }) {
   try {
     const data = await fetch(`https://api.github.com/repos/${repo}`, {
       next: { revalidate: 86400 }, // Cache for 1 day (86400 seconds)
