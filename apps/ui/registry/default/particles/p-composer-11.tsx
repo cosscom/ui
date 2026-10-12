@@ -20,7 +20,7 @@ export default function Particle() {
   return (
     <div className="flex w-full max-w-xl flex-col gap-2">
       <Composer
-        className="rounded-[calc(--spacing(5.5)+1px)] [--composer-padding:--spacing(1)] data-[layout=adaptive]:not-data-multiline:px-1 sm:rounded-[calc(--spacing(5)+1px)]"
+        className="rounded-[calc(--spacing(5.5)+1px)] [--composer-padding:--spacing(1)] before:rounded-[--spacing(5.5)] data-[layout=adaptive]:not-data-multiline:px-[calc(--spacing(1)-1px)] sm:rounded-[calc(--spacing(5)+1px)] sm:before:rounded-[--spacing(5)]"
         layout="adaptive"
         value={value}
         onValueChange={setValue}
@@ -34,7 +34,7 @@ export default function Particle() {
           className="px-2"
           placeholder="Write a message…"
         />
-        <ComposerActions className="mx-1">
+        <ComposerActions className="mx-[calc(--spacing(1)-1px)]">
           <ComposerActionGroup align="end">
             <ComposerSubmit
               render={
