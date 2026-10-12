@@ -1,0 +1,88 @@
+---
+title: Linear
+description: Your Linear issues in Shipyard, and an agent on any of them in one step, with an API key that stays on your computer.
+---
+
+**Issues** (under **More** in the sidebar, or **Show issues** in ⌘K) lists
+issues from GitHub or from Linear: the switch is at the top right. The
+Linear side shows what is assigned to you, or a team's open issues, each
+with its description and comments, and starts an agent on any of them.
+
+## Connecting
+
+1. In Linear, make a personal API key: **Settings → Security & access →
+   Personal API keys**. Read access is enough to list issues; add write
+   access if you want to comment from Shipyard.
+2. In Shipyard, **Settings → Integrations**: paste the key and press
+   **Connect**.
+
+Shipyard asks Linear who the key belongs to before it keeps it, so a wrong
+or revoked key is refused there and then. **Disconnect** removes it.
+
+## Where the key lives
+
+The key is kept by the [laptop agent](/docs/concepts/laptop-agent) in
+`linear.json` in its [state folder](/docs/reference/files#on-the-laptop), a
+file only you can read. Settings shows the full path.
+
+- Every call to Linear is made by the laptop agent. The app's window can
+  only talk to that agent, so the key never reaches it; Settings and
+  plugins are told who is connected, never the key.
+- The key is never sent to a box, written to a log, or put in a URL.
+- Shipyard makes a fixed set of calls: who you are, your teams, a list of
+  issues, one issue with its comments, and posting a comment. Nothing else
+  in your workspace is read or changed.
+
+A second computer needs its own key; [joining](/docs/guides/more-computers)
+does not copy it.
+
+## The list
+
+- **Assigned to me**, or one **team**: the picker beside the switch. Up to
+  100 issues that are not done or cancelled, the most recently updated
+  first.
+- **Filters.** Search (`/`) by identifier, title, state, label or assignee;
+  All / Mine / Unassigned within a team; label chips that narrow together;
+  sort by recently updated, newest or priority.
+- **The issue.** Its state, priority, labels and assignee, what Linear has
+  linked to it (pull requests among them), the description and the last 50
+  comments.
+- **Comment.** Posted to Linear under your name, after you confirm it.
+
+Keys: `J`/`K` move, `X` ticks, `S` starts an agent (on the ticked issues,
+or the one open), `O` opens the issue in Linear, `/` searches.
+
+## Starting an agent
+
+A Linear issue belongs to a team, not to a repository, so the first time
+you start an agent Shipyard asks which project it should work in. The
+choice is kept, and shows beside the team picker where you can change it.
+
+**Start an agent** then opens a sheet, filled in from the issue:
+
+| | |
+| --- | --- |
+| Worktree | Named for the issue: `web-412-retrying-a-failed-payment` |
+| Branch | The branch name Linear suggests for the issue, so Linear links the pull request to it and moves the issue along by itself |
+| Box, agent | The project's default box and your last agent; both can be changed |
+| First prompt | The issue's identifier, title, link and description, and a line asking for a pull request with the identifier in its title |
+
+Everything can be changed before you start. Tick several issues to start
+one agent each, one after another, with the same prompt template:
+`{{id}}`, `{{title}}`, `{{body}}`, `{{url}}` and `{{team}}` are filled in
+from each issue.
+
+From then on the issue's row shows its agent: running, needs you, done, or
+only the worktree left. Any worktree whose branch or name carries the
+identifier (`web-412`) counts, however it was made.
+
+## On Home
+
+The **Linear** widget ([Home](/docs/guides/home) → **Add widget**) lists what is
+assigned to you, the most urgent first. It asks Linear only while it is on
+screen, every three minutes.
+
+## For plugins
+
+Plugins read Linear through [`berth.linear`](/docs/reference/plugin-sdk#linear),
+which goes through the same laptop agent. They never see the key.

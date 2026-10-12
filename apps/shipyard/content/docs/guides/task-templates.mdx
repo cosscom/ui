@@ -1,0 +1,44 @@
+---
+title: Task templates
+description: Kinds of task you start often, with the agent, branch and prompt filled in.
+---
+
+Task templates live on your laptop, one JSON file per template in
+`~/.berth/templates/`; the file name is its id, unless it sets `id`. The app's composer (⌘N)
+offers them under **Options → Template**, and fills in the rest from it.
+
+```json title="~/.berth/templates/bugfix.json"
+{
+  "name": "Fix a bug",
+  "description": "A fresh branch and Claude Code, asked for a failing test first.",
+  "agent": "claude",
+  "branch": "fix/{{name}}",
+  "base": "main",
+  "prompt": "Fix this bug: {{issue}}\n\nReproduce it with a failing test first.",
+  "variables": [{ "id": "issue", "label": "What's broken", "multiline": true }]
+}
+```
+
+- `{{name}}` is the task's name, which is also the worktree's.
+- Every other `{{var}}` in `branch` or `prompt` becomes an input;
+  `variables` gives them labels (`label`), a `default`, and makes long ones
+  `multiline`.
+- `agent` is a preset id. `command` runs instead of the preset (an agent
+  must still be picked), and then the template's `prompt` isn't passed.
+- A branch that already exists, locally or on `origin`, is checked out as it
+  is, so a template can review or continue existing work.
+
+The repository's
+[`examples/templates`](https://github.com/cosscom/shipyard/tree/main/examples/templates)
+has two to start from: **Fix a bug** and **Review a branch**.
+
+## Templates or project config?
+
+| | Task templates | `.berth/config.json` |
+| --- | --- | --- |
+| Whose | Yours, on your laptop | The repository's, committed |
+| Shapes | One kind of task: agent, branch, first prompt | Every worktree: setup, ports, env, services, hooks, flows |
+| Applies | When you pick it | Always |
+
+For saved prompts you send to agents that are already running, use the
+saved prompts instead (**Send a saved prompt…** in ⌘K).

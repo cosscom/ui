@@ -1,0 +1,32 @@
+{
+  "title": "Guides",
+  "pages": [
+    "home",
+    "orchestration",
+    "runs",
+    "terminals",
+    "browser",
+    "files",
+    "artifacts",
+    "visual-diffs",
+    "agent-browser",
+    "offline-queue",
+    "automations",
+    "hooks",
+    "resource-guard",
+    "project-config",
+    "kits",
+    "team-setup",
+    "review-a-pr",
+    "linear",
+    "leadline",
+    "secrets",
+    "task-templates",
+    "agent-integrations",
+    "phone",
+    "more-computers",
+    "plugins",
+    "themes",
+    "labs"
+  ]
+}

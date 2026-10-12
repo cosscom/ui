@@ -1,0 +1,220 @@
+---
+title: berth CLI
+description: Every command of berth, the laptop CLI.
+---
+
+`berth` runs on your laptop. It talks to the [laptop agent](/docs/concepts/laptop-agent),
+starting it if needed, and through it to every box. `berth help` prints this
+list; `berth kit help` the kit commands, `berth team help` the team setup ones,
+`berth review help` the review ones.
+
+- **Addressing.** A box is `devl`; a location on it `devl/shop`; a worktree
+  `devl/shop/checkout`; a session `devl/SESSION`.
+- **JSON.** Every listing takes `--json`.
+- **State.** `BERTH_HOME` overrides the state directory; see
+  [files and environment](/docs/reference/files).
+
+On a box, [`berthd`](/docs/reference/berthd) takes the same box commands without
+the `BOX/` prefix.
+
+## Boxes
+
+| Command | What it does |
+| --- | --- |
+| `berth add ssh [user@]HOST [--name N] [--agents claude,codex\|none] [--guided] [--yes] [--from STEP] [--network NET] [--listen ADDR] [--address ADDR] [--identity FILE] [--trust-host-key SHA256:…] [--no-integrations] [-- SSH OPTIONS]` | Set a box up over SSH (once), quietly: installs berthd, tmux and git if missing (Shipyard's own tmux needs no sudo), the agent CLIs (`--agents`, Claude Code by default) and their hooks, and pairs, with no plan and no Enter. Only a step that needs `sudo`'s password (git missing, or lingering the box allows only as root) runs in a terminal, where `sudo` asks; lingering alone is asked about first and can be skipped. `--guided` shows the whole plan, waits for Enter, and runs every step in one terminal. `--yes` (or no terminal) asks nothing and stops with the command to run where `sudo` would need a password; `--from` retries from a step. See [add a box](/docs/getting-started/add-a-box#over-ssh). |
+| `berth pair '<link>' [--name N] [--network NET]` | Pair with a box, from the link `berthd pair` prints |
+| `berth invite [--boxes a,b] [--for NAME] [--yes] [--json]` | A join link for another computer of yours: a fresh single-use code from each box (every paired box, or `--boxes`), valid ten minutes. Offline boxes are left out and listed. Asks first unless `--yes`; `--for` names the computer in the boxes' events. See [more than one computer](/docs/guides/more-computers). |
+| `berth join '<link>'\|- [--check] [--yes] [--json]` | Pair this computer with every box in a join link (`-` reads it from stdin; pasting the whole message is fine). Each box reports `paired`, `already`, `needs-network` (sign in to its tailnet, then join again) or `failed`; `--check` only says what the link holds |
+| `berth network login NAME` | Join another tailnet (a personal one, say) to reach its boxes |
+| `berth network proxy NAME HOST PORT` | Connect stdin and stdout to HOST:PORT through that network, for SSH's `ProxyCommand` |
+| `berth networks [--json]` | Joined networks |
+| `berth discover [--network NET] [--json]` | Machines on the tailnet that could be boxes |
+| `berth boxes [--json]` | Paired boxes, whether they are online, and the [route](/docs/concepts/laptop-agent#routes-to-a-box) each is reached by |
+| `berth ping BOX [-c N]` | Check a box answers and still trusts you: how long connecting took, then N−1 round trips on the open connection (its latency) |
+| `berth upgrade BOX [--check] [--json]` | Upgrade the box's daemon over Shipyard's own connection (no SSH); `--check` only reports whether it is older |
+| `berth edit BOX/PROJECT[/WT] [FILE[:LINE[:COL]]] [--in cursor\|vscode\|windsurf\|zed]` | Open a worktree, or a file at a line, in your editor (default: the first installed) |
+| `berth ssh-config [--write] [--json]` | Show (then write) the SSH hosts editors use: `berth-<box>` |
+| `berth forget BOX` | Remove a box from this laptop |
+
+`berth discover --json` prints `{ user, machines, tailscale, tailnet }`:
+`user` is the SSH user to suggest (yours on this computer), `tailscale` is
+this computer's Tailscale (`running`, `stopped`, `logged-out` or `missing`;
+anything but `running` lists no machines rather than failing), and
+`tailnet` its tailnet's name. Each machine has `name`, `dns_name`, `ip`,
+`os`, `online`, `ssh` (it runs Tailscale SSH), `host_keys` (the SHA256
+fingerprints of the SSH host keys the tailnet reports for it) and `box`
+(the box it is paired as, if any). With `--network`, the machines are that
+network's, and `tailscale` and `tailnet` are left out.
+
+## Kits
+
+| Command | What it does |
+| --- | --- |
+| `berth kit list [--json]` | Kits on this laptop, and where each is installed |
+| `berth kit add LINK [--yes]` | Fetch a kit (git repo, `…/tree/REF/DIR`, gist, `kit.json` URL or folder), show what it does, and keep it |
+| `berth kit show ID` | Everything a kit does and every file it carries |
+| `berth kit apply ID BOX/PROJECT...` | Install it on projects |
+| `berth kit update ID` | Fetch it again from its link |
+| `berth kit rm ID` | Forget a kit on this laptop |
+| `berth kit remove BOX/PROJECT` | Uninstall a project's kit |
+| `berth kit save BOX/PROJECT ID [--name N]` | Make a kit of how a project is set up on a box |
+
+See [kits](/docs/guides/kits).
+
+## Team setup
+
+| Command | What it does |
+| --- | --- |
+| `berth team show ORG [--box BOX] [--json]` | What `<org>/.berth` does: the org, the pinned commit, each box step (and which ask for your password), each repo and whether you can read it, the keys, and an update if there is one |
+| `berth team setup ORG BOX [--yes] [--only ID,…] [--no-1password] [--key PROJECT/KEY=VALUE]…` | Run it on BOX: the steps in a terminal on the box (`berth attach BOX/team-<id>` to type your password), then the repos; asks for keys it needs, and follows the progress. `--no-1password` [skips 1Password](/docs/guides/team-setup#skipping-1password): the shared keys are asked for once instead (Enter leaves one missing) and op is never signed in on the box; refused when the team's `team.json` says `"onepassword": "required"` |
+| `berth team status [--json]` | Each team setup you accepted, its box, commit, state and progress |
+| `berth team retry ORG [--from STEP\|PROJECT] [--box BOX]` | Start a failed setup again from a step or a repo |
+
+`ORG` is a GitHub org, whose `<org>/.berth` holds the team setup, or a link
+to one anywhere: `github.com/OWNER/REPO[@REF]` or
+`github.com/OWNER/REPO/tree/REF/FOLDER`. GitHub goes through `gh`: this laptop's reads the team setup, and the box
+signs in with its own. See [team setup](/docs/guides/team-setup).
+
+## Reviewing a PR
+
+| Command | What it does |
+| --- | --- |
+| `berth review OWNER/NAME#N [--box BOX] [--as EMAIL] [--path /x] [--yes] [--json]` | The review sheet: the PR, its author and the exact head commit, the box, what will run there and which keys it gets, and what in the PR changes setup. Then asks, and makes the worktree at that commit (`--yes` doesn't ask; `--json` prints the sheet and makes nothing). `--as` and `--path` [open it logged in](/docs/guides/review-a-pr#opening-logged-in-at-a-page) as one of the project's dev users, at a page, and print that address. Also takes a `berth://review` link |
+| `berth review link OWNER/NAME#N [--as EMAIL] [--path /x]` | Print the PR's review link, to paste in its description or a chat |
+| `berth reviews BOX [--idle-days N] [--json]` | The reviews on BOX; `--idle-days` sets how long one may sit unused before it is cleaned up (`0`: never) |
+
+Who may be reviewed is read from GitHub with this laptop's `gh`, as you. See
+[review a PR](/docs/guides/review-a-pr).
+
+## Reaching services
+
+| Command | What it does |
+| --- | --- |
+| `berth url BOX PORT\|SERVICE` | Print the private URL for a port, or a service by name |
+| `berth open BOX PORT\|SERVICE` | Open that URL in your browser |
+| `berth forward BOX PORTS [--json]` | Forward local ports: `3000`, `8080:3000`, `3000-3005` |
+| `berth forwards [--json]` | List forwards |
+| `berth unforward ID` | Stop and forget a forward |
+| `berth route add '*.x.localhost' BOX PORT` | Send every matching host to a box port, `Host` unchanged |
+| `berth routes [--json]` | List routes (`berth route rm PATTERN` removes one) |
+| `berth units BOX [--json]` | Managed units on a box |
+| `berth unit add BOX/NAME -- COMMAND...` | Install and start a unit |
+| `berth unit get BOX/NAME [--json]` | A unit's state and where its log is |
+| `berth unit log BOX/NAME` | What a unit has written, for one that will not stay up |
+| `berth unit restart BOX/NAME` | Start a unit again |
+| `berth unit rm BOX/NAME` | Stop and remove a unit (its log stays) |
+| `berth helpers BOX [--json]` | The [helpers of plugins](/docs/reference/berthd#plugin-helpers) on a box, and whether each runs |
+| `berth helper log BOX/PLUGIN` | What a plugin's helper has printed |
+| `berth helper rm BOX/PLUGIN [--purge]` | Stop and remove a plugin's helper (its data stays; `--purge` removes that too) |
+
+## The agent
+
+| Command | What it does |
+| --- | --- |
+| `berth status [--json]` | Boxes, forwards and the proxy at a glance |
+| `berth doctor [BOX] [--json]` | Check this computer (or a box, with the routes to it) and how to fix it |
+| `berth events [BOX] [--json]` | Stream events from this laptop and every box as they happen (box events carry `box`); with `BOX`, only that box's |
+| `berth agent` | Run the agent in the foreground |
+| `berth agent start` | Start the agent in the background if it isn't running (what the app's **Start the Shipyard agent** runs) |
+| `berth agent restart [--if-stale] [--json]` | Restart the agent once its work under way is done; `--if-stale` only when it's older than this `berth` (what the app runs as it starts, after an update) |
+| `berth agent install\|uninstall\|status` | Run the agent at login, restart it on crashes |
+| `berth setup port80 [--remove]` | Drop `:1377` from URLs (macOS; asks for your admin password once) |
+| `berth stop` | Stop the agent (and every forward) |
+| `berth id` | Print this laptop's fingerprint |
+| `berth version` | Print this build's version |
+| `berth ui-token` | The desktop app's API address and token, as JSON |
+
+## Locations and worktrees
+
+| Command | What it does |
+| --- | --- |
+| `berth locations BOX [--json]` | Locations and their worktrees |
+| `berth location add BOX/NAME PATH` | Register a repo or directory |
+| `berth location rm BOX/NAME` | Forget a location (files are untouched) |
+| `berth location scripts BOX/NAME [--setup CMD] [--archive CMD] [--clear]` | Worktree setup and archive scripts (default: the repo's `.berth/config.json`) |
+| `berth location config BOX/NAME [--json] [--trust HASH\|--untrust]` | The repo's, the box's and the effective config; trust the repo's to run it |
+| `berth services BOX [--json]` | Which worktree each running server belongs to |
+| `berth service list\|start\|stop\|restart\|log BOX/LOC/WORKTREE [SERVICE]` | A worktree's services from the repo's config |
+| `berth preview BOX/[LOC/WORKTREE] [PORT] [--path /x]` | Open a worktree's page in the Shipyard app |
+| `berth worktree new BOX/LOC/NAME [--branch B] [--base REF] [--pr N [--ref REF]] [--parent NAME] [--no-setup]` | Create a git worktree and run its setup; `--pr` checks out that pull request (pass its head branch as `--branch`; a fork's head comes from `--ref`, by default `pull/N/head`); `--parent` nests it under another worktree of the location; `--no-setup` skips setup and autostart services, and the worktree shows `setup_pending` in `locations --json` |
+| `berth worktree setup BOX/LOC/NAME [--wait]` | Run the location's setup script and autostart services in a worktree, for one made with `--no-setup`. `--wait` blocks until setup finishes and exits non-zero if it fails |
+| `berth worktree rm BOX/LOC/NAME [--force]` | Remove a worktree |
+| `berth worktree rename BOX/LOC/NAME [TITLE]` | Give a worktree a [display name](/docs/concepts/projects-and-worktrees#display-names); its branch and folder keep their names, and no TITLE clears it |
+
+## Agent sessions
+
+| Command | What it does |
+| --- | --- |
+| `berth sessions BOX [--json]` | List sessions |
+| `berth agents BOX [--json]` | Agent CLIs this box can start |
+| `berth task new BOX/LOC/NAME [--agent ID] [--prompt TEXT] [--open split\|tab] [--branch B] [--base REF] [-- COMMAND...]` | A worktree with an agent (or a command) running in it |
+| `berth session new BOX/LOC[/WORKTREE] [--name N] [--agent ID [--prompt TEXT]] [--open split\|tab] [-- COMMAND...]` | Start an agent or a command (default: a shell) there |
+| `berth session screen BOX/NAME [--history N]` | Print what the session shows |
+| `berth session send BOX/NAME TEXT [--when now\|idle] [--force] [--idem KEY] [--no-enter] [--wait [--timeout 30m]] [--queue]` | Type a prompt into a session (or hold it until the agent is idle), and wait for its turn |
+| `berth session wait BOX/NAME [--turn ID] [--for finished,waiting] [--timeout 30m]` | Wait for a turn (from `session send`), or its agent's current one, to end |
+| `berth session turns BOX/NAME [--limit 10] [--json]` | List a session's turns: who prompted, how it ended, how long it took |
+| `berth exec BOX/LOC[/WORKTREE] [--timeout 10m] [--detach] -- COMMAND...` | Run a command there and print its output; `--detach` runs it as a run and prints its ID |
+| `berth loop BOX/SESSION --check CMD [--prompt TEXT] [--max 5] [--turn-timeout 30m] [--cancel-on-exit] [--detach]` | Prompt, wait, check, and feed failures back: a [durable run](/docs/guides/runs) on the box (Ctrl-C stops following, not the loop) |
+| `berth session rename BOX/NAME [TITLE]` | Name a session's work, as the app shows it; no TITLE clears it |
+| `berth session kill BOX/NAME` | Stop a session |
+| `berth attach BOX/SESSION` | Attach this terminal to a session (detach: Ctrl-b d) |
+| `berth terminal BOX/SESSION` | Open a new terminal window attached to a session |
+| `berth queue [--json]` | Prompts waiting for their box (`berth queue rm\|retry\|send ID`) |
+
+See [orchestration](/docs/guides/orchestration) and
+[the offline queue](/docs/guides/offline-queue).
+
+## Runs
+
+| Command | What it does |
+| --- | --- |
+| `berth runs BOX [--status active\|done\|S] [--template T] [--limit 20] [--json]` | List [runs](/docs/guides/runs), newest first |
+| `berth run templates BOX [--json]` | The templates and their parameters |
+| `berth run start BOX --template T [--param k=v]... [--follow] [--idem KEY] [--json]` | Start a run; a value that is JSON is taken as such |
+| `berth run get BOX/RUN [--json]` | Its steps as a tree, its gate, attempts and tokens |
+| `berth run logs BOX/RUN [--since N] [--follow] [--json]` | Its journal, as it happens |
+| `berth run approve\|reject BOX/RUN [STEP] [--pick N] [--note TEXT]` | Decide the gate it waits at (`--pick`: the attempt, from 1) |
+| `berth run cancel BOX/RUN` | Stop a run |
+| `berth flow secret BOX FLOW [--scope S] [--json]` | Make a webhook flow's signing secret, shown once |
+
+## Agent browser
+
+| Command | What it does |
+| --- | --- |
+| `berth browser open BOX/LOC/WT [PATH\|URL] [--as EMAIL] [--path /x] [--size WxH\|PRESET] [--scale N]` | Open the worktree's page in its [agent browser](/docs/guides/agent-browser) and print a compact snapshot; `--as` logs it in as one of the project's [dev users](/docs/guides/kits#personas-logging-in-as-a-dev-user) first |
+| `berth browser resize BOX/LOC/WT WxH\|PRESET [--scale N]` | Set its page's [size](/docs/guides/agent-browser#size): 1920x1080 by default, `phone` (390x844), `tablet`, `laptop`; kept until changed |
+| `berth browser snapshot\|click\|fill\|press\|select\|hover\|check\|wait\|shot\|console\|network\|eval\|status\|close BOX/LOC/WT …` | Drive it; each prints a short text |
+| `berth browser list BOX [--json]` | Browsers running on the box |
+| `berth browser allow BOX ORIGIN` | Let agents' browsers on the box load a public origin |
+
+## Ports and sharing
+
+| Command | What it does |
+| --- | --- |
+| `berth ports BOX [--json]` | What is listening on the box |
+| `berth stats BOX [--json]` | Memory, disk, load, and agents running or waiting |
+| `berth ps BOX [--json]` | The box's browsers with who started each, and what its sessions use |
+| `berth ps BOX stop ID` | Stop one of them (Shipyard's or its sessions' only) |
+| `berth info BOX` | The box's name, OS, build, tools and agent presets, as JSON |
+| `berth share BOX PORT` | Make a port public (a Cloudflare quick tunnel run by the box) |
+| `berth shares BOX [--json]` | List public shares |
+| `berth unshare BOX ID` | Stop a share |
+
+## Skills, secrets and events
+
+| Command | What it does |
+| --- | --- |
+| `berth skills BOX [list\|install\|uninstall] [SKILL...] [--agent claude\|codex\|all] [--target user\|project] [--location LOC] [--commit]` | Teach Claude Code and Codex on a box to use Shipyard |
+| `berth secret test BOX REF` | Check a box can resolve `op://vault/item/field` or `env://NAME` (prints the value's length, never the value) |
+| `berth emit TYPE [key=value...]` | Announce an event on this laptop |
+| `berth emit BOX TYPE [key=value...] [--origin TOOL]` | Announce an event on a box |
+
+## Integrations
+
+| Command | What it does |
+| --- | --- |
+| `berth integrations [status]` | Where Shipyard's hooks and skills are for each agent CLI on this laptop, per Claude Code and Codex account |
+| `berth integrations install claude\|cursor\|codex\|gemini\|opencode\|all` | Install Shipyard's skills and agent hooks for a tool, on this laptop, in every account folder it has |
+| `berth hook TOOL EVENT [PAYLOAD]` | What those hooks run: turns a tool's hook into a Shipyard event |
+
+See [agent integrations](/docs/guides/agent-integrations).

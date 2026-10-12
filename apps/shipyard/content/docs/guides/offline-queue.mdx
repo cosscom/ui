@@ -1,0 +1,78 @@
+---
+title: The offline queue
+description: Prompts for an agent on a box you can't reach wait on the laptop, and go when the box is back.
+---
+
+Boxes drop off: the laptop sleeps, Wi-Fi goes, a box restarts. A prompt for
+an agent on a box that cannot be reached can wait in the laptop agent's
+queue instead of failing:
+
+```sh
+berth session send devl/checkout-claude "Rebase on main" --queue
+berth queue                # what is waiting, and why anything failed
+berth queue rm ID          # discard one
+berth queue retry ID       # put a failed one back in line
+berth queue send ID        # send one now, without waiting for the agent's turn
+```
+
+The app offers the same thing ("Queue for when devl is back") in Send a
+prompt, the prompt picker and broadcasts, and lists the queue under
+**Queued** in the status bar.
+
+## How it behaves
+
+- **Only prompts that never left are queued.** `--queue` (and the app's
+  offer) applies when the connection to the box could not be opened at all.
+  If the connection dropped after the prompt went out, it may have arrived,
+  so the send fails as usual; the app says so and offers "Queue anyway".
+- **Where it lives.** `queue.json` in the laptop's state directory, written
+  atomically on every change. It survives the agent and the laptop
+  restarting; delivery happens with the app closed.
+- **When it goes.** As soon as the agent sees the box again (and on every
+  health check while prompts wait), oldest first for each session. Each
+  session's prompts go in order: a failed one holds the ones behind it until
+  it is retried, moved or discarded.
+- **Not mid-turn.** Before typing, the agent checks the session still runs.
+  If its agent reported `running`, the prompt waits (state `waiting`) for
+  `idle`, `waiting` or `finished`, for up to 30 minutes, then goes anyway:
+  agents take input mid-turn, they just read it later. An agent that never
+  reported a state is not waited for. A prompt queued with `wait: false`
+  goes at once.
+- **Gone sessions.** If the session is gone or its program exited, the
+  prompt fails with that reason and stays, so you can move it to another
+  agent or discard it.
+- **At most once.** An item is marked `sending` and saved before the request
+  goes out. If the box answers, it leaves the queue (delivered) or fails with
+  the box's reason. If the request never reached the box, it goes back in
+  line. If anything else happens before the answer (the connection drops,
+  the agent crashes), nobody can tell whether it arrived, so it fails ("may
+  have arrived") rather than being typed twice; Retry sends it again once you
+  have looked. Enqueueing takes an optional `id`, so a client retrying the
+  enqueue itself never queues twice.
+
+## Events
+
+The laptop agent publishes these, so laptop hooks can react too. None of
+them carries the prompt.
+
+| Event | Data |
+| --- | --- |
+| `queue.changed` | `queued` and `failed`: how many prompts are in each state |
+| `queue.delivered` | `id`, `box`, `session`, `attempts` |
+| `queue.failed` | `id`, `box`, `session`, `reason` |
+
+```json title="~/.berth/hooks.json"
+{
+  "hooks": [
+    { "on": "queue.failed", "run": "osascript -e 'display notification \"$BERTH_REASON\" with title \"A queued prompt failed\"'" }
+  ]
+}
+```
+
+## API
+
+The queue is on the laptop agent's API: `GET`, `POST`, `PATCH` and `DELETE`
+under `/v1/queue`, plus `POST /v1/queue/{id}/retry` and
+`POST /v1/queue/{id}/send`. See [the app's API](/docs/reference/app-api#laptop),
+and [orchestration](/docs/guides/orchestration#send) for sending prompts in the
+first place.

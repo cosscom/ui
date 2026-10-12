@@ -1,0 +1,175 @@
+---
+title: Go to file, File tabs and the Files panel
+description: Find a file in a worktree with ⌘P, starting from what the agent changed this turn, browse it in the Files panel beside the agent, and read or edit it in a File tab that knows what the agent did and never overwrites its work unseen.
+---
+
+Shipyard is not an IDE, but you often want to look at a file the agent just
+changed, or fix one line yourself, without leaving the app. **⌘P** finds a
+file in the worktree in front, the **Files panel** shows the worktree's
+files (or only what the agent changed) beside whatever tab is in front, and
+a **File tab** shows a file beside the agent's Chat, Shell and Preview tabs.
+
+## ⌘P
+
+Press **⌘P** (or **Go → Go to file…** in the menu bar) in a worktree. The
+picker looks like ⌘K and searches the worktree you are acting in: the
+focused pane's.
+
+Before you type, it lists:
+
+- **Changed by Claude this turn**: every file the agent's latest turn
+  edited or wrote, newest first, with its `+added −removed` lines and a
+  **new** tag for files the turn created;
+- **Recently opened**: the files you opened in this worktree lately.
+
+Type to search every file git tracks in the worktree, plus the untracked
+ones it doesn't ignore. The match is fuzzy, like fzf: the letters you type
+must appear in order, and letters in the file's own name count for more
+than letters in its folders, so `paywh` finds
+`apps/web/lib/payments/webhook.ts`. Files the agent changed and files you
+opened lately are lifted a little. The matched letters are underlined.
+
+| Key | Does |
+| --- | --- |
+| ↵ | Open the file in a File tab (or bring its tab to the front) |
+| ⌥↵ | Open it beside the focused pane |
+| ⌘↵ | Open it in your editor (Cursor, VS Code, Windsurf or Zed, the one chosen in **Settings → Boxes**) |
+| ↑ ↓, ⌃N ⌃P | Move |
+| esc | Close |
+
+On a wide window, the picker shows the highlighted file on the right,
+scrolled to the agent's first change, so you can see what it did before
+you open anything.
+
+The picker works in any worktree, with or without an agent in it.
+
+In a very large repository, ⌘P searches the first 20,000 files git lists,
+plus every file the agent changed this turn; its footer says **Searching
+the first 20,000 files** when that is the case. The Files panel lists
+every folder whatever the repository's size.
+
+## The Files panel
+
+Press **⌘⇧E** (or **View → Files panel**, or the panel button at the right
+of the tab strip) to show the worktree's files in a panel at the right,
+under the tab strip, beside whatever tab is in front: the agent's Chat or
+Shell, a Preview, a File tab. It follows the worktree in front. Whether it
+shows is remembered for every worktree, across restarts.
+
+- **All** lists the worktree's folders and files, a folder at a time:
+  folders first, then files, in the order a person reads them
+  (`analytics-2` before `analytics-10`). Like ⌘P it shows what git tracks
+  and the untracked files it doesn't ignore, never `.git`.
+- **Changed** folds the tree to the files the agent changed this turn. A
+  chain of folders with one folder in each reads as one row
+  (`apps/web/lib`), and each file has its `+added −removed` lines and a
+  letter: **A** the turn made it, **M** it changed it, **D** it deleted it.
+  The footer sums the turn.
+
+While the worktree's agent is working, the panel opens on **Changed**, so
+what it writes is in view; otherwise on **All**. Once you pick one, that
+worktree keeps your pick.
+
+A blue dot after a folder means the agent changed something inside it
+(blue, because amber means "needs you" in Shipyard). The file the agent wrote
+in the last 20 seconds gets a small live mark, and its folders' dots
+pulse, but only while the agent is working: when its turn ends, the mark
+goes. With the panel closed, a dot on its button says the turn changed
+files.
+
+Click a file (or move with the arrow keys and press ↵) to open it in a
+File tab; ⌥-click or ⌥↵ opens it beside the focused pane, ⌘-click or ⌘↵ in
+your editor. The File tab in front is highlighted in the tree.
+
+**New file** (the button in the panel's header) is the only thing the
+panel does to files: type a name and press ↵, and an empty file is made in
+the folder you are on (start the name with `/` for a path from the top),
+then opened in a File tab. It never replaces a file that exists. There is
+no rename, delete, move or drag: those stay with the agent and your
+editor.
+
+Below a 1100px window the panel floats over the tabs with a dimmed
+backdrop instead of taking their room, and goes when you pick a file or
+press esc. Floating doesn't change whether it shows docked in a wider
+window.
+
+## File tabs
+
+A File tab is a tab in the worktree's strip like any other: it splits, is
+dragged, and closes the same way. Its header shows:
+
+- the file's path as a breadcrumb, and a dot while you have unsaved edits;
+- **Claude, 2m ago +12 −2**: who changed the file this turn, when, and by
+  how much;
+- a change stepper (**1/5** with up and down arrows) that jumps between the
+  agent's changes;
+- a wrap button: long lines wrap, or scroll sideways (in a narrow pane they
+  wrap until you choose);
+- **Open in Cursor** (or your editor).
+
+The margin beside the line numbers marks the agent's changes this turn:
+green for added lines, blue for changed ones, and a red notch where lines
+were removed. Lines you have changed and not saved are marked in grey, so
+your edits and the agent's are told apart.
+
+Code is coloured with your theme's own syntax colours, the same ones the
+diff view uses, so a file looks alike in its tab and in a diff.
+
+**⌘S** saves. **⌘F** searches in the file.
+
+### When the agent writes the file
+
+An open File tab notices when the file changes on the box (it checks every
+couple of seconds while it shows).
+
+- **No unsaved edits**: the tab reloads in place, keeping your place in the
+  file.
+- **Unsaved edits**: nothing is lost or overwritten. A banner says
+  **Claude changed this. Your unsaved edits are still here.**, the lines
+  the agent's new version changes under you are tinted amber, and the tab
+  shows a warning sign. Choose:
+  - **Reload** takes the agent's version and drops your edits;
+  - **Keep mine** keeps your text; the next ⌘S saves it over the agent's
+    version, on purpose;
+  - **Compare** shows your version beside the agent's in the diff view,
+    with **Take Claude's** and **Keep mine**.
+
+If the agent deletes the file while you have unsaved edits, the banner
+offers **Discard mine** and **Keep mine** (which saves the file again).
+
+A save always names the version it was made against. If the file changed
+on the box in between, the box refuses the save and the banner appears
+instead: a save never overwrites the agent's work unseen.
+
+### Files the editor doesn't open
+
+- Files larger than 2 MB, and files that aren't UTF-8 text, open as a note
+  that says why, with **Open in Cursor**.
+- Pictures (PNG, JPEG, GIF, WebP, AVIF, BMP, ICO) are shown, with their size.
+- Nothing in `.git` is listed, opened or written, and no path can lead
+  outside the worktree, through `..` or a symlink.
+
+## What "this turn" means
+
+A turn is everything since your last prompt to the agent. The box reads
+the agent's own record of the conversation (Claude Code's transcript or
+Codex's session file) for the files its edits and writes touched since
+then.
+
+For Claude Code, the record also keeps each file as it was before each
+edit, so the counts and the margin show this turn's changes alone, even
+when the worktree has older uncommitted work. For Codex, whose record
+doesn't keep that, they are counted against the last commit.
+
+## API
+
+The box serves these to paired laptops; the app reaches them through the
+laptop agent like every other box route ([app API](/docs/reference/app-api)):
+
+| Method and path | Does |
+| --- | --- |
+| `GET locations/{loc}/worktrees/{wt}/files?q=&limit=` | the worktree's files that match `q`, best first (at most 200) |
+| `GET locations/{loc}/worktrees/{wt}/files?dir=` | `{ dir, entries: [{ name, dir?, children? }], truncated? }`: one folder's files and folders, folders first, for the Files panel (`dir=` empty is the top) |
+| `GET locations/{loc}/worktrees/{wt}/file?path=` | `{ path, etag, mtime, size, content? }`, or `binary`, `image`, `too_large` and a `reason`. `&stat=1` leaves out the content, `&raw=1` serves a picture's bytes, `&turn=1` adds what the agent's turn did to the file, with the file as the turn found it (`turn.before`) |
+| `PUT locations/{loc}/worktrees/{wt}/file?path=` | `{ content }` with `If-Match: "<etag>"` (or `If-None-Match: *` to make a new file). A stale etag is **412** `file_changed`, with the file as it is now |
+| `GET locations/{loc}/worktrees/{wt}/touched` | `{ files: [{ path, added, removed, created?, deleted?, at, live?, session, agent, base }] }`: what the agents' latest turns changed; `base` is `turn` or `head`; `live` while the agent works and wrote the file in the last 20 seconds |

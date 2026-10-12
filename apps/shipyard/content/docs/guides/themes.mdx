@@ -1,0 +1,141 @@
+---
+title: Themes
+description: Colour the app and its terminals with a JSON file, or ship a theme in a plugin.
+---
+
+Pick a theme in **Settings → Appearance → Theme**: Shipyard's own, then ports
+of popular VS Code themes, grouped dark and light, with a search. Each card
+shows the theme's sidebar and terminal, and dots for its primary colour and
+terminal palette. The command palette (⌘K, "theme") previews them as you
+move through.
+
+<Shot name="themes" alt="Settings, Appearance, Theme: a search box, Match system with Shipyard Light and Shipyard Dark, then cards for Shipyard Dark, Shipyard Light, Midnight and Paper, and the first dark ports: Dracula, One Dark Pro, Catppuccin Mocha, Tokyo Night, Nord and GitHub Dark" />
+
+| | Dark | Light |
+|---|---|---|
+| Shipyard | Shipyard Dark, Midnight | Shipyard Light, Paper |
+| Dracula | Dracula | |
+| One | One Dark Pro | One Light |
+| Catppuccin | Mocha | Latte |
+| Tokyo Night | Tokyo Night | |
+| Nord | Nord | |
+| GitHub | GitHub Dark, GitHub Dark Dimmed | GitHub Light |
+| Gruvbox | Gruvbox Dark | Gruvbox Light |
+| Solarized | Solarized Dark | Solarized Light |
+| Rosé Pine | Rosé Pine | Rosé Pine Dawn |
+| Night Owl | Night Owl | Night Owl Light |
+| Kanagawa | Kanagawa Wave | |
+
+The ports take each theme's own palette for the app, the terminal's 16
+colours and the code in diffs, edits and an agent's replies (each through
+its own Shiki theme, loaded the first time code shows). Where a colour was
+too faint to read, it was lightened or darkened, hue kept: every built-in
+theme keeps body and muted text at 4.5:1, and done, waiting, running and
+failed apart from each other. Sources and licences are in
+[THIRD_PARTY_THEMES.md](https://github.com/cosscom/shipyard/blob/main/THIRD_PARTY_THEMES.md).
+
+**Match system** follows macOS: one theme by day, another when it's dark.
+Shipyard Light and Shipyard Dark unless you pick others beside it.
+
+## Your own
+
+Add a JSON file to `~/.berth/themes/` on your laptop. It appears in Settings
+within 15 seconds, or as soon as you switch back to the app, under Dark or
+Light by its `appearance`. A theme with a built-in's id (`berth-dark`,
+`dracula`, …) replaces it.
+
+```json title="~/.berth/themes/harbour.json"
+{
+  "id": "harbour",
+  "name": "Harbour",
+  "appearance": "dark",
+  "syntax": "github-dark-default",
+  "colors": {
+    "background": "#1d1e22", "foreground": "#e3e4e8",
+    "sidebar": "#18191c", "sidebarForeground": "#a9abb3",
+    "muted": "#25262b", "mutedForeground": "#8a8c95",
+    "border": "#2c2d33",
+    "accent": "#2a2b31", "accentForeground": "#f1f2f4",
+    "primary": "#e3e4e8", "primaryForeground": "#18191c",
+    "card": "#212226", "popover": "#222328", "ring": "#5b5d66",
+    "success": "#3fb950", "warning": "#e8a33d", "destructive": "#f0564a",
+    "info": "#2b7fff"
+  },
+  "terminal": {
+    "background": "#1d1e22", "foreground": "#dcdde2", "cursor": "#e3e4e8", "selectionBackground": "#3a3c45",
+    "black": "#1d1e22", "red": "#f0564a", "green": "#3fb950", "yellow": "#e8a33d",
+    "blue": "#6d9eff", "magenta": "#c88bf0", "cyan": "#4fc1d6", "white": "#c9cad0",
+    "brightBlack": "#6b6d76", "brightRed": "#ff7b70", "brightGreen": "#5fd36f", "brightYellow": "#f5c063",
+    "brightBlue": "#8db4ff", "brightMagenta": "#dba8f7", "brightCyan": "#7ad6e6", "brightWhite": "#f4f5f7"
+  }
+}
+```
+
+A theme needs `id` (defaulting to the file name), `colors` and `terminal`;
+`appearance` is `dark` or `light`. The full type is
+[`Theme`](/docs/reference/plugin-sdk#types). Optional, beside those:
+
+- `syntax`: the [Shiki theme](https://shiki.style/themes) that colours code
+  in diffs and replies, by name (`dracula`, `github-light-default`, …).
+  Without it, Pierre's own light or dark.
+- `colors.info`: what is running (a spinner) and notices; the app's blue
+  without it.
+- `colors.successForeground`, `warningForeground`, `destructiveForeground`,
+  `infoForeground`: each state as text, on a light wash of its own colour
+  (badges, banners). Keep them 4.5:1 on that wash.
+- `colors.link` for links in replies (the text colour, underlined, without
+  it) and `colors.selection` for selected text.
+- `terminal.selectionForeground`: selected text in the terminal, where its
+  own colour doesn't read on the selection.
+
+`warning` is mainly the colour of "needs you": the dot of an agent waiting
+for you, and the lamp in the app's drawings. It also marks boxes still
+connecting, memory running low and other warnings, so keep it easy to tell
+apart from `primary`, `success` (done) and `info` (running).
+
+To check yours against the bar the built-ins meet, copy it into
+`app/src/themes/` in a clone of the repo and run `pnpm check:themes`
+after adding it to `builtinThemes`.
+
+## In a plugin
+
+A [plugin](/docs/guides/plugins) can ship themes as files, listed under
+`"themes"` in its `berth-plugin.json`, or add one at runtime with
+`berth.addTheme(theme)`. Plugin themes come after yours, so a plugin theme
+with the same id replaces yours.
+
+## Chat width
+
+**Settings → Appearance → Chat → Width** sets how wide conversations run:
+Narrow, Default, Wide, Extra wide, or Full (the pane's width). Long code,
+tables and edits still scroll inside their own blocks.
+
+## Chat background
+
+**Settings → Appearance → Chat background** puts a quiet background behind
+conversations, in panes and in zen. Everything is drawn in your theme's
+colours, between its page and its text, so it follows light and dark:
+
+<Shot name="chat-background" alt="Settings, Appearance, Chat background: a preview of a short conversation over the harbour scene, and rows of patterns, gradients, scenes and Custom (Add and Generate)" />
+
+- **None**, the default.
+- **Patterns**: chart contours, a dot grid, a nautical grid, soft waves.
+- **Gradients**: Dawn, Dusk and Deep sea, ordered-dithered like the
+  harbour on a new agent.
+- **Scenes**: the harbour paintings, dithered at a low contrast.
+- **Custom**: **Add…** a picture of your own (or drop one on the section),
+  or **Generate** one from a prompt. Shipyard runs Codex's CLI on your Mac
+  with your Codex account (`codex exec`, read-only, in an empty folder),
+  shows the exact command first, and runs it only when you press Generate.
+  Without Codex installed and signed in (`codex login`) it says so. Your
+  pictures are shrunk to at most 2560 px and kept on this Mac, the last
+  eight you used. They land in Shipyard's style: softened and dithered in
+  the theme's ink.
+
+Then shape it under **Effects**: **Strength** (how far it rises from the
+page), **Dither** (fine, coarse or smooth) and **Tone** (a hint of colour,
+or the theme's ink). A picture's **Advanced** can show it as it is, and
+fit or crop it. Behind the conversation and the reply box the
+background always fades to the plain page, so it lives in the margins
+and only whispers under the text. A
+pane's **⋯** menu has **Chat background…** to come back here.

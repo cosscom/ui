@@ -1,0 +1,239 @@
+---
+title: Sessions and agents
+description: Programs that run on the box in tmux, the agents in them, and how Shipyard knows what they need.
+---
+
+A **session** is a program running on a box, an **agent** is a coding agent
+running in one, and a **task** is a worktree made with an agent already
+running in it.
+
+## Sessions
+
+A **session** runs a program, usually a coding agent, at a location or
+worktree, in Shipyard's own tmux server with `remain-on-exit`. Sessions keep
+running when nobody is attached, when the laptop sleeps, and when berthd
+restarts or upgrades.
+
+```sh
+berth session new devl/shop/checkout --agent claude --prompt "…"    # an agent
+berth session new devl/shop/checkout -- pnpm test --watch           # any command
+berth session new devl/shop/checkout                                # a shell
+berth sessions devl
+berth session rename devl/SESSION "Fix checkout webhook"
+berth session kill devl/SESSION
+```
+
+A session also has a **title**, which is what the app calls it: the first
+line of the prompt it started with ("Fix checkout webhook"), cut to about
+48 characters, with the agent beside it ("Fix checkout webhook · Claude
+Code"). A session started without a prompt takes the title of the first
+prompt it gets, sent through Shipyard or typed into the agent. The title is a
+tmux option (`@berth_title`). Rename it
+with `berth session rename`, `--title` on `session new` and `task new`, or
+the tab's menu in the app.
+
+A session's command, with the first prompt in it, is kept in a file only
+you can read (`<state>/commands/<session>.cmd`), which the session's login
+shell runs; it goes when the session does. A prompt can be long (a request
+up to 2 MB): it never goes on tmux's command line, which takes about 16 KB.
+The agent itself gets its first prompt as one argument, which Linux caps at
+128 KB and macOS at about 1 MB, so a longer one is refused up front; send
+the rest once the agent runs, as a paste of any length, or attach it as a
+file.
+
+A session is named after where it runs and what it runs
+(`shop-checkout-claude-…`) unless you pass `--name`. Its environment is the
+worktree's: ports, `BERTH_*` variables and the project's `env`, plus
+`BERTH_SESSION` (the session's name) and, for an agent preset, `BERTH_AGENT`
+(the preset's id). The agent's hooks pass `BERTH_SESSION` back, so Shipyard
+knows which session they come from even when several agents share a
+worktree. Shipyard also keeps the preset with the session, so an agent started
+from a preset whose command wraps it (`env FOO=1 claude`, `npx …`) is still
+known as that agent.
+
+### Sessions clean up after themselves
+
+What a session's program starts (a repository's Playwright tests and their
+browsers, a dev server, a watcher) goes when Shipyard ends the session, even
+what was started in the background or detached itself from the terminal.
+
+- **On Linux with systemd**, each new session runs in a transient scope of
+  its own (`berth-SESSION-….scope` under your systemd user manager), a cgroup
+  that holds everything it starts. Ending the session stops the scope:
+  `SIGTERM` to everything in it, then `SIGKILL` after 10 seconds. The scope
+  belongs to your user manager, not to berthd, so sessions outlive berthd's
+  restarts and upgrades as before. Its cgroup also says what the session
+  uses, which `berth sessions BOX --json` shows as `usage`.
+- **Elsewhere** (macOS, a container without systemd, and sessions started
+  before this), Shipyard stops what it finds for the session when it ends
+  it: its terminal's processes and their children and, on Linux, processes
+  that left that tree but still carry the session's `BERTH_SESSION` and
+  Shipyard's own tmux server in their environment.
+- **Nothing else** is touched: your own tmux, terminals and processes have
+  neither the scope nor the marker.
+
+A box can hold each session under a **memory limit** (Settings → Boxes,
+**Browsers and sessions**; `session_memory_gb` in the box's
+[`guard.json`](/docs/guides/resource-guard)). It needs the scopes above. It is
+systemd's `MemoryHigh`: near it, the kernel reclaims the session's memory
+and slows it down, and Shipyard says so in its chat and on its tab ("using
+11.8 GB, near its 12 GB limit"), with a notification. Nothing is stopped for
+it. A new limit applies to running sessions at once.
+
+The app shows each session as a terminal (ghostty-web) in the worktree's
+workspace, beside other terminals, splits and browser tabs. Laptops attach
+through a framed terminal stream (keystrokes and resizes in, screen out), or
+read the screen without attaching:
+
+```sh
+berth attach devl/SESSION              # this terminal; Ctrl-b d detaches
+berth terminal devl/SESSION            # a new terminal window
+berth session screen devl/SESSION --history 200
+```
+
+## Tasks
+
+A **task** is a worktree with an agent already running in it, made in one
+request, so a hook, the app or another agent can hand off work in a single
+step:
+
+```sh
+berth task new devl/shop/checkout --agent claude --prompt "Fix the checkout page"
+```
+
+In the app this is **New worktree** (⌘N) with an agent chosen. It runs
+`before:task.create`, then the worktree's and the session's own gates, and
+announces `task.created`.
+
+## Agents
+
+An agent is a preset: an id, a name and a command. The box offers each
+built-in whose command it finds on its `PATH` (ids `claude`, `codex`,
+`opencode`, `gemini`, and `cursor`, which runs `cursor-agent`), plus any a
+repository's config adds or replaces. `berth agents BOX` lists the
+built-ins the box has; a repository's own presets come with its location
+(`agents` in `berth locations BOX --json`).
+A first prompt is passed as the command's last argument, or after its
+`prompt_flag`. See [the config reference](/docs/reference/config#agents).
+
+### Agent state
+
+Shipyard knows what an agent is doing from the agent's own hooks, which
+`berthd install` sets up for the agent CLIs it finds on the box (later,
+`berthd integrations install claude`, or `codex`, `cursor`, `gemini`,
+`opencode`, `all`; an upgrade brings hooks Shipyard installed before up to
+date):
+
+| State | In the app | Meaning | From |
+| --- | --- | --- | --- |
+| `idle` | Idle | Open, at its prompt, not given anything yet | `agent.ready` |
+| `running` | Working | Working on a prompt | `agent.started` |
+| `waiting` | Needs you | A permission, a question | `agent.waiting` |
+| `finished` | Done | Done with its turn | `agent.finished` |
+| `exited` | Ended | The agent itself quit | `agent.exited` |
+
+A session whose program has ended is `exited`, and the app calls it
+**ended** everywhere: the sidebar, tabs, panes, the dashboard, zen, ⌘K and
+notifications use the same words and the same glyph (a blue spinner while
+working, an amber dot when it needs you, a check when done, a grey ring when
+idle, a grey dot once ended). An ended agent takes no input: sending to one
+fails with the code `session_exited` instead of typing into a dead pane, and
+the app offers to start it again or hand its work on rather than to send.
+While its box is offline the app doesn't guess: the pane says the box is
+away and comes back by itself. Shipyard also notices Claude
+Code's "trust this folder" question at startup and reports it as `waiting`.
+Claude Code's reminder a minute after a finished turn (`idle_prompt`) and its
+login notice are not questions, so they never read as `waiting`; after you
+approve a permission, the tool it allowed running says the agent is working
+again.
+
+### Turns
+
+A **turn** is one prompt to the end of the agent's reply. The box keeps a
+ledger of every agent session's turns, numbered in the order things happened
+(not by anyone's clock), and everything that waits for an agent waits for a
+turn: `session send --wait`, loops, flows, the app's broadcast.
+
+```sh
+berth session send devl/SESSION "Rebase on main" --json   # {"turn":"SESSION#4","seq":812,…}
+berth session wait devl/SESSION --turn 'SESSION#4'          # until that turn ends
+berth session turns devl/SESSION                            # the last ten
+```
+
+- A prompt sent while the agent is mid-turn gets its own turn, which starts
+  when the agent takes it up: the turn it was already in ending does not end
+  yours.
+- A turn is `queued` (held until the agent is idle), `pending` (sent, not
+  started), `running`, `waiting`, `finished`, `exited` or `lost` (open when
+  berthd restarted and nothing could settle it, or sent but never started
+  after two minutes with its agent idle: the agent read two prompts as one,
+  or dropped it; its status says `never started`).
+- Each turn says who prompted it (`laptop:<name>`, `flow:<id>`, `phone`,
+  `terminal` for a person at the terminal) and how often it waited for you.
+  When Claude Code asks for a permission, its `PermissionRequest` hook says
+  which tool and with what: the wait keeps the tool, a short summary of the
+  input (the command, or the file's path, never what it would write, at
+  most 300 characters) and Claude's reason, and the session shows it as
+  `ask` while it waits. This stays in the box's private ledger: it is never
+  put in events, the journal or hooks.
+- Prompts held with `--when idle` are listed by `GET
+  /v1/sessions/{name}/queue` (and counted as the session's `queued`); one can
+  be cancelled, or sent at once.
+- Agents sharing a worktree keep their own turns. An older hook that names
+  only a folder counts for the one agent of its kind there; when there are
+  several, it is recorded but ends no one's wait.
+
+**Fidelity** says how well Shipyard knows a turn's edges: `hooks` (the agent
+said when it started and ended), `partial` (the agent cannot say when it
+starts, so its turn starts when Shipyard sends the prompt) or `screen` (no hooks
+reported: Shipyard reads the terminal every two seconds, and a screen that stops
+changing ends the turn).
+
+| Agent | Ready | Started | Waiting | Finished | Through |
+| --- | --- | --- | --- | --- | --- |
+| Claude Code | ✓ | ✓ | ✓ | ✓ | hooks in `~/.claude/settings.json` |
+| Codex | ✓ | ✓ | ✓ | ✓ | hooks in `~/.codex/hooks.json` (trust them once with `/hooks`); older versions report only `finished`, through `notify` |
+| Cursor Agent | ✓ | ✓ | screen | ✓ | hooks in `~/.cursor/hooks.json` |
+| Gemini CLI | ✓ | ✓ | ✓ | ✓ | hooks in `~/.gemini/settings.json` |
+| OpenCode | | ✓ | ✓ | ✓ | a plugin in `~/.config/opencode/plugin/berth.js` |
+| anything else | screen | screen | screen | screen | the terminal |
+
+The box lists these as `adapters` in `GET /v1/info`, with `capabilities`
+`["turns","journal"]` when it keeps turns.
+
+Hooks reach berthd through its socket in milliseconds. While berthd is down
+(an upgrade, a restart), a hook is kept in `~/.berth/box/spool/` and
+published, in order, when berthd starts, so an agent that finished meanwhile
+does not read as working forever.
+
+The hooks forward only identifiers and the working directory: prompts,
+messages and transcripts never leave the tool. The one exception is the
+summary of a permission request above, which only berthd's own ledger
+keeps. A hook never fails or blocks
+the agent that called it.
+
+### In the app
+
+- **Agent Dashboard** (⌘J): every agent on every box, by what it needs:
+  **Needs you**, **Working**, **Done**, **Ready**.
+- **Review**: agents' finished work on every box, to approve, send back or
+  discard.
+- **Notifications**: when an agent waits for you, on this laptop, and on your
+  phone with the [phone companion](/docs/guides/phone).
+
+## Driving agents
+
+Anything that can run a command can prompt an agent, wait for its turn to
+end, and check its work, including another agent:
+
+```sh
+berth session send devl/SESSION "Rebase on main" --wait     # waits for this prompt's turn
+berth session send devl/SESSION "Then the docs" --when idle # held until the agent is idle
+berth session wait devl/SESSION --for finished,waiting
+berth exec devl/shop/checkout -- pnpm test
+```
+
+Shipyard never types into an agent that is waiting for you unless told to
+(`--force`): an Enter at a permission prompt would pick an answer for you.
+
+See [orchestration](/docs/guides/orchestration).

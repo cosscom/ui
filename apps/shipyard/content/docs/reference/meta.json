@@ -1,0 +1,12 @@
+{
+  "title": "Reference",
+  "pages": [
+    "cli",
+    "berthd",
+    "config",
+    "events",
+    "app-api",
+    "plugin-sdk",
+    "files"
+  ]
+}

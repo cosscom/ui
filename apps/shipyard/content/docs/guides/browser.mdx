@@ -1,0 +1,167 @@
+---
+title: Browser and Preview tabs
+description: See a worktree's dev server in the app, in a Browser tab or at every size at once in a Preview tab, synced or isolated, light or dark.
+---
+
+A worktree's dev server has an address on your laptop,
+`http://WORKTREE.LOCATION.BOX.localhost:1377/` (such as
+`http://checkout.shop.devl.localhost:1377/`), served by the
+[laptop agent's proxy](/docs/concepts/laptop-agent). The app shows it two ways.
+
+## Browser tab
+
+A Browser tab (**+ → New browser tab**, ⌘⇧B) is a browser of its own: type a
+port (`3000`) to open that port of the worktree's box, or any URL. In the
+app it is a native web view, so every site works as in a browser. Its
+toolbar can pick an element for the worktree's agent, watch the
+[agent's browser](/docs/guides/agent-browser), and open the page as a Preview tab
+(**Preview sizes**).
+
+When the project's kit or config lists
+[dev users](/docs/guides/kits#personas-logging-in-as-a-dev-user), **Log in as…**
+next to the address lists them by name: pick one and the tab is logged in as
+that user, on the page it was showing. ⌘K has **Log in as …** too.
+
+### Developer tools
+
+Two layers, both in the Browser tab's toolbar.
+
+**Inspect** opens WebKit's Web Inspector for the page (Elements, Console,
+Network, Sources, Storage…), in a window of its own. Right-click the page
+for **Inspect Element** too. It is the Shipyard app's: a Browser tab in a plain
+browser shows the page in a frame, which has none.
+
+**Console and network** (⌘⌥I, or **View → Console and network**) opens a
+drawer under the page. Drag its top edge to resize it.
+
+- **Console** is what the page logged since it loaded (`console.log`,
+  `info`, `warn`, `error`, `debug`, `assert`), every uncaught error and
+  unhandled promise rejection, and images or scripts that failed to load.
+  An entry with a stack folds it out; the same line again counts up. Filter
+  by level or text, and **Clear** it. A reload or a new page starts afresh.
+- **Network** is the page's requests: method, path, status, type, time and
+  size, with failed ones (4xx, 5xx, no answer) marked and a **Failed**
+  filter. Click one for its full address and, for a failed JSON or text
+  answer, how it began. It lists a worktree's page: the requests that go
+  through the laptop's proxy, which keeps the last 200 for each host (a
+  call to another worktree's address is listed under the page that made
+  it). For another site, use the Web Inspector's Network tab.
+- **Send to agent**, on an error, a warning or a failed request, sends the
+  worktree's agent what happened (the error, where it was thrown and its
+  stack, or the request and its answer) with the page's address and a note
+  of yours. The element picker sends a picked element the same way.
+
+The toolbar button and the Browser tab show the page's errors since it
+loaded: console errors and failed requests. While you watch the
+[agent's browser](/docs/guides/agent-browser), the button opens the same drawer
+for the agent's page: the console lines and failed requests its box keeps,
+without marking them seen for the agent.
+
+<Callout title="A private WebKit setting">
+The Web Inspector in a release build of the Mac app uses a private WebKit
+setting (`developerExtrasEnabled`, through Tauri's `devtools` feature),
+which the Mac App Store refuses. Shipyard is notarized and distributed outside
+it, so that is fine. The inspector always opens in its own window: docked,
+WebKit would size it as if the page filled the window.
+</Callout>
+
+How the drawer gets its data: the page runs a small script
+(`internal/proxy/devtools.js`) that keeps what it logs. The native web view
+runs it at the start of every page and asks it twice a second for what's
+new. In a frame (a plain browser), the page is asked for with
+`?__berth_devtools=1`, and the proxy puts the same script in, as it does
+the Preview tab's; it only goes into a frame Shipyard named, and the flag never
+reaches your dev server. Requests come from the proxy's own log
+(`GET /v1/proxy/requests?host=` on the laptop agent's API), which sees
+every request a worktree's page makes, including ones that never reach the
+page's JavaScript.
+
+## Preview tab
+
+A Preview tab shows the same page at several sizes at once, each in a frame
+at its real CSS width, scaled to fit, with its size and scale above it.
+Open one from:
+
+- **+ → Preview**, which starts on the worktree's dev server;
+- the **Run** menu (**Preview sizes**, under each service), or a page
+  under **Running in** (**Preview**, beside **Open in tab**);
+- a Browser tab's toolbar (**Preview sizes**), for the page it shows.
+
+### Sizes
+
+The sizes menu (the ruler) picks what shows, up to 10 frames:
+
+| | Width | Height |
+| --- | --- | --- |
+| Tailwind `sm`, `md`, `lg`, `xl`, `2xl` | 640, 768, 1024, 1280, 1536 | 900 (720 to 1080, in the menu) |
+| Phone | 390 | 844 |
+| Phone Max | 430 | 932 |
+| Tablet | 820 | 1180 |
+
+Type a width to add your own. Phones and the tablet turn sideways with the
+rotate button on their frame. What you pick, and everything below, is
+remembered for each worktree.
+
+### Layouts
+
+- **Fit all**: every frame at one scale, the largest at which they all fit
+  in the tab.
+- **Filmstrip**: one row, each frame as tall as the tab; scroll sideways.
+- **Grid**: one scale for all, so sizes compare honestly, the widest frame
+  filling the tab's width; scroll down.
+
+Frames load as they come into view, three at a time. A Preview tab that
+stays hidden lets its frames go after 20 seconds and loads them again, where
+they were, when you come back.
+
+### Synced or isolated
+
+**Synced** (the default): open a page in one frame and every frame opens it;
+scroll one and the others scroll to the same place, proportionally or (in
+the options menu) by the element at the top of the view. **Mirror clicks
+and typing** also replays clicks, typing and form submissions in the other
+frames. **Isolated**: each frame on its own.
+
+### Light and dark
+
+**Auto**, **Light** or **Dark** for all frames in the toolbar, and for one
+frame with the sun or moon on it. Forcing a theme:
+
+- answers the page's `prefers-color-scheme` media rules and `matchMedia`
+  for that theme, and sets `color-scheme`;
+- with a **.dark class** or **data-theme** strategy, also sets the class
+  (Tailwind's `dark:` with the class strategy, next-themes) or the
+  attribute on `<html>`.
+
+The strategy is **Auto** by default, which reads the page's own styles to
+see what it keys its theme on; the options menu says what it found, and can
+set it yourself.
+
+### Other things a frame can do
+
+On a frame's label: reload it, or open it in a Browser tab. In the toolbar:
+reload every frame, and a **screenshot** of all frames side by side, which
+you can copy, save, or send to the worktree's agent with a note.
+
+### How it works
+
+Frames talk to the app through a small script that the laptop's proxy puts
+into a page only when a Preview frame asks for it: its first request carries
+`?__berth_preview=1` (taken off before the dev server sees it, and off the
+address the page sees), and later page loads in the same frame are known as
+iframes of that host. A Browser tab, your own browser and the page's own
+iframes never get it. For a Preview frame the proxy also:
+
+- drops `X-Frame-Options` and a policy's `frame-ancestors`, so pages that
+  refuse to be framed show, and allows the script under a
+  `Content-Security-Policy`;
+- lends the frame the cookies the host set: browsers keep cookies from
+  frames of another site, so without this a page you are logged in to
+  would be logged out in its frames. Log in in a Browser tab, or in any
+  frame, and every frame is logged in.
+
+A frame whose page didn't get the script (a site not served through Shipyard's
+proxy, or a laptop agent from before Preview: restart it) still shows, with
+an amber dot: it doesn't sync or switch themes. A site that isn't a
+worktree's or a box port's, such as `https://example.com`, says it can't be
+framed and offers to open it in a Browser tab.

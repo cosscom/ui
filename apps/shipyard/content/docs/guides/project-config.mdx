@@ -1,0 +1,223 @@
+---
+title: Project config
+description: A repository's .berth/config.json says how every worktree is set up, run and torn down, on every box.
+---
+
+A repository's `.berth/config.json`, committed with the code, says how every
+worktree of that repository is set up and torn down, which ports,
+environment and services it gets, and which agents to offer. It travels with
+the repo, so every box does the same.
+
+```json title=".berth/config.json"
+{
+  "setup": "pnpm install && createdb $BERTH_WORKTREE_SLUG",
+  "archive": "dropdb --if-exists $BERTH_WORKTREE_SLUG",
+  "ports": 2,
+  "env": {
+    "DATABASE_URL": "postgres://localhost/$BERTH_WORKTREE_SLUG",
+    "NEXT_PUBLIC_WEBAPP_URL": "$BERTH_URL"
+  },
+  "services": [
+    { "name": "web", "run": "pnpm dev --port $BERTH_PORT", "autostart": true },
+    { "name": "worker", "run": "pnpm worker" }
+  ],
+  "agents": [
+    { "id": "claude", "name": "Claude Code (Opus)", "command": "claude --model opus" }
+  ],
+  "hooks": [
+    { "on": "worktree.created", "run": "cp ../shop/.env .env" }
+  ],
+  "flows": []
+}
+```
+
+Every field is optional; [the config reference](/docs/reference/config) lists
+them all with their rules.
+
+## Trusting a repository's config
+
+The file is code: its setup script, services, hooks, flows, `env` and agent
+commands all run on the box. So a box runs none of it until someone trusts
+it there. Until then the box applies only `ports`, and the app shows
+**This repository wants to run …** with every command the file holds, and
+**Trust and run it** / **Not now** — in Project settings, and when you create
+a worktree (**Trust and create** / **Create without it**). A worktree made
+without trust is a plain checkout.
+
+- Trust is per box and per project, and is for the file exactly as you saw
+  it: the box keeps the file's SHA-256 hash. When a commit changes the file,
+  none of it runs again until it is trusted again.
+- A file with nothing but `ports` needs no trust.
+- A [kit](/docs/guides/kits) you apply, and the box's own config below, are
+  yours, and apply without asking.
+- Only trust a repository if you trust everyone who can commit to it.
+
+From a terminal, `berth location config devl/shop` prints what the file
+wants and its hash; `--trust HASH` trusts that version, `--untrust` stops it.
+The box's API is `POST /v1/locations/{name}/config/trust` with
+`{"hash": "…"}` (refused with 409 if the file no longer has that hash) and
+`DELETE` on the same path. Both run `before:config.change` gates and announce
+`config.changed`.
+
+## Setup and teardown
+
+- `setup` runs right after a worktree is created, in it, through a login
+  shell (up to 30 minutes, with its output in a log on the box).
+- `check` is how to tell the work is right (`"pnpm test && pnpm lint"`):
+  Try N ways and loops verify with it unless you give another. Without one,
+  Shipyard suggests what the repository suggests: `package.json`'s `test`
+  script run by the package manager its lockfile names, `go test ./...`,
+  `cargo test`, or a Makefile's `test` target. It is only a default; nothing
+  runs it until you start a run with it.
+- `archive` runs before a worktree is removed, after its services stop; if it
+  fails, the worktree stays, and the app's Details shows what it printed last.
+  While it runs the app shows the worktree as "Archiving…"; once it is gone,
+  its sessions stop and its tabs close.
+- A worktree git left locked by an interrupted `git worktree add` ("locked
+  initializing") is unlocked and removed as usual. One a person locked with
+  `git worktree lock` is left alone, and the error says how to unlock it.
+- Both also get Orca's names (`ORCA_ROOT_PATH`, `ORCA_WORKTREE_PATH`,
+  `ORCA_WORKSPACE_NAME`), so setup scripts written for Orca work unchanged.
+
+## Ports and environment
+
+- **Ports.** Every worktree has its own block of ports, stable for its life
+  and freed when it is removed: `$BERTH_PORT`, then `$BERTH_PORT_1`… up to
+  `ports` of them (at most 10; at least one). Whatever listens on a port in
+  the block counts as the worktree's, containers included, and the
+  worktree's [private URL](/docs/concepts/projects-and-worktrees#private-urls),
+  `http://<worktree>.<location>.<box>.localhost:1377/`, reaches the lowest
+  one.
+- **Environment.** Everything run in a worktree (setup and archive scripts,
+  terminals and agents, `exec`, hooks, flows, services) gets these, then
+  `env` with them expanded:
+
+| Variable | Meaning |
+| --- | --- |
+| `BERTH_BOX` | The box's name for itself |
+| `BERTH_LOCATION` | The location, like `shop` |
+| `BERTH_ROOT_PATH` | The repository's main checkout |
+| `BERTH_WORKTREE_PATH`, `BERTH_WORKTREE_NAME` | This worktree |
+| `BERTH_WORKTREE_SLUG` | Like `shop_fix_checkout`, safe for database names |
+| `BERTH_BRANCH` | Its branch |
+| `BERTH_PORT`, `BERTH_PORT_1`, … | Its ports |
+| `BERTH_URL` | The worktree's private URL as you open it on your laptop, such as `http://fix-checkout.shop.devl.localhost:1377` (the main checkout: `shop.devl.localhost`). Use it for an app's own base URL, not `localhost:$BERTH_PORT`, which the laptop never sees |
+| `BERTH_BROWSER_PROXY` | The worktree's [browser proxy](/docs/guides/agent-browser#what-it-can-reach), for a browser an agent runs itself |
+| `BERTH_KIT_DIR` | Where the project's [kit](/docs/guides/kits) keeps its files, if it has one |
+
+A value in `env` can use `$NAME` for those variables or berthd's own
+environment, and can be a [secret reference](/docs/guides/secrets) instead of a
+value.
+
+## Services
+
+Services run in each worktree as managed processes that survive the daemon
+restarting and come back if they crash, with their output in a log.
+
+- `autostart` ones start when the worktree is created, after setup succeeds.
+- All of them stop before the archive script runs.
+- A service gets `PORT` (its worktree's `$BERTH_PORT`) unless `env` sets
+  it, as do the worktree's terminals and agents.
+- Start, stop and open them from the app's **Run** menu, or:
+
+```sh
+berth service list devl/shop/checkout
+berth service start devl/shop/checkout web
+berth service log devl/shop/checkout web
+```
+
+### Services in a terminal
+
+A dev server whose output you want to watch can run in a terminal instead,
+shown as a tab in its worktree:
+
+```json
+{ "name": "web", "run": "pnpm dev --port $BERTH_PORT", "autostart": true, "terminal": true, "title": "Next.js" }
+```
+
+- It gets the same environment, secrets, `PORT` and private URL, and starts,
+  stops and restarts from the same places, but runs in a tmux session of its
+  own (`svc-<project>-<worktree>-<name>`) rather than as a managed unit.
+- The tab opens when the worktree does, named `title` (or `name`). Closing
+  it only hides it: the service keeps running, and **Show terminal** in
+  "Running in …" or the **Run** menu brings it back.
+- Ctrl-C in the tab stops it, as Stop does. The tab stays with what it
+  printed, and Start runs it again there.
+- Its output is in `berth service log` too.
+- It is not restarted when it crashes or the box reboots; start it again
+  from the app. It ends when its worktree is removed.
+- It is never counted as an agent.
+
+The option works the same in `.berth/config.json`, a kit and a box's own
+config for the project.
+
+## Agents
+
+`agents` adds ways to start agents in this repository, or replaces a
+built-in one with the same `id` (`claude`, `codex`, `opencode`, `gemini`,
+`cursor`). A first prompt goes at the end of `command`, or after
+`prompt_flag` if the agent needs one.
+
+### Models and effort
+
+A task, a session or an attempt can pick its agent's `model` and `effort`
+(`berth task … --agent claude` through the API, or the app's agent picker).
+Shipyard passes them with each CLI's own flags, checked against its `--help`:
+
+| Agent | Model | Effort | Models offered |
+|---|---|---|---|
+| `claude` | `--model` | `--effort` (low, medium, high, xhigh, max) | `opus`, `sonnet`, `haiku` (Claude Code's aliases for the latest of each) |
+| `codex` | `--model` | `-c model_reasoning_effort=` (minimal, low, medium, high) | none: Codex's default |
+| `opencode`, `cursor` | `--model` | none | none |
+
+Unset means the CLI's default. A value must be a plain name (letters,
+digits, `.` `_` `:` `/` `-`); anything else is refused, so nothing reaches a
+shell as more than one word. To offer other models, list them for the
+built-in agent with only its `id`; its command and flags stay:
+
+```json
+{ "agents": [ { "id": "codex", "models": ["gpt-5-codex", "gpt-5"] } ] }
+```
+
+The box's own config for the repository (`berth location config`) can do the
+same, for models only that box has.
+
+## Hooks and flows
+
+- **Hooks** fire only for this repository's events, inside the worktree the
+  event is about, with its environment. `before:` gates here can refuse
+  actions in this repository. See [hooks](/docs/guides/hooks).
+- **Flows** are this repository's automations, on every box that has it.
+  See [automations](/docs/guides/automations).
+
+## This box only
+
+Some of it should not be committed: a database password, one box's paths.
+Each box keeps its own config for a location, laid over the file (and over
+the project's kit, if it has one):
+
+- `setup`, `archive`, `ports` and each `env` entry replace the file's;
+- `services`, `agents` and `flows` replace the file's by name or id, and add
+  new ones;
+- `hooks` add up.
+
+Edit it in the app's Project settings, or `PUT /v1/locations/{name}/config`
+on the box. `berth location config devl/shop` shows the effective config
+(and what an untrusted file would run); with `--json`, the repository's, the
+kit's and the box's layers too.
+
+```sh
+berth location scripts devl/shop --setup "make bootstrap"   # just the scripts
+berth location scripts devl/shop --clear
+```
+
+A box can also give every worktree on it some environment, in
+`~/.berth/env.json` (`{"env": {"KEY": "value"}}`), under the project's own.
+
+## Next
+
+- [Kits](/docs/guides/kits) carry this same config to a repository you can't
+  commit to, or to several at once.
+- [Secrets](/docs/guides/secrets) keep passwords out of `env`.
+- [Task templates](/docs/guides/task-templates) fill in the agent, branch and
+  prompt for kinds of task you start often.

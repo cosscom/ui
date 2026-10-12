@@ -1,5 +1,6 @@
 {
   "lockfileVersion": 1,
+  "configVersion": 0,
   "workspaces": {
     "": {
       "name": "cosscom",
@@ -97,6 +98,36 @@
         "shiki": "^3.15.0",
         "tailwindcss": "^4.1.17",
         "tw-animate-css": "^1.4.0",
+        "typescript": "^5.9.3",
+      },
+    },
+    "apps/shipyard": {
+      "name": "shipyard",
+      "version": "0.1.0",
+      "dependencies": {
+        "@coss/ui": "workspace:*",
+        "@hugeicons/core-free-icons": "^2.0.0",
+        "@hugeicons/react": "^1.1.1",
+        "clsx": "^2.1.1",
+        "fumadocs-core": "^16.0.14",
+        "fumadocs-mdx": "^14.0.3",
+        "lucide-react": "^0.555.0",
+        "next": "16.2.5",
+        "next-themes": "^0.4.4",
+        "react": "^19.2.6",
+        "react-dom": "^19.2.6",
+        "tailwind-merge": "^3.4.0",
+      },
+      "devDependencies": {
+        "@coss/typescript-config": "workspace:*",
+        "@tailwindcss/postcss": "^4.1.17",
+        "@types/mdx": "^2.0.13",
+        "@types/node": "^24.10.1",
+        "@types/react": "^19.2.6",
+        "@types/react-dom": "^19.2.3",
+        "rehype-pretty-code": "^0.14.1",
+        "shiki": "^3.15.0",
+        "tailwindcss": "^4.1.17",
         "typescript": "^5.9.3",
       },
     },
@@ -2022,6 +2053,8 @@
     "shebang-regex": ["shebang-regex@3.0.0", "", {}, "sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A=="],
 
     "shiki": ["shiki@3.15.0", "", { "dependencies": { "@shikijs/core": "3.15.0", "@shikijs/engine-javascript": "3.15.0", "@shikijs/engine-oniguruma": "3.15.0", "@shikijs/langs": "3.15.0", "@shikijs/themes": "3.15.0", "@shikijs/types": "3.15.0", "@shikijs/vscode-textmate": "^10.0.2", "@types/hast": "^3.0.4" } }, "sha512-kLdkY6iV3dYbtPwS9KXU7mjfmDm25f5m0IPNFnaXO7TBPcvbUOY72PYXSuSqDzwp+vlH/d7MXpHlKO/x+QoLXw=="],
+
+    "shipyard": ["shipyard@workspace:apps/shipyard"],
 
     "side-channel": ["side-channel@1.1.0", "", { "dependencies": { "es-errors": "1.3.0", "object-inspect": "1.13.4", "side-channel-list": "1.0.0", "side-channel-map": "1.0.1", "side-channel-weakmap": "1.0.2" } }, "sha512-ZX99e6tRweoUXqR+VBrslhda51Nh5MTQwou5tnUDgbtyM0dBgmhEDtWGP/xbKn6hqfPRHujUNwz5fy/wbbhnpw=="],
 

@@ -12,6 +12,10 @@ export const siteConfig = {
 			label: "ui",
 		},
 		{
+			href: "/shipyard",
+			label: "shipyard",
+		},
+		{
 			href: "/calendar",
 			label: "calendar",
 			upcoming: true,
