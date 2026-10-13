@@ -5,128 +5,125 @@ import {
   ArrowUpRightIcon,
   CheckIcon,
   CopyIcon,
-  MessageCircleIcon,
-  RadioIcon,
-  RotateCcwIcon,
 } from "lucide-react";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { ChatDemo } from "@/registry/default/chat-demo/chat-demo";
-import type { ChatScenario } from "@/registry/default/chat-demo/chat-demo-state";
 import { useCopyToClipboard } from "@/registry/default/hooks/use-copy-to-clipboard";
 import { Button } from "@/registry/default/ui/button";
 import { DrawerTrigger } from "@/registry/default/ui/drawer";
+import { ChatFeatures } from "./chat-features";
+import { ChatLayouts } from "./chat-layouts";
 import { ChatPreview } from "./chat-preview";
+import { ChatStatesSection } from "./chat-states-section";
 
-const groups = [
+const COMPONENT_MAP = [
+  { area: "Conversation", components: ["ChatConversation", "useChatScroll"] },
   {
-    title: "The conversation",
-    number: "01",
-    icon: MessageCircleIcon,
-    description: "From a quick hello to the finer details.",
-    cases: [
-      {
-        value: "conversation",
-        label: "The full experience",
-        detail: "Reply, react, mention",
-      },
-      {
-        value: "long-message",
-        label: "A little more to say",
-        detail: "Expandable messages",
-      },
-      { value: "pinned", label: "Keep it in view", detail: "Pinned messages" },
-      {
-        value: "unread",
-        label: "Pick up where you left off",
-        detail: "Unread messages",
-      },
+    area: "Messages",
+    components: ["ChatMessage", "ChatMessageText", "ChatCollapsibleMessage"],
+  },
+  {
+    area: "Composer",
+    components: ["ChatComposer", "ChatMentionSuggestions"],
+  },
+  {
+    area: "Actions",
+    components: [
+      "ChatMessageActionToolbar",
+      "ChatReactionPicker",
+      "ChatReactionChip",
     ],
   },
   {
-    title: "In the moment",
-    number: "02",
-    icon: RadioIcon,
-    description: "Small signals that keep everyone in sync.",
-    cases: [
-      {
-        value: "typing",
-        label: "A thought in progress",
-        detail: "Typing indicator",
-      },
-      {
-        value: "typing-multiple",
-        label: "Everyone’s chiming in",
-        detail: "Multiple people typing",
-      },
-      {
-        value: "receipts",
-        label: "Sent. Delivered. Seen.",
-        detail: "Receipts and retry",
-      },
-      {
-        value: "empty",
-        label: "Start something",
-        detail: "Join the conversation",
-      },
-    ],
+    area: "Replies",
+    components: ["ChatReplyReference", "ChatReplyPreview"],
   },
   {
-    title: "Life happens",
-    number: "03",
-    icon: RotateCcwIcon,
-    description: "A thoughtful response to the in-between.",
-    cases: [
-      { value: "loading", label: "On its way", detail: "Loading messages" },
-      {
-        value: "offline",
-        label: "Back in a moment",
-        detail: "Reconnect gracefully",
-      },
-      {
-        value: "error",
-        label: "Let’s try that again",
-        detail: "History error",
-      },
-      { value: "left", label: "The door is open", detail: "Leave and rejoin" },
-    ],
+    area: "Timeline",
+    components: ["ChatDatePill", "ChatUnreadDivider", "ChatTypingIndicator"],
   },
-] satisfies {
+  {
+    area: "Delivery",
+    components: ["ChatDeliveryIndicator", "ChatMessageInfo"],
+  },
+  {
+    area: "States",
+    components: ["ChatEmptyState", "ChatLoadingState", "ChatStatusBar"],
+  },
+];
+
+function InstallCommand({ command }: { command: string }) {
+  const { isCopied, copyToClipboard } = useCopyToClipboard();
+  return (
+    <Button
+      className="justify-between gap-3 font-normal text-muted-foreground"
+      variant="outline"
+      aria-label={isCopied ? "Install command copied" : "Copy install command"}
+      onClick={() => copyToClipboard(command)}
+    >
+      <code className="text-xs">
+        <span aria-hidden="true" className="me-2 opacity-50">
+          $
+        </span>
+        {command}
+      </code>
+      {isCopied ? (
+        <CheckIcon aria-hidden="true" />
+      ) : (
+        <CopyIcon aria-hidden="true" />
+      )}
+    </Button>
+  );
+}
+
+function SectionHeading({
+  id,
+  title,
+  description,
+}: {
+  id: string;
   title: string;
-  number: string;
-  icon: typeof MessageCircleIcon;
-  description: string;
-  cases: { value: ChatScenario; label: string; detail: string }[];
-}[];
+  description: ReactNode;
+}) {
+  return (
+    <div className="mb-10 max-w-xl">
+      <h2
+        id={id}
+        className="font-bold font-heading text-3xl tracking-tight md:text-4xl"
+      >
+        {title}
+      </h2>
+      <p className="mt-3 text-muted-foreground">{description}</p>
+    </div>
+  );
+}
 
 export function ChatShowcase() {
-  const { isCopied, copyToClipboard } = useCopyToClipboard();
   return (
     <ChatDemo
       renderTriggers={(select) => (
         <>
-          <section className="container grid items-center gap-12 py-14 md:grid-cols-[1fr_1fr] md:gap-14 md:py-22 lg:gap-24 lg:py-26">
+          <section className="container grid items-center gap-12 py-14 md:grid-cols-2 md:gap-14 md:py-20 lg:gap-24">
             <div className="flex min-w-0 flex-col items-start">
-              <div className="mb-7 flex items-center gap-2.5 text-muted-foreground text-xs">
-                <MessageCircleIcon aria-hidden="true" className="size-4" />
-                <span className="font-medium">Chat UI</span>
-                <span aria-hidden="true">/</span>
-                <span>Made for connection</span>
-              </div>
-              <h1 className="font-bold font-heading text-[clamp(2.75rem,5.4vw,4.5rem)] leading-[1.04] tracking-[-.035em]">
+              <p className="mb-6 font-medium text-muted-foreground text-sm">
+                Chat UI
+              </p>
+              <h1 className="font-bold font-heading text-5xl leading-none tracking-tight lg:text-6xl">
                 Make room
                 <br />
                 for conversation.
               </h1>
-              <p className="mt-6 max-w-98 text-pretty text-lg text-muted-foreground leading-relaxed">
-                Bring people together with beautifully crafted chat components.
-                Thoughtful details. A natural rhythm. Entirely yours.
+              <p className="mt-6 max-w-md text-pretty text-lg text-muted-foreground">
+                Chat components for React with replies, reactions, mentions, and
+                delivery states built in. Copy the source and make it yours.
               </p>
               <div className="mt-8 flex flex-wrap gap-2.5">
                 <DrawerTrigger
                   render={<Button size="lg" />}
                   onClick={() => select("conversation")}
                 >
-                  Try the chat
+                  Open the full demo
                   <ArrowUpRightIcon aria-hidden="true" />
                 </DrawerTrigger>
                 <Button
@@ -134,193 +131,104 @@ export function ChatShowcase() {
                   variant="outline"
                   render={<Link href="/docs/chat" />}
                 >
-                  Start building
+                  Read the docs
                 </Button>
               </div>
-              <Button
-                className="mt-5 gap-3 text-muted-foreground"
-                size="sm"
-                variant="ghost"
-                aria-label={
-                  isCopied ? "Install command copied" : "Copy install command"
-                }
-                onClick={() =>
-                  copyToClipboard("npx shadcn@latest add @coss/chat")
-                }
-              >
-                <span aria-hidden="true" className="opacity-50">
-                  $
-                </span>
-                <code className="text-xs">
-                  npx shadcn@latest add @coss/chat
-                </code>
-                {isCopied ? (
-                  <CheckIcon aria-hidden="true" />
-                ) : (
-                  <CopyIcon aria-hidden="true" />
-                )}
-              </Button>
+              <div className="mt-5">
+                <InstallCommand command="npx shadcn@latest add @coss/chat" />
+              </div>
               <p className="mt-8 text-muted-foreground text-xs">
-                Built with Base UI · Tailwind CSS · Motion
+                Built with Base UI, Tailwind CSS, and Motion
               </p>
             </div>
-            <div className="relative mx-auto w-full max-w-112">
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute -inset-3 rounded-[1.75rem] border border-foreground/8 border-dashed md:-inset-5 md:rounded-4xl"
-              />
+            <div className="mx-auto w-full max-w-md">
               <ChatPreview />
-              <p className="mt-4 text-center text-muted-foreground text-xs">
-                Try a message. See how it feels.
-              </p>
             </div>
           </section>
+
           <section
-            className="border-y bg-background/50"
-            aria-labelledby="chat-examples"
+            aria-labelledby="chat-features"
+            className="border-t bg-muted/24"
           >
-            <div className="container py-12 md:py-18">
-              <div className="mb-9 flex flex-wrap items-end justify-between gap-4">
-                <div>
-                  <p className="mb-3 text-muted-foreground text-xs">
-                    THE LITTLE THINGS, CONSIDERED
-                  </p>
-                  <h2
-                    id="chat-examples"
-                    className="font-bold font-heading text-3xl tracking-tight md:text-4xl"
-                  >
-                    There’s a state for that.
-                  </h2>
-                </div>
-                <p className="max-w-76 text-muted-foreground text-sm leading-relaxed">
-                  Open an example. Make it your own.
-                  <br />
-                  Every detail is yours to explore.
+            <div className="container py-14 md:py-20">
+              <SectionHeading
+                id="chat-features"
+                title="Every part of a conversation"
+                description="Each tile below is the real component. Click, hover, and type to try it."
+              />
+              <ChatFeatures />
+            </div>
+          </section>
+
+          <section aria-labelledby="chat-states" className="border-t">
+            <div className="container py-14 md:py-20">
+              <SectionHeading
+                id="chat-states"
+                title="Ready for when things go wrong"
+                description="Loading, empty, offline, errors, and lost access. Each state keeps the draft and offers a way forward."
+              />
+              <ChatStatesSection />
+            </div>
+          </section>
+
+          <section
+            aria-labelledby="chat-layouts"
+            className="border-t bg-muted/24"
+          >
+            <div className="container py-14 md:py-20">
+              <SectionHeading
+                id="chat-layouts"
+                title="Fits wherever you need it"
+                description="The same components work in a drawer, a side panel, or a full page."
+              />
+              <ChatLayouts onOpenDrawer={() => select("conversation")} />
+            </div>
+          </section>
+
+          <section aria-labelledby="chat-build" className="border-t">
+            <div className="container grid gap-12 py-14 md:grid-cols-[2fr_3fr] md:py-20">
+              <div className="flex flex-col items-start">
+                <h2
+                  id="chat-build"
+                  className="font-bold font-heading text-3xl tracking-tight md:text-4xl"
+                >
+                  Start building
+                </h2>
+                <p className="mt-3 text-muted-foreground">
+                  Install the components, or start from the complete drawer
+                  example with sample data. Your app supplies messages,
+                  persistence, and permissions.
                 </p>
+                <div className="mt-6 flex w-full max-w-sm flex-col gap-2">
+                  <InstallCommand command="npx shadcn@latest add @coss/chat" />
+                  <InstallCommand command="npx shadcn@latest add @coss/chat-demo" />
+                </div>
+                <Button
+                  className="mt-6"
+                  variant="outline"
+                  render={<Link href="/docs/chat" />}
+                >
+                  Read the docs
+                  <ArrowRightIcon aria-hidden="true" />
+                </Button>
               </div>
-              <div className="grid gap-4 lg:grid-cols-3">
-                {groups.map((group) => (
-                  <div
-                    key={group.number}
-                    className="rounded-xl border bg-popover p-2"
-                  >
-                    <div className="px-3 pt-3 pb-5">
-                      <div className="mb-5 flex items-center justify-between text-muted-foreground">
-                        <group.icon
-                          aria-hidden="true"
-                          className="size-5 stroke-[1.5]"
-                        />
-                        <span className="font-mono text-xs opacity-60">
-                          {group.number}
-                        </span>
-                      </div>
-                      <h3 className="font-medium text-base">{group.title}</h3>
-                      <p className="mt-1 text-muted-foreground text-xs">
-                        {group.description}
-                      </p>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      {group.cases.map((item) => (
-                        <DrawerTrigger
-                          key={item.value}
-                          onClick={() => select(item.value)}
-                          render={
-                            <Button
-                              variant="ghost"
-                              className="h-auto justify-between gap-3 px-3 py-3 text-start sm:h-auto"
-                            />
-                          }
+              <dl className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
+                {COMPONENT_MAP.map((item) => (
+                  <div key={item.area} className="border-t pt-4">
+                    <dt className="font-medium text-sm">{item.area}</dt>
+                    <dd className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
+                      {item.components.map((component) => (
+                        <code
+                          key={component}
+                          className="text-muted-foreground text-xs"
                         >
-                          <span className="flex min-w-0 flex-col gap-1">
-                            <span className="text-sm">{item.label}</span>
-                            <span className="font-normal text-muted-foreground text-xs">
-                              {item.detail}
-                            </span>
-                          </span>
-                          <ArrowUpRightIcon
-                            aria-hidden="true"
-                            className="size-4 opacity-40"
-                          />
-                        </DrawerTrigger>
+                          {component}
+                        </code>
                       ))}
-                    </div>
+                    </dd>
                   </div>
                 ))}
-              </div>
-              <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2">
-                <span className="text-muted-foreground text-xs">
-                  And when access changes
-                </span>
-                {(
-                  [
-                    { value: "removed", label: "Removed" },
-                    { value: "banned", label: "Banned" },
-                    { value: "access-lost", label: "Access lost" },
-                  ] as const
-                ).map((item) => (
-                  <DrawerTrigger
-                    key={item.value}
-                    render={<Button variant="ghost" size="sm" />}
-                    onClick={() => select(item.value)}
-                  >
-                    {item.label}
-                    <ArrowUpRightIcon aria-hidden="true" />
-                  </DrawerTrigger>
-                ))}
-              </div>
-            </div>
-          </section>
-          <section
-            className="container grid gap-10 py-14 md:grid-cols-[1fr_1.1fr] md:gap-20 md:py-22"
-            aria-labelledby="chat-build"
-          >
-            <div>
-              <p className="mb-4 text-muted-foreground text-xs">
-                YOUR PRODUCT. YOUR CONVERSATION.
-              </p>
-              <h2
-                id="chat-build"
-                className="max-w-100 font-bold font-heading text-3xl tracking-tight md:text-4xl"
-              >
-                The details are done.
-                <br />
-                The possibilities are open.
-              </h2>
-              <Button
-                className="mt-6"
-                variant="outline"
-                render={<Link href="/docs/chat" />}
-              >
-                Explore the components
-                <ArrowRightIcon aria-hidden="true" />
-              </Button>
-            </div>
-            <div className="grid gap-7 sm:grid-cols-2">
-              {[
-                {
-                  title: "Fits right in",
-                  text: "A drawer, a panel, or a whole page. Compose a chat that feels at home in your product.",
-                },
-                {
-                  title: "Feels alive",
-                  text: "Expressive reactions, soft message entrances, and replies that stay in context.",
-                },
-                {
-                  title: "Ready for real life",
-                  text: "Long messages, lost connections, small screens, and keyboards. The awkward bits, considered.",
-                },
-                {
-                  title: "Yours to own",
-                  text: "Copy the source. Connect your data. Keep the parts you love and change everything else.",
-                },
-              ].map((item) => (
-                <div key={item.title}>
-                  <h3 className="font-medium text-sm">{item.title}</h3>
-                  <p className="mt-2 text-muted-foreground text-sm leading-relaxed">
-                    {item.text}
-                  </p>
-                </div>
-              ))}
+              </dl>
             </div>
           </section>
         </>

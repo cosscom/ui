@@ -1,132 +1,359 @@
 "use client";
 
-import { CheckCheckIcon } from "lucide-react";
-import { useRef, useState } from "react";
+import { XIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { ChatComposer } from "@/registry/default/chat/chat-composer";
 import { ChatConversation } from "@/registry/default/chat/chat-conversation";
+import { ChatDeliveryIndicator } from "@/registry/default/chat/chat-delivery-indicator";
 import { ChatMessage } from "@/registry/default/chat/chat-message";
+import { ChatMessageActionToolbar } from "@/registry/default/chat/chat-message-actions";
+import { ChatMessageText } from "@/registry/default/chat/chat-message-text";
 import { ChatReactionChip } from "@/registry/default/chat/chat-reaction-chip";
+import { ChatReactionPicker } from "@/registry/default/chat/chat-reaction-picker";
+import { ChatReplyReference } from "@/registry/default/chat/chat-reply-reference";
+import { ChatTypingIndicator } from "@/registry/default/chat/chat-typing-indicator";
 import { useChatScroll } from "@/registry/default/chat/hooks/use-chat-scroll";
-import { Avatar, AvatarFallback } from "@/registry/default/ui/avatar";
-import { TooltipProvider } from "@/registry/default/ui/tooltip";
+import { ChatMemberAvatar } from "@/registry/default/chat-demo/chat-demo-message";
+import {
+  CHAT_EMOJI,
+  CHAT_MEMBERS,
+  type MemberId,
+} from "@/registry/default/chat-demo/chat-demo-state";
+import { Button } from "@/registry/default/ui/button";
 
-const initialMessages = [
+type Status = "sending" | "delivered" | "read";
+
+type PreviewMessage = {
+  id: number;
+  author: MemberId;
+  text: string;
+  replyTo?: number;
+  status?: Status;
+  reactions: { emoji: string; members: MemberId[] }[];
+};
+
+const STATUS_LABELS: Record<Status, string> = {
+  sending: "Sending",
+  delivered: "Delivered",
+  read: "Read",
+};
+
+const MENTION_HANDLES = Object.values(CHAT_MEMBERS).map(
+  (member) => member.handle,
+);
+
+const MENTION_OPTIONS = (["maya", "jordan", "alex"] as const).map((id) => ({
+  id,
+  name: CHAT_MEMBERS[id].name,
+  insertText: CHAT_MEMBERS[id].handle,
+  avatar: <ChatMemberAvatar member={id} className="size-4 text-[0.5rem]" />,
+}));
+
+const REPLIES = [
+  "Love that. Adding it to the release notes.",
+  "Good call, @Jordan will want to see this too.",
+  "Perfect. Let’s keep the momentum going.",
+];
+
+const INITIAL_MESSAGES: PreviewMessage[] = [
   {
     id: 1,
-    own: false,
-    text: "What if the little things felt a little more human?",
-    author: "Maya Chen",
-    initials: "MC",
+    author: "maya",
+    text: "Pushed the new onboarding flow. Would love eyes on it before Friday.",
+    reactions: [{ emoji: "🙏", members: ["jordan"] }],
   },
   {
     id: 2,
-    own: true,
-    text: "Like a conversation, not another comment box.",
-    author: "You",
-    initials: "SR",
+    author: "jordan",
+    replyTo: 1,
+    text: "Looks great, @Maya. The empty state is my favorite part.",
+    reactions: [{ emoji: "❤️", members: ["maya", "alex"] }],
   },
   {
     id: 3,
-    own: false,
-    text: "Exactly. I think we’re onto something ✨",
-    author: "Jordan Lee",
-    initials: "JL",
+    author: "you",
+    text: "Same here. Let’s ship it ✨",
+    status: "read",
+    reactions: [],
   },
 ];
 
+function getPreview(message: PreviewMessage | undefined) {
+  return message?.text ?? "Message unavailable";
+}
+
+function getReactorNames(members: readonly MemberId[]) {
+  return members.map((member) => CHAT_MEMBERS[member].name);
+}
+
 export function ChatPreview() {
   const [draft, setDraft] = useState("");
-  const [messages, setMessages] = useState(initialMessages);
-  const [reacted, setReacted] = useState(false);
-  const nextId = useRef(4);
-  const scroll = useChatScroll({ itemCount: messages.length });
+  const [messages, setMessages] = useState(INITIAL_MESSAGES);
+  const [replyTo, setReplyTo] = useState<number | null>(null);
+  const [typing, setTyping] = useState(false);
+  const [highlighted, setHighlighted] = useState<number | null>(null);
+  const nextId = useRef(INITIAL_MESSAGES.length + 1);
+  const replyIndex = useRef(0);
+  const timers = useRef<number[]>([]);
+  const scroll = useChatScroll({
+    itemCount: messages.length,
+    layoutKey: typing ? "typing" : "idle",
+  });
+
+  useEffect(() => {
+    const pending = timers.current;
+    return () => {
+      for (const timer of pending) window.clearTimeout(timer);
+    };
+  }, []);
+
+  const later = (callback: () => void, delay: number) => {
+    timers.current.push(window.setTimeout(callback, delay));
+  };
+
+  const setStatus = (id: number, status: Status) => {
+    setMessages((current) =>
+      current.map((message) =>
+        message.id === id ? { ...message, status } : message,
+      ),
+    );
+  };
+
+  const toggleReaction = (id: number, emoji: string) => {
+    setMessages((current) =>
+      current.map((message) => {
+        if (message.id !== id) return message;
+        const existing = message.reactions.find(
+          (reaction) => reaction.emoji === emoji,
+        );
+        if (!existing) {
+          return {
+            ...message,
+            reactions: [...message.reactions, { emoji, members: ["you"] }],
+          };
+        }
+        const members = existing.members.includes("you")
+          ? existing.members.filter((member) => member !== "you")
+          : [...existing.members, "you" as const];
+        return {
+          ...message,
+          reactions: message.reactions
+            .map((reaction) =>
+              reaction.emoji === emoji ? { ...reaction, members } : reaction,
+            )
+            .filter((reaction) => reaction.members.length > 0),
+        };
+      }),
+    );
+  };
+
+  const jumpTo = (id: number) => {
+    setHighlighted(id);
+    document
+      .getElementById(`chat-preview-${id}`)
+      ?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    later(() => setHighlighted(null), 600);
+  };
+
+  const send = (text: string) => {
+    const id = nextId.current++;
+    scroll.atBottomRef.current = true;
+    setMessages((current) => [
+      ...current,
+      {
+        id,
+        author: "you",
+        text,
+        replyTo: replyTo ?? undefined,
+        status: "sending",
+        reactions: [],
+      },
+    ]);
+    setDraft("");
+    setReplyTo(null);
+    later(() => setStatus(id, "delivered"), 700);
+    later(() => {
+      setStatus(id, "read");
+      setTyping(true);
+    }, 1400);
+    later(() => {
+      const reply = REPLIES[replyIndex.current++ % REPLIES.length] ?? "";
+      setTyping(false);
+      setMessages((current) => [
+        ...current,
+        {
+          id: nextId.current++,
+          author: "maya",
+          text: reply,
+          replyTo: id,
+          reactions: [],
+        },
+      ]);
+    }, 3200);
+  };
+
+  const replyMessage = messages.find((message) => message.id === replyTo);
 
   return (
-    <TooltipProvider>
-      <section
-        aria-label="Live chat preview"
-        className="flex h-148 min-w-0 flex-col overflow-hidden rounded-2xl border bg-popover shadow-xl/4 sm:h-134"
-      >
-        <div className="flex items-center justify-between px-5 py-4">
-          <div>
-            <h2 className="font-semibold text-sm">The studio</h2>
-            <p className="mt-1 text-muted-foreground text-xs">
-              Maya, Jordan, and you
-            </p>
-          </div>
-          <span className="rounded-full border px-2 py-1 text-[.625rem] text-muted-foreground">
-            Live preview
-          </span>
+    <section
+      aria-label="Live chat preview"
+      className="flex h-144 min-w-0 flex-col overflow-hidden rounded-2xl border bg-popover shadow-lg/5"
+    >
+      <div className="flex shrink-0 items-center justify-between gap-4 border-b px-5 py-3.5">
+        <div>
+          <h2 className="font-medium text-sm">Launch week</h2>
+          <p className="mt-0.5 text-muted-foreground text-xs">
+            Maya, Jordan, Alex, and you
+          </p>
         </div>
-        <ChatConversation
-          scroll={scroll}
-          label="Preview messages"
-          jumpLabel="Jump to latest"
-        >
-          <div className="flex flex-col gap-5 pt-3">
-            {messages.map((message) => (
+        <div className="flex -space-x-1.5">
+          {(["maya", "jordan", "alex"] as const).map((member) => (
+            <ChatMemberAvatar
+              key={member}
+              member={member}
+              className="size-6 ring-2 ring-popover"
+            />
+          ))}
+        </div>
+      </div>
+      <ChatConversation
+        scroll={scroll}
+        label="Preview messages"
+        jumpLabel="Jump to latest"
+      >
+        <div className="flex flex-col gap-4 pt-4">
+          {messages.map((message) => {
+            const own = message.author === "you";
+            const quoted = messages.find((item) => item.id === message.replyTo);
+            return (
               <ChatMessage
                 key={message.id}
-                side={message.own ? "outgoing" : "incoming"}
-                author={message.author}
-                avatar={
-                  <Avatar className="size-7 text-[.625rem]">
-                    <AvatarFallback>{message.initials}</AvatarFallback>
-                  </Avatar>
+                id={`chat-preview-${message.id}`}
+                side={own ? "outgoing" : "incoming"}
+                author={CHAT_MEMBERS[message.author].name}
+                avatar={<ChatMemberAvatar member={message.author} />}
+                animateEntrance={message.id > INITIAL_MESSAGES.length}
+                highlighted={highlighted === message.id}
+                actions={
+                  <ChatMessageActionToolbar
+                    side={own ? "outgoing" : "incoming"}
+                    toolbarLabel="Message actions"
+                    reactionPicker={(toolbarRef) => (
+                      <ChatReactionPicker
+                        inToolbar
+                        options={CHAT_EMOJI}
+                        selectedEmojis={message.reactions
+                          .filter((reaction) =>
+                            reaction.members.includes("you"),
+                          )
+                          .map((reaction) => reaction.emoji)}
+                        triggerLabel="Add reaction"
+                        triggerTooltip="React"
+                        popupLabel="Reactions"
+                        popupAnchor={toolbarRef}
+                        onSelect={(emoji) => toggleReaction(message.id, emoji)}
+                      />
+                    )}
+                    onReply={() => setReplyTo(message.id)}
+                    replyLabel="Reply"
+                    replyTooltip="Reply"
+                  />
                 }
-                animateEntrance={message.id > 3}
                 reactions={
-                  message.id === 3 ? (
-                    <ChatReactionChip
-                      emoji="❤️"
-                      count={reacted ? 3 : 2}
-                      selected={reacted}
-                      label="React with heart"
-                      reactorLabel="People who reacted with heart"
-                      onClick={() => setReacted((value) => !value)}
-                      reactorContent={
-                        <div className="space-y-2 p-1 text-xs">
-                          <p>Maya Chen</p>
-                          <p>Alex Morgan</p>
-                          {reacted && <p>You</p>}
-                        </div>
-                      }
-                    />
-                  ) : undefined
+                  message.reactions.length > 0
+                    ? message.reactions.map((reaction) => {
+                        const selected = reaction.members.includes("you");
+                        return (
+                          <ChatReactionChip
+                            key={reaction.emoji}
+                            animateEntrance
+                            emoji={reaction.emoji}
+                            count={reaction.members.length}
+                            selected={selected}
+                            label={`${selected ? "Remove" : "Add"} ${reaction.emoji} reaction`}
+                            reactorLabel={`People who reacted with ${reaction.emoji}`}
+                            onClick={() =>
+                              toggleReaction(message.id, reaction.emoji)
+                            }
+                            reactorContent={
+                              <ul className="space-y-1 p-1 text-xs">
+                                {getReactorNames(reaction.members).map(
+                                  (name) => (
+                                    <li key={name}>{name}</li>
+                                  ),
+                                )}
+                              </ul>
+                            }
+                          />
+                        );
+                      })
+                    : undefined
                 }
                 footer={
-                  <span className="inline-flex items-center gap-1 text-[.625rem] text-muted-foreground">
-                    10:42{" "}
-                    {message.own && (
-                      <CheckCheckIcon aria-hidden="true" className="size-3" />
+                  <span className="inline-flex items-center gap-1">
+                    10:42
+                    {message.status && (
+                      <ChatDeliveryIndicator
+                        status={message.status}
+                        label={STATUS_LABELS[message.status]}
+                      />
                     )}
                   </span>
                 }
               >
-                {message.text}
+                {message.replyTo && (
+                  <ChatReplyReference
+                    author={
+                      quoted
+                        ? CHAT_MEMBERS[quoted.author].name
+                        : "Original message"
+                    }
+                    preview={getPreview(quoted)}
+                    disabled={!quoted}
+                    onClick={() => message.replyTo && jumpTo(message.replyTo)}
+                  />
+                )}
+                <ChatMessageText
+                  text={message.text}
+                  mentions={MENTION_HANDLES}
+                />
               </ChatMessage>
-            ))}
+            );
+          })}
+          <ChatTypingIndicator visible={typing} label="Maya is typing" />
+        </div>
+      </ChatConversation>
+      <div className="shrink-0 px-4 pt-2 pb-4">
+        {replyMessage && (
+          <div className="mb-2 flex items-center justify-between gap-3 rounded-lg bg-muted/72 py-1.5 ps-3 pe-1.5 text-xs">
+            <span className="min-w-0 truncate">
+              Replying to{" "}
+              <span className="font-medium">
+                {CHAT_MEMBERS[replyMessage.author].name}
+              </span>
+            </span>
+            <Button
+              aria-label="Cancel reply"
+              size="icon-xs"
+              variant="ghost"
+              onClick={() => setReplyTo(null)}
+            >
+              <XIcon aria-hidden="true" />
+            </Button>
           </div>
-        </ChatConversation>
+        )}
         <ChatComposer
           compact
-          className="px-4 pt-2 pb-4"
           draft={draft}
           onDraftChange={setDraft}
-          onSend={(text) => {
-            const id = nextId.current++;
-            scroll.atBottomRef.current = true;
-            setMessages((current) => [
-              ...current,
-              { id, own: true, text, author: "You", initials: "SR" },
-            ]);
-            setDraft("");
-          }}
+          onSend={send}
+          mentions={{ label: "Mention suggestions", options: MENTION_OPTIONS }}
           textareaLabel="Preview message"
           sendLabel="Send message"
-          placeholder="Say something nice…"
+          placeholder="Try a message, or type @ to mention…"
+          hint="Hover a message to react or reply"
         />
-      </section>
-    </TooltipProvider>
+      </div>
+    </section>
   );
 }
