@@ -1,0 +1,27 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "p-composer-4",
+  "description": "Composer surface with a native textarea",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "@coss/button",
+    "@coss/composer"
+  ],
+  "files": [
+    {
+      "path": "registry/default/particles/p-composer-4.tsx",
+      "content": "\"use client\";\n\nimport { ArrowUpIcon, PaperclipIcon } from \"lucide-react\";\nimport { useState } from \"react\";\nimport { Button } from \"@/registry/default/ui/button\";\nimport {\n  Composer,\n  ComposerActionGroup,\n  ComposerActions,\n  ComposerInput,\n  ComposerSubmit,\n  type ComposerValue,\n  getComposerText,\n} from \"@/registry/default/ui/composer\";\n\nexport default function Particle() {\n  const [value, setValue] = useState<ComposerValue>([]);\n  const [notice, setNotice] = useState(\"\");\n\n  return (\n    <div className=\"flex w-full max-w-xl flex-col gap-3\">\n      <Composer\n        value={value}\n        onValueChange={setValue}\n        onSubmit={(draft) => {\n          setNotice(`Sent: ${getComposerText(draft)}`);\n          setValue([]);\n        }}\n      >\n        <ComposerInput\n          render={\n            <textarea\n              aria-label=\"Plain message\"\n              placeholder=\"Write a message…\"\n            />\n          }\n        />\n        <ComposerActions>\n          <ComposerActionGroup>\n            <Button\n              aria-label=\"Attach a file\"\n              size=\"icon\"\n              type=\"button\"\n              variant=\"ghost\"\n              onClick={() => setNotice(\"Attach a file\")}\n            >\n              <PaperclipIcon aria-hidden=\"true\" />\n            </Button>\n          </ComposerActionGroup>\n          <ComposerActionGroup align=\"end\">\n            <ComposerSubmit\n              render={\n                <Button aria-label=\"Send message\" size=\"icon\">\n                  <ArrowUpIcon aria-hidden=\"true\" />\n                </Button>\n              }\n            />\n          </ComposerActionGroup>\n        </ComposerActions>\n      </Composer>\n      <p className=\"min-h-5 text-muted-foreground text-sm\" role=\"status\">\n        {notice}\n      </p>\n    </div>\n  );\n}\n",
+      "type": "registry:block"
+    }
+  ],
+  "meta": {
+    "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"
+  },
+  "categories": [
+    "composer",
+    "textarea"
+  ],
+  "type": "registry:block"
+}

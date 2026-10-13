@@ -1,0 +1,198 @@
+---
+title: Releasing
+description: How a Shipyard release is cut, built, signed and published, from a tag or from a Mac.
+---
+
+For maintainers. A release is a GitHub release on
+[cosscom/shipyard](https://github.com/cosscom/shipyard/releases), cut by
+pushing a `v*` tag. CI builds everything from the tag; a Mac with the signing
+credentials can publish the app itself instead with `make publish`.
+
+## What a release carries
+
+No asset name carries a version, so
+`https://github.com/cosscom/shipyard/releases/latest/download/<name>`
+always finds the newest. The version is stamped into each binary instead
+(`berthd version`, `berth version`).
+
+| Asset | Made by | Used by |
+| --- | --- | --- |
+| `berthd-<os>-<arch>.tar.gz` | `make release` | The [install command](/docs/getting-started/add-a-box#with-the-install-command) on a box |
+| `berth-<os>-<arch>.tar.gz` | `make release` | [The CLI without the app](/docs/getting-started/install#the-cli-without-the-app): `berth` and the Linux daemons |
+| `checksums.txt` | `make release` | The install command checks its download against it |
+| `Berth-macos-universal.dmg` | `scripts/mac-release.sh` | [The download](/docs/getting-started/install#install-the-app) |
+| `Berth-macos-universal.app.tar.gz`, `.sig` | `scripts/mac-release.sh` | The app's updater: the new app and its signature |
+| `Berth-linux-x86_64-alpha.AppImage`, `.sig` | `scripts/linux-release.sh` | [Linux (alpha)](/docs/getting-started/install#linux-alpha): the download, and the updater's signature for it |
+| `Berth-linux-x86_64-alpha.deb` | `scripts/linux-release.sh` | Linux (alpha) on Debian and Ubuntu |
+| `latest.json` | `scripts/mac-release.sh`, then `scripts/merge-feed.py` | The feed installed apps check for [updates](/docs/getting-started/install#updates): `darwin-*` from the Mac job, `linux-x86_64*` merged in by the feed job |
+
+`<os>-<arch>` is `linux-amd64`, `linux-arm64`, `darwin-arm64` or
+`darwin-amd64`. The landing page's `https://berthd.app/install` is
+[`site/install.sh`](https://github.com/cosscom/shipyard/blob/main/site/install.sh),
+which downloads from the latest release.
+
+## Full release checks
+
+The bugs new users hit showed only on a fresh install of the release: the
+release CSP blocking the built-in plugins, launchd's PATH without Homebrew's
+tmux, no `PORT` for worktree servers, App Transport Security blocking the
+Browser tab, tmux 3.7 without a locale. A set of tests goes through Shipyard the
+way a new user meets it. They aren't part of releasing: run them by hand
+now and then, for instance before a release that changes installing,
+onboarding or upgrading:
+
+```sh
+make release-check      # builds HEAD, as committed, in a clean checkout, then tests it
+make release-check REF=1a2b3c4        # another commit; DIRTY=1 tests uncommitted changes instead
+make release-check UNIVERSAL=1        # both architectures, as the release workflow builds it
+make release-check DMG=path FROM=v0.3.0   # a dmg already built from HEAD; upgrade from another release
+```
+
+Uncommitted changes in your checkout are never tested by accident: the
+build happens in `dist/release-test/check-<time>/src`, a checkout of the
+commit alone, and every report starts with the commit it tested. Every
+test checks the dmg first: it must carry `berthd`, as a release
+does, and its `berth-cli` must say it was built from the commit under test (Go
+records the commit in the binary). A dmg left in `target/` from an older build is
+refused by name, rather than tested as if it were this one.
+
+[`scripts/release-check.sh`](https://github.com/cosscom/shipyard/blob/main/scripts/release-check.sh)
+runs three tests, each in its own home, ports and launchd labels, removed
+afterwards, so they never touch the Shipyard you use (ports 1377-1379,
+`~/.berth`, `~/Library/Application Support/berth`, `dev.berth.berthd`):
+
+| Test | What it does |
+| --- | --- |
+| [`scripts/fresh-user-test.sh`](https://github.com/cosscom/shipyard/blob/main/scripts/fresh-user-test.sh) (macOS) | Installs the app from the dmg (`--dmg`, or `--tag vX.Y.Z` to download one) and goes through a new user's first run: the agent started from the app, onboarding with this Mac (a real launchd box), the sample's first task sent to a stand-in for Claude Code (no tokens), the worktree, its dev server on `$BERTH_PORT`, the worktree URL with curl and in the Browser tab's native webview, the chat's turn, the terminal (ghostty, not the fallback), the built-in plugins loaded, the Diff panel, and archiving the worktree. A screenshot per step. |
+| [`scripts/linux-box-test.sh`](https://github.com/cosscom/shipyard/blob/main/scripts/linux-box-test.sh) (Docker) | A fresh Ubuntu 24.04 box with systemd: `install.sh` with this build's archives, `berth` pairing from a fresh laptop home, a task with the stand-in, the worktree URL through the proxy, and the agent browser blocked by Chromium's sandbox: berthd must say so with the fixes, not crash. |
+| [`scripts/upgrade-test.sh`](https://github.com/cosscom/shipyard/blob/main/scripts/upgrade-test.sh) | The last release (`--from`) set up and used (a running task, preferences, plugins on and off, a layout with tab groups, a kit), then upgraded to this build, on a Linux box in Docker and on this Mac's own box. The session must keep running and answer again; preferences, layout and kit must survive. |
+
+Reports and screenshots go to `dist/release-test/`. The app is driven
+through the macOS accessibility API, so the terminal running the tests needs
+**Accessibility** and **Screen Recording** (System Settings → Privacy &
+Security), and the app's window comes to the front for the minute it takes.
+The tests run on a copy of the app with its own bundle identifier and its
+agent's port moved, signed again ad hoc for that: the frontend, its CSP, App
+Transport Security and the bundled `berth` and `berthd` are the release's.
+
+CI runs the Linux tests weekly, or on demand from the **release tests**
+workflow (`.github/workflows/release-test.yml`); the macOS ones need a Mac.
+
+## Cut a release with a tag
+
+1. On `main`, with CI green, set the version in `app/package.json`,
+   `app/src-tauri/tauri.conf.json` and `app/src-tauri/Cargo.toml` (and
+   `Cargo.lock`), and commit it (`chore: v0.1.2`). The app is built with the
+   tag's version either way; this keeps the repository saying the same.
+2. Tag and push:
+
+   ```sh
+   git tag v0.1.2
+   git push origin main v0.1.2
+   ```
+
+The tag starts [`.github/workflows/release.yml`](https://github.com/cosscom/shipyard/blob/main/.github/workflows/release.yml):
+
+- **release** (Linux): `go vet`, `go test -race`, shellcheck on the
+  release scripts and `site/install.sh`, then `make release
+  VERSION=<tag>`, which builds the CLI and daemon archives and
+  `checksums.txt` into `dist/`. It checks the stamped version, then creates
+  the GitHub release with generated notes (or adds to it, if it exists).
+- **macos**, after it: builds the app as one universal binary, signs it
+  with the Developer ID, notarizes and staples it, checks it
+  ([below](#what-scriptsmac-releasesh-checks)), and uploads the dmg, the
+  updater archive and its signature, and `latest.json` last, so the feed
+  never points at an archive that isn't there yet. It skips the build when
+  the release's `latest.json` already announces this version, so re-running
+  it is safe.
+- **linux**, beside macos: builds the Linux app (an alpha) for x86-64 on a
+  hosted Ubuntu 22.04 runner with `scripts/linux-release.sh`, which checks
+  that both bundles carry the app, `berth-cli`, `berthd`, the Linux daemons
+  and tmux, built for x86-64 and stamped with the tag, that the .deb opens
+  `berth://` links, and that the AppImage's updater signature verifies
+  against the app's public key. It uploads the AppImage, its `.sig` and the
+  .deb, and keeps its `latest.json` entries (`latest-linux.json`) as a
+  workflow artifact.
+- **feed**, after both: merges the Linux entries into the Mac's
+  `latest.json` (`scripts/merge-feed.py`, which refuses another version, a
+  Mac platform, or an asset the release doesn't have), uploads it, and then
+  makes the release "latest". The Mac and Linux jobs may finish in either
+  order. If the Linux build fails, the feed stays the Mac's and the release
+  still goes out. `scripts/release-test/feed-merge-test.sh` (run in CI)
+  tests the merge.
+
+Once `latest.json` is up, installed apps offer the update within a few hours
+(they check every four), or at once from **Settings → About → Check now**.
+
+### Secrets CI needs
+
+| Secret | What it is |
+| --- | --- |
+| `APPLE_CERTIFICATE`, `APPLE_CERTIFICATE_PASSWORD` | The Developer ID Application certificate with its private key, as a base64 `.p12`, and its password |
+| `KEYCHAIN_PASSWORD` | Any password, for the temporary keychain the job makes |
+| `APPLE_API_ISSUER`, `APPLE_API_KEY`, `APPLE_API_KEY_P8` | An App Store Connect API key (issuer, key ID, and the `.p8`), for notarization |
+| `TAURI_SIGNING_PRIVATE_KEY` | The updater's signing key. Its public half is `plugins.updater.pubkey` in `tauri.conf.json`; installed apps refuse an update signed with any other key |
+
+## Publish from a Mac
+
+```sh
+make publish VERSION=0.1.2 [NOTES="What changed"]
+```
+
+[`scripts/publish.sh`](https://github.com/cosscom/shipyard/blob/main/scripts/publish.sh)
+does the whole release from a clean `main`:
+
+1. sets the version in the app's `package.json`, `tauri.conf.json` and
+   `Cargo.toml`;
+2. builds, signs, notarizes and checks the app with `scripts/mac-release.sh`;
+3. commits `chore: release v0.1.2`, tags it, and pushes `main` and the tag;
+4. creates the GitHub release with the dmg and the updater archive, and
+   uploads `latest.json` last.
+
+The tag push still runs the workflow: its release job adds the CLI and
+daemon archives, its macos job finds `latest.json` already announcing
+the version and builds nothing, and its linux and feed jobs add the Linux
+app to the release and to `latest.json`.
+
+Credentials come from the environment (`APPLE_SIGNING_IDENTITY`,
+`APPLE_API_ISSUER`, `APPLE_API_KEY`, `APPLE_API_KEY_PATH`,
+`TAURI_SIGNING_PRIVATE_KEY`), else from 1Password with the `op` CLI. With
+one Developer ID Application identity in the keychain, it is found without
+`APPLE_SIGNING_IDENTITY`. It refuses to run with uncommitted changes, off
+`main`, or for a version already tagged or released.
+
+## What scripts/mac-release.sh checks
+
+```sh
+scripts/mac-release.sh v0.1.2 [--no-notarize]
+```
+
+CI and `make publish` both run it, so a release built on a Mac and one built
+in CI are the same. It needs Rust's `aarch64-apple-darwin` and
+`x86_64-apple-darwin` targets, and `minisign` to check the updater
+signature (CI always does). It fails unless every copy of the app (the
+built one, the one in the dmg, and the one in the updater archive):
+
+- verifies with `codesign --verify --deep --strict`, signed with a Developer
+  ID, a team identifier and the hardened runtime;
+- is accepted by Gatekeeper (`spctl`) as **Notarized Developer ID**, with a
+  stapled ticket;
+- has both architectures in its executables, and carries the Linux daemons;
+- says it is the version being released.
+
+It also signs, notarizes and staples the dmg, checks the dmg has an
+**Applications** link to drag to, checks the updater archive's signature
+against the public key in `tauri.conf.json`, and writes `latest.json`.
+
+`--no-notarize` skips Apple, for trying a signed build locally. Its output
+must not be published.
+
+## After a release
+
+- The docs at [coss.com/shipyard/docs](https://coss.com/shipyard/docs) deploy from `main`
+  on their own; add the release to the [changelog](/docs/changelog).
+- Boxes pick up the new berthd with `berth upgrade BOX`, or by running the
+  install command again.
+- Without the signing credentials, `make app-build` still builds an
+  unsigned `Shipyard.app` and dmg for trying locally; see
+  [build from source](/docs/getting-started/install#build-from-source).

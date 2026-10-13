@@ -22,6 +22,7 @@ export const registryCategories = [
   "checkbox group",
   "collapsible",
   "combobox",
+  "composer",
   "command",
   "context menu",
   "date picker",

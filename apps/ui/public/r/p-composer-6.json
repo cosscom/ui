@@ -1,0 +1,27 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "p-composer-6",
+  "description": "Composer with distinct person, team, and action chips",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "@coss/button",
+    "@coss/composer"
+  ],
+  "files": [
+    {
+      "path": "registry/default/particles/p-composer-6.tsx",
+      "content": "\"use client\";\n\nimport {\n  ArrowUpIcon,\n  SparklesIcon,\n  UserRoundIcon,\n  UsersRoundIcon,\n} from \"lucide-react\";\nimport { useState } from \"react\";\nimport { Button } from \"@/registry/default/ui/button\";\nimport {\n  Composer,\n  ComposerActionGroup,\n  ComposerActions,\n  ComposerInput,\n  ComposerItem,\n  type ComposerItemValue,\n  ComposerList,\n  ComposerPopup,\n  ComposerSubmit,\n  ComposerToken,\n  type ComposerTrigger,\n  type ComposerValue,\n  getComposerText,\n} from \"@/registry/default/ui/composer\";\n\nconst people = [\n  { id: \"alex\", label: \"Alex Morgan\", kind: \"person\" },\n  { id: \"sam\", label: \"Sam Rivera\", kind: \"person\" },\n];\n\nconst teams = [\n  { id: \"design\", label: \"Design team\", kind: \"team\" },\n  { id: \"engineering\", label: \"Engineering team\", kind: \"team\" },\n];\n\nconst actions = [\n  { id: \"summarize\", label: \"Summarize\", type: \"action\" as const },\n  { id: \"rewrite\", label: \"Rewrite\", type: \"action\" as const },\n];\n\nconst triggers: ComposerTrigger[] = [\n  { character: \"@\", items: [...people, ...teams] },\n  { character: \"/\", items: actions },\n];\n\nexport default function Particle() {\n  const [value, setValue] = useState<ComposerValue>([]);\n  const [notice, setNotice] = useState(\"\");\n\n  return (\n    <div className=\"flex w-full max-w-xl flex-col gap-3\">\n      <Composer\n        value={value}\n        onValueChange={setValue}\n        triggers={triggers}\n        onSubmit={(draft) => {\n          setNotice(`Sent: ${getComposerText(draft)}`);\n          setValue([]);\n        }}\n      >\n        <ComposerInput\n          aria-label=\"Message\"\n          placeholder=\"Write a message…\"\n          renderToken={(token) => (\n            <ComposerToken\n              token={token}\n              variant=\"chip\"\n              icon={\n                token.type === \"action\" ? (\n                  <SparklesIcon aria-hidden=\"true\" />\n                ) : token.kind === \"team\" ? (\n                  <UsersRoundIcon aria-hidden=\"true\" />\n                ) : (\n                  <UserRoundIcon aria-hidden=\"true\" />\n                )\n              }\n            />\n          )}\n        />\n        <ComposerPopup>\n          <ComposerList>\n            {(item: ComposerItemValue) => (\n              <ComposerItem key={item.id} value={item}>\n                {item.type === \"action\" ? (\n                  <SparklesIcon\n                    aria-hidden=\"true\"\n                    className=\"size-4 opacity-80\"\n                  />\n                ) : item.kind === \"team\" ? (\n                  <UsersRoundIcon\n                    aria-hidden=\"true\"\n                    className=\"size-4 opacity-80\"\n                  />\n                ) : (\n                  <UserRoundIcon\n                    aria-hidden=\"true\"\n                    className=\"size-4 opacity-80\"\n                  />\n                )}\n                <span className=\"truncate\">{item.label}</span>\n              </ComposerItem>\n            )}\n          </ComposerList>\n        </ComposerPopup>\n        <ComposerActions>\n          <ComposerActionGroup align=\"end\">\n            <ComposerSubmit\n              render={\n                <Button aria-label=\"Send message\" size=\"icon\">\n                  <ArrowUpIcon aria-hidden=\"true\" />\n                </Button>\n              }\n            />\n          </ComposerActionGroup>\n        </ComposerActions>\n      </Composer>\n      <p className=\"min-h-5 text-muted-foreground text-sm\" role=\"status\">\n        {notice}\n      </p>\n    </div>\n  );\n}\n",
+      "type": "registry:block"
+    }
+  ],
+  "meta": {
+    "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"
+  },
+  "categories": [
+    "composer",
+    "text editor"
+  ],
+  "type": "registry:block"
+}

@@ -1,7 +1,7 @@
 export const siteConfig = {
 	description: "coss.com - the everything but AI company.",
 	links: {
-		github: "https://github.com/cosscom/coss",
+		github: "https://github.com/cosscom/ui",
 		twitter: "https://x.com/coss_com",
 	},
 	name: "coss.com",
@@ -10,6 +10,10 @@ export const siteConfig = {
 		{
 			href: "/",
 			label: "ui",
+		},
+		{
+			href: "/shipyard",
+			label: "shipyard",
 		},
 		{
 			href: "/calendar",

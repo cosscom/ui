@@ -1,0 +1,84 @@
+---
+title: Home
+description: The composer to start work, and a grid of widgets you arrange yourself, for what needs you and how it's going.
+---
+
+Home is where Shipyard opens when no worktree is in front: **Home** in the
+sidebar, or closing the last tab. At the top is the composer (what should
+your agents work on, on which project and box); with
+[Labs](/docs/guides/labs) on, the harbour sits above it. Below is a grid of
+widgets, which you choose, move and size yourself.
+
+## Widgets
+
+| Widget | What it shows | Where it comes from |
+| --- | --- | --- |
+| **Needs you** | Agents waiting on a permission or an answer, oldest first. A permission (a command to run, a file to edit) has **Deny** and **Allow once** right there; a question opens the agent to answer it. | Sessions, and a waiting agent's screen for its options |
+| **Working now** | Each working agent and the step it is on (`Running pnpm test…`), with its clock | Sessions; each working agent's screen every 12s while on screen |
+| **Recently finished** | Turns that just ended, with the lines they changed | Sessions, and Review's diff of each worktree |
+| **Recent areas** | The worktrees you and your agents worked in lately, with who is in each | Worktrees you opened on this Mac, and sessions |
+| **Harbour** | A boat for each working agent out on the water; agents that need you wait by the lighthouse, whose lamp lights | Sessions |
+| **Pull requests** | Pull requests waiting on your review, then yours with their checks and review state | One GitHub search with `gh` on a box (the Pull request plugin) |
+| **CI failures** | Workflow runs whose latest result failed on your worktrees' branches, a click from their logs | `gh run list` in each GitHub project (the Pull request plugin) |
+| **Git activity** | Commits and lines changed a day, the last two weeks, across your projects | `git log` on each project's main checkout, every 15 minutes |
+| **Agent usage** | Tokens today and this week, Claude Code's own cost estimate, and how much of a plan's window Codex last saw used | The [Usage & accounts](/docs/guides/plugins) plugin, which is off until you turn it on |
+| **Boxes** | Each box's CPU, memory and disk, the agents at work on it, and boxes that are offline | Stats the app already reads |
+| **Running services** | Dev servers listening in your worktrees; click one for a browser tab beside its agent | Services the app already lists |
+| **Notes** | A note or checklist that stays on Home (lines written `- [ ]` tick with a click) | Kept on this Mac (the Notes plugin) |
+
+Plugins can add their own; they appear in the picker under the plugin's
+name. See [Home widgets](/docs/reference/plugin-sdk#home-widgets) in the plugin
+SDK.
+
+A widget reads nothing while you can't see it: scrolled away, behind a
+worktree, or with the window hidden. Each shows its last read at once and
+refreshes in the background; **Refresh now** in its menu (`…` on its
+heading) reads again straight away.
+
+## Customize
+
+**Customize**, above the grid, turns each widget's heading into a handle:
+
+- **Move** a widget by dragging its heading over another; the rest make room.
+- **Resize** it with the size chips on its heading (S 1×1, M 2×1, T 1×2,
+  L 2×2, W 4×1, as the widget allows), or by dragging its corner.
+- **Remove** it with **×**. Its plugin's widgets stay in the picker.
+- **Add widget** opens the picker: every widget, with the one you pick
+  drawn live at the size you choose, and where its data comes from.
+  Plugins that are off but add widgets are listed under **More with
+  plugins that are off**, to turn on there.
+- **Reset** goes back to the default widgets. **Done**, or Escape, leaves.
+
+Each widget's `…` menu also changes its size or removes it without
+Customize.
+
+With the keyboard, Tab to a widget's handle in Customize, then:
+
+| Key | Does |
+| --- | --- |
+| ← → ↑ ↓ | Move it before or after its neighbour, or into the place of the widget above or below |
+| `[` `]` (or `-` `+`) | One size smaller or bigger |
+| Delete | Remove it |
+| Escape | Leave Customize |
+
+Screen readers hear each widget's place ("Needs you, 3 of 10") and size as
+it changes.
+
+The grid has four columns, two in a narrower window and one in a narrow
+one; a widget is never wider than the grid, and one that is wide in four
+columns spans the row in two.
+
+## Your layout
+
+Your widgets, their order and sizes are kept in Shipyard's preferences on this
+Mac (`berth.prefs`, under `home`, versioned so a later Shipyard can move it
+on). Until you change anything you get the default layout, which may
+improve in a later version. A widget from a plugin that is off keeps its
+place and comes back when the plugin does; in Customize it shows as off,
+to remove.
+
+## A new Home
+
+With a box paired but nothing on it yet, each widget says what fills it
+and how: **Add a project** where projects are needed, the composer for a
+first agent, **Add a box** for another computer.

@@ -263,6 +263,53 @@ Primitive content wrapper used for polymorphic composition with the `render` pro
 
 <ComponentPreview name="p-drawer-6" />
 
+### Software keyboard
+
+Bottom drawers automatically handle software-keyboard focus and spacing for inputs, textareas, and contenteditable fields. No additional prop is needed. Drawers without a focused input keep their normal layout. With snap points, the drawer moves up as needed while the keyboard is open and returns to the selected snap point when it closes.
+
+Put scrolling fields in `DrawerPanel`. For a persistent input or action row, place it after the panel, outside its scroll area. Set `--drawer-height` on `DrawerPopup` when the layout needs a fixed height; keyboard handling does not set the drawer height.
+
+<ComponentPreview name="p-drawer-15" />
+
+```tsx
+import { ArrowUpIcon } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import {
+  Composer,
+  ComposerActionGroup,
+  ComposerActions,
+  ComposerInput,
+  ComposerSubmit,
+} from "@/components/ui/composer"
+
+<Drawer>
+  <DrawerTrigger>Open chat</DrawerTrigger>
+  <DrawerPopup className="[--drawer-height:calc(100dvh-3rem)]">
+    <DrawerHeader><DrawerTitle>Chat</DrawerTitle></DrawerHeader>
+    <div className="min-h-0 flex-1">
+      <DrawerPanel>Conversation</DrawerPanel>
+    </div>
+    <Composer
+      className="mx-3 mb-3"
+      value={value}
+      onValueChange={setValue}
+      onSubmit={onSend}
+    >
+      <ComposerInput aria-label="Message" placeholder="Write a message…" />
+      <ComposerActions>
+        <ComposerActionGroup align="end">
+          <ComposerSubmit render={
+            <Button aria-label="Send message" size="icon">
+              <ArrowUpIcon aria-hidden="true" />
+            </Button>
+          } />
+        </ComposerActionGroup>
+      </ComposerActions>
+    </Composer>
+  </DrawerPopup>
+</Drawer>
+```
+
 ### Nested drawers
 
 <ComponentPreview name="p-drawer-7" />

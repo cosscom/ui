@@ -61,7 +61,7 @@ export default function Header() {
             </a>
             <a
               className="inline-flex size-9 items-center justify-center rounded text-muted-foreground outline-none hover:text-foreground/80 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-              href="https://github.com/cosscom/coss"
+              href="https://github.com/cosscom/ui"
               rel="noopener noreferrer"
               target="_blank"
             >

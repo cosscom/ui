@@ -159,7 +159,7 @@ export default function Component() {
         Multiple image uploader w/ image list ∙{" "}
         <a
           className="underline hover:text-foreground"
-          href="https://github.com/cosscom/coss/blob/main/apps/origin/docs/use-file-upload.md"
+          href="https://github.com/cosscom/ui/blob/main/apps/origin/docs/use-file-upload.md"
         >
           API
         </a>

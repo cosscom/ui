@@ -1,0 +1,236 @@
+---
+title: Config reference
+description: Every field of .berth/config.json, kit.json, and the box's own config files.
+---
+
+## `.berth/config.json`
+
+A repository's config, committed at `.berth/config.json`. The same shape is
+a kit's `config` and a box's own config for a location. A missing file means
+no config; a file that doesn't parse is an error the app and CLI show. A
+guide is in [project config](/docs/guides/project-config).
+
+| Field | Type | Meaning |
+| --- | --- | --- |
+| `setup` | string | Run in a new worktree, through a login shell, after it is created. Up to 30 minutes, logged on the box. |
+| `archive` | string | Run before a worktree is removed, after its services stop. If it fails, the worktree stays. |
+| `ports` | number | How many ports each worktree gets, 0 to 10. Every worktree gets at least one. |
+| `env` | object | Variables for everything run in a worktree. Keys are `[A-Za-z_][A-Za-z0-9_]*`. Values can use `$NAME` for `BERTH_*` variables and berthd's environment, or be a secret reference. |
+| `services` | array | [Services](#services) run in every worktree. |
+| `agents` | array | [Agent presets](#agents) to add, or to replace built-ins by `id`. |
+| `hooks` | array | [Hooks](#hooks) for this repository's events only, run in the worktree. |
+| `flows` | array | [Flows](#flows) for this repository's worktrees. |
+| `shots` | object | What `berthd shots compare` [shoots and diffs](#shots) by default. Read from the worktree's own file, trusted or not: it names pages and selectors and runs nothing. |
+| `login` | object | [Dev users](#login) a worktree can be logged in as, and the script that logs one in. |
+| `review_button` | boolean | Add a [Review in Shipyard button](/docs/guides/review-a-pr#the-review-in-shipyard-button) to the description of each PR opened from the project's worktrees. Off by default; from the repository's file it applies once the box trusts it. |
+
+### `services`
+
+| Field | Type | Meaning |
+| --- | --- | --- |
+| `name` | string | Required. `[a-z0-9][a-z0-9-]*`, at most 32 characters, unique. |
+| `run` | string | Required. Run in the worktree through a login shell, with its environment and `PORT`. |
+| `autostart` | boolean | Start when the worktree is created, after setup succeeds. |
+| `terminal` | boolean | Run in a terminal of its own, shown as a tab in the worktree, instead of in the background. Ctrl-C there stops it. Needs a box with the `service.terminal` capability. See [services in a terminal](/docs/guides/project-config#services-in-a-terminal). |
+| `title` | string | The tab's name, one line of at most 48 characters. Default: `name`. |
+
+### `agents`
+
+| Field | Type | Meaning |
+| --- | --- | --- |
+| `id` | string | The preset's id. The same id as a built-in (`claude`, `codex`, `opencode`, `gemini`, `cursor`) replaces it. |
+| `name` | string | Shown in the app. |
+| `command` | string | What to run. |
+| `prompt_flag` | string | How the agent takes a first prompt, when it needs a flag (`--prompt`). Empty: the prompt is the last argument. |
+
+The built-ins are offered when their command is installed on the box:
+`claude`, `codex`, `opencode` (`--prompt`), `gemini` (`-i`) and `cursor`
+(`cursor-agent`).
+
+### `hooks`
+
+| Field | Type | Meaning |
+| --- | --- | --- |
+| `on` | string | Required. An event type, a prefix like `worktree.*`, `*`, or `before:` and an action for a gate. |
+| `run` | string | Required. Run through `/bin/sh -c` with the event on stdin and in `BERTH_*` variables. |
+| `timeout` | string | A Go duration. Default `1m`, or `30s` for gates. |
+| `tool` | string | Never run for events whose origin is this tool. |
+
+The same shape is used in `~/.berth/hooks.json` (`{"hooks": [...]}`) and in a
+plugin's manifest. See [hooks](/docs/guides/hooks).
+
+### `flows`
+
+| Field | Type | Meaning |
+| --- | --- | --- |
+| `id` | string | Required. `[a-z0-9][a-z0-9-]*`, at most 48 characters, unique. |
+| `name` | string | Required. |
+| `enabled` | boolean | Default `false`: a flow runs only when it is `true`. |
+| `trigger` | object | Exactly one of `event`, `schedule`, `github` or `webhook`; see below. |
+| `steps` | array | At least one; see below. |
+| `max_runs_per_hour` | number | Default 20 when empty or `0`. |
+| `queue` | number | Triggers that may wait behind the flow's run in the same worktree (default 5, at most 50); past it, a trigger is refused and a GitHub item tried again on the next look. |
+| `coalesce` | boolean | New GitHub items merge into the run already waiting, as `{{event.items}}`, instead of queueing their own. |
+
+#### `trigger`
+
+| Field | Type | Meaning |
+| --- | --- | --- |
+| `event` | string | An event type or prefix. Not a `before:` gate. |
+| `schedule` | string | Cron (`m h dom mon dow`) or `@hourly`, `@daily`, `@midnight`, `@weekly`, `@monthly`, `@yearly`, `@annually`; the box's local time. |
+| `each_worktree` | boolean | With `schedule` only: once for every worktree. |
+| `github` | object | `on`: `review_comment`, `pr_review`, `check_failed`, `pr_merged`, `issue_labeled` (with `label`) or `issue_assigned` (with `assignee`, default `@me`); `poll`: a duration, at least `1m`, default `2m`. |
+| `webhook` | object | Started by a signed `POST /v1/triggers/<id>`; `branch_field` names the posted field that picks the worktree (default `branch`). |
+| `where` | object | `location`, `agent`, `branch` (a trailing `*` matches a prefix), and for GitHub triggers `author` (logins, `"collaborators"` or `"*"`; `review_comment` and `pr_review` default to collaborators). Empty matches anything. |
+
+#### `steps`
+
+Each step:
+
+| Field | Type | Meaning |
+| --- | --- | --- |
+| `id` | string | Optional, unique in the flow. Unnamed steps are `1`, `2`, … |
+| `kind` | string | `run`, `prompt`, `wait`, `start_agent`, `notify` or `webhook`, or a [run](/docs/guides/runs) step: `check`, `loop`, `map`, `join`, `if`, `gate`, `sleep`, `judge`, `headless`, `collect`, `handoff`, `pr`, `cleanup`. |
+| `when` | string | `success` (default), `failure` or `always`. |
+| `command` | string | `run`: required. Variables reach it as environment variables, [never as code](/docs/guides/automations#how-values-are-filled-in). |
+| `text` | string | `prompt`: required, the prompt. `start_agent`: its first prompt. `notify`: the body. `webhook`: the JSON body (default: every variable). |
+| `title` | string | `notify`: required. |
+| `session` | string | `prompt`: which session (default: the event's `session`, else the agent running in the event's worktree, else one an earlier step started). |
+| `for` | array | `wait`: states that end it (default `finished`, `waiting`). |
+| `agent` | string | `start_agent`: required, a preset id. |
+| `new_worktree`, `name` | boolean, string | `start_agent`: in a new worktree, and its name. |
+| `url` | string | `webhook`: required, `http` or `https`; public addresses only unless [allowed](/docs/guides/automations#outbound-requests). |
+| `timeout` | string | A duration: `run` 10m, `check` 20m, `wait` 30m, `webhook` 15s by default; at most 2h. |
+| `deliver` | string | `prompt`: `idle` holds it on the box until the agent is idle. |
+| `max`, `until`, `steps` | number, string, array | `loop`: rounds (default 3, at most 50), a condition that ends it, and its steps. |
+| `items`, `concurrency`, `mode` | list or text, number, string | `map`: what to fan out over (a list, or text whose lines are the items, `{{item}}` and `{{item.FIELD}}` in its steps), how many at once, and `all`, `any` or `first_success`. |
+| `cond`, `else` | string, array | `if`: a [condition](/docs/guides/automations#steps), and the steps when it is false. |
+| `on_timeout` | string | `gate`: `reject` (default), `approve` or `fail`. |
+| `duration` | string | `sleep`: how long, kept across restarts. |
+
+Variables and behaviour are in [automations](/docs/guides/automations#steps).
+
+### `shots`
+
+Defaults for [visual diffs](/docs/guides/visual-diffs). Flags on
+`berthd shots compare` override them for one run (`--mask` adds to `mask`).
+
+| Field | Type | Meaning |
+| --- | --- | --- |
+| `pages` | array | Paths to shoot, such as `["/", "/login"]`. Default `["/"]`; at most 50. |
+| `sizes` | array | Viewport widths in CSS pixels, 240 to 2560, at most 6. Default `[375, 768, 1280]` (shot at 812, 1024 and 800 pixels high). |
+| `mask` | array | CSS selectors of dynamic content (clocks, avatars, relative dates), painted flat on both sides and left out of the diff. |
+| `threshold` | number | The colour distance, 0 to 1, under which two pixels count as the same. Default `0.03`. |
+| `unchanged_below` | number | The share of changed pixels, in percent, under which a shot counts as unchanged. Default `0.02`. |
+| `max_height` | number | Full-page shots stop here, in CSS pixels. Default `4000`. |
+| `scale` | number | Device pixel ratio, up to 3. Default `1`. |
+| `color_scheme` | string | `light` (default), `dark`, or `both` (every shot in each). |
+| `wait_for` | string | A selector every page must show before its shot (up to 10 seconds). |
+| `seed_random` | boolean | `Math.random` repeats the same numbers on every load. |
+| `parallel` | number | Browser tabs shooting at once. Default: the box's CPUs, from 2 to 8. |
+
+### `login`
+
+| Field | Type | Meaning |
+| --- | --- | --- |
+| `script` | string | Required. A path inside the config's folder: the kit's own folder for a kit, the main checkout's `.berth/` for the repository's file and the box's own config. No `..`, no absolute path; a symlink that leads outside is refused when it runs. Run in the worktree, with its environment and `BERTH_LOGIN_EMAIL`, for up to 30 seconds. |
+| `users` | array | Emails, or `{ "email", "label" }`, at most 50. An email is a plain address: letters, digits and `. _ + -` before the `@`, starting with a letter or digit, at most 254 characters. A label is one line of at most 48 characters, shown in place of the email. |
+| `any` | boolean | Any valid email may log in, not only `users`. Default `false`. |
+
+The script prints one JSON object on stdout, at most 64 KB:
+`{"cookies": [{"name", "value", "path"?, "httpOnly"?, "secure"?, "sameSite"?, "maxAge"?}], "redirect"?: "/path"}`.
+One to 32 cookies; no `domain` (a cookie is set for the worktree's own
+address); `sameSite` is `Lax`, `Strict` or `None`; `maxAge` is 1 second to
+400 days; `redirect` is a path on the worktree. Anything else, a non-zero
+exit or a timeout is an error that never quotes the output. A login comes
+from the kit, the box's own config, or the repository's trusted file in the
+main checkout, never from a worktree's own checkout. See
+[personas](/docs/guides/kits#personas-logging-in-as-a-dev-user).
+
+## How layers merge
+
+A location's effective config is the repository's file, then its kit's
+`config`, then the box's own config for it:
+
+| Field | Merge |
+| --- | --- |
+| `setup`, `archive` | The later one wins if set |
+| `ports` | The later one wins if set |
+| `env` | Key by key; the later one wins |
+| `services`, `agents`, `flows` | By `name` or `id`: a later one replaces, new ones are added |
+| `hooks` | Added up: the file's, the kit's, then the box's |
+| `login` | Whole: the later one's script and users replace the earlier one's |
+| `review_button` | The later one wins if set (`false` too); with none set, the team's `team.json` decides |
+
+Only the effective flows run: a flow replaced by `id` never does, and a
+replacement with `enabled: false` switches the flow off on that box.
+`GET /v1/flows` lists every layer's flows, with `overridden: true` on the
+replaced ones.
+
+The repository's file counts only once it is trusted on the box, for its
+exact content (its SHA-256 hash); until then, and again after any change to
+it, only its `ports` apply and `GET /v1/locations/{name}/config` reports
+`repo_trust: {state: "untrusted" | "changed", hash, wants}`, with `wants`
+holding the whole file. A file that runs nothing (only `ports`, say) needs no
+trust. Trusting and untrusting run `before:config.change` gates and announce
+`config.changed`. See
+[trusting a repository's config](/docs/guides/project-config#trusting-a-repositorys-config).
+
+`berth location config BOX/LOC` prints the effective config, and what an
+untrusted file would run with its hash; `--json` shows each layer (`repo`,
+`kit`, `local`, `effective`, `repo_trust`). `--trust HASH` trusts the file
+as shown, `--untrust` stops running it.
+
+## `kit.json`
+
+| Field | Type | Meaning |
+| --- | --- | --- |
+| `id` | string | Required. `[a-z0-9][a-z0-9-]*`, at most 48 characters. |
+| `name` | string | Default: the id. |
+| `description` | string | |
+| `version` | string | Shown. A project is flagged as running an older kit when its installed contents (their hash) differ from the kit on this laptop. |
+| `match` | object | `slug`: the `owner/repo` it is for. Selects matching projects in the app; nothing enforces it. |
+| `requires` | array | `{ "tool": "psql", "hint": "how to install it" }`. A missing tool is a warning when the kit is applied. |
+| `config` | object | A `.berth/config.json`, validated by the same rules. |
+| `login` | object | The same as `config.login`, at the top for short kits; set one or the other. |
+| `files` | object | Small files inline, `{ "scripts/setup.sh": "…" }`. Paths stay inside the kit. |
+| `watch` | array | The repository's files that change how the kit sets a worktree up, as globs (`*` within a folder, `**` any folders): `["prisma/**", "scripts/setup/*"]`. A pull request that changes one says so on its [review sheet](/docs/guides/review-a-pr). |
+
+A kit's files are copied to each box it is applied to, and
+`$BERTH_KIT_DIR` points at them. Files starting with `#!` are made
+executable. See [kits](/docs/guides/kits).
+
+## Task templates
+
+`~/.berth/templates/<id>.json` on the laptop:
+
+| Field | Type | Meaning |
+| --- | --- | --- |
+| `id` | string | Default: the file's name without `.json`. |
+| `name` | string | Shown in the composer's Template picker (⌘N → Options). |
+| `description` | string | |
+| `agent` | string | A preset id. |
+| `command` | string | Run instead of the agent preset; the template's `prompt` is then not passed. |
+| `branch`, `base` | string | The branch (with `{{name}}` and variables) and what it starts from. |
+| `prompt` | string | The first prompt, with variables. |
+| `variables` | array | `{ "id", "label", "default", "multiline" }` for each `{{var}}`. |
+
+See [task templates](/docs/guides/task-templates).
+
+## Box files
+
+In `~/.berth/` on a box:
+
+| File | Shape | What it is for |
+| --- | --- | --- |
+| `hooks.json` | `{ "hooks": [Hook] }` | [Hooks](/docs/guides/hooks) for the box |
+| `flows.json` | `{ "flows": [Flow] }` | Flows for any project on the box |
+| `env.json` | `{ "env": { "KEY": "value" } }` | Environment for every worktree on the box, under each project's own; values may be secret references. `OP_*` keys reach `op`. |
+| `guard.json` | `{ "enabled", "memory_percent", "sustain", "stop_services", "pause_agents" }` | The [resource guard](/docs/guides/resource-guard) |
+| `network.json` | `{ "allow_outbound": ["10.0.0.0/8", "192.168.1.20", "ntfy.home.lan"] }` | Private addresses flow webhooks and phone notifications may reach: IP addresses, CIDR prefixes or host names ([outbound requests](/docs/guides/automations#outbound-requests)). Nothing in the API changes it |
+| `plugins/<id>/berth-plugin.json` | A plugin manifest | Its hooks run on the box too, once allowed in `plugins.json` |
+| `plugins.json` | `{ "plugins": { "<id>": { "hash"? } } }` | The plugins whose hooks may run on the box; an entry without a `hash` trusts whatever the folder holds ([trust and consent](/docs/guides/plugins#trust-and-consent)) |
+
+Changing env, flows, the guard or a location's config through the API runs
+`before:config.change` gates and announces `config.changed`. Where every
+file lives is in [files and environment](/docs/reference/files).

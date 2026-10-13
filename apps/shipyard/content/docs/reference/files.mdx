@@ -1,0 +1,151 @@
+---
+title: Files and environment
+description: Where Shipyard keeps its state on the laptop and on boxes, and the variables it sets and reads.
+---
+
+Shipyard keeps two kinds of files:
+
+- **State**, which Shipyard writes: identities, trust stores, sockets, logs.
+  It lives in the state directory: `~/Library/Application Support/berth` on
+  a Mac, `~/.config/berth` (or `$XDG_CONFIG_HOME/berth`) on Linux.
+  `BERTH_HOME` moves it; it must be an absolute path.
+- **Things you write**, by hand or through the app: hooks, flows, templates,
+  themes, plugins, kits. They live in `~/.berth/`; `BERTH_USER_DIR` moves it.
+
+## On the laptop
+
+State, in `<state>/client/`:
+
+| File | What it holds |
+| --- | --- |
+| `identity.pem` | This laptop's key |
+| `boxes.json` | Paired boxes, their addresses, fingerprints and networks |
+| `forwards.json`, `routes.json` | Saved forwards and routes |
+| `box-routes.json` | The [routes to each box](/docs/concepts/laptop-agent#routes-to-a-box) besides its paired address (an SSH host, other addresses), and the ones turned off |
+| `ssh/` | The SSH routes' shared connections (ControlMaster sockets) |
+| `queue.json` | The [offline prompt queue](/docs/guides/offline-queue) |
+| `agent.sock`, `agent.lock`, `agent.log` | The laptop agent's socket, lock and log |
+| `ui-token` | The token for [the app's API](/docs/reference/app-api) (mode 0600) |
+| `linear.json` | Your [Linear](/docs/guides/linear) API key and who it belongs to (mode 0600); removed when you disconnect |
+| `networks/` | Embedded Tailscale nodes for other tailnets |
+
+Yours, in `~/.berth/`:
+
+| File | What it holds |
+| --- | --- |
+| `hooks.json` | Laptop [hooks](/docs/guides/hooks) |
+| `templates/*.json` | [Task templates](/docs/guides/task-templates) |
+| `themes/*.json` | [Themes](/docs/guides/themes) |
+| `plugins/<id>/` | [Plugins](/docs/guides/plugins), each with a `berth-plugin.json` |
+| `plugins.json` | The plugins you allowed, each with the hash of the code you reviewed ([trust and consent](/docs/guides/plugins#trust-and-consent)) |
+| `plugin-sources.json` | The plugins [installed from the listing](/docs/guides/plugins#install-one-from-the-app): the listing each came from, its version, and each file's checksum. A plugin not in it is one you put there yourself |
+| `.plugin-<id>-*/` | A plugin while it is being installed, replaced or removed; gone when that finishes |
+| `kits/<id>/` | Your [kits](/docs/guides/kits) library: `kit.json`, its files, and where it came from |
+| `app/<key>.json` | The app's settings documents: saved prompts, projects, the sidebar, notifications |
+
+## On a box
+
+State, in `<state>/box/`:
+
+| File | What it holds |
+| --- | --- |
+| `identity.pem` | The box's key |
+| `clients.json` | Paired laptops (with a backup) |
+| `pairing.json` | Pairing codes not yet used |
+| `listen` | The address berthd serves on |
+| `berthd.sock`, `berthd.log` | The local socket (mode 0600) and the log |
+| `locations.json` | Locations, each with the box's own config, its kit, and the hash of the repository config trusted there |
+| `ports.json` | Each worktree's block of ports |
+| `logs/` | Setup and archive logs |
+| `units/` | Unit and service logs |
+| `helpers/<plugin>/install.json` | A [plugin's helper](/docs/guides/plugins#give-a-plugin-a-helper) as it was installed: its name, version, arguments, size and SHA-256 (0600). berthd starts what this names, and checks the program against it each time |
+| `helpers/<plugin>/bin/<version>/<name>` | The helper's program, for its owner alone (0700). One version is kept |
+| `helpers/<plugin>/data/` | The helper's own data: `{dir}` in its arguments, and where it writes its ready file. It stays when the helper is turned off, and goes when it is removed with its data |
+| `helpers/<plugin>/attached.json` | The services that were last started with what the helper answered, so that turning it off can say which still point at it |
+| `helpers/<plugin>/helper.log`, `helper.log.1` | What the helper printed, and when berthd started and stopped it (0600). Past 4 MB it starts over, and the log before that is kept once |
+| `kits/<location>/<kit>/` | Installed kits' files (`$BERTH_KIT_DIR`) |
+| `paused.json` | Paused worktrees |
+| `agent-states.json` | What each agent last reported, by working directory |
+| `tmux.conf` | The configuration of Shipyard's tmux server |
+| `commands/<session>.cmd` | Each session's command, prompt and all (0600), which its login shell runs; removed with the session |
+| `phone.json` | The phone companion: on or off, its token, notifications |
+| `runs/index.json`, `runs/<id>.jsonl` | [Runs](/docs/guides/runs): the index, and each run's journal; finished runs past 100 per flow or template, or 30 days, are removed |
+| `runs/<id>.d/` | A run's headless agents' prompts and JSON output |
+| `flow-runs.json.imported` | Flow runs from before durable runs, once imported |
+| `autofix.json` | Each worktree's Auto-fix this PR settings |
+| `reviews.json` | [Review](/docs/guides/review-a-pr) settings: `idle_days`. Each review's mark (its PR, commit, author, and the keys it doesn't get) is in `locations.json` |
+| `browser/shots/<location>/<worktree>/` | Agents' browser screenshots, 20 per worktree |
+| `browser/viewports.json` | The [size](/docs/guides/agent-browser#size) an agent chose for each worktree's browser, by path; a worktree at the default 1920×1080 has none |
+| `browser/profiles/` | Running browsers' throwaway profiles, removed when each closes |
+| `browser-proxies.json` | Each worktree's browser proxy port |
+| `trigger-secrets.json` | Webhook flows' signing secrets (0600) |
+| `op-session` | The 1Password CLI session `berthd secret signin` made (0600), passed to `op` for `op://` reads; op ends it after 30 minutes unused |
+| `team/<id>/` | A [team setup](/docs/guides/team-setup): what the laptop sent, its runner script, the progress file and its state |
+| `turns.json`, `turns-archive.jsonl`, `inbox.json`, `journal/`, `spool/` | The turn ledger, the event journal and hooks kept while berthd was down |
+| `flow-github.json` | What GitHub-triggered flows have already seen |
+
+Yours, in `~/.berth/`: `hooks.json`, `flows.json`, `env.json`, `guard.json`,
+`network.json`, `runs.json`, `plugins/` and `plugins.json`; see
+[the config reference](/docs/reference/config#box-files).
+
+Sessions run in tmux on its own socket (`tmux -L berth`).
+
+## Environment
+
+### What a worktree gets
+
+Everything run in a worktree (setup and archive scripts, terminals and
+agents, `exec`, repository hooks, flow steps, services):
+
+| Variable | Meaning |
+| --- | --- |
+| `BERTH_BOX`, `BERTH_LOCATION` | Where |
+| `BERTH_ROOT_PATH` | The repository's main checkout |
+| `BERTH_WORKTREE_PATH`, `BERTH_WORKTREE_NAME`, `BERTH_BRANCH` | This worktree |
+| `BERTH_WORKTREE_SLUG` | `location_worktree`, lowercase, safe for database names |
+| `BERTH_PORT`, `BERTH_PORT_1`, … | Its ports |
+| `BERTH_URL` | Its private URL as the laptop opens it: `http://WT.LOC.BOX.localhost:1377` |
+| `BERTH_BROWSER_PROXY`, `PLAYWRIGHT_MCP_PROXY_SERVER`, `PLAYWRIGHT_MCP_PROXY_BYPASS` | Its [browser proxy](/docs/guides/agent-browser#a-browser-you-run-yourself) |
+| `BERTH_KIT_DIR` | Its kit's files, when it has a kit |
+| `BERTH_REVIEW`, `BERTH_REVIEW_REPO`, `BERTH_REVIEW_SHA`, `BERTH_WITHHELD` | In a [review](/docs/guides/review-a-pr): the PR number, its repository, the commit checked out, and the names of the reviewer's own keys it does not get |
+| then | the box's `env.json`, the project's `env`, and resolved secrets (in a review, without the reviewer's own keys) |
+| `PORT` | `$BERTH_PORT`, for servers that read `PORT`, unless the box or `env` sets it |
+| `AGENT_BROWSER_IDLE_TIMEOUT_MS` | Terminals and agents: `300000`, so an [agent-browser](/docs/guides/agent-browser#agent-browser) left idle closes after 5 minutes, unless the box, `env` or berthd's environment sets it |
+| `ORCA_ROOT_PATH`, `ORCA_WORKTREE_PATH`, `ORCA_WORKSPACE_NAME` | Setup and archive scripts, for scripts written for Orca |
+| what a helper answers | Services only: before berthd starts one, each running [plugin's helper](/docs/guides/plugins#attach-what-a-helper-adds-to-a-service) that asks to be told may set the variables its manifest names (`OTEL_*`, a `DATABASE_URL` through its proxy). Never a `BERTH_` variable, and never one that names a secret |
+
+### What a helper gets
+
+A [plugin's helper](/docs/guides/plugins#give-a-plugin-a-helper) runs with a small
+environment of its own, not berthd's: what berthd itself was told (a token,
+a 1Password session) is not passed on.
+
+| Variable | Meaning |
+| --- | --- |
+| `PATH`, `HOME`, `USER`, `LOGNAME`, `SHELL`, `LANG`, `LC_ALL`, `LC_CTYPE`, `TMPDIR`, `TZ` | berthd's own, where it has them |
+| `BERTH_HELPER` | The plugin's id |
+| `BERTH_HELPER_DIR` | The helper's data directory: `{dir}` in its arguments, and where it starts |
+| `BERTH_HELPER_HOME` | The box's `helpers/` folder. With `BERTH_HELPER` it marks the process as a helper of this berthd's, which is how one left running by a berthd that was killed is found and ended |
+| `BERTH_BOX` | The box's name |
+
+### What a hook gets
+
+See [events and gates](/docs/reference/events#what-a-hook-gets).
+
+### What Shipyard reads
+
+| Variable | Meaning |
+| --- | --- |
+| `BERTH_HOME` | The state directory |
+| `BERTH_USER_DIR` | Instead of `~/.berth` |
+| `BERTH_ORIGIN` | The origin `berth` and `berthd` commands announce events with |
+| `BERTH_OP` | Where the 1Password CLI is |
+| `OP_SERVICE_ACCOUNT_TOKEN`, other `OP_*` | Passed to `op`, from berthd's environment or `env.json` |
+| `SHELL` | The shell scripts, sessions and `exec` run in |
+| `BERTH_PROXY_ADDR`, `BERTH_UI_ADDR` | `berth agent` only: where a second agent (a test, a throwaway home) listens instead of 1377 and 1378 |
+| `BERTH_PLUGIN_REGISTRY` | `berth agent` only: the [plugin listing](/docs/guides/plugins#publish-it-to-the-listing) to browse instead of `https://berthd.app/plugins/index.json`. An `https://` link to an `index.json`; plain `http://` only on `localhost` or `127.0.0.1` |
+| `BERTH_CHROMIUM` | berthd: the Chromium for [agents' browsers](/docs/guides/agent-browser) |
+| `BERTH_CLI` | A dev build of the desktop app (`pnpm tauri dev`): the `berth` to run for the laptop agent. The packaged app ignores it and runs only the copy it carries |
+
+The [laptop agent](/docs/concepts/laptop-agent) explains what runs where; the
+[config reference](/docs/reference/config) has the shape of every file you write.

@@ -1,0 +1,38 @@
+{
+  "agent-browser": {
+    "width": 764,
+    "height": 534
+  },
+  "browser-sandbox": {
+    "width": 764,
+    "height": 327
+  },
+  "chat-artifacts": {
+    "width": 772,
+    "height": 754
+  },
+  "chat-background": {
+    "width": 680,
+    "height": 576
+  },
+  "chat-question": {
+    "width": 772,
+    "height": 746
+  },
+  "kits": {
+    "width": 660,
+    "height": 301
+  },
+  "service-terminal": {
+    "width": 924,
+    "height": 494
+  },
+  "tab-groups": {
+    "width": 818,
+    "height": 774
+  },
+  "themes": {
+    "width": 680,
+    "height": 753
+  }
+}

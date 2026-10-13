@@ -1,0 +1,125 @@
+---
+title: Boxes
+description: The machines your agents run on, and what berthd keeps on each.
+---
+
+A **box** is a machine that runs `berthd`, usually Linux (macOS works too):
+a VPS, a cloud VM, a desktop under your desk. It is where repositories live, where agents and dev
+servers run, and where automations fire. Boxes are always on, so work
+continues while your laptop is asleep or shut.
+
+A laptop can pair with any number of boxes, and a box can be paired with
+several laptops. Each box has a name on your laptop (`devl`, `gpu`,
+`homelab`), which is also part of its URLs: `http://3000.devl.localhost:1377/`.
+
+## What berthd keeps
+
+- **Locations**: named directories, usually git repositories, and their
+  worktrees. See [projects and worktrees](/docs/concepts/projects-and-worktrees).
+- **Sessions**: programs (usually agents) running in Shipyard's own tmux
+  server. See [sessions and agents](/docs/concepts/sessions-and-agents).
+- **Services**: each worktree's dev servers and workers, from the
+  repository's config, kept running by the service manager.
+- **Units**: any other long-lived program you want on the box.
+- **Shares**: public links to a port.
+- **Hooks, flows and the resource guard**: automation that runs on the box.
+- **The phone companion**, when you turn it on.
+
+berthd runs as a systemd user service, or a launchd agent on macOS.
+The [install script](/docs/getting-started/add-a-box#with-the-install-command)
+and [`berth add ssh`](/docs/getting-started/add-a-box#over-ssh) both set that up
+for you with `berthd install`. It survives restarts and upgrades
+without touching running sessions. Its state is in `~/.config/berth/box/`
+(`~/Library/Application Support/berth/box/` on macOS); files you write by
+hand (`hooks.json`, `flows.json`, `env.json`, `guard.json`) are in
+`~/.berth/`. See [files and environment](/docs/reference/files).
+
+## Online, offline, untrusted
+
+The laptop agent keeps one connection per box and reports each as
+`connecting`, `online`, `offline` or `untrusted` (the box no longer trusts
+this laptop's key):
+
+```sh
+berth boxes
+berth ping devl
+```
+
+When a box is offline, its sessions keep running out there. The app shows
+what it last knew, and prompts for its agents can wait in the
+[offline queue](/docs/guides/offline-queue).
+
+## Units
+
+A unit is a long-lived program berthd runs on the box under the platform's
+service manager, so it survives reboots and restarts on failure. Its output
+goes to a log file berthd owns.
+
+```sh
+berth unit add devl/tunnel -- cloudflared tunnel run home
+berth units devl
+berth unit log devl/tunnel
+berth unit restart devl/tunnel
+```
+
+A worktree's services are units too, named after the worktree; manage them
+with `berth service` instead.
+
+## Public shares
+
+```sh
+berth share devl 3000      # Port 3000 is public at https://….trycloudflare.com
+berth shares devl
+berth unshare devl ID
+```
+
+The box runs a Cloudflare quick tunnel (it needs `cloudflared` installed), so
+the link keeps working while your laptop sleeps. A share ends when you stop
+it, or when berthd stops or upgrades.
+
+## Upgrades
+
+```sh
+berth upgrade devl           # or --check to only report whether it runs a different build
+```
+
+The laptop uploads the berthd build that ships beside its `berth`, over
+Shipyard's own connection, with no SSH. The box checks that the new binary runs
+and reports the box's own fingerprint, swaps it in and re-executes in place,
+so sessions and services keep running. Public shares stop.
+
+The app notices on its own. When a box runs an older berthd than this Shipyard
+ships, the status bar and **Settings → Boxes** say so ("2 boxes run an older
+berthd") with **Update all**, which updates each box in turn and shows its
+progress. A feature that needs a newer berthd (the conversation view, runs,
+Review) offers **Update** right where it is missing. To skip the step
+altogether, turn on **Update boxes automatically when Shipyard updates** in
+Settings → Boxes: each box is updated once for every build Shipyard ships, as
+soon as it is online.
+
+A box is in one of four states, the same everywhere in the app: **online**,
+**outdated** (online, with an older berthd), **offline** (not answering;
+Shipyard reconnects on its own) or **unreachable** (it answers, but Shipyard can't
+use it, such as a box whose identity changed).
+
+## Health
+
+```sh
+berth stats devl     # memory, disk, load, and agents running or waiting
+berth ports devl     # what is listening, and which process
+berth doctor devl    # git, tmux, cloudflared, agent CLIs, listen address, lingering, paired laptops
+```
+
+Click a box's memory meter in the status bar for the
+[browsers running on it](/docs/guides/agent-browser#every-browser-on-a-box), who
+started each and what it costs, with **Stop** for the ones Shipyard or its
+sessions started; `berth ps devl` lists them in a terminal. A session's
+processes [go with it](/docs/concepts/sessions-and-agents#sessions-clean-up-after-themselves)
+when it ends.
+
+The built-in **Box monitor** plugin keeps an hour of history and warns before
+a box runs out. The [resource guard](/docs/guides/resource-guard) can stop idle
+dev servers and pause idle agents when memory runs short.
+
+Next: [projects and worktrees](/docs/concepts/projects-and-worktrees), what you
+keep on a box.

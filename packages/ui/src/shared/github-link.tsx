@@ -2,21 +2,30 @@ import { Skeleton } from "@coss/ui/components/skeleton";
 import { GitHubLinkClient } from "@coss/ui/shared/github-link-client";
 import * as React from "react";
 
-export function GitHubLink() {
+// The link and its stars are coss's repository unless a product says
+// which of its own (apps/shipyard: cosscom/shipyard).
+export function GitHubLink({
+  repo = "cosscom/ui",
+  href,
+}: {
+  repo?: string;
+  href?: string;
+} = {}) {
   return (
     <GitHubLinkClient
+      href={href}
       stars={
         <React.Suspense fallback={<Skeleton className="h-4 w-[25.5px]" />}>
-          <StarsCount />
+          <StarsCount repo={repo} />
         </React.Suspense>
       }
     />
   );
 }
 
-export async function StarsCount() {
+export async function StarsCount({ repo = "cosscom/ui" }: { repo?: string }) {
   try {
-    const data = await fetch("https://api.github.com/repos/cosscom/coss", {
+    const data = await fetch(`https://api.github.com/repos/${repo}`, {
       next: { revalidate: 86400 }, // Cache for 1 day (86400 seconds)
     });
 

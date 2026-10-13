@@ -1,0 +1,238 @@
+---
+title: Review a PR
+description: Open a teammate's pull request on your own box in one click, set up the way your team's worktrees are.
+---
+
+A review link opens a pull request on **your** box: a worktree at the PR's
+head commit, set up by your team's kit (database, `.env`, ports, dev
+server), with a Browser tab on its dev server and the Diff beside it.
+
+```
+berth://review?repo=acme/shop&pr=42
+```
+
+Paste one in a chat. GitHub doesn't keep `berth://` links in a PR's
+description, so there the link is a [button](#the-review-in-shipyard-button)
+that goes through berthd.app. From the terminal it is
+`berth review acme/shop#42`.
+
+## The Review in Shipyard button
+
+On GitHub, a review link is a button in the PR's description:
+
+```md
+<!-- shipyard-review-button -->
+[![Review in Shipyard](https://berthd.app/badges/review.svg)](https://berthd.app/review?repo=acme/shop&pr=42)
+<!-- /shipyard-review-button -->
+```
+
+It links to `https://berthd.app/review?repo=acme/shop&pr=42`, a static page
+that checks the link and opens `berth://review?repo=acme/shop&pr=42` in
+Shipyard. It shows the repository and PR, an **Open in Shipyard** button in
+case the browser asks first, a link to the PR on GitHub, and where to
+install Shipyard. The page:
+
+- reads the link as strictly as the app: `repo`, `pr`, and optionally
+  `sha` (a commit, only a hint), `as` (a login user's email, at most 254
+  characters) and `path` (a page on the worktree's own address, at most
+  512). Anything else, a parameter given twice, or a value out of shape,
+  and it says the link isn't one it can open, and opens nothing;
+- builds the `berth://` link again from the values it checked, never from
+  the address as written, and puts them on the page as text only;
+- runs one inline script and nothing else (its Content Security Policy
+  allows only that script, by hash), loads nothing from anywhere but
+  berthd.app, has no analytics, and sends no referrer, so the PR's link
+  doesn't travel on to GitHub.
+
+`as` and `path` open the review logged in as one of the project's
+[dev users](/docs/guides/kits#personas-logging-in-as-a-dev-user), at that page:
+`...&as=pro%40acme.test&path=/billing`. They are requests: the review
+logs in only as a user the project's trusted login lists, and opens without
+logging in otherwise.
+
+### Adding it to every PR
+
+A project can have berthd add the button by itself. Turn it on with
+`"review_button": true` in the project's `.berth/config.json` (on the
+default branch, once your box trusts it), in **Project settings › Review
+button** for one box, or for the whole team in `team.json`'s
+[project entry](/docs/guides/team-setup#teamjson). It is off by default, and a
+box's own setting wins over the repository's and the team's.
+
+With it on, berthd looks for a PR on each of the project's worktrees'
+branches, and the first time one has an open PR it appends the button to
+the description, after everything else, between the two marker comments.
+It does this once:
+
+- it never changes anything outside the markers, and never adds a second
+  button: a description that already has the markers, or a review link
+  someone wrote by hand, is left as it is;
+- GitHub has no way to edit a description only if nobody else just did, so
+  berthd reads it again right before writing, and when it changed, starts
+  over from the new one, once;
+- only UI work gets one: a PR whose changed files include nothing a browser
+  shows (pages, components, styles, `.tsx`/`.jsx`/`.vue`/`.svelte`/`.html`/
+  `.css` and the like, images, `components/`, `pages/`, `public/`,
+  translations) gets none, and is looked at again when it gets new commits.
+  One someone asked for with `berthd review-button` goes on regardless;
+- a PR from a fork, or by someone who isn't a member, owner or collaborator,
+  gets no button, as a review would refuse it;
+- `berthd review-button --as EMAIL --path /x`, in the worktree, sets the
+  button's user and page; berthd puts the new link in place between the
+  markers on its next look. `--clear` drops both.
+
+Each button berthd adds or changes is in the box's
+[journal](/docs/reference/events#reviews) as `review.button`.
+
+## Opening a review
+
+A review link, a paste in the command palette (⌘K, then paste the link or
+`acme/shop#42`) or `berth review` opens the **review sheet**. Nothing is
+fetched to a box and nothing runs until you press **Review**. The sheet
+shows:
+
+- **The pull request**: the repository, its number and title, the author
+  and how they belong to the org ("Member of acme"), the head branch and the
+  **exact commit** that will be checked out.
+- **What will run**: which box (a picker when several have the project),
+  where its setup comes from (your team's kit, or the default branch's
+  `.berth/config.json` as your box trusts it), the setup command and the
+  services by name.
+- **Keys**: the team's shared keys, by name, and the keys that are yours
+  alone, which the review never gets.
+- **What it changes in setup**: the files in the PR that touch how a
+  worktree is set up, in plain words (below).
+- **Clean-up**: when the review goes.
+
+**Review** checks everything again (the author, the commit, the box) and
+makes the worktree at the commit you were shown. The sheet then shows the
+setup's progress; when the dev server is up, the worktree opens with the
+Browser and the Diff.
+
+In the sidebar a review is named **Review: #42 Fix checkout rounding**, with
+a small PR badge. Its menu has **Copy review link**, which every worktree
+whose branch has a PR offers too.
+
+## Opening logged in, at a page
+
+A link can also say how the review opens once it is ready: logged in as one
+of the project's [dev users](/docs/guides/kits#personas-logging-in-as-a-dev-user),
+at a page:
+
+```
+berth://review?repo=acme/shop&pr=42&as=pro@acme.test&path=/event-types
+```
+
+From the terminal: `berth review acme/shop#42 --as pro@acme.test --path /event-types`,
+and `berth review link acme/shop#42 --as pro@acme.test` prints such a link.
+The worktree menu's **Copy review link as…** lists the project's users.
+
+The sheet says what it will do: **Opens /event-types, logged in as
+pro@acme.test**. Both are requests, never authority:
+
+- `as` must be a plain email address, and it logs in only when the
+  project's login on that box (its kit, the box's own config, or the main
+  checkout's trusted `.berth/config.json`, never the PR's) lists it, or
+  takes any user. Otherwise the sheet says so ("pro@acme.test isn't one of
+  acme/shop's login users, so it opens without logging in") and the review
+  opens without logging in. It is never a reason to refuse the review.
+- `path` must be a page on the worktree's own address: it starts with one
+  `/`, with no scheme, host, backslash or control character, however it is
+  encoded, and at most 512 characters.
+- Anything else in either makes the whole link no link. Neither changes
+  what is fetched, set up or trusted; they only decide where the Browser
+  tab opens.
+
+## Who can be reviewed this way
+
+The link says only which repository and which PR. Everything else is
+read from GitHub with your own `gh`, as you, so a private repository you
+can't see fails with "You can't see acme/shop#42 with your GitHub account".
+A PR opens in one click when:
+
+- its repository is one of your [team setup](/docs/guides/team-setup)'s projects
+  (`team.json`), or a project already on one of your boxes;
+- it is open, and its branch is in that repository, not a fork;
+- its author is a **member** or **owner** of the org, or a **collaborator**
+  on the repository.
+
+Anything else is refused with what to do instead, such as "Review this one
+by hand: its author is outside acme" or "it comes from a fork (jo/shop)".
+Nothing is fetched for a refused PR.
+
+## The commit stays put
+
+The review is the commit the sheet showed: the box fetches
+`refs/pull/42/head` and checks it is that commit before it makes anything,
+or stops with "PR #42 moved on". When the PR moves on later, the review
+stays where it was and the sidebar says **3 new commits since you opened
+it**. **Update to latest** shows the sheet again, for the new head, with the
+author and setup changes checked again, and moves the review only when you
+confirm. A review with uncommitted changes is not moved.
+
+## Setup never comes from the PR
+
+A review is set up like any worktree of the project: by your team's kit
+and the `.berth/config.json` your box trusts, read from the main checkout,
+never from the PR's own `.berth/`. Git hooks are off while Shipyard checks
+the PR out.
+
+What the PR changes in setup is listed on the sheet, so you can look before
+you start:
+
+| Change | What the sheet says |
+| --- | --- |
+| `.berth/**` | Changes Shipyard's own setup (not used for this review) |
+| `package.json` scripts (`postinstall`, `prepare`, `dev`, …) | Changes package.json scripts, by name |
+| Other `package.json` changes, manifests | Changes dependencies |
+| Lockfiles alone | Lockfile only |
+| Dockerfiles, `docker-compose*` | Changes a Dockerfile, Changes Docker Compose |
+| Migrations (`migrations/`, `db/migrate/`, `schema.prisma`) | Adds or changes a database migration |
+| `.env*` | Changes an environment file |
+| `.husky/`, `.githooks/`, `lefthook.yml` | Changes git hooks |
+| The kit's [`watch`](/docs/reference/config#kitjson) globs | Changes files the kit watches |
+
+## Keys
+
+A review gets the team's **shared** keys (the `op://` references in
+`team.json`'s `keys.<project>.shared`) exactly as any worktree of the
+project does, and **never** the keys that are yours alone (`ask`). Setup
+scripts see `BERTH_REVIEW` (the PR number) and `BERTH_WITHHELD` (the names
+left out), so a kit can skip anything personal too. A kit that copies the
+main checkout's `.env` into each worktree copies what is in it: keep
+personal keys out of that file, or have the kit skip them when
+`BERTH_REVIEW` is set.
+
+## Containment
+
+The dev server is reachable only through Shipyard's private URL, as any
+worktree's is. Its terminals and agents run in their own session scopes, so
+removing the review stops everything it started.
+
+## Clean-up
+
+A review is removed, through the project's archive step (which drops its
+database), when its PR is merged or closed, or after 7 days unused. It is
+never removed with uncommitted changes, or with a session running in it:
+the sidebar asks instead ("PR merged. Remove this review? It has
+uncommitted changes."). Each box can change the 7 days:
+
+```sh
+berth reviews BOX --idle-days 14   # 0: never for being idle
+```
+
+## The journal
+
+Each review is in the box's [journal](/docs/reference/events#reviews):
+`review.opened` (the repository, PR, commit, author, association, box,
+reviewer and the keys policy), `review.updated`, `review.waiting` and
+`review.removed`.
+
+## For agents
+
+An agent that opens a PR from a Shipyard worktree adds the
+[button](#the-review-in-shipyard-button) to its description, as the berth
+skill tells it, with `path` set to the main page its change affects and `as`
+to one of the project's login users (`berthd login users` lists them), or
+neither. On the laptop, `berth review link OWNER/NAME#N` prints the
+`berth://` link for a chat.

@@ -1,0 +1,60 @@
+---
+title: Terminals
+description: The terminal panes, their settings, and how typing stays quick on a slow link.
+---
+
+Every session shows as a terminal pane: a shell, a dev server, or an
+agent's own screen. The app draws it with Ghostty's terminal core compiled
+to WebAssembly (ghostty-web), or with xterm.js if that can't start, and
+attaches it to the session's tmux on the box through the laptop agent. A
+pane stays attached while its tab is in the background; if the link drops,
+it reattaches on its own and the box redraws the screen.
+
+## Settings
+
+**Settings → Terminal** applies to every terminal pane, and open ones
+update as you change it:
+
+| Setting | What it does |
+|---|---|
+| Font, Size, Line height | ⌘+ and ⌘− with a terminal focused change the size; ⌘0 resets it. |
+| Cursor | Block, bar or underline, blinking or not. |
+| Scrollback | Lines kept in the app. The box's tmux keeps 50,000 more, redrawn when you reattach. |
+| Predict typing | Adaptive, Always or Never: see below. |
+| Copy on select | Selecting text copies it. |
+| Renderer | Ghostty or xterm.js. If Ghostty can't start, the app says why here. |
+
+## Typing on a slow link
+
+A box reached through a relay can be 80 ms to 2 s away, and a terminal only
+shows a key once the box has echoed it back. To keep typing from feeling
+broken, Shipyard predicts the echo the way [Mosh](https://mosh.org) does:
+what you type shows at once, underlined, and the underline goes when the
+box's own echo arrives and agrees.
+
+- **When.** Each terminal measures the time from a keystroke to its echo.
+  With **Adaptive** (the default), predictions show once that is over about
+  60 ms, so a nearby box looks exactly as before. **Always** shows them on
+  any link; **Never** turns them off.
+- **What is predicted.** Characters typed at the cursor, Backspace, and
+  Left and Right along the line you are typing.
+- **What isn't.** Enter, Tab, Up and Down, Ctrl keys and pastes do whatever
+  the program decides, so they are never predicted. After one, the next key
+  waits for its own echo; once that comes back, the keys after it show at
+  once again.
+- **The box always wins.** Predictions are drawn over the terminal, never
+  written into it. If the box draws something else where a prediction was
+  (a job finishing, a completion menu, output from elsewhere), every
+  prediction still waiting is taken back and the box's screen shows as it
+  is. Prediction then waits until the box confirms one again.
+- **Passwords.** A password prompt doesn't echo, so its predictions are
+  never confirmed and never show.
+- **Full-screen programs.** In vim, less and the like, typing is predicted
+  only once the program has echoed a key where it was typed, and keys that
+  move around (vim's normal mode, less's scrolling) never show.
+- **Where.** In shells and other terminals you type in. An agent's own
+  screen (Claude Code, Codex), the chat's terminal and a scrolled-back
+  terminal get none.
+
+Both renderers show predictions. Nothing about them animates, so Reduce
+motion has nothing to change.

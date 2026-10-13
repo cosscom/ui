@@ -23,9 +23,9 @@ Use this skill to:
 ## Source of truth
 
 - coss components docs: `apps/ui/content/docs/components/*.mdx`
-  - `https://github.com/cosscom/coss/tree/main/apps/ui/content/docs/components`
+  - `https://github.com/cosscom/ui/tree/main/apps/ui/content/docs/components`
 - coss particle examples: `apps/ui/registry/default/particles/p-*.tsx`
-  - `https://github.com/cosscom/coss/tree/main/apps/ui/registry/default/particles`
+  - `https://github.com/cosscom/ui/tree/main/apps/ui/registry/default/particles`
 - coss particles catalog: `https://coss.com/ui/particles`
 - docs map for agents: `https://coss.com/ui/llms.txt`
 

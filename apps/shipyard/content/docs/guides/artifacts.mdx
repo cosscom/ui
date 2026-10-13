@@ -1,0 +1,139 @@
+---
+title: Artifacts
+description: Charts, tables, diagrams, notes and small pages an agent makes for you, shown in its chat, as a tab and on the worktree's board, and updated live.
+---
+
+An artifact is something an agent made for you to look at instead of a
+wall of text: before and after numbers as a bar chart, test results as a
+table, a map of the system as a diagram, a plan as notes, a long job's
+progress as a small page. The agent writes a file and registers it with
+`berthd artifact add`; Shipyard shows it in the chat where it was made, opens
+it as a tab, keeps the worktree's artifacts on a board, and shows each new
+version live when the agent rewrites the file.
+
+Agents learn this from the `berth-artifacts` skill, which
+`berthd integrations install` gives Claude Code and Codex (see
+[agent integrations](/docs/guides/agent-integrations#skills)).
+
+## In the app
+
+- **In the chat**, a card where the agent made it: a live thumbnail, a
+  headline worked out from the data ("/search 1,240 → 410 ms (−67%)",
+  "3 failed of 16", "Worst: /search at 18:00, 1,420 ms"), what it is, its
+  version and how long ago. **Open** shows it in a tab after the chat;
+  **⌘-click** (or the beside button) opens it beside the chat.
+- **The Artifact tab** says who made it and from which file, has a **Live**
+  pill that pulses when a version lands, a strip of its versions (pick one
+  to look back; **Back to latest** returns), **Source** for what the agent
+  wrote, and **Board**. It is a pane like any other: split it, drag it into
+  a tab group, or put it on a side of Compare.
+- **The board** is the worktree's gallery, newest change first, filtered by
+  Charts, Tables, Diagrams, Pages and Notes. Open it from **N artifacts**
+  under the reply box, a tab's **Board** button, or the grid button in the
+  worktree's toolbar, beside Files.
+
+## Visual diffs
+
+What a change did to the app's pages is an artifact of its own kind:
+`berthd shots compare` screenshots the worktree's pages and main's at
+phone, tablet and desktop widths, diffs them, and shows the result as a
+before/after slider with a heatmap, numbered regions and what broke (a
+page that scrolls sideways, a 500). It versions, updates live and sits on
+the board like any other artifact. See [visual diffs](/docs/guides/visual-diffs).
+
+## Kinds
+
+| Kind | The file | Drawn by |
+| --- | --- | --- |
+| chart | `berth.chart/v1` JSON | Shipyard, with [bklit UI](https://ui.bklit.com)'s charts, in your theme |
+| table | `.csv`, `.tsv`, or a JSON array of objects | Shipyard: sortable, a `status` column colours rows and filters failures |
+| diagram | Mermaid (`.mmd`) | Shipyard draws flowcharts; other Mermaid diagrams show as source |
+| notes | Markdown (`.md`) | Shipyard, without raw HTML |
+| page | one `.html` file | the page itself, sandboxed on its own origin |
+
+| visualdiff | made by `berthd shots compare`, never added by hand | Shipyard: a before/after slider, heatmap and regions ([visual diffs](/docs/guides/visual-diffs)) |
+
+The kind comes from the file, or `--kind`. Data artifacts may be 1 MB and
+5,000 rows; a page 2 MB.
+
+### berth.chart/v1
+
+```json
+{
+  "$schema": "berth.chart/v1",
+  "type": "bar",
+  "title": "p95 latency, before and after",
+  "x": "endpoint",
+  "y": [{ "key": "before", "label": "Before", "color": "muted" }, "after"],
+  "units": "ms",
+  "better": "lower",
+  "data": [{ "endpoint": "/search", "before": 1240, "after": 410 }]
+}
+```
+
+`type` is `bar`, `line`, `area`, `funnel`, `sankey`, `gauge`, `pie`,
+`ring` or `heatmap`. Colours are names (`"1"`–`"5"`, `good`, `bad`,
+`warn`, `muted`), never hex, so a chart reads right in every theme. The
+box checks each version and refuses one that doesn't fit with what's wrong
+(`data[0].after is "fast", not a number`). The skill has a template for
+each type.
+
+## From the command line
+
+```sh
+berthd artifact add perf/p95.json --title "p95 before and after"
+berthd artifact add perf/p95.json --note "with the suggest cache"   # same file: a new version
+berthd artifact add out.csv --id a1b2c3d4e5                          # update by id
+berthd artifact list                                                 # this worktree's
+berthd artifact show a1b2c3d4e5 [--content [--version 2]]
+berthd artifact rm a1b2c3d4e5
+berth BOX artifact list shop/search-perf                             # from a laptop
+```
+
+Run on the box, `add` remembers the file and watches it: when the agent
+rewrites it (and it has held still for a moment), the new content is a new
+version, with nothing else to run. A rewrite that doesn't check (half
+written, too big) is shown on the artifact as a problem, and the last good
+version stays. The box keeps the first version and the newest eight.
+
+Artifacts live in the box's state folder, outside the worktree: nothing in
+git, nothing in Review, and nothing a repository can ship to plant one.
+Each records the session (and helper, `--by`) that made it. They go when
+the worktree is removed. Events: `artifact.added`, `artifact.updated`,
+`artifact.removed`; gates: `before:artifact.add`, `before:artifact.remove`
+([events](/docs/reference/events)).
+
+## Safety
+
+A page an agent wrote is untrusted: a prompt-injected agent could write a
+hostile one. Shipyard runs each at its own origin,
+`http://art-<id>.<box>.localhost:1377`, answered by the laptop's proxy from
+the box over your paired connection, so the page never holds a token:
+
+- **Its own origin, sandboxed.** The page runs with an opaque origin: no
+  cookies, no storage, nothing of the app's, other artifacts' or your dev
+  sites'. It can't navigate the app, open windows or show dialogs.
+- **No network.** `connect-src 'none'`, images, fonts and media only
+  `data:` and `blob:`, no forms, frames or workers. Scripts run inline, or
+  from a few pinned libraries (Chart.js, d3, Alpine, ECharts, three.js,
+  marked) that the proxy fetches by their exact CDN address, checks against
+  a hash, and serves from the page's own origin: the page reaches no CDN,
+  so nothing it adds to an address goes anywhere.
+- **It can't leave.** The app frames a small shell of Shipyard's, which frames
+  the page and allows only that origin's pages: a page that navigates
+  itself elsewhere is stopped.
+- **No cookies, none of Preview's machinery**: the proxy reads and sets
+  none on these hosts, and names starting `art-` are kept from locations
+  and worktrees.
+- **WebRTC**, which no policy's `connect-src` covers, is blocked with the
+  `webrtc 'block'` directive where the browser supports it, and the page's
+  first script removes its constructors.
+- **Secrets.** The box refuses a version that looks like it holds one
+  (private keys, cloud and API tokens, passwords in URLs, `.env`-style
+  lines): a pattern check, so the skill also says never to include any.
+
+Charts, tables, diagrams and notes run no code of the agent's at all: Shipyard
+draws them from their data, as text.
+
+Thumbnails of pages are a poster, not the running page: a page runs only
+in its tab, so a busy one can't slow the chat or the board.

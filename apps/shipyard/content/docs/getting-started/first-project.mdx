@@ -1,0 +1,101 @@
+---
+title: First project and worktree
+description: Register a repository on a box, branch a worktree off it, and open its dev server.
+---
+
+## Add the repository
+
+Shipyard works with repositories that are already on the box. Register one as a
+**location**, a name for a directory on that box:
+
+```sh
+berth location add my-box/app ~/work/app
+berth locations my-box
+```
+
+A path under your laptop's home is sent as `~/…`, so the box reads it against
+its own home. A location can be any directory, but worktrees need a git
+repository. If the repository isn't on the box yet, clone it there first
+(an SSH command starts in your home on the box, so `work/app` is
+`~/work/app`):
+
+```sh
+ssh me@my-box git clone https://github.com/you/app work/app
+```
+
+In the app, **Add a project** takes a path on the box, a git URL or
+`owner/repo` to clone, or a new name to create an empty repository, and says
+what Enter will do before you press it. One repository checked out on several
+boxes is one **project** in the sidebar; see
+[projects and worktrees](/docs/concepts/projects-and-worktrees).
+
+## Make a worktree
+
+```sh
+berth worktree new my-box/app/fix-login
+```
+
+Shipyard runs `git worktree add` next to the repository, as `~/work/app-fix-login`,
+on a branch named `fix-login` (or `--branch B`, from `--base REF`). An
+existing branch, locally or on `origin`, is checked out as it is. Then:
+
+1. a `worktree.created` event goes to anything listening;
+2. the repository's **setup script** runs in the new worktree, in the
+   background, with its output in a log;
+3. once setup succeeds, the worktree's **services** marked `autostart`
+   start.
+
+Worktrees made by any other tool, including plain `git worktree add`, show up
+too: berthd watches its locations.
+
+## Give it its own ports and setup
+
+Every worktree gets a block of ports of its own (`$BERTH_PORT`,
+`$BERTH_PORT_1`, …) and a set of `BERTH_*` variables. A repository says how
+to use them in `.berth/config.json`:
+
+```json title=".berth/config.json"
+{
+  "setup": "pnpm install",
+  "ports": 2,
+  "env": { "DATABASE_URL": "postgres://localhost/$BERTH_WORKTREE_SLUG" },
+  "services": [{ "name": "web", "run": "pnpm dev --port $BERTH_PORT", "autostart": true }]
+}
+```
+
+Commit it, then trust it once on each box: the file runs commands, so a
+box runs none of it (only `ports`) until someone trusts it there, and again
+after it changes. The app asks (**This repository wants to run …**), or run
+`berth location config my-box/app` and then `--trust HASH` with the hash it
+prints; see
+[trusting a repository's config](/docs/guides/project-config#trusting-a-repositorys-config).
+Every box that trusts it then does the same thing. For setup you'd rather not
+commit, use a [kit](/docs/guides/kits) or the box's own config
+([project config](/docs/guides/project-config#this-box-only)).
+
+## Open it
+
+A worktree's dev server is at a private URL on your laptop, served by the
+laptop agent's proxy through the box connection, with nothing exposed on the
+box:
+
+```text
+http://fix-login.app.my-box.localhost:1377/   the worktree's own port
+http://3000.my-box.localhost:1377/            any port on the box
+```
+
+```sh
+berth open my-box 3000                   # open a port in your browser
+berth service list my-box/app/fix-login  # the worktree's services
+berth edit my-box/app/fix-login          # open it in your editor, over SSH
+```
+
+In the app, the worktree's workspace has terminals, splits and browser tabs
+onto those URLs; the **Run** menu starts and opens its services.
+Drag a tab onto a pane's edge to split it there, or a pane by its header
+onto the tab strip to make it a tab again; a tab's right-click menu has
+**Split right** and **Split down** too.
+
+## Next
+
+[Start your first agent](/docs/getting-started/first-agent).

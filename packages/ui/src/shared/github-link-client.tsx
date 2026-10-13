@@ -7,12 +7,18 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import type * as React from "react";
 
-export function GitHubLinkClient({ stars }: { stars: React.ReactNode }) {
+export function GitHubLinkClient({
+  stars,
+  href = siteConfig.links.github,
+}: {
+  stars: React.ReactNode;
+  href?: string;
+}) {
   return (
     <Button
       className="relative h-8 shadow-none max-sm:w-8"
       render={
-        <Link href={siteConfig.links.github} rel="noreferrer" target="_blank">
+        <Link href={href} rel="noreferrer" target="_blank">
           <HugeiconsIcon className="size-4" icon={GithubIcon} strokeWidth={2} />
           <span className="max-sm:sr-only">{stars}</span>
         </Link>

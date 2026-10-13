@@ -18,6 +18,7 @@
         "@coss/checkbox-group",
         "@coss/collapsible",
         "@coss/combobox",
+        "@coss/composer",
         "@coss/command",
         "@coss/context-menu",
         "@coss/dialog",
@@ -297,6 +298,23 @@
       "name": "combobox",
       "registryDependencies": [
         "@coss/input",
+        "@coss/scroll-area"
+      ],
+      "type": "registry:ui"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react"
+      ],
+      "files": [
+        {
+          "path": "registry/default/ui/composer.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "name": "composer",
+      "registryDependencies": [
+        "@coss/composer-editor",
         "@coss/scroll-area"
       ],
       "type": "registry:ui"
@@ -5112,6 +5130,281 @@
     },
     {
       "categories": [
+        "composer",
+        "text editor"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "description": "Composer with people, teams, and slash suggestions",
+      "files": [
+        {
+          "path": "registry/default/particles/p-composer-1.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"
+      },
+      "name": "p-composer-1",
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/composer"
+      ],
+      "type": "registry:block"
+    },
+    {
+      "categories": [
+        "composer",
+        "async",
+        "loading"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "description": "Composer with asynchronous mention suggestions",
+      "files": [
+        {
+          "path": "registry/default/particles/p-composer-2.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"
+      },
+      "name": "p-composer-2",
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/composer",
+        "@coss/spinner"
+      ],
+      "type": "registry:block"
+    },
+    {
+      "categories": [
+        "composer",
+        "drawer"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "description": "Composer pinned below scrollable drawer content",
+      "files": [
+        {
+          "path": "registry/default/particles/p-composer-3.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "name": "p-composer-3",
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/composer",
+        "@coss/drawer"
+      ],
+      "type": "registry:block"
+    },
+    {
+      "categories": [
+        "composer",
+        "textarea"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "description": "Composer surface with a native textarea",
+      "files": [
+        {
+          "path": "registry/default/particles/p-composer-4.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"
+      },
+      "name": "p-composer-4",
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/composer"
+      ],
+      "type": "registry:block"
+    },
+    {
+      "categories": [
+        "composer",
+        "text editor"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "description": "Composer with a custom suggestion list",
+      "files": [
+        {
+          "path": "registry/default/particles/p-composer-5.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"
+      },
+      "name": "p-composer-5",
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/composer"
+      ],
+      "type": "registry:block"
+    },
+    {
+      "categories": [
+        "composer",
+        "text editor"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "description": "Composer with distinct person, team, and action chips",
+      "files": [
+        {
+          "path": "registry/default/particles/p-composer-6.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"
+      },
+      "name": "p-composer-6",
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/composer"
+      ],
+      "type": "registry:block"
+    },
+    {
+      "categories": [
+        "composer",
+        "text editor"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "description": "Contenteditable composer with Send beside a short draft",
+      "files": [
+        {
+          "path": "registry/default/particles/p-composer-7.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"
+      },
+      "name": "p-composer-7",
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/composer"
+      ],
+      "type": "registry:block"
+    },
+    {
+      "categories": [
+        "composer",
+        "textarea"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "description": "Textarea composer with Send beside a short draft",
+      "files": [
+        {
+          "path": "registry/default/particles/p-composer-8.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"
+      },
+      "name": "p-composer-8",
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/composer"
+      ],
+      "type": "registry:block"
+    },
+    {
+      "categories": [
+        "composer",
+        "text editor"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "description": "Rounded adaptive composer with circular actions",
+      "files": [
+        {
+          "path": "registry/default/particles/p-composer-9.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"
+      },
+      "name": "p-composer-9",
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/composer"
+      ],
+      "type": "registry:block"
+    },
+    {
+      "categories": [
+        "composer",
+        "text editor"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "description": "Composer with leading buttons for mentions and slash actions",
+      "files": [
+        {
+          "path": "registry/default/particles/p-composer-10.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"
+      },
+      "name": "p-composer-10",
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/composer"
+      ],
+      "type": "registry:block"
+    },
+    {
+      "categories": [
+        "composer",
+        "text editor"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "description": "Compact rounded adaptive composer with a circular send button",
+      "files": [
+        {
+          "path": "registry/default/particles/p-composer-11.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "meta": {
+        "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"
+      },
+      "name": "p-composer-11",
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/composer"
+      ],
+      "type": "registry:block"
+    },
+    {
+      "categories": [
         "command",
         "dialog"
       ],
@@ -5554,6 +5847,29 @@
       "name": "p-drawer-14",
       "registryDependencies": [
         "@coss/button",
+        "@coss/drawer"
+      ],
+      "type": "registry:block"
+    },
+    {
+      "categories": [
+        "drawer",
+        "composer"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "description": "Chat composer pinned above the mobile keyboard",
+      "files": [
+        {
+          "path": "registry/default/particles/p-drawer-15.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "name": "p-drawer-15",
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/composer",
         "@coss/drawer"
       ],
       "type": "registry:block"
@@ -12231,6 +12547,45 @@
       }
     },
     {
+      "files": [
+        {
+          "path": "registry/default/lib/composer-document.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "name": "composer-document",
+      "registryDependencies": [
+        "@coss/composer-query"
+      ],
+      "type": "registry:lib"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react"
+      ],
+      "files": [
+        {
+          "path": "registry/default/lib/composer-editor.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "name": "composer-editor",
+      "registryDependencies": [
+        "@coss/use-composer-editor"
+      ],
+      "type": "registry:lib"
+    },
+    {
+      "files": [
+        {
+          "path": "registry/default/lib/composer-query.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "name": "composer-query",
+      "type": "registry:lib"
+    },
+    {
       "dependencies": [
         "class-variance-authority"
       ],
@@ -12308,6 +12663,22 @@
       ],
       "name": "direction-provider",
       "type": "registry:lib"
+    },
+    {
+      "dependencies": [
+        "@base-ui/react"
+      ],
+      "files": [
+        {
+          "path": "registry/default/hooks/use-composer-editor.ts",
+          "type": "registry:hook"
+        }
+      ],
+      "name": "use-composer-editor",
+      "registryDependencies": [
+        "@coss/composer-document"
+      ],
+      "type": "registry:hook"
     },
     {
       "files": [

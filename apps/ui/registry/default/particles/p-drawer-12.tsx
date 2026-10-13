@@ -17,7 +17,6 @@ import {
   Drawer,
   DrawerClose,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerPanel,
   DrawerPopup,
@@ -63,15 +62,15 @@ export default function Particle() {
             <DrawerDescription>{FORM_DESCRIPTION}</DrawerDescription>
           </DrawerHeader>
           <Form className="contents">
-            <DrawerPanel className="grid gap-4" scrollable={false}>
+            <DrawerPanel className="grid gap-4">
               {formFields}
+              <div className="flex flex-col-reverse gap-2">
+                <DrawerClose render={<Button variant="ghost" />}>
+                  {CANCEL_LABEL}
+                </DrawerClose>
+                <Button type="submit">{SAVE_LABEL}</Button>
+              </div>
             </DrawerPanel>
-            <DrawerFooter>
-              <DrawerClose render={<Button variant="ghost" />}>
-                {CANCEL_LABEL}
-              </DrawerClose>
-              <Button type="submit">{SAVE_LABEL}</Button>
-            </DrawerFooter>
           </Form>
         </DrawerPopup>
       </Drawer>

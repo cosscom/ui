@@ -2073,6 +2073,146 @@ export const particles: ParticleItem[] = [
     type: "registry:block",
   },
   {
+    categories: categories("composer", "text editor"),
+    dependencies: ["lucide-react"],
+    description: "Composer with people, teams, and slash suggestions",
+    files: [{ path: "particles/p-composer-1.tsx", type: "registry:block" }],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl",
+    },
+    name: "p-composer-1",
+    registryDependencies: ["@coss/button", "@coss/composer"],
+    type: "registry:block",
+  },
+  {
+    categories: categories("composer", "async", "loading"),
+    dependencies: ["lucide-react"],
+    description: "Composer with asynchronous mention suggestions",
+    files: [{ path: "particles/p-composer-2.tsx", type: "registry:block" }],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl",
+    },
+    name: "p-composer-2",
+    registryDependencies: ["@coss/button", "@coss/composer", "@coss/spinner"],
+    type: "registry:block",
+  },
+  {
+    categories: categories("composer", "drawer"),
+    dependencies: ["lucide-react"],
+    description: "Composer pinned below scrollable drawer content",
+    files: [{ path: "particles/p-composer-3.tsx", type: "registry:block" }],
+    name: "p-composer-3",
+    registryDependencies: ["@coss/button", "@coss/composer", "@coss/drawer"],
+    type: "registry:block",
+  },
+  {
+    categories: categories("composer", "textarea"),
+    dependencies: ["lucide-react"],
+    description: "Composer surface with a native textarea",
+    files: [{ path: "particles/p-composer-4.tsx", type: "registry:block" }],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl",
+    },
+    name: "p-composer-4",
+    registryDependencies: ["@coss/button", "@coss/composer"],
+    type: "registry:block",
+  },
+  {
+    categories: categories("composer", "text editor"),
+    dependencies: ["lucide-react"],
+    description: "Composer with a custom suggestion list",
+    files: [{ path: "particles/p-composer-5.tsx", type: "registry:block" }],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl",
+    },
+    name: "p-composer-5",
+    registryDependencies: ["@coss/button", "@coss/composer"],
+    type: "registry:block",
+  },
+  {
+    categories: categories("composer", "text editor"),
+    dependencies: ["lucide-react"],
+    description: "Composer with distinct person, team, and action chips",
+    files: [{ path: "particles/p-composer-6.tsx", type: "registry:block" }],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl",
+    },
+    name: "p-composer-6",
+    registryDependencies: ["@coss/button", "@coss/composer"],
+    type: "registry:block",
+  },
+  {
+    categories: categories("composer", "text editor"),
+    dependencies: ["lucide-react"],
+    description: "Contenteditable composer with Send beside a short draft",
+    files: [{ path: "particles/p-composer-7.tsx", type: "registry:block" }],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl",
+    },
+    name: "p-composer-7",
+    registryDependencies: ["@coss/button", "@coss/composer"],
+    type: "registry:block",
+  },
+  {
+    categories: categories("composer", "textarea"),
+    dependencies: ["lucide-react"],
+    description: "Textarea composer with Send beside a short draft",
+    files: [{ path: "particles/p-composer-8.tsx", type: "registry:block" }],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl",
+    },
+    name: "p-composer-8",
+    registryDependencies: ["@coss/button", "@coss/composer"],
+    type: "registry:block",
+  },
+  {
+    categories: categories("composer", "text editor"),
+    dependencies: ["lucide-react"],
+    description: "Rounded adaptive composer with circular actions",
+    files: [{ path: "particles/p-composer-9.tsx", type: "registry:block" }],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl",
+    },
+    name: "p-composer-9",
+    registryDependencies: ["@coss/button", "@coss/composer"],
+    type: "registry:block",
+  },
+  {
+    categories: categories("composer", "text editor"),
+    dependencies: ["lucide-react"],
+    description: "Composer with leading buttons for mentions and slash actions",
+    files: [{ path: "particles/p-composer-10.tsx", type: "registry:block" }],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl",
+    },
+    name: "p-composer-10",
+    registryDependencies: ["@coss/button", "@coss/composer"],
+    type: "registry:block",
+  },
+  {
+    categories: categories("composer", "text editor"),
+    dependencies: ["lucide-react"],
+    description:
+      "Compact rounded adaptive composer with a circular send button",
+    files: [{ path: "particles/p-composer-11.tsx", type: "registry:block" }],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl",
+    },
+    name: "p-composer-11",
+    registryDependencies: ["@coss/button", "@coss/composer"],
+    type: "registry:block",
+  },
+  {
     categories: categories("command", "dialog"),
     dependencies: ["lucide-react"],
     description: "Command palette with dialog",
@@ -2311,6 +2451,15 @@ export const particles: ParticleItem[] = [
     },
     name: "p-drawer-14",
     registryDependencies: ["@coss/button", "@coss/drawer"],
+    type: "registry:block",
+  },
+  {
+    categories: categories("drawer", "composer"),
+    dependencies: ["lucide-react"],
+    description: "Chat composer pinned above the mobile keyboard",
+    files: [{ path: "particles/p-drawer-15.tsx", type: "registry:block" }],
+    name: "p-drawer-15",
+    registryDependencies: ["@coss/button", "@coss/composer", "@coss/drawer"],
     type: "registry:block",
   },
   {

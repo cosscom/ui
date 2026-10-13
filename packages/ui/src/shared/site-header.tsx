@@ -8,10 +8,13 @@ export function SiteHeader({
   mobileNav,
   children,
   currentProduct,
+  github,
 }: {
   mobileNav?: React.ReactNode;
   children?: React.ReactNode;
   currentProduct?: string;
+  /** The product's own repository for the GitHub link and its stars. */
+  github?: { repo: string; href: string };
 }) {
   const gatewayOrigin = process.env.NEXT_PUBLIC_COSS_URL || "";
   const gatewayHome = gatewayOrigin ? `${gatewayOrigin}/` : "/";
@@ -38,7 +41,7 @@ export function SiteHeader({
         </div>
         <div className="ms-auto flex items-center gap-2 md:flex-1 md:justify-end">
           {children}
-          <GitHubLink />
+          <GitHubLink {...github} />
           <ModeSwitcher />
         </div>
       </div>

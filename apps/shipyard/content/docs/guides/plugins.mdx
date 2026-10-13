@@ -1,0 +1,591 @@
+---
+title: Writing a plugin
+description: Add screens, worktree panels, commands, status bar items and themes to the app, with the plugin SDK.
+---
+
+A plugin is an ES module whose default export receives a
+`BerthPluginContext`, registers what it adds, and may return a cleanup
+function. Plugin components are ordinary React components in the app's own
+tree, using the app's own UI kit, so they look like the rest of Shipyard.
+
+Shipyard's built-ins are written the same way, against the same SDK: Git
+changes, Diff, Pull request, Dev servers, Box monitor, Activity, Notes, Issues
+(GitHub's and [Linear](/docs/guides/linear)'s) and Prompt library (see
+[`plugins/`](https://github.com/cosscom/shipyard/tree/main/plugins)).
+They ship inside the app and are on from the first launch, with no prompt:
+Settings → Plugins turns one off, and the app remembers that. A plugin of
+yours with the same id replaces a built-in.
+
+<Callout type="warn" title="Plugins run with the app's access">
+  Plugins are not sandboxed. A plugin can do anything the app can, on every
+  box, and its hooks run on your computer. Shipyard asks before a plugin you
+  installed first runs, and again whenever its code changes. Allow only
+  plugins you trust. See [Trust and consent](#trust-and-consent).
+</Callout>
+
+## Install one from the app
+
+**Settings → Plugins → Browse** lists plugins that aren't built in.
+**Install** puts one in `~/.berth/plugins/<id>/`, and it shows under
+**Installed**, off. Turn it on there: Shipyard shows what it will be able to
+do and a hash of its code, and it runs only once you choose **Allow and turn
+on** (see [Trust and consent](#trust-and-consent)). Installing never turns a
+plugin on.
+
+- **Update** shows when the listing has a newer version. It replaces the
+  plugin's whole folder. The new code is not the code you allowed, so the
+  plugin is off until you review it again, and the app asks straight away
+  if it was on.
+- **Remove…**, beside a plugin under Installed, deletes one the listing
+  installed and forgets that you allowed it.
+- **Replace…** shows instead of Install when `~/.berth/plugins` already has
+  a plugin with that id that the listing didn't install: a folder or a link
+  you put there, or a listed plugin whose files you changed. Shipyard never
+  installs over one of those without asking, and Remove… leaves them alone.
+
+The app's own page can't reach the web, so the Shipyard agent on your
+computer reads the listing, `https://berthd.app/plugins/index.json`, and
+downloads the files. To browse another listing, start the agent with
+`BERTH_PLUGIN_REGISTRY` set to an `https://` link to its `index.json`. See
+[what the checksum proves](#what-the-checksum-proves) for what the agent
+checks, and what it can't.
+
+## The smallest plugin
+
+```tsx title="src/index.tsx"
+import type { BerthPluginContext } from "@berth/plugin";
+import { Button } from "@berth/plugin/ui";
+
+export default function activate(berth: BerthPluginContext) {
+  berth.addCommand({ id: "hello", title: "Say hello", run: () => berth.notify("Hello", "from a plugin") });
+  berth.addScreen({ id: "hello", title: "Hello", Component: () => <Button>Hi</Button> });
+  berth.addSidebarItem({ id: "hello", title: "Hello", icon: "Sparkles", screen: "hello" });
+}
+```
+
+Every `add…` returns a function that removes what it added. Anything a
+plugin registers is also removed when the plugin is unloaded, so returning
+those from `activate` is optional.
+
+## Set up a project
+
+Copy [`plugins/hello-ports`](https://github.com/cosscom/shipyard/tree/main/plugins/hello-ports),
+the smallest complete example: a screen listing every dev server on every
+box, a sidebar item, a command and an event handler. Its pieces:
+
+```json title="package.json"
+{
+  "name": "berth-plugin-hello",
+  "private": true,
+  "type": "module",
+  "scripts": { "build": "node build.mjs", "typecheck": "tsc --noEmit" },
+  "devDependencies": {
+    "@berth/plugin": "file:../../packages/plugin-sdk",
+    "@types/react": "^19.1.8",
+    "esbuild": "^0.25.0",
+    "typescript": "~6.0.3"
+  }
+}
+```
+
+`@berth/plugin` is the SDK in
+[`packages/plugin-sdk`](https://github.com/cosscom/shipyard/tree/main/packages/plugin-sdk):
+types only, since the app provides the real thing at runtime.
+
+```js title="build.mjs"
+import { build } from "esbuild";
+
+await build({
+  entryPoints: ["src/index.tsx"],
+  bundle: true,
+  format: "esm",
+  jsx: "automatic",
+  target: "es2022",
+  external: ["react", "react/jsx-runtime", "react-dom", "@berth/plugin", "@berth/plugin/ui"],
+  outfile: "dist/index.js",
+});
+```
+
+Bundle it as ESM with `react`, `react/jsx-runtime`, `react-dom`,
+`@berth/plugin` and `@berth/plugin/ui` left external: the app provides one
+shared copy of each.
+
+## Install it
+
+A plugin is a folder in `~/.berth/plugins/` with a `berth-plugin.json`:
+
+```json title="~/.berth/plugins/hello/berth-plugin.json"
+{ "id": "hello", "name": "Hello", "version": "0.1.0", "main": "dist/index.js" }
+```
+
+```sh
+pnpm install && pnpm build
+mkdir -p ~/.berth/plugins && ln -s "$PWD" ~/.berth/plugins/hello
+```
+
+Then **Settings → Plugins → Reload** in the app (or **Reload plugins** in
+⌘K), and turn it on there. A plugin you install is off until you allow it
+(see [Trust and consent](#trust-and-consent)), and every build changes its
+code, so the app asks again after each rebuild. There is no file watcher:
+reload after each build. Settings → Plugins also shows what each plugin adds,
+or the error that stopped it loading.
+
+The folder's name is the plugin's id. The manifest's fields:
+
+| Field | Meaning |
+| --- | --- |
+| `name`, `version`, `description` | Shown in Settings |
+| `main` | The bundle, relative to the folder |
+| `defaultEnabled` | For built-in plugins only: `false` to stay off until turned on. A plugin in `~/.berth/plugins` is always off until you allow it |
+| `hooks` | [Hooks](/docs/guides/hooks) to run while the plugin is on, in its folder, with `BERTH_PLUGIN_DIR` set |
+| `themes` | Theme JSON files to offer, relative to the folder |
+| `kits` | Kit folders to offer, relative to the folder |
+| `author`, `homepage`, `marketplace` | For a plugin in [the listing](#publish-it-to-the-listing): who it is from, a web page about it, and `true` to list it |
+| `box.helper` | A [program the plugin runs on a box](#give-a-plugin-a-helper), with the checksum of its build for each platform |
+
+A plugin folder in `~/.berth/plugins` on a box gives that box its hooks
+too, once it is allowed there (see below).
+
+## Trust and consent
+
+A plugin's code runs inside the app's own page, with the app's own access.
+Once on, a plugin can:
+
+- use the Shipyard agent's API, and its API token, exactly as the app does;
+- run commands and open shells on every box you've paired;
+- read whatever boxes return: files, logs, environment and session output;
+- send anything it can read to any website;
+- run its hooks as you, on this computer and on a box that has it installed.
+
+So Shipyard never turns on a plugin you installed by itself. The first time you
+turn one on, the app shows what it can do, its hooks, and a hash of its code,
+and runs it only if you choose **Allow and turn on**. What you allow is that
+exact code: the agent records a SHA-256 hash of the plugin's
+`berth-plugin.json` and its `main` module in `~/.berth/plugins.json` (beside
+the plugins folder, never inside a plugin's own folder), and the app imports
+a plugin only when the bytes it fetched hash to that value. When either file
+changes, the plugin is off, its hooks stop running, and the app asks again.
+Turning a plugin off forgets the permission.
+
+`defaultEnabled` and an `enabled` file in a plugin's folder no longer turn a
+plugin on: only the built-in plugins that ship inside the app can be on by
+default.
+
+A plugin can also carry a program for your boxes (a
+[helper](/docs/reference/plugin-sdk#helper), under `box.helper` in its
+manifest), as [Leadline](/docs/guides/leadline) does. The dialog then adds that
+it can install and run that program, by name, on the boxes you turn it on
+for, and its row in Settings → Plugins says the same. Allowing the plugin
+installs nothing: the program reaches a box only when you turn the plugin
+on for that box, and a different program, or a different build of it, is a
+different manifest, so Shipyard asks again.
+
+On a box, where there is no app to ask, a plugin's hooks run only once it is
+listed in the box's `~/.berth/plugins.json`. An entry without a hash trusts
+whatever the folder holds:
+
+```json title="~/.berth/plugins.json (on a box)"
+{ "plugins": { "hello": {} } }
+```
+
+<Callout title="Not a sandbox">
+  Consent decides whether a plugin runs; it does not limit what a plugin
+  does once it runs. Running each plugin in its own isolated view behind a
+  bridge that grants only the capabilities it asked for is planned.
+</Callout>
+
+## Publish it to the listing
+
+The listing people browse in Settings → Plugins is a folder of this
+repository, [`site/plugins/`](https://github.com/cosscom/shipyard/tree/main/site/plugins),
+served at `berthd.app/plugins/`. To add a plugin to it:
+
+1. Put the plugin in `plugins/<id>/`, laid out like
+   [`hello-ports`](https://github.com/cosscom/shipyard/tree/main/plugins/hello-ports)
+   with its code in `src/index.tsx`. The id is lowercase letters, digits and
+   dashes, at most 48 characters.
+2. In its `berth-plugin.json`, set `"marketplace": true` and a `version`,
+   and say who it is from:
+
+   ```json title="plugins/hello-ports/berth-plugin.json"
+   {
+     "id": "hello-ports",
+     "name": "Hello ports (example)",
+     "version": "0.1.0",
+     "description": "An example plugin to copy from.",
+     "main": "dist/index.js",
+     "author": "Shipyard",
+     "homepage": "https://github.com/cosscom/shipyard/tree/main/plugins/hello-ports",
+     "marketplace": true
+   }
+   ```
+
+3. Run `pnpm -C app build:marketplace`. It bundles every marketplace plugin
+   the way `build.mjs` above does, into `site/plugins/<id>/<version>/`
+   (the manifest, the `main` module, and any `themes` and `kits` the
+   manifest names), and writes `site/plugins/index.json`. Bundles are not
+   minified, so the code someone is asked to allow can be read.
+4. Commit `site/plugins/` with the plugin and open a pull request. Once it
+   is merged and the site is deployed, the plugin is in everyone's Browse.
+
+To publish a change, raise `version` and run the build again: people who
+installed the plugin see **Update**. `pnpm -C app check:marketplace` fails
+when `site/plugins/` is not what `plugins/` builds.
+
+The index lists each plugin and every file it has, with links relative to
+the index:
+
+```json title="site/plugins/index.json"
+{
+  "plugins": [
+    {
+      "id": "hello-ports",
+      "name": "Hello ports (example)",
+      "description": "An example plugin to copy from.",
+      "version": "0.1.0",
+      "author": "Shipyard",
+      "homepage": "https://github.com/cosscom/shipyard/tree/main/plugins/hello-ports",
+      "files": [
+        { "path": "berth-plugin.json", "url": "hello-ports/0.1.0/berth-plugin.json", "sha256": "b8d54d1d…", "size": 382 },
+        { "path": "dist/index.js", "url": "hello-ports/0.1.0/dist/index.js", "sha256": "f9902943…", "size": 5335 }
+      ]
+    }
+  ]
+}
+```
+
+| Field | What the agent holds it to |
+| --- | --- |
+| `id` | Lowercase letters, digits and dashes, at most 48 characters. It becomes the folder's name; an entry with any other id is not listed |
+| `version` | Must be the `version` in the plugin's own `berth-plugin.json` |
+| `author`, `homepage` | Optional. A `homepage` that is not an `https://` link is dropped |
+| `files[].path` | Where the file goes inside the plugin's folder: a relative path with no `..`. One of them is `berth-plugin.json`, and the `main` it names is another |
+| `files[].url` | Where the file is, relative to the index, on the same address as the index |
+| `files[].sha256`, `files[].size` | The file's SHA-256, in hex, and its size in bytes. A file is at most 16 MB, a plugin 64 MB in 256 files, and the index 1 MB |
+
+A plugin the index describes wrongly is listed with the reason and can't be
+installed. Fields the agent doesn't know are ignored, so a newer index still
+reads. Any static host can serve a listing of your own in this format: point
+`BERTH_PLUGIN_REGISTRY` at its `index.json`. It must be `https://`; plain
+`http://` is read only from `localhost` or `127.0.0.1`.
+
+### What the checksum proves
+
+Before anything is installed, the agent downloads every file the listing
+names, from the listing's own address, and compares each with the size and
+SHA-256 the listing gives. If one differs, nothing is installed and what was
+there stays as it was.
+
+That proves **the files are the ones the listing describes**: a download cut
+short, a file changed on the server after the listing was written, or two
+versions mixed together is refused.
+
+It does not prove the plugin is safe, or who wrote it. The checksums come
+from the same place as the files, so whoever can change the listing can
+change both. It is not a signature. What stands between a listing and your
+boxes is still you: a plugin runs only once you allow it, the consent dialog
+shows the hash of the code that was installed, and that permission is for
+exactly that code. An update is new code, so it is asked about again; when
+an update changes only files other than the manifest and `main`, which the
+permission's hash doesn't cover, Shipyard forgets the permission rather than
+carry it over.
+
+## Give a plugin a helper
+
+A plugin's code runs in the app, on your laptop. Some things can only be
+done where the code under development runs: recording a dev server's
+queries, watching its files, keeping data that should outlive the app. For
+that a plugin can bring a **helper**, a program Shipyard installs on a box
+and keeps running there, with an HTTP API the plugin's panel reads through
+Shipyard. Leadline's `berth-leadline` is one.
+
+A helper is declared in the plugin's manifest:
+
+```json title="berth-plugin.json"
+{
+  "name": "Acme traces",
+  "version": "1.2.0",
+  "main": "dist/index.js",
+  "box": {
+    "helper": {
+      "name": "acme-helper",
+      "version": "0.3.0",
+      "args": ["serve", "--dir", "{dir}", "--addr", "127.0.0.1:0"],
+      "ready": "helper.json",
+      "attach": "/api/attach",
+      "attach_env": ["DATABASE_URL", "POSTGRES_URL", "OTEL_*"],
+      "assets": {
+        "linux-amd64": { "url": "https://downloads.acme.example/acme-helper-0.3.0-linux-amd64", "sha256": "5f70bf18…", "size": 18403328 },
+        "linux-arm64": { "url": "https://downloads.acme.example/acme-helper-0.3.0-linux-arm64", "sha256": "9c1185a5…", "size": 17551360 }
+      }
+    }
+  }
+}
+```
+
+| Field | What it is |
+| --- | --- |
+| `name` | The program's file name: lowercase letters, digits, dots and dashes, at most 64 characters |
+| `version` | The helper's own version, apart from the plugin's. It names the folder the program is kept in |
+| `args` | The program's arguments, at most 32. `{dir}` in one is the helper's data folder on the box. Nothing else is added to them |
+| `ready` | The name of a JSON file the helper writes in `{dir}` once it listens, with `"api": "http://127.0.0.1:PORT"`. Until it is there the helper is `starting`; one that has not written it in 30 seconds is stopped and started again |
+| `attach`, `attach_env` | Optional: [what the helper adds to a worktree's services](#attach-what-a-helper-adds-to-a-service) |
+| `assets` | The build for each platform a box can be: `linux-amd64`, `linux-arm64`, `darwin-arm64`, `darwin-amd64`. Each has the `https://` address it is downloaded from, its SHA-256 in hex, and its size in bytes (at most 128 MB). A box of a platform with no build shows the helper as unsupported |
+
+What a helper has to do:
+
+- **Listen on loopback, on a port it is given by the system** (`127.0.0.1:0`),
+  and say which in its `ready` file. berthd relays only to an address on the
+  box itself, and a fixed port would collide with the next box's.
+- **Answer to this machine only.** Requests reach it from berthd with its
+  own loopback address as the `Host` and no `Origin`. Refuse other hosts,
+  which stops a web page from reaching it by DNS rebinding.
+- **Keep everything in `{dir}`.** It is the helper's own folder, kept when
+  the helper is turned off and updated, and removed only when someone
+  removes the helper with its data.
+- **Stop when asked.** berthd sends `SIGTERM`, and kills it five seconds
+  later.
+- **Log without secrets.** What it prints is kept in a log the box's owner
+  and their laptops can read.
+
+It is one static program for each platform: berthd runs the file it was
+sent, and installs nothing beside it.
+
+### Turning it on
+
+A helper is installed on one box at a time, by the person, from the plugin.
+The laptop agent does it, on three routes of [its API](/docs/reference/app-api#laptop):
+
+| Request | What it does |
+| --- | --- |
+| `GET /v1/plugins/acme-traces/helper?box=devbox` | The helper's state on that box: `none` (the plugin has no helper), `unsupported` (no build for the box's platform, or a berthd too old to run helpers), `off`, `installing`, `starting`, `running` or `failed`, with the box's `platform`, the `version` it runs, the `latest` the manifest names and `update` when they differ |
+| `POST /v1/plugins/acme-traces/helper?box=devbox` | Install it, or update it, and turn it on |
+| `DELETE /v1/plugins/acme-traces/helper?box=devbox` | Turn it off and remove its program. Its data stays unless `&purge=1` |
+
+`POST` has the laptop download the build for that box's platform, check its
+size and SHA-256 against the manifest, and upload it to the box over
+Shipyard's own connection: the box needs no way out to the internet. berthd
+checks the bytes again, keeps the program in the helper's own folder and
+starts it. From then on it runs whenever berthd does, and is started again
+if it exits. `update` in the status says the box runs another helper than
+the manifest names now; `POST` again brings it up to date. See
+[the app's API](/docs/reference/app-api#laptop) for the answers and their codes.
+
+These routes work only for a plugin that is installed and allowed as it is
+now. When a plugin updates, its manifest changes, the permission lapses, and
+its helper is not touched until you have allowed the new manifest. Removing
+a helper is never held back.
+
+### Reading it from the plugin
+
+The plugin's panel reaches its helper's API through the box, as any box
+path:
+
+```ts
+// GET /api/queries?source=acme/fix-orders on the helper, on the box "devbox".
+const queries = await berth.api.request("devbox", "GET", "helpers/acme-traces/api/api/queries?source=acme%2Ffix-orders");
+```
+
+Everything after `helpers/<id>/api` is the path on the helper, with its
+query and body, and the answer comes back as the helper wrote it, a
+server-sent event stream included. While the helper is not running on that
+box the answer is 409 with the code `helper_off`.
+
+[`berth.helper.request`](/docs/reference/plugin-sdk#helper) is the same call with
+the plugin's own id and the helper's `/api/` filled in: `berth.helper.request("devbox",
+"GET", "queries?source=acme%2Ffix-orders")` asks for the path above. Keep a
+helper's API under `/api/`, and what it answers there as JSON: the laptop
+takes a plain-text 404 from a box for a berthd too old to know the route.
+
+### Attach: what a helper adds to a service
+
+A helper that records what a dev server does has to be told about the dev
+server, and the dev server has to be pointed at it. With `attach` set,
+berthd asks the helper before it starts a worktree's
+[service](/docs/guides/project-config#services), by `POST` to that path:
+
+```json
+{
+  "box": "devbox",
+  "project": "acme",
+  "worktree": "fix-orders",
+  "branch": "fix/orders-n-plus-one",
+  "path": "/home/dev/acme-fix-orders",
+  "command": "web",
+  "env": { "DATABASE_URL": "postgres://app:…@localhost:5432/acme" }
+}
+```
+
+`worktree` is empty for the project's own checkout, and `command` is the
+service's name in the project's config. The helper answers with the
+variables to set:
+
+```json
+{ "env": { "DATABASE_URL": "postgres://app:…@127.0.0.1:25432/acme", "OTEL_EXPORTER_OTLP_ENDPOINT": "http://127.0.0.1:41873" } }
+```
+
+- **`attach_env` is both what the helper is told and what it may set.** Each
+  entry is a variable's name, or a prefix ending in `*`. The request's `env`
+  has the service's variables that match and no others, and a variable in
+  the answer that does not match is ignored. It is in the manifest, so it is
+  part of what the person allowed.
+- **Secrets stay out of it.** A variable that names a
+  [secret](/docs/guides/secrets) (`op://…`, `env://…`) is not sent, since its
+  value is only read when the service starts, and is not replaced. Neither
+  is any `BERTH_` variable.
+- **A helper is never in the way.** berthd waits two seconds. A helper that
+  is not running, answers late, answers an error or answers something else
+  changes nothing: the service starts exactly as it would have.
+- **A plain value in a variable you name is sent as it is**, a password in a
+  database URL included. It goes to the helper on loopback, and berthd logs
+  neither the request nor the answer.
+
+- **A service is told once, when it starts.** What the helper answered is
+  the service's environment until the service is started again. So a helper
+  should answer with addresses that outlast it: `berth-leadline` opens a
+  worktree's proxy on the same port every time, and comes back on the port
+  it had after a restart. And turning a helper off does not restart
+  anything: a service that was pointed at it still is, until you restart
+  the service, which then starts as the project wrote it. The answer to
+  turning it off lists those services (`attached`), so a panel can say
+  which to restart.
+
+Only services are attached: a dev server an agent starts by hand in its
+terminal has the worktree's usual environment.
+
+### Publishing a helper's builds
+
+The checksums in `assets` are what a person allows with the plugin, so they
+must be the checksums of builds that exist. Build the helper for each
+platform, publish the files somewhere they will not change, and write each
+one's address, SHA-256 and size into the manifest. New builds are a new
+`version` of the helper, at new addresses; then raise the plugin's `version`
+and [publish it](#publish-it-to-the-listing) as usual.
+`pnpm -C app build:marketplace` carries `box.helper` into the listed manifest
+and refuses assets that are not `https://`, have no checksum or name a
+platform no box runs.
+
+For a helper built in this repository the listing build fills `assets` in
+itself, from the files that were released, and drops whatever the plugin's
+manifest says of them. `scripts/release-leadline-helper.sh` does it for
+`berth-leadline`: it builds the four platforms (`make leadline`), lists them
+in `site/plugins/` at
+`https://github.com/cosscom/shipyard/releases/download/leadline-helper-v<version>/berth-leadline-<os>-<arch>`,
+and uploads those very files to that release. Building the listing without
+the builds keeps the checksums it already has for that version, and refuses
+other builds under a version that is listed. A version with no release yet
+is listed with no builds, and installs nowhere.
+
+### What a helper's checksum proves
+
+The laptop fetches a helper from the address in the manifest, which can be
+anywhere. What holds it to account is the manifest: its SHA-256 is part of
+the hash you allowed when you turned the plugin on, and the laptop, and then
+the box, refuse any bytes that do not match it.
+
+That proves **the program on the box is the one your allowed manifest
+names**: a download that was tampered with, replaced at its address after
+the fact, or cut short is never uploaded, and never run.
+
+It does not prove the program is safe, or who built it. Whoever wrote the
+manifest chose the checksum; it is not a signature. And a helper is not
+confined: it is a program that runs on the box as you, for as long as berthd
+runs, and can read and do there what you can. Allowing a plugin with a
+helper, and then turning the helper on for a box, is deciding to run its
+author's program on that box. `berthd helpers` on the box lists what runs,
+and `berthd helper rm` removes one whatever the app says.
+
+## What a plugin can add
+
+| Call | Adds |
+| --- | --- |
+| `addScreen` | A screen in the main area, under the app's header strip |
+| `addSidebarItem` | A place that opens one of its screens. It starts under the sidebar's **More** menu (also zen's switcher); people can pin it from there |
+| `addWorktreePanel` | A view about one worktree, opened as a tab or split in its workspace |
+| `addCommand` | An entry in the command palette (⌘K) |
+| `addStatusBarItem` | Something in the status bar, left or right |
+| `addTheme` | A theme |
+| `on(type, handler)` | A handler for events of a type, a prefix like `worktree.*`, or `*` |
+
+And it can act: `notify`, `openScreen`, `openTerminal`, `openUrl`,
+`openWorktree`, `openBrowser`, `openPanel`. `berth.api` is a typed client for
+every box; `berth.orchestrate` drives agents; `berth.prompts` is the saved
+prompt library; `berth.storage` keeps small values on this computer. Every
+call is in [the plugin SDK reference](/docs/reference/plugin-sdk).
+
+## Fitting in
+
+- A screen opens under the app's header strip, which shows its `title` (and
+  `description`). Render `<ViewHeader title description actions />` from
+  `@berth/plugin/ui` anywhere in the screen to put a live description or
+  buttons there.
+- The app lays a screen out as a page, one width and left aligned like every
+  other screen; pass `layout: "fill"` for a table or split view that fills
+  the area and scrolls itself.
+- Use `<Frame variant="card">` for a section of a screen (one outline, rows
+  directly inside), and `sessionName(session, …)` to name a session the way
+  the app does.
+- Choices and filters use the app's controls so they mean the same thing
+  everywhere: `PickOne` for one of a few values (including a filter with an
+  "All" choice), `BoxFilter` for which boxes a screen covers, and
+  `FilterChip` to narrow a list by labels or tags.
+- Tooltips are `<Tip label>`, never the HTML `title` attribute. Size list
+  rows with `h-row` or `py-row-pad` so they follow the Density setting.
+- Stick to Tailwind classes the app already uses, or inline styles: a user
+  plugin's classes are not compiled into the app's stylesheet.
+
+## Built-in: the Diff panel
+
+**Diff** (in a workspace's **+** menu, under Panels, or "Show this branch's
+diff" in ⌘K) shows the current branch's whole diff in one scrolling view,
+drawn with [`@pierre/diffs`](https://diffs.com):
+
+- **Branch** (the default) is what the branch's commits changed since it left
+  the default branch: `origin/HEAD`, else `origin/main`, `main` or `master`.
+  **Uncommitted** is the working tree against `HEAD`, new files included.
+  **All** is both: the working tree against where the branch left.
+- A file list with each file's added and removed lines; click one to jump to
+  it. **Split** or **Unified**, line wrapping and the file list are
+  remembered.
+- Lockfiles, generated files and very large diffs start folded; binary files
+  are named but not shown. Click a file's header to fold or unfold it.
+- The diff is read with `git` on the box and stops at 4 MB, which the panel
+  says. Only the files on screen are drawn, and highlighting runs in a
+  worker; the library loads the first time a Diff panel opens.
+
+A built-in can keep heavy code out of its main module the same way: each
+file in its `src/lazy/` is built, code-split, to `<id>/lazy/`, for the plugin
+to `import()` by URL when it needs it (see `app/scripts/build-plugins.mjs`).
+
+## Example: a worktree panel
+
+```tsx
+import type { BerthPluginContext, WorktreePanelProps } from "@berth/plugin";
+import { Button } from "@berth/plugin/ui";
+import { useState } from "react";
+
+function Tests({ berth, box, location, worktree, main }: WorktreePanelProps) {
+  const [out, setOut] = useState("");
+  const where = main ? location : `${location}/${worktree}`;
+  return (
+    <div className="p-4">
+      <Button onClick={async () => setOut((await berth.orchestrate.exec(box, where, "pnpm test")).output)}>
+        Run the tests
+      </Button>
+      <pre className="mt-3 text-xs">{out}</pre>
+    </div>
+  );
+}
+
+export default function activate(berth: BerthPluginContext) {
+  berth.addWorktreePanel({ id: "tests", title: "Tests", icon: "FlaskConical", Component: Tests });
+}
+```
+
+`worktreeLocation({ location, worktree, main })` from `@berth/plugin` builds
+the same `where`.
+
+For every call, hook and component, see
+[the plugin SDK reference](/docs/reference/plugin-sdk); for more complete
+examples, read the built-ins in
+[`plugins/`](https://github.com/cosscom/shipyard/tree/main/plugins).

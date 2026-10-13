@@ -16,6 +16,7 @@
     "@coss/checkbox-group",
     "@coss/collapsible",
     "@coss/combobox",
+    "@coss/composer",
     "@coss/command",
     "@coss/context-menu",
     "@coss/dialog",
