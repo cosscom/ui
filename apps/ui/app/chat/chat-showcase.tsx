@@ -155,14 +155,14 @@ export function ChatShowcase() {
                   aria-label="Conversation type"
                   className="self-center"
                 >
-                  <TabsTab value="group">Group chat</TabsTab>
                   <TabsTab value="direct">Direct message</TabsTab>
+                  <TabsTab value="group">Group chat</TabsTab>
                 </TabsList>
-                <TabsPanel value="group">
-                  <ChatPreview />
-                </TabsPanel>
                 <TabsPanel value="direct">
                   <ChatPreview direct />
+                </TabsPanel>
+                <TabsPanel value="group">
+                  <ChatPreview />
                 </TabsPanel>
               </Tabs>
             </div>
