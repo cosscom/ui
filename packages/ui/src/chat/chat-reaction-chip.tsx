@@ -46,7 +46,6 @@ export function ChatReactionChip({
   }, [selected]);
 
   const [open, setOpen] = useState(false);
-  const [pressing, setPressing] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const anchorRef = useRef<HTMLSpanElement>(null);
   const popupRef = useRef<HTMLDivElement>(null);
@@ -60,11 +59,10 @@ export function ChatReactionChip({
 
   useEffect(() => clearHold, [clearHold]);
 
-  useChatPopupDismissal(open || pressing, triggerRef, () => {
+  useChatPopupDismissal(open, triggerRef, () => {
     clearHold();
     if (touchOrigin.current) suppressClick.current = true;
     touchOrigin.current = null;
-    setPressing(false);
     setOpen(false);
   });
 
@@ -161,7 +159,6 @@ export function ChatReactionChip({
             suppressClick.current = false;
             if (event.pointerType !== "touch" || !event.isPrimary) return;
             touchOrigin.current = { x: event.clientX, y: event.clientY };
-            setPressing(true);
             clearHold();
             holdTimer.current = setTimeout(() => {
               holdTimer.current = null;
@@ -180,19 +177,16 @@ export function ChatReactionChip({
             clearHold();
             suppressClick.current = true;
             touchOrigin.current = null;
-            setPressing(false);
             setOpen(false);
           }}
           onPointerUp={() => {
             clearHold();
             touchOrigin.current = null;
-            setPressing(false);
           }}
           onPointerCancel={() => {
             clearHold();
             touchOrigin.current = null;
             suppressClick.current = true;
-            setPressing(false);
             setOpen(false);
           }}
           onContextMenu={(event) => {

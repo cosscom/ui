@@ -1,12 +1,17 @@
 "use client";
 
-import { type RefObject, useEffect } from "react";
+import { type RefObject, useEffect, useRef } from "react";
 
 export function useChatPopupDismissal(
   active: boolean,
   triggerRef: RefObject<HTMLElement | null>,
   onDismiss: () => void,
 ): void {
+  const onDismissRef = useRef(onDismiss);
+  useEffect(() => {
+    onDismissRef.current = onDismiss;
+  }, [onDismiss]);
+
   useEffect(() => {
     const trigger = triggerRef.current;
     if (!active || !trigger) return;
@@ -55,7 +60,7 @@ export function useChatPopupDismissal(
         element = element.parentElement
       ) {
         if (!isScrollable(element)) continue;
-        if (element.contains(trigger)) onDismiss();
+        if (element.contains(trigger)) onDismissRef.current();
         return;
       }
       // Modal menus intercept wheel/touch input with a backdrop over the scroller.
@@ -79,7 +84,7 @@ export function useChatPopupDismissal(
           point.clientY >= bounds.top &&
           point.clientY <= bounds.bottom
         ) {
-          onDismiss();
+          onDismissRef.current();
           return;
         }
       }
@@ -91,5 +96,5 @@ export function useChatPopupDismissal(
       for (const type of scrollInputs)
         ownerDocument.removeEventListener(type, onScrollInput);
     };
-  }, [active, triggerRef, onDismiss]);
+  }, [active, triggerRef]);
 }
