@@ -3,7 +3,6 @@ export const appConfig = {
     "A set of beautifully designed components that you can customize, extend, and build on. Start here then make it your own. Open Source. Open Code.",
   name: "coss ui",
   navItems: [
-    { href: "/chat", label: "Chat UI" },
     {
       href: "/docs",
       label: "Docs",
@@ -12,6 +11,7 @@ export const appConfig = {
       href: "/particles",
       label: "Particles",
     },
+    { href: "/chat", label: "Chat UI" },
   ],
   ogImage: "https://coss.com/og.jpg",
   url: "https://coss.com/ui",
