@@ -634,7 +634,13 @@ export function useComposerEditor({
           range.deleteContents();
           const fragment = document.createElement("div");
           writeValue(fragment, pastedValue);
-          const nodes = Array.from(fragment.childNodes);
+          const nodes = Array.from(fragment.childNodes).filter(
+            (node) =>
+              !(
+                node instanceof HTMLElement &&
+                node.hasAttribute("data-composer-placeholder")
+              ),
+          );
           const last = nodes.at(-1);
           for (const node of nodes.reverse()) range.insertNode(node);
           if (last) range.setStartAfter(last);
