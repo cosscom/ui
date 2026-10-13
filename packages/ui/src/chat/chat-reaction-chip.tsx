@@ -10,6 +10,7 @@ import { cn } from "@coss/ui/lib/utils";
 import { motion, useReducedMotion } from "motion/react";
 import type { ComponentProps, ReactElement, ReactNode } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useChatPopupDismissal } from "./hooks/use-chat-popup-dismissal";
 
 export type ChatReactionChipProps = {
   animateEntrance?: boolean;
@@ -59,24 +60,13 @@ export function ChatReactionChip({
 
   useEffect(() => clearHold, [clearHold]);
 
-  useEffect(() => {
-    if (!open && !pressing) return;
-    const trigger = triggerRef.current;
-    const onScroll = (event: Event): void => {
-      if (
-        !(event.target instanceof Node) ||
-        !trigger ||
-        !event.target.contains(trigger)
-      )
-        return;
-      clearHold();
-      suppressClick.current = true;
-      setPressing(false);
-      setOpen(false);
-    };
-    document.addEventListener("scroll", onScroll, true);
-    return () => document.removeEventListener("scroll", onScroll, true);
-  }, [open, pressing, clearHold]);
+  useChatPopupDismissal(open || pressing, triggerRef, () => {
+    clearHold();
+    if (touchOrigin.current) suppressClick.current = true;
+    touchOrigin.current = null;
+    setPressing(false);
+    setOpen(false);
+  });
 
   const chip = (
     <Toggle

@@ -5,18 +5,11 @@ export const chat: Registry["items"] = [
     name: "chat",
     type: "registry:ui",
     description:
-      "Composable chat components with messages, reactions, replies, and a composer.",
-    dependencies: [
-      "motion@14.0.0",
-      "lucide-react",
-      "@base-ui/react@1.8.0",
-      "class-variance-authority",
-    ],
+      "Composable chat components with messages, reactions, replies, and delivery states.",
+    dependencies: ["motion@14.0.0", "lucide-react", "@base-ui/react@1.8.0"],
     registryDependencies: [
-      "@coss/avatar",
       "@coss/button",
       "@coss/collapsible",
-      "@coss/composer",
       "@coss/empty",
       "@coss/menu",
       "@coss/popover",
@@ -25,7 +18,6 @@ export const chat: Registry["items"] = [
       "@coss/toggle",
       "@coss/toolbar",
       "@coss/tooltip",
-      "@coss/use-media-query",
       "@coss/utils",
     ],
     files: [

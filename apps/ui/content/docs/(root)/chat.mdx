@@ -9,7 +9,7 @@ Chat UI is a family of components for conversations in a drawer, a panel, or a p
 
 ## Start here
 
-- **Build a conversation:** install `@coss/chat`, then use the [minimal example](#minimal-conversation).
+- **Build a conversation:** install `@coss/chat` with `@coss/composer` and `@coss/avatar`, then use the [minimal example](#minimal-conversation).
 - **Adapt the full drawer:** install `@coss/chat-demo`, then read the [source map](#source-map) and [application responsibilities](#connect-your-application).
 - **Working as an agent:** read [this page as Markdown](/ui/docs/chat.md). The [chat registry source](/ui/r/chat.json) and [drawer example source](/ui/r/chat-demo.json) include file contents and dependencies. Use the exported TypeScript props as the API contract; the live showcase alone does not expose the implementation.
 
@@ -53,6 +53,12 @@ import { DrawerTrigger } from "@/components/ui/drawer";
 Use this composition inside a client component. Additional scenario values are exported from `chat-demo-state.ts`.
 
 ## Minimal conversation
+
+The example also uses Composer and Avatar. Install them explicitly alongside the chat family:
+
+```bash
+npx shadcn@latest add @coss/chat @coss/composer @coss/avatar
+```
 
 This complete client component demonstrates plain-text sending with local state. A conversation needs a bounded height, a scroll controller, messages, and a controlled draft. Use the full drawer example for mentions, grouped messages, reactions, and focused replies.
 
@@ -193,7 +199,7 @@ Paths below are relative to your configured components directory after installat
 
 `ChatMessage` requires `side` and `children`. It accepts `author` and `avatar`, plus `actions`, `reactions`, and `footer` slots. Set `grouped` for consecutive messages from the same sender; it hides repeated incoming authors/avatars while preserving the avatar column. The first bubble uses a smaller upper corner on its sender's side; grouped bubbles use equal corners. Pass a bubble ref or native attributes through `bubbleProps`.
 
-Grouping and vertical spacing belong to the composition. The drawer breaks groups at date changes and deleted messages. It uses `pt-5` between senders, `pt-1` within a group, and `pt-3` after a grouped message with delivery metadata. Omit that padding immediately after a date or unread separator. Show incoming timestamps at the end of a group; outgoing delivery feedback remains per message.
+Grouping and vertical spacing belong to the composition. The drawer breaks groups at date changes and deleted messages. It uses `pt-5` between senders, `pt-1` within a group, and `pt-3` after a grouped message with delivery metadata. Omit that padding immediately after a date or unread separator. Show incoming timestamps at the end of a group; outgoing delivery feedback remains per message. `ChatDeliveryIndicator` exposes a labelled image rather than a live region. Announce important send failures through a single application-owned status region.
 
 String children render through `ChatMessageText`. For mention emphasis, supply `ChatMessageText` with `mentions` containing known handles. Custom React content passes through unchanged.
 
@@ -201,7 +207,7 @@ String children render through `ChatMessageText`. For mention emphasis, supply `
 
 Use `bubble={false}` for a deleted-message placeholder. Your application decides whether historical messages remain after membership changes.
 
-The toolbar reserves its width beside the bubble and appears on hover, keyboard focus, or coarse pointers. Popups dismiss when their scroll ancestor moves.
+The toolbar reserves its width beside the bubble and appears on hover, keyboard focus, or coarse pointers. Popups dismiss on user scroll input in their scroll container. Automatic scrolling as messages arrive does not dismiss them.
 
 ### Reactions
 

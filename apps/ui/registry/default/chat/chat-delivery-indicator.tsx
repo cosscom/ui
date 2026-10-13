@@ -28,7 +28,7 @@ export function ChatDeliveryIndicator({
 
   return (
     <span
-      role="status"
+      role="img"
       aria-label={label}
       title={label}
       data-slot="chat-delivery-indicator"

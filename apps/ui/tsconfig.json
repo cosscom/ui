@@ -7,10 +7,9 @@
       "@/*": ["./*"],
       "@coss/ui/*": ["../../packages/ui/src/*"],
       "@source/*": ["./.source/*"]
-    },
-    "types": ["react", "node", "next", "bun-types"]
+    }
   },
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "tests"],
   "extends": "@coss/typescript-config/nextjs.json",
   "include": [
     "next-env.d.ts",
