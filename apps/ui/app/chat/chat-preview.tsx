@@ -1,8 +1,7 @@
 "use client";
 
-import { XIcon } from "lucide-react";
+import { AnimatePresence } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import { ChatComposer } from "@/registry/default/chat/chat-composer";
 import { ChatConversation } from "@/registry/default/chat/chat-conversation";
 import { ChatDeliveryIndicator } from "@/registry/default/chat/chat-delivery-indicator";
 import { ChatMessage } from "@/registry/default/chat/chat-message";
@@ -10,16 +9,24 @@ import { ChatMessageActionToolbar } from "@/registry/default/chat/chat-message-a
 import { ChatMessageText } from "@/registry/default/chat/chat-message-text";
 import { ChatReactionChip } from "@/registry/default/chat/chat-reaction-chip";
 import { ChatReactionPicker } from "@/registry/default/chat/chat-reaction-picker";
+import {
+  ChatReplyPreview,
+  type ChatReplyTarget,
+} from "@/registry/default/chat/chat-reply-preview";
 import { ChatReplyReference } from "@/registry/default/chat/chat-reply-reference";
 import { ChatTypingIndicator } from "@/registry/default/chat/chat-typing-indicator";
 import { useChatScroll } from "@/registry/default/chat/hooks/use-chat-scroll";
+import { ChatDemoComposer } from "@/registry/default/chat-demo/chat-demo-composer";
 import { ChatMemberAvatar } from "@/registry/default/chat-demo/chat-demo-message";
 import {
   CHAT_EMOJI,
   CHAT_MEMBERS,
   type MemberId,
 } from "@/registry/default/chat-demo/chat-demo-state";
-import { Button } from "@/registry/default/ui/button";
+import {
+  type ComposerValue,
+  getComposerText,
+} from "@/registry/default/ui/composer";
 
 type Status = "sending" | "delivered" | "read";
 
@@ -41,13 +48,6 @@ const STATUS_LABELS: Record<Status, string> = {
 const MENTION_HANDLES = Object.values(CHAT_MEMBERS).map(
   (member) => member.handle,
 );
-
-const MENTION_OPTIONS = (["maya", "jordan", "alex"] as const).map((id) => ({
-  id,
-  name: CHAT_MEMBERS[id].name,
-  insertText: CHAT_MEMBERS[id].handle,
-  avatar: <ChatMemberAvatar member={id} className="size-4 text-[0.5rem]" />,
-}));
 
 const REPLIES = [
   "Love that. Adding it to the release notes.",
@@ -87,15 +87,22 @@ function getReactorNames(members: readonly MemberId[]) {
 }
 
 export function ChatPreview() {
-  const [draft, setDraft] = useState("");
+  const [draft, setDraft] = useState<ComposerValue>([]);
   const [messages, setMessages] = useState(INITIAL_MESSAGES);
   const [replyTo, setReplyTo] = useState<number | null>(null);
+  const [replyFocus, setReplyFocus] = useState<
+    (ChatReplyTarget & { messageId: number }) | null
+  >(null);
+  const dismissalRef = useRef<"cancel" | "send">("cancel");
+  const bubbles = useRef(new Map<number, HTMLDivElement>());
   const [typing, setTyping] = useState(false);
   const [highlighted, setHighlighted] = useState<number | null>(null);
+  const inputRef = useRef<HTMLDivElement>(null);
   const nextId = useRef(INITIAL_MESSAGES.length + 1);
   const replyIndex = useRef(0);
   const timers = useRef<number[]>([]);
   const scroll = useChatScroll({
+    paused: replyFocus !== null,
     itemCount: messages.length,
     layoutKey: typing ? "typing" : "idle",
   });
@@ -149,9 +156,12 @@ export function ChatPreview() {
 
   const jumpTo = (id: number) => {
     setHighlighted(id);
-    document
-      .getElementById(`chat-preview-${id}`)
-      ?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    document.getElementById(`chat-preview-${id}`)?.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "auto"
+        : "smooth",
+      block: "nearest",
+    });
     later(() => setHighlighted(null), 600);
   };
 
@@ -169,7 +179,8 @@ export function ChatPreview() {
         reactions: [],
       },
     ]);
-    setDraft("");
+    setDraft([]);
+    dismissalRef.current = "send";
     setReplyTo(null);
     later(() => setStatus(id, "delivered"), 700);
     later(() => {
@@ -192,11 +203,45 @@ export function ChatPreview() {
     }, 3200);
   };
 
-  const replyMessage = messages.find((message) => message.id === replyTo);
+  const replyMessage = messages.find(
+    (message) => message.id === replyFocus?.messageId,
+  );
+  const cancelReply = () => {
+    dismissalRef.current = "cancel";
+    setReplyTo(null);
+  };
+  const renderBody = (message: PreviewMessage, focused = false) => {
+    const quoted = messages.find((item) => item.id === message.replyTo);
+    return (
+      <>
+        {message.replyTo && (
+          <ChatReplyReference
+            author={
+              quoted ? CHAT_MEMBERS[quoted.author].name : "Original message"
+            }
+            preview={getPreview(quoted)}
+            disabled={!quoted || focused}
+            onClick={() => message.replyTo && jumpTo(message.replyTo)}
+          />
+        )}
+        <ChatMessageText text={message.text} mentions={MENTION_HANDLES} />
+      </>
+    );
+  };
 
   return (
     <section
       aria-label="Live chat preview"
+      onKeyDown={(event) => {
+        if (
+          event.key === "Escape" &&
+          !event.defaultPrevented &&
+          replyTo !== null
+        ) {
+          event.preventDefault();
+          cancelReply();
+        }
+      }}
       className="flex h-144 min-w-0 flex-col overflow-hidden rounded-2xl border bg-popover shadow-lg/5"
     >
       <div className="flex shrink-0 items-center justify-between gap-4 border-b px-5 py-3.5">
@@ -220,11 +265,34 @@ export function ChatPreview() {
         scroll={scroll}
         label="Preview messages"
         jumpLabel="Jump to latest"
+        inactive={replyFocus !== null}
+        overlay={
+          <AnimatePresence onExitComplete={() => setReplyFocus(null)}>
+            {replyTo !== null && replyFocus && replyMessage && (
+              <ChatReplyPreview
+                key={replyMessage.id}
+                target={replyFocus}
+                side={replyMessage.author === "you" ? "outgoing" : "incoming"}
+                avatar={<ChatMemberAvatar member={replyMessage.author} />}
+                author={CHAT_MEMBERS[replyMessage.author].name}
+                replyLabel={
+                  replyMessage.author === "you"
+                    ? "Reply to your message"
+                    : `Reply to ${CHAT_MEMBERS[replyMessage.author].name}`
+                }
+                cancelLabel="Cancel reply"
+                dismissalRef={dismissalRef}
+                onCancel={cancelReply}
+              >
+                {renderBody(replyMessage, true)}
+              </ChatReplyPreview>
+            )}
+          </AnimatePresence>
+        }
       >
         <div className="flex flex-col gap-4 pt-4">
           {messages.map((message) => {
             const own = message.author === "you";
-            const quoted = messages.find((item) => item.id === message.replyTo);
             return (
               <ChatMessage
                 key={message.id}
@@ -234,6 +302,13 @@ export function ChatPreview() {
                 avatar={<ChatMemberAvatar member={message.author} />}
                 animateEntrance={message.id > INITIAL_MESSAGES.length}
                 highlighted={highlighted === message.id}
+                lifted={replyFocus?.messageId === message.id}
+                bubbleProps={{
+                  ref: (element) => {
+                    if (element) bubbles.current.set(message.id, element);
+                    else bubbles.current.delete(message.id);
+                  },
+                }}
                 actions={
                   <ChatMessageActionToolbar
                     side={own ? "outgoing" : "incoming"}
@@ -254,7 +329,24 @@ export function ChatPreview() {
                         onSelect={(emoji) => toggleReaction(message.id, emoji)}
                       />
                     )}
-                    onReply={() => setReplyTo(message.id)}
+                    onReply={() => {
+                      const source = bubbles.current.get(message.id);
+                      if (!source) return;
+                      dismissalRef.current = "cancel";
+                      setReplyFocus({
+                        messageId: message.id,
+                        source,
+                        width: source.getBoundingClientRect().width,
+                        firstInGroup: true,
+                      });
+                      setReplyTo(message.id);
+                      inputRef.current?.focus({ preventScroll: true });
+                      const selection = window.getSelection();
+                      if (inputRef.current) {
+                        selection?.selectAllChildren(inputRef.current);
+                        selection?.collapseToEnd();
+                      }
+                    }}
                     replyLabel="Reply"
                     replyTooltip="Reply"
                   />
@@ -301,57 +393,30 @@ export function ChatPreview() {
                   </span>
                 }
               >
-                {message.replyTo && (
-                  <ChatReplyReference
-                    author={
-                      quoted
-                        ? CHAT_MEMBERS[quoted.author].name
-                        : "Original message"
-                    }
-                    preview={getPreview(quoted)}
-                    disabled={!quoted}
-                    onClick={() => message.replyTo && jumpTo(message.replyTo)}
-                  />
-                )}
-                <ChatMessageText
-                  text={message.text}
-                  mentions={MENTION_HANDLES}
-                />
+                {renderBody(message)}
               </ChatMessage>
             );
           })}
           <ChatTypingIndicator visible={typing} label="Maya is typing" />
         </div>
       </ChatConversation>
-      <div className="shrink-0 px-4 pt-2 pb-4">
-        {replyMessage && (
-          <div className="mb-2 flex items-center justify-between gap-3 rounded-lg bg-muted/72 py-1.5 ps-3 pe-1.5 text-xs">
-            <span className="min-w-0 truncate">
-              Replying to{" "}
-              <span className="font-medium">
-                {CHAT_MEMBERS[replyMessage.author].name}
-              </span>
-            </span>
-            <Button
-              aria-label="Cancel reply"
-              size="icon-xs"
-              variant="ghost"
-              onClick={() => setReplyTo(null)}
-            >
-              <XIcon aria-hidden="true" />
-            </Button>
-          </div>
-        )}
-        <ChatComposer
-          compact
-          draft={draft}
-          onDraftChange={setDraft}
-          onSend={send}
-          mentions={{ label: "Mention suggestions", options: MENTION_OPTIONS }}
-          textareaLabel="Preview message"
-          sendLabel="Send message"
-          placeholder="Try a message, or type @ to mention…"
-          hint="Hover a message to react or reply"
+      <div className="relative z-20 shrink-0 px-4 pb-4">
+        <ChatDemoComposer
+          className="px-0 pb-0"
+          value={draft}
+          onValueChange={setDraft}
+          inputRef={inputRef}
+          mentionMembers={["maya", "jordan", "alex"]}
+          replyAuthor={
+            replyTo !== null && replyMessage
+              ? CHAT_MEMBERS[replyMessage.author].name
+              : undefined
+          }
+          notice=""
+          onSend={() => {
+            const text = getComposerText(draft).trim();
+            if (text) send(text);
+          }}
         />
       </div>
     </section>

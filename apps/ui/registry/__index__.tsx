@@ -1001,7 +1001,7 @@ export const Index: Record<string, any> = {
     name: "chat",
     description: "Composable chat components with messages, reactions, replies, and a composer.",
     type: "registry:ui",
-    registryDependencies: ["@coss/button","@coss/collapsible","@coss/empty","@coss/input-group","@coss/menu","@coss/popover","@coss/scroll-area","@coss/skeleton","@coss/textarea","@coss/toggle","@coss/toolbar","@coss/tooltip","@coss/use-media-query","@coss/utils"],
+    registryDependencies: ["@coss/avatar","@coss/button","@coss/collapsible","@coss/composer","@coss/empty","@coss/menu","@coss/popover","@coss/scroll-area","@coss/skeleton","@coss/toggle","@coss/toolbar","@coss/tooltip","@coss/use-media-query","@coss/utils"],
     files: [{
       path: "registry/default/chat/chat-bubble.tsx",
       type: "registry:component",
@@ -1010,14 +1010,6 @@ export const Index: Record<string, any> = {
       path: "registry/default/chat/chat-collapsible-message.tsx",
       type: "registry:component",
       target: "@components/chat/chat-collapsible-message.tsx"
-    },{
-      path: "registry/default/chat/chat-composer-field.tsx",
-      type: "registry:component",
-      target: "@components/chat/chat-composer-field.tsx"
-    },{
-      path: "registry/default/chat/chat-composer.tsx",
-      type: "registry:component",
-      target: "@components/chat/chat-composer.tsx"
     },{
       path: "registry/default/chat/chat-conversation.tsx",
       type: "registry:component",
@@ -1038,10 +1030,6 @@ export const Index: Record<string, any> = {
       path: "registry/default/chat/chat-members.tsx",
       type: "registry:component",
       target: "@components/chat/chat-members.tsx"
-    },{
-      path: "registry/default/chat/chat-mentions.tsx",
-      type: "registry:component",
-      target: "@components/chat/chat-mentions.tsx"
     },{
       path: "registry/default/chat/chat-message-actions.tsx",
       type: "registry:component",
@@ -1106,10 +1094,6 @@ export const Index: Record<string, any> = {
       path: "registry/default/chat/lib/split-chat-message-preview.ts",
       type: "registry:component",
       target: "@components/chat/lib/split-chat-message-preview.ts"
-    },{
-      path: "registry/default/chat/lib/chat-mention-text.ts",
-      type: "registry:component",
-      target: "@components/chat/lib/chat-mention-text.ts"
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/default/chat/chat-bubble.tsx")
@@ -1123,7 +1107,7 @@ export const Index: Record<string, any> = {
     name: "chat-demo",
     description: "An interactive group chat with a responsive drawer and conversation states.",
     type: "registry:block",
-    registryDependencies: ["@coss/alert-dialog","@coss/avatar","@coss/badge","@coss/button","@coss/drawer","@coss/menu","@coss/tooltip","@coss/use-media-query","@coss/utils","@coss/chat"],
+    registryDependencies: ["@coss/alert-dialog","@coss/avatar","@coss/badge","@coss/button","@coss/composer","@coss/drawer","@coss/menu","@coss/tooltip","@coss/use-media-query","@coss/utils","@coss/chat"],
     files: [{
       path: "registry/default/chat-demo/chat-demo-composer.tsx",
       type: "registry:component",

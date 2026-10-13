@@ -1,16 +1,17 @@
 "use client";
 
-import { CircleAlertIcon, LockIcon, MessageCircleIcon } from "lucide-react";
+import { CircleAlertIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
-import { ChatComposer } from "@/registry/default/chat/chat-composer";
 import {
   ChatEmptyState,
   ChatLoadingState,
   ChatStatusBar,
 } from "@/registry/default/chat/chat-states";
+import { ChatTimelineState } from "@/registry/default/chat-demo/chat-demo-scenarios";
 import { Button } from "@/registry/default/ui/button";
 import { Tabs, TabsList, TabsPanel, TabsTab } from "@/registry/default/ui/tabs";
+import { ChatInlineComposer } from "./chat-inline-composer";
 import { ChatWindow, SampleConversation } from "./chat-sample";
 
 const STATES = [
@@ -21,26 +22,12 @@ const STATES = [
   { value: "no-access", label: "No access" },
 ] as const;
 
-const ACCESS = {
-  removed: {
-    label: "Removed",
-    title: "You were removed from this chat",
-    description: "You can rejoin at any time.",
-    action: "Rejoin",
-  },
-  banned: {
-    label: "Banned",
-    title: "You were banned from this chat",
-    description: "An admin needs to lift the ban before you can post again.",
-    action: null,
-  },
-  "access-lost": {
-    label: "Access lost",
-    title: "You no longer have access",
-    description: "Your permissions changed. Ask an admin to add you back.",
-    action: "Request access",
-  },
-} as const;
+const ACCESS = [
+  { value: "removed", label: "Removed" },
+  { value: "banned", label: "Banned" },
+  { value: "access-lost", label: "Access lost" },
+  { value: "left", label: "Left" },
+] as const;
 
 function useTimeout() {
   const timer = useRef<number>(undefined);
@@ -57,16 +44,11 @@ function LoadingState() {
       <div className="min-h-0 flex-1 overflow-hidden px-4">
         <ChatLoadingState label="Loading conversation" />
       </div>
-      <ChatComposer
-        compact
+      <ChatInlineComposer
         disabled
-        className="px-3 pt-3 pb-3"
-        draft=""
-        onDraftChange={() => {}}
-        onSend={() => {}}
-        textareaLabel="Message"
-        sendLabel="Send message"
-        placeholder="Message the group…"
+        value={[]}
+        onValueChange={() => {}}
+        onSubmit={() => {}}
       />
     </>
   );
@@ -74,16 +56,16 @@ function LoadingState() {
 
 function EmptyState() {
   const [joined, setJoined] = useState(false);
-  if (joined) return <SampleConversation />;
+  if (joined) return <SampleConversation empty />;
   return (
     <div className="flex min-h-0 flex-1 flex-col justify-center">
-      <ChatEmptyState
-        icon={<MessageCircleIcon aria-hidden="true" />}
-        title="Join the conversation"
-        description="Only people who join can read and send messages."
-      >
-        <Button onClick={() => setJoined(true)}>Join chat</Button>
-      </ChatEmptyState>
+      <ChatTimelineState
+        scenario="empty"
+        joined={false}
+        memberCount={3}
+        onRecover={() => {}}
+        onJoin={() => setJoined(true)}
+      />
     </div>
   );
 }
@@ -95,6 +77,7 @@ function ReconnectingState() {
   const later = useTimeout();
   return (
     <SampleConversation
+      disabled={status !== "online"}
       banner={
         status !== "online" && (
           <ChatStatusBar
@@ -149,50 +132,41 @@ function ErrorState() {
 }
 
 function NoAccessState() {
-  const [reason, setReason] = useState<keyof typeof ACCESS>("removed");
+  const [access, setAccess] =
+    useState<(typeof ACCESS)[number]["value"]>("removed");
   const [restored, setRestored] = useState(false);
-  if (restored) return <SampleConversation />;
-  const content = ACCESS[reason];
   return (
-    <SampleConversation
-      footer={
-        <div className="flex shrink-0 flex-col items-center gap-3 border-t px-4 py-4 text-center">
-          <Tabs
-            value={reason}
-            onValueChange={(value) => setReason(value as keyof typeof ACCESS)}
+    <>
+      <div className="flex flex-wrap gap-1 border-b p-3">
+        {ACCESS.map(({ value, label }) => (
+          <Button
+            key={value}
+            aria-pressed={access === value}
+            size="xs"
+            variant={access === value ? "secondary" : "ghost"}
+            onClick={() => {
+              setAccess(value);
+              setRestored(false);
+            }}
           >
-            <TabsList variant="underline" aria-label="Reason">
-              {Object.entries(ACCESS).map(([value, item]) => (
-                <TabsTab key={value} value={value}>
-                  {item.label}
-                </TabsTab>
-              ))}
-            </TabsList>
-          </Tabs>
-          <div className="flex items-start gap-2 text-start">
-            <LockIcon
-              aria-hidden="true"
-              className="mt-0.5 size-4 shrink-0 text-muted-foreground"
-            />
-            <div className="text-sm" role="status">
-              <p className="font-medium">{content.title}</p>
-              <p className="mt-0.5 text-muted-foreground text-xs">
-                {content.description}
-              </p>
-            </div>
-          </div>
-          {content.action && (
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => setRestored(true)}
-            >
-              {content.action}
-            </Button>
-          )}
+            {label}
+          </Button>
+        ))}
+      </div>
+      {restored ? (
+        <SampleConversation />
+      ) : (
+        <div className="flex min-h-0 flex-1 flex-col justify-center">
+          <ChatTimelineState
+            scenario={access}
+            onRecover={() => setRestored(true)}
+            joined={false}
+            memberCount={3}
+            onJoin={() => {}}
+          />
         </div>
-      }
-    />
+      )}
+    </>
   );
 }
 

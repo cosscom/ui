@@ -13,15 +13,15 @@ export const chat: Registry["items"] = [
       "class-variance-authority",
     ],
     registryDependencies: [
+      "@coss/avatar",
       "@coss/button",
       "@coss/collapsible",
+      "@coss/composer",
       "@coss/empty",
-      "@coss/input-group",
       "@coss/menu",
       "@coss/popover",
       "@coss/scroll-area",
       "@coss/skeleton",
-      "@coss/textarea",
       "@coss/toggle",
       "@coss/toolbar",
       "@coss/tooltip",
@@ -38,16 +38,6 @@ export const chat: Registry["items"] = [
         path: "chat/chat-collapsible-message.tsx",
         type: "registry:component",
         target: "@components/chat/chat-collapsible-message.tsx",
-      },
-      {
-        path: "chat/chat-composer-field.tsx",
-        type: "registry:component",
-        target: "@components/chat/chat-composer-field.tsx",
-      },
-      {
-        path: "chat/chat-composer.tsx",
-        type: "registry:component",
-        target: "@components/chat/chat-composer.tsx",
       },
       {
         path: "chat/chat-conversation.tsx",
@@ -73,11 +63,6 @@ export const chat: Registry["items"] = [
         path: "chat/chat-members.tsx",
         type: "registry:component",
         target: "@components/chat/chat-members.tsx",
-      },
-      {
-        path: "chat/chat-mentions.tsx",
-        type: "registry:component",
-        target: "@components/chat/chat-mentions.tsx",
       },
       {
         path: "chat/chat-message-actions.tsx",
@@ -159,11 +144,6 @@ export const chat: Registry["items"] = [
         type: "registry:component",
         target: "@components/chat/lib/split-chat-message-preview.ts",
       },
-      {
-        path: "chat/lib/chat-mention-text.ts",
-        type: "registry:component",
-        target: "@components/chat/lib/chat-mention-text.ts",
-      },
     ],
   },
   {
@@ -177,6 +157,7 @@ export const chat: Registry["items"] = [
       "@coss/avatar",
       "@coss/badge",
       "@coss/button",
+      "@coss/composer",
       "@coss/drawer",
       "@coss/menu",
       "@coss/tooltip",

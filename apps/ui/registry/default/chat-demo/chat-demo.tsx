@@ -13,7 +13,7 @@ import {
   UserXIcon,
 } from "lucide-react";
 import { AnimatePresence } from "motion/react";
-import type { ComponentProps, ReactElement, ReactNode, RefObject } from "react";
+import type { ReactElement, ReactNode, RefObject } from "react";
 import { Fragment, useEffect, useId, useRef, useState } from "react";
 import { useMediaQuery } from "@/registry/default/hooks/use-media-query";
 import { cn } from "@/registry/default/lib/utils";
@@ -30,6 +30,10 @@ import {
 import { Badge } from "@/registry/default/ui/badge";
 import { Button } from "@/registry/default/ui/button";
 import {
+  type ComposerValue,
+  getComposerText,
+} from "@/registry/default/ui/composer";
+import {
   Drawer,
   DrawerClose,
   DrawerDescription,
@@ -37,7 +41,6 @@ import {
   DrawerHeader,
   DrawerPanel,
   DrawerPopup,
-  DrawerPrimitive,
   DrawerTitle,
   DrawerTrigger,
 } from "@/registry/default/ui/drawer";
@@ -80,6 +83,15 @@ const DEMO_REPLIES = [
   "Love that. Let’s pick it up in the walkthrough.",
   "Noted — I’ll bring this back to the group.",
 ];
+
+// `focus()` on a contenteditable puts the caret at the start of an existing draft.
+function focusAtEnd(input: HTMLElement | null): void {
+  if (!input) return;
+  input.focus({ preventScroll: true });
+  const selection = window.getSelection();
+  selection?.selectAllChildren(input);
+  selection?.collapseToEnd();
+}
 
 function GroupDetails({
   open,
@@ -195,11 +207,11 @@ function GroupDetails({
                 badges: (
                   <>
                     {member === "you" && <Badge variant="secondary">You</Badge>}
-                    {CHAT_MEMBERS[member].role === "admin" && (
-                      <Badge variant="default">Admin</Badge>
+                    {CHAT_MEMBERS[member].role === "host" && (
+                      <Badge variant="default">Host</Badge>
                     )}
-                    {CHAT_MEMBERS[member].role === "moderator" && (
-                      <Badge variant="default">Moderator</Badge>
+                    {CHAT_MEMBERS[member].role === "co-host" && (
+                      <Badge variant="default">Co-host</Badge>
                     )}
                     {mutedMembers.includes(member) && (
                       <Badge variant="error">
@@ -209,7 +221,7 @@ function GroupDetails({
                   </>
                 ),
                 action:
-                  CHAT_MEMBERS[member].role === "member" ? (
+                  CHAT_MEMBERS[member].role === "guest" ? (
                     <Menu>
                       <MenuTrigger
                         render={
@@ -325,7 +337,8 @@ function GroupDetails({
               <AlertDialogHeader>
                 <AlertDialogTitle>Leave this chat?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  You’ll stop receiving messages from this group.
+                  You’ll stop receiving messages from this group. Your ticket
+                  for the event stays valid.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -363,8 +376,8 @@ function GroupDetails({
               </AlertDialogTitle>
               <AlertDialogDescription>
                 {moderationAction === "ban"
-                  ? "They won’t be able to rejoin until you lift the ban. "
-                  : "They’ll leave the chat but can rejoin using the group invitation. "}
+                  ? "They won’t be able to rejoin until you lift the ban. Their ticket stays valid."
+                  : "They’ll leave the chat but can rejoin through their ticket invitation. Their ticket stays valid."}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -392,16 +405,6 @@ function GroupDetails({
   );
 }
 
-function KeyboardAwareDrawerPopup(
-  props: ComponentProps<typeof DrawerPopup>,
-): ReactElement {
-  return (
-    <DrawerPrimitive.VirtualKeyboardProvider>
-      <DrawerPopup {...props} />
-    </DrawerPrimitive.VirtualKeyboardProvider>
-  );
-}
-
 export function ChatDemo({
   renderTriggers,
 }: {
@@ -423,7 +426,8 @@ export function ChatDemo({
     INITIAL_CHAT_MESSAGES,
   );
   const [enteringMessageIds, setEnteringMessageIds] = useState<number[]>([]);
-  const [draft, setDraft] = useState("");
+  const [draftValue, setDraftValue] = useState<ComposerValue>([]);
+  const draft = getComposerText(draftValue);
   const [replyTo, setReplyTo] = useState<number | null>(null);
   const [replyFocus, setReplyFocus] = useState<ChatReplyFocusTarget | null>(
     null,
@@ -438,7 +442,7 @@ export function ChatDemo({
   const [highlightedId, setHighlightedId] = useState<number | null>(null);
   const infoReturnFocusRef = useRef<HTMLElement | null>(null);
   const deleteReturnFocusRef = useRef<HTMLElement | null>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const composerRef = useRef<HTMLDivElement>(null);
   const focusComposerAfterRestoreRef = useRef(false);
   const scroll = useChatScroll({
     active: open,
@@ -495,14 +499,14 @@ export function ChatDemo({
 
   useEffect(() => {
     if (open && scenario === "empty" && joinedChat)
-      textareaRef.current?.focus();
+      focusAtEnd(composerRef.current);
     if (
       open &&
       scenario === "conversation" &&
       focusComposerAfterRestoreRef.current
     ) {
       focusComposerAfterRestoreRef.current = false;
-      textareaRef.current?.focus();
+      focusAtEnd(composerRef.current);
     }
   }, [open, scenario, joinedChat]);
 
@@ -617,7 +621,7 @@ export function ChatDemo({
     atBottomRef.current = true;
     setEnteringMessageIds((current) => [...current, message.id]);
     setMessages((current) => [...current, message]);
-    setDraft("");
+    setDraftValue([]);
     replyDismissalRef.current = "send";
     setReplyTo(null);
     setTypingMembers(["maya"]);
@@ -672,13 +676,12 @@ export function ChatDemo({
       expanded,
     });
     setReplyTo(messageId);
-    window.requestAnimationFrame(() => textareaRef.current?.focus());
+    focusAtEnd(composerRef.current);
   };
 
   const cancelReply = (): void => {
     replyDismissalRef.current = "cancel";
     setReplyTo(null);
-    textareaRef.current?.focus();
   };
 
   const onReact = (messageId: number, emoji: string): void => {
@@ -809,14 +812,9 @@ export function ChatDemo({
         }}
       >
         {renderTriggers(changeScenario)}
-        <KeyboardAwareDrawerPopup
+        <DrawerPopup
           variant="inset"
           showCloseButton
-          initialFocus={
-            composerDisabled || (scenario === "empty" && !joinedChat)
-              ? true
-              : textareaRef
-          }
           portalProps={{
             className: "max-md:[&_[data-slot=drawer-viewport]]:pt-2",
           }}
@@ -870,7 +868,7 @@ export function ChatDemo({
                   canLeave={scenario !== "access-lost"}
                   onLeave={() => {
                     changeScenario("left");
-                    setDraft("");
+                    setDraftValue([]);
                   }}
                   conversationFocusRef={timelineRef}
                 />
@@ -960,9 +958,7 @@ export function ChatDemo({
                   initial={false}
                   onExitComplete={() => {
                     setReplyFocus(null);
-                    if (replyDismissalRef.current === "send")
-                      scroll.resetScroll();
-                    else finishNestedDrawerClose();
+                    finishNestedDrawerClose();
                   }}
                 >
                   {replyMessage && replyFocus && (
@@ -1100,7 +1096,7 @@ export function ChatDemo({
                     aria-hidden="true"
                     className="mt-0.5 size-3.5 shrink-0"
                   />
-                  Leave whenever you like.
+                  Leave any time — your ticket stays valid.
                 </span>
               </div>
             </DrawerFooter>
@@ -1112,8 +1108,8 @@ export function ChatDemo({
             scenario !== "access-lost" &&
             (scenario !== "empty" || joinedChat) && (
               <ChatDemoComposer
-                draft={draft}
-                onDraftChange={setDraft}
+                value={draftValue}
+                onValueChange={setDraftValue}
                 replyAuthor={
                   replyMessage
                     ? CHAT_MEMBERS[replyMessage.author].name
@@ -1121,7 +1117,7 @@ export function ChatDemo({
                 }
                 mentionMembers={activeOtherMembers}
                 onSend={sendMessage}
-                textareaRef={textareaRef}
+                inputRef={composerRef}
                 notice={notice}
                 disabled={composerDisabled}
               />
@@ -1167,7 +1163,7 @@ export function ChatDemo({
               </AlertDialogFooter>
             </AlertDialogPopup>
           </AlertDialog>
-        </KeyboardAwareDrawerPopup>
+        </DrawerPopup>
       </Drawer>
     </TooltipProvider>
   );

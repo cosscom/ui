@@ -10,11 +10,35 @@ export function useChatPopupDismissal(
   useEffect(() => {
     const trigger = triggerRef.current;
     if (!active || !trigger) return;
+    let userScroll = false;
+    const onScrollInput = (): void => {
+      userScroll = true;
+    };
     const onScroll = (event: Event): void => {
-      if (event.target instanceof Node && event.target.contains(trigger))
+      // Focus and keyboard transitions scroll without user input when a popup opens.
+      if (
+        userScroll &&
+        event.target instanceof Node &&
+        event.target.contains(trigger)
+      )
         onDismiss();
     };
+    const scrollInputs = [
+      "wheel",
+      "touchmove",
+      "pointerdown",
+      "keydown",
+    ] as const;
+    for (const type of scrollInputs)
+      document.addEventListener(type, onScrollInput, {
+        capture: true,
+        passive: true,
+      });
     document.addEventListener("scroll", onScroll, true);
-    return () => document.removeEventListener("scroll", onScroll, true);
+    return () => {
+      for (const type of scrollInputs)
+        document.removeEventListener(type, onScrollInput, true);
+      document.removeEventListener("scroll", onScroll, true);
+    };
   }, [active, triggerRef, onDismiss]);
 }

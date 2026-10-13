@@ -54,6 +54,9 @@ export function ChatReactionPicker({
           variant="ghost"
           className="pointer-coarse:size-8 rounded-full before:rounded-full"
           aria-label={triggerLabel}
+          onMouseDown={(event) => {
+            if (event.button === 0) event.preventDefault();
+          }}
         />
       }
     />
@@ -74,6 +77,8 @@ export function ChatReactionPicker({
         side="top"
         align={popupAlign}
         aria-label={popupLabel}
+        initialFocus={(interaction) => interaction === "keyboard"}
+        finalFocus={(interaction) => interaction === "keyboard"}
         className="rounded-full before:rounded-full **:data-[slot=popover-viewport]:p-1"
       >
         <div className="flex">
@@ -85,6 +90,9 @@ export function ChatReactionPicker({
               variant="ghost"
               size="icon-lg"
               className="rounded-full before:rounded-full"
+              onMouseDown={(event) => {
+                if (event.button === 0) event.preventDefault();
+              }}
               onClick={() => {
                 onSelect(emoji);
                 setOpen(false);

@@ -35,7 +35,7 @@ describe("chat demo message deletion", () => {
     "jordan",
     "alex",
     "you",
-  ] as const)("lets %s delete their own messages and protects other admins and moderators", (viewer) => {
+  ] as const)("lets %s delete their own messages and protects other hosts and co-hosts", (viewer) => {
     for (const message of INITIAL_CHAT_MESSAGES) {
       const reason = getMessageDeletionReason(message, viewer);
       if (message.author === viewer) expect(reason).toBe("sender");
@@ -56,7 +56,7 @@ describe("chat demo message deletion", () => {
       reactions: [],
       deletedReason: "moderator",
     });
-    expect(getMessagePreview(deleted)).toBe("Removed by a moderator");
+    expect(getMessagePreview(deleted)).toBe("Removed by a host");
     expect(getMessageDeletionReason(deleted)).toBeUndefined();
     expect(original.text).toBe(memberMessage.text);
     expect(original.reactions).toHaveLength(1);

@@ -42,6 +42,7 @@ export function ChatMessageActionToolbar({
   menuFinalFocus,
 }: ChatMessageActionToolbarProps): ReactElement | null {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [menuDismissedOutside, setMenuDismissedOutside] = useState(false);
   const toolbarRef = useRef<HTMLDivElement>(null);
   const ownMenuTriggerRef = useRef<HTMLButtonElement>(null);
   const menuTriggerRef = suppliedMenuTriggerRef ?? ownMenuTriggerRef;
@@ -69,6 +70,9 @@ export function ChatMessageActionToolbar({
                     variant="ghost"
                     className="pointer-coarse:size-8 rounded-full before:rounded-full"
                     aria-label={replyLabel}
+                    onMouseDown={(event) => {
+                      if (event.button === 0) event.preventDefault();
+                    }}
                     onClick={onReply}
                   />
                 }
@@ -81,7 +85,16 @@ export function ChatMessageActionToolbar({
         </Tooltip>
       )}
       {menuChildren && (
-        <Menu open={menuOpen} onOpenChange={setMenuOpen}>
+        <Menu
+          open={menuOpen}
+          onOpenChange={(open, details) => {
+            setMenuDismissedOutside(
+              details.reason === "outside-press" ||
+                details.reason === "focus-out",
+            );
+            setMenuOpen(open);
+          }}
+        >
           <Tooltip>
             <TooltipTrigger
               render={
@@ -110,7 +123,7 @@ export function ChatMessageActionToolbar({
           <MenuPopup
             anchor={toolbarRef}
             align={side === "outgoing" ? "start" : "end"}
-            finalFocus={menuFinalFocus}
+            finalFocus={menuDismissedOutside ? false : menuFinalFocus}
           >
             {menuChildren}
           </MenuPopup>

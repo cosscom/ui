@@ -9,6 +9,7 @@ import {
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ChatDemo } from "@/registry/default/chat-demo/chat-demo";
+import { CHAT_SCENARIOS } from "@/registry/default/chat-demo/chat-demo-state";
 import { useCopyToClipboard } from "@/registry/default/hooks/use-copy-to-clipboard";
 import { Button } from "@/registry/default/ui/button";
 import { DrawerTrigger } from "@/registry/default/ui/drawer";
@@ -25,7 +26,7 @@ const COMPONENT_MAP = [
   },
   {
     area: "Composer",
-    components: ["ChatComposer", "ChatMentionSuggestions"],
+    components: ["Composer", "ComposerInput", "ComposerPopup"],
   },
   {
     area: "Actions",
@@ -165,9 +166,25 @@ export function ChatShowcase() {
               <SectionHeading
                 id="chat-states"
                 title="Ready for when things go wrong"
-                description="Loading, empty, offline, errors, and lost access. Each state keeps the draft and offers a way forward."
+                description="Loading, empty, offline, errors, and lost access. Recovery actions respect whether the member can still access the chat."
               />
               <ChatStatesSection />
+              <div
+                className="mt-8 flex flex-wrap justify-center gap-2"
+                aria-label="Explore drawer states"
+              >
+                {CHAT_SCENARIOS.filter(
+                  ({ value }) => value !== "conversation",
+                ).map(({ value, label }) => (
+                  <DrawerTrigger
+                    key={value}
+                    render={<Button variant="outline" size="xs" />}
+                    onClick={() => select(value)}
+                  >
+                    {label}
+                  </DrawerTrigger>
+                ))}
+              </div>
             </div>
           </section>
 

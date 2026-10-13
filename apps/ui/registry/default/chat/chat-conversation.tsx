@@ -16,6 +16,8 @@ export type ChatConversationProps = ComponentProps<"div"> & {
   contentClassName?: string;
   overlay?: ReactNode;
   inactive?: boolean;
+  /** "off" when the caller announces arrivals itself, e.g. so paged-in history isn't read out. */
+  live?: "polite" | "off";
 };
 
 export function ChatConversation({
@@ -26,13 +28,14 @@ export function ChatConversation({
   children,
   overlay,
   inactive = false,
+  live,
   className,
   ...props
 }: ChatConversationProps): ReactElement {
   return (
     <div
       data-slot="chat-conversation"
-      className={cn("relative flex min-h-0 flex-1 flex-col", className)}
+      className={cn("relative isolate flex min-h-0 flex-1 flex-col", className)}
       {...props}
     >
       <ScrollAreaPrimitive.Root
@@ -43,6 +46,7 @@ export function ChatConversation({
           ref={scroll.viewportRef}
           role="log"
           aria-label={label}
+          aria-live={live}
           aria-relevant="additions text"
           data-slot="scroll-area-viewport"
           className="h-full rounded-[inherit] outline-none transition-shadow focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset data-has-overflow-y:overscroll-y-contain data-has-overflow-x:overscroll-x-contain"

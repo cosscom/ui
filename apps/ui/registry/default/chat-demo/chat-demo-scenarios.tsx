@@ -36,12 +36,10 @@ export function ChatTimelineState({
     );
   const content = {
     empty: {
-      title: joined
-        ? "A little hello goes a long way"
-        : "Join the conversation",
+      title: joined ? "A little hello goes a long way" : "Join the event chat",
       description: joined
         ? "Start the conversation. Everyone in the group can join in."
-        : "A space for the team to share ideas and work through the details. Only people who join can read or send messages.",
+        : "Talk with the host and other guests who are going. Only people who join can read or send messages.",
       Icon: MessageCircleIcon,
     },
     error: {
@@ -58,17 +56,19 @@ export function ChatTimelineState({
     removed: {
       title: "You were removed from this chat",
       description:
-        "A moderator removed you. You can rejoin using the group invitation.",
+        "A host removed you. You can rejoin through your ticket invitation. Your ticket for the event is still valid.",
       Icon: UserXIcon,
     },
     banned: {
       title: "You were banned from this chat",
-      description: "You can’t rejoin unless a moderator lifts the ban.",
+      description:
+        "You can’t rejoin unless a host lifts the ban. Your ticket for the event is still valid.",
       Icon: BanIcon,
     },
     left: {
       title: "You left this chat",
-      description: "You’ll no longer receive messages from this group.",
+      description:
+        "You’ll no longer receive messages from this group. Your ticket for the event is still valid.",
       Icon: LogOutIcon,
     },
   };

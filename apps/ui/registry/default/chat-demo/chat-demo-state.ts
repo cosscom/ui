@@ -2,28 +2,30 @@ export type MemberId = "maya" | "jordan" | "alex" | "you";
 
 export const CHAT_MEMBERS = {
   maya: {
-    role: "admin",
+    role: "host",
     name: "Maya Chen",
     handle: "Maya",
     initials: "MC",
-    color: "bg-muted text-foreground",
+    color:
+      "bg-orange-100 text-orange-800 dark:bg-orange-950 dark:text-orange-200",
   },
   jordan: {
-    role: "moderator",
+    role: "co-host",
     name: "Jordan Lee",
     handle: "Jordan",
     initials: "JL",
-    color: "bg-muted text-foreground",
+    color:
+      "bg-violet-100 text-violet-800 dark:bg-violet-950 dark:text-violet-200",
   },
   alex: {
-    role: "member",
+    role: "guest",
     name: "Alex Morgan",
     handle: "Alex",
     initials: "AM",
-    color: "bg-muted text-foreground",
+    color: "bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-200",
   },
   you: {
-    role: "moderator",
+    role: "co-host",
     name: "Sam Rivera",
     handle: "You",
     initials: "SR",
@@ -32,7 +34,7 @@ export const CHAT_MEMBERS = {
 } satisfies Record<
   MemberId,
   {
-    role: "admin" | "moderator" | "member";
+    role: "host" | "co-host" | "guest";
     name: string;
     handle: string;
     initials: string;
@@ -88,8 +90,8 @@ export function getMessageDeletionReason(
   if (message.deletedReason) return undefined;
   if (message.author === viewer) return "sender";
   if (
-    CHAT_MEMBERS[viewer].role !== "member" &&
-    CHAT_MEMBERS[message.author].role === "member"
+    CHAT_MEMBERS[viewer].role !== "guest" &&
+    CHAT_MEMBERS[message.author].role === "guest"
   ) {
     return "moderator";
   }
@@ -106,7 +108,7 @@ export function deleteChatMessage(
 }
 
 export function getMessagePreview(message: ChatMessage): string {
-  if (message.deletedReason === "moderator") return "Removed by a moderator";
+  if (message.deletedReason === "moderator") return "Removed by a host";
   if (message.deletedReason === "sender") return "Message deleted";
   return message.text;
 }
@@ -191,7 +193,7 @@ const LONG_CHAT_MESSAGE: ChatMessage = {
   id: 8,
   author: "maya",
   text: [
-    "I wrote down the full walkthrough so everyone can review it before we meet. First, we’ll look at the project overview as a teammate and make sure the brief, timeline, and team details are easy to find. Then we’ll open the chat and check that the conversation feels useful without taking over the page.",
+    "I wrote down the full walkthrough so everyone can review it before we meet. First, we’ll look at the event page as a guest and make sure the date, location, and group details are easy to find. Then we’ll open the chat and check that the conversation feels useful without taking over the page.",
     "After that, let’s try a few everyday situations: catching up on older messages, replying to a specific note, mentioning someone, and finding a pinned update. I’d also like us to check what happens when several people are typing and when a message takes a moment to send.",
     "Finally, we should look at the narrow layout together. The drawer needs to leave enough room for actions beside each bubble, keep the composer comfortable to use, and make long notes like this one easy to skim. If anything feels crowded, we can simplify it before sharing the pattern with other teams.",
     "One more thing for the review: please try the same conversation with a few messages arriving while the drawer is open. We should check whether the reading position stays predictable, whether the latest message control is easy to find, and whether the date markers still make sense as we move through older parts of the conversation. If you notice any confusing transitions, leave a note so we can refine the behavior before this pattern is reused elsewhere in the app.",

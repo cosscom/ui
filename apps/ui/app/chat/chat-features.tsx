@@ -3,7 +3,6 @@
 import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 import { ChatCollapsibleMessage } from "@/registry/default/chat/chat-collapsible-message";
-import { ChatComposer } from "@/registry/default/chat/chat-composer";
 import { ChatConversation } from "@/registry/default/chat/chat-conversation";
 import { ChatDatePill } from "@/registry/default/chat/chat-date-pill";
 import { ChatDeliveryIndicator } from "@/registry/default/chat/chat-delivery-indicator";
@@ -15,6 +14,7 @@ import { ChatReactionPicker } from "@/registry/default/chat/chat-reaction-picker
 import { ChatReplyReference } from "@/registry/default/chat/chat-reply-reference";
 import { ChatUnreadDivider } from "@/registry/default/chat/chat-unread-divider";
 import { useChatScroll } from "@/registry/default/chat/hooks/use-chat-scroll";
+import { ChatDemoComposer } from "@/registry/default/chat-demo/chat-demo-composer";
 import { ChatMemberAvatar } from "@/registry/default/chat-demo/chat-demo-message";
 import {
   CHAT_EMOJI,
@@ -28,6 +28,10 @@ import {
   CardFrameFooter,
   CardPanel,
 } from "@/registry/default/ui/card";
+import {
+  type ComposerValue,
+  getComposerText,
+} from "@/registry/default/ui/composer";
 import { cn } from "@/lib/utils";
 
 function FeatureTile({
@@ -168,36 +172,31 @@ function ReactionsDemo() {
   );
 }
 
-const MENTION_OPTIONS = (["maya", "jordan", "alex"] as const).map((id) => ({
-  id,
-  name: CHAT_MEMBERS[id].name,
-  insertText: CHAT_MEMBERS[id].handle,
-  avatar: <ChatMemberAvatar member={id} className="size-4 text-[0.5rem]" />,
-}));
-
 function MentionsDemo() {
-  const [draft, setDraft] = useState("");
+  const [draft, setDraft] = useState<ComposerValue>([]);
   const [sent, setSent] = useState("Thanks @Alex, this is exactly it.");
+  const inputRef = useRef<HTMLDivElement>(null);
   return (
     <div className="flex flex-col gap-4">
       <ChatMessage side="outgoing">
         <ChatMessageText
           text={sent}
-          mentions={MENTION_OPTIONS.map((option) => option.insertText)}
+          mentions={Object.values(CHAT_MEMBERS).map((member) => member.handle)}
         />
       </ChatMessage>
-      <ChatComposer
-        compact
-        draft={draft}
-        onDraftChange={setDraft}
-        onSend={(text) => {
+      <ChatDemoComposer
+        className="px-0 pb-0"
+        value={draft}
+        onValueChange={setDraft}
+        inputRef={inputRef}
+        mentionMembers={["maya", "jordan", "alex"]}
+        notice=""
+        onSend={() => {
+          const text = getComposerText(draft).trim();
+          if (!text) return;
           setSent(text);
-          setDraft("");
+          setDraft([]);
         }}
-        mentions={{ label: "Mention suggestions", options: MENTION_OPTIONS }}
-        textareaLabel="Message with mentions"
-        sendLabel="Send message"
-        placeholder="Type @ to mention someone…"
       />
     </div>
   );

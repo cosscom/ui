@@ -73,6 +73,9 @@ export function ChatReplyPreview({
         animate={{ opacity: isPresent ? 1 : 0 }}
         transition={{ duration: reduceMotion ? 0 : 0.22 }}
         onClick={onCancel}
+        onMouseDown={(event) => {
+          if (event.button === 0) event.preventDefault();
+        }}
         onWheel={(event) => event.preventDefault()}
       />
       <div className="pointer-events-none absolute inset-0 z-50 overflow-clip">
@@ -113,7 +116,11 @@ export function ChatReplyPreview({
                 reduceMotion
                   ? { duration: 0 }
                   : isPresent || returning
-                    ? { type: "tween", duration: 0.7, ease: [0.16, 1, 0.16, 1] }
+                    ? {
+                        type: "tween",
+                        duration: 0.35,
+                        ease: [0.3, 0.84, 0.24, 1],
+                      }
                     : { duration: 0.3, ease: [0.22, 1, 0.36, 1] }
               }
               onAnimationComplete={() => {
@@ -188,6 +195,9 @@ export function ChatReplyPreview({
                           variant="outline"
                           aria-label={cancelLabel}
                           className="size-6 rounded-full before:rounded-full"
+                          onMouseDown={(event) => {
+                            if (event.button === 0) event.preventDefault();
+                          }}
                           onClick={onCancel}
                         />
                       }

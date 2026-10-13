@@ -2,16 +2,21 @@
 
 import type { ReactNode } from "react";
 import { useRef, useState } from "react";
-import { ChatComposer } from "@/registry/default/chat/chat-composer";
 import { ChatConversation } from "@/registry/default/chat/chat-conversation";
 import { ChatDeliveryIndicator } from "@/registry/default/chat/chat-delivery-indicator";
 import { ChatMessage } from "@/registry/default/chat/chat-message";
 import { useChatScroll } from "@/registry/default/chat/hooks/use-chat-scroll";
 import { ChatMemberAvatar } from "@/registry/default/chat-demo/chat-demo-message";
+import { ChatTimelineState } from "@/registry/default/chat-demo/chat-demo-scenarios";
 import {
   CHAT_MEMBERS,
   type MemberId,
 } from "@/registry/default/chat-demo/chat-demo-state";
+import {
+  type ComposerValue,
+  getComposerText,
+} from "@/registry/default/ui/composer";
+import { ChatInlineComposer } from "./chat-inline-composer";
 import { cn } from "@/lib/utils";
 
 type SampleMessage = { id: number; author: MemberId; text: string };
@@ -52,25 +57,37 @@ export function ChatWindow({
 
 export function SampleConversation({
   banner,
-  footer,
   disabled = false,
+  empty = false,
 }: {
   banner?: ReactNode;
-  footer?: ReactNode;
   disabled?: boolean;
+  empty?: boolean;
 }) {
-  const [draft, setDraft] = useState("");
-  const [messages, setMessages] = useState(SAMPLE_MESSAGES);
+  const [draft, setDraft] = useState<ComposerValue>([]);
+  const [messages, setMessages] = useState<SampleMessage[]>(
+    empty ? [] : SAMPLE_MESSAGES,
+  );
   const nextId = useRef(SAMPLE_MESSAGES.length + 1);
   const scroll = useChatScroll({ itemCount: messages.length });
 
   return (
     <>
+      {banner}
       <ChatConversation
         scroll={scroll}
         label="Messages"
         jumpLabel="Jump to latest"
       >
+        {messages.length === 0 && (
+          <ChatTimelineState
+            scenario="empty"
+            joined
+            memberCount={3}
+            onRecover={() => {}}
+            onJoin={() => {}}
+          />
+        )}
         <div className="flex flex-col gap-4 pt-4">
           {messages.map((message) => (
             <SampleMessageRow
@@ -81,25 +98,19 @@ export function SampleConversation({
           ))}
         </div>
       </ChatConversation>
-      {banner}
-      {footer ?? (
-        <ChatComposer
-          compact
-          className="px-3 pt-3 pb-3"
-          disabled={disabled}
-          draft={draft}
-          onDraftChange={setDraft}
-          onSend={(text) => {
-            const id = nextId.current++;
-            scroll.atBottomRef.current = true;
-            setMessages((current) => [...current, { id, author: "you", text }]);
-            setDraft("");
-          }}
-          textareaLabel="Message"
-          sendLabel="Send message"
-          placeholder="Message the group…"
-        />
-      )}
+      <ChatInlineComposer
+        disabled={disabled}
+        value={draft}
+        onValueChange={setDraft}
+        onSubmit={(value) => {
+          const text = getComposerText(value).trim();
+          if (!text) return;
+          const id = nextId.current++;
+          scroll.atBottomRef.current = true;
+          setMessages((current) => [...current, { id, author: "you", text }]);
+          setDraft([]);
+        }}
+      />
     </>
   );
 }
