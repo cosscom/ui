@@ -87,7 +87,7 @@ export function ChatDemoComposer({
       )}
     >
       <Composer
-        className="[--composer-max-rows:4] data-disabled:opacity-50 max-md:data-[layout=adaptive]:not-data-multiline:px-1 max-md:[--composer-min-rows:1] max-md:[--composer-padding:--spacing(1)] max-md:[--composer-radius:calc(--spacing(5.5)+1px)] sm:max-md:[--composer-radius:calc(--spacing(5)+1px)] md:[--composer-max-rows:6] md:[--composer-min-rows:2] pointer-coarse:[&_[data-slot=composer-scroll-area]_[data-slot=scroll-area-scrollbar]]:hidden"
+        className="[--composer-max-rows:4] data-disabled:opacity-50 max-md:data-[layout=adaptive]:not-data-multiline:px-1 max-md:[--composer-min-rows:1] max-md:[--composer-padding:--spacing(1)] max-md:[--composer-radius:calc(--spacing(5.5)+0.0625rem)] sm:max-md:[--composer-radius:calc(--spacing(5)+0.0625rem)] md:[--composer-max-rows:6] md:[--composer-min-rows:2] pointer-coarse:[&_[data-slot=composer-scroll-area]_[data-slot=scroll-area-scrollbar]]:hidden"
         disabled={disabled}
         layout="adaptive"
         submitOnEnter="desktop"
