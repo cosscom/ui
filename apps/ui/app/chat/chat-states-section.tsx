@@ -8,10 +8,10 @@ import {
   ChatLoadingState,
   ChatStatusBar,
 } from "@/registry/default/chat/chat-states";
+import { ChatDemoComposer } from "@/registry/default/chat-demo/chat-demo-composer";
 import { ChatTimelineState } from "@/registry/default/chat-demo/chat-demo-scenarios";
 import { Button } from "@/registry/default/ui/button";
 import { Tabs, TabsList, TabsPanel, TabsTab } from "@/registry/default/ui/tabs";
-import { ChatInlineComposer } from "./chat-inline-composer";
 import { ChatWindow, SampleConversation } from "./chat-sample";
 
 const STATES = [
@@ -20,13 +20,6 @@ const STATES = [
   { value: "reconnecting", label: "Reconnecting" },
   { value: "error", label: "Error" },
   { value: "no-access", label: "No access" },
-] as const;
-
-const ACCESS = [
-  { value: "removed", label: "Removed" },
-  { value: "banned", label: "Banned" },
-  { value: "access-lost", label: "Access lost" },
-  { value: "left", label: "Left" },
 ] as const;
 
 function useTimeout() {
@@ -39,16 +32,26 @@ function useTimeout() {
 }
 
 function LoadingState() {
+  const [loaded, setLoaded] = useState(false);
+  const inputRef = useRef<HTMLDivElement>(null);
+  if (loaded) return <SampleConversation focusComposer />;
   return (
     <>
-      <div className="min-h-0 flex-1 overflow-hidden px-4">
-        <ChatLoadingState label="Loading conversation" />
+      <div className="min-h-0 flex-1 overflow-y-auto px-4">
+        <ChatLoadingState label="Loading conversation">
+          <Button variant="outline" size="sm" onClick={() => setLoaded(true)}>
+            Finish loading preview
+          </Button>
+        </ChatLoadingState>
       </div>
-      <ChatInlineComposer
+      <ChatDemoComposer
+        inputRef={inputRef}
+        mentionMembers={["maya", "jordan", "alex"]}
+        notice=""
         disabled
         value={[]}
         onValueChange={() => {}}
-        onSubmit={() => {}}
+        onSend={() => {}}
       />
     </>
   );
@@ -56,9 +59,9 @@ function LoadingState() {
 
 function EmptyState() {
   const [joined, setJoined] = useState(false);
-  if (joined) return <SampleConversation empty />;
+  if (joined) return <SampleConversation empty focusComposer />;
   return (
-    <div className="flex min-h-0 flex-1 flex-col justify-center">
+    <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
       <ChatTimelineState
         scenario="empty"
         joined={false}
@@ -78,11 +81,13 @@ function ReconnectingState() {
   return (
     <SampleConversation
       disabled={status !== "online"}
+      focusComposer={status === "online"}
+      notice={status === "online" ? "Connected" : ""}
       banner={
         status !== "online" && (
           <ChatStatusBar
             title={status === "offline" ? "You’re offline" : "Reconnecting…"}
-            description="Your draft is saved. Sending resumes when you’re back."
+            description="Your draft is saved here. Sending will resume when connected."
             action={
               <Button
                 variant="outline"
@@ -93,7 +98,7 @@ function ReconnectingState() {
                   later(() => setStatus("online"), 1200);
                 }}
               >
-                Try now
+                Reconnect
               </Button>
             }
           />
@@ -108,9 +113,9 @@ function ErrorState() {
     "error",
   );
   const later = useTimeout();
-  if (status === "loaded") return <SampleConversation />;
+  if (status === "loaded") return <SampleConversation focusComposer />;
   return (
-    <div className="flex min-h-0 flex-1 flex-col justify-center">
+    <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
       <ChatEmptyState
         icon={<CircleAlertIcon aria-hidden="true" />}
         title="Couldn’t load the conversation"
@@ -118,6 +123,7 @@ function ErrorState() {
       >
         <Button
           variant="outline"
+          size="sm"
           loading={status === "retrying"}
           onClick={() => {
             setStatus("retrying");
@@ -132,41 +138,18 @@ function ErrorState() {
 }
 
 function NoAccessState() {
-  const [access, setAccess] =
-    useState<(typeof ACCESS)[number]["value"]>("removed");
   const [restored, setRestored] = useState(false);
+  if (restored) return <SampleConversation focusComposer />;
   return (
-    <>
-      <div className="flex flex-wrap gap-1 border-b p-3">
-        {ACCESS.map(({ value, label }) => (
-          <Button
-            key={value}
-            aria-pressed={access === value}
-            size="xs"
-            variant={access === value ? "secondary" : "ghost"}
-            onClick={() => {
-              setAccess(value);
-              setRestored(false);
-            }}
-          >
-            {label}
-          </Button>
-        ))}
-      </div>
-      {restored ? (
-        <SampleConversation />
-      ) : (
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
-          <ChatTimelineState
-            scenario={access}
-            onRecover={() => setRestored(true)}
-            joined={false}
-            memberCount={3}
-            onJoin={() => {}}
-          />
-        </div>
-      )}
-    </>
+    <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+      <ChatTimelineState
+        scenario="removed"
+        onRecover={() => setRestored(true)}
+        joined={false}
+        memberCount={3}
+        onJoin={() => {}}
+      />
+    </div>
   );
 }
 

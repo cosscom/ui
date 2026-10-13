@@ -21,6 +21,7 @@ import {
   CHAT_MEMBERS,
   type MemberId,
 } from "@/registry/default/chat-demo/chat-demo-state";
+import { Badge } from "@/registry/default/ui/badge";
 import { Button } from "@/registry/default/ui/button";
 import {
   Card,
@@ -68,6 +69,7 @@ function FeatureTile({
 
 function RepliesDemo() {
   const [highlighted, setHighlighted] = useState(false);
+  const targetRef = useRef<HTMLElement>(null);
   const timer = useRef<number>(undefined);
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
@@ -78,6 +80,9 @@ function RepliesDemo() {
         author={CHAT_MEMBERS.maya.name}
         avatar={<ChatMemberAvatar member="maya" />}
         highlighted={highlighted}
+        ref={targetRef}
+        tabIndex={-1}
+        aria-label="Maya Chen, original message"
       >
         Can we move the launch to Thursday?
       </ChatMessage>
@@ -86,9 +91,10 @@ function RepliesDemo() {
           author={CHAT_MEMBERS.maya.name}
           preview="Can we move the launch to Thursday?"
           onClick={() => {
+            targetRef.current?.focus({ preventScroll: true });
             setHighlighted(true);
             window.clearTimeout(timer.current);
-            timer.current = window.setTimeout(() => setHighlighted(false), 600);
+            timer.current = window.setTimeout(() => setHighlighted(false), 420);
           }}
         />
         <ChatMessageText text="Thursday works. I’ll update the plan." />
@@ -139,6 +145,7 @@ function ReactionsDemo() {
               triggerTooltip="React"
               popupLabel="Reactions"
               popupAnchor={toolbarRef}
+              popupAlign="end"
               onSelect={toggle}
             />
           )}
@@ -149,17 +156,39 @@ function ReactionsDemo() {
         return (
           <ChatReactionChip
             key={reaction.emoji}
-            animateEntrance
+            animateEntrance={
+              !INITIAL_REACTIONS.some((item) => item.emoji === reaction.emoji)
+            }
             emoji={reaction.emoji}
             count={reaction.members.length}
             selected={selected}
-            label={`${selected ? "Remove" : "Add"} ${reaction.emoji} reaction`}
-            reactorLabel={`People who reacted with ${reaction.emoji}`}
+            label={`${selected ? "Remove" : "Add"} ${reaction.emoji} reaction, ${reaction.members.length} ${reaction.members.length === 1 ? "person" : "people"}`}
+            reactorLabel={`${reaction.members.length} ${reaction.members.length === 1 ? "reaction" : "reactions"}`}
+            popupAlign="start"
             onClick={() => toggle(reaction.emoji)}
             reactorContent={
-              <ul className="space-y-1 p-1 text-xs">
+              <ul
+                aria-label="People who reacted"
+                className="flex max-h-48 flex-col overflow-y-auto overscroll-contain"
+              >
                 {reaction.members.map((member) => (
-                  <li key={member}>{CHAT_MEMBERS[member].name}</li>
+                  <li
+                    key={member}
+                    className="flex items-center gap-2 px-1.5 py-1 text-xs leading-5"
+                  >
+                    <ChatMemberAvatar
+                      member={member}
+                      className="size-5 text-[.5625rem]"
+                    />
+                    <span className="min-w-0 flex-1 truncate">
+                      {CHAT_MEMBERS[member].name}
+                    </span>
+                    {member === "you" && (
+                      <Badge variant="secondary" size="sm">
+                        You
+                      </Badge>
+                    )}
+                  </li>
                 ))}
               </ul>
             }
@@ -179,9 +208,19 @@ function MentionsDemo() {
   return (
     <div className="flex flex-col gap-4">
       <ChatMessage side="outgoing">
-        <ChatMessageText
+        <ChatCollapsibleMessage
           text={sent}
-          mentions={Object.values(CHAT_MEMBERS).map((member) => member.handle)}
+          side="outgoing"
+          showMoreLabel="Show more"
+          showLessLabel="Show less"
+          renderText={(text) => (
+            <ChatMessageText
+              text={text}
+              mentions={Object.values(CHAT_MEMBERS).map(
+                (member) => member.handle,
+              )}
+            />
+          )}
         />
       </ChatMessage>
       <ChatDemoComposer
@@ -276,7 +315,9 @@ const LONG_MESSAGE = `Quick recap from today’s review.
 
 The onboarding flow tested well: most people finished it in under two minutes, and nobody got stuck on the workspace step. The empty states got a lot of love.
 
-Two things to follow up on. The invite screen still feels a little crowded on small phones, and a few people missed the “skip for now” link. I’ll pair with Jordan on both tomorrow, then we can do one more pass before Friday.`;
+Two things to follow up on. The invite screen still feels a little crowded on small phones, and a few people missed the “skip for now” link. I’ll pair with @Jordan on both tomorrow, then we can do one more pass before Friday.
+
+Please add your feedback to the shared review notes so we can keep the decisions together. We’ll check the updated screens on both desktop and mobile, then confirm the final copy with the team before the launch.`;
 
 function LongMessageDemo() {
   return (
@@ -288,7 +329,14 @@ function LongMessageDemo() {
       <ChatCollapsibleMessage
         side="incoming"
         text={LONG_MESSAGE}
-        maxPreviewLength={160}
+        renderText={(text) => (
+          <ChatMessageText
+            text={text}
+            mentions={Object.values(CHAT_MEMBERS).map(
+              (member) => member.handle,
+            )}
+          />
+        )}
         showMoreLabel="Show more"
         showLessLabel="Show less"
       />
@@ -336,23 +384,28 @@ function TimelineDemo() {
         jumpLabel="Jump to latest"
       >
         {TIMELINE.map((group) => (
-          <div key={group.date} className="flex flex-col gap-3 pt-4">
+          <div
+            key={group.date}
+            className="not-first:mt-4 flex flex-col gap-4 first:pt-4"
+          >
             <ChatDatePill>{group.date}</ChatDatePill>
             {group.unread && (
               <ChatUnreadDivider className="my-0">
                 2 new messages
               </ChatUnreadDivider>
             )}
-            {group.messages.map((message) => (
-              <ChatMessage
-                key={message.id}
-                side={message.author === "you" ? "outgoing" : "incoming"}
-                author={CHAT_MEMBERS[message.author].name}
-                avatar={<ChatMemberAvatar member={message.author} />}
-              >
-                {message.text}
-              </ChatMessage>
-            ))}
+            <div className="flex flex-col gap-5">
+              {group.messages.map((message) => (
+                <ChatMessage
+                  key={message.id}
+                  side={message.author === "you" ? "outgoing" : "incoming"}
+                  author={CHAT_MEMBERS[message.author].name}
+                  avatar={<ChatMemberAvatar member={message.author} />}
+                >
+                  {message.text}
+                </ChatMessage>
+              ))}
+            </div>
           </div>
         ))}
       </ChatConversation>

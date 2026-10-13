@@ -41,6 +41,7 @@ export function ChatDemoComposer({
   value,
   onValueChange,
   replyAuthor,
+  placeholder = "Message the group…",
   mentionMembers,
   onSend,
   inputRef,
@@ -51,6 +52,7 @@ export function ChatDemoComposer({
   value: ComposerValue;
   onValueChange: (value: ComposerValue) => void;
   replyAuthor?: string;
+  placeholder?: string;
   mentionMembers: readonly MemberId[];
   onSend: () => void;
   inputRef: RefObject<HTMLDivElement | null>;
@@ -95,9 +97,7 @@ export function ChatDemoComposer({
           aria-describedby={touchInput ? undefined : hintId}
           aria-label="Message"
           className="max-md:px-2"
-          placeholder={
-            replyAuthor ? `Reply to ${replyAuthor}…` : "Message the group…"
-          }
+          placeholder={replyAuthor ? `Reply to ${replyAuthor}…` : placeholder}
         />
         <ComposerPopup>
           <ComposerList>

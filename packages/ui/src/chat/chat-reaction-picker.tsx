@@ -79,7 +79,7 @@ export function ChatReactionPicker({
         aria-label={popupLabel}
         initialFocus={(interaction) => interaction === "keyboard"}
         finalFocus={(interaction) => interaction === "keyboard"}
-        className="rounded-full before:rounded-full **:data-[slot=popover-viewport]:p-1"
+        className="transform-gpu rounded-full before:rounded-full **:data-[slot=popover-viewport]:p-1"
       >
         <div className="flex">
           {options.map(({ emoji, label }) => (

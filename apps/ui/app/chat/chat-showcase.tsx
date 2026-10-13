@@ -5,14 +5,17 @@ import {
   ArrowUpRightIcon,
   CheckIcon,
   CopyIcon,
+  MessagesSquareIcon,
 } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ChatDemo } from "@/registry/default/chat-demo/chat-demo";
 import { CHAT_SCENARIOS } from "@/registry/default/chat-demo/chat-demo-state";
 import { useCopyToClipboard } from "@/registry/default/hooks/use-copy-to-clipboard";
+import { Badge } from "@/registry/default/ui/badge";
 import { Button } from "@/registry/default/ui/button";
 import { DrawerTrigger } from "@/registry/default/ui/drawer";
+import { Tabs, TabsList, TabsPanel, TabsTab } from "@/registry/default/ui/tabs";
 import { ChatFeatures } from "./chat-features";
 import { ChatLayouts } from "./chat-layouts";
 import { ChatPreview } from "./chat-preview";
@@ -107,9 +110,13 @@ export function ChatShowcase() {
         <>
           <section className="container grid items-center gap-12 py-14 md:grid-cols-2 md:gap-14 md:py-20 lg:gap-24">
             <div className="flex min-w-0 flex-col items-start">
-              <p className="mb-6 font-medium text-muted-foreground text-sm">
+              <Badge
+                variant="outline"
+                className="mb-6 h-7 gap-1.5 rounded-full px-2.5 text-xs shadow-xs/5 sm:h-7"
+              >
+                <MessagesSquareIcon aria-hidden="true" className="size-3.5" />
                 Chat UI
-              </p>
+              </Badge>
               <h1 className="font-bold font-heading text-5xl leading-none tracking-tight lg:text-6xl">
                 Make room
                 <br />
@@ -143,7 +150,21 @@ export function ChatShowcase() {
               </p>
             </div>
             <div className="mx-auto w-full max-w-md">
-              <ChatPreview />
+              <Tabs defaultValue="direct" className="gap-4">
+                <TabsList
+                  aria-label="Conversation type"
+                  className="self-center"
+                >
+                  <TabsTab value="group">Group chat</TabsTab>
+                  <TabsTab value="direct">Direct message</TabsTab>
+                </TabsList>
+                <TabsPanel value="group">
+                  <ChatPreview />
+                </TabsPanel>
+                <TabsPanel value="direct">
+                  <ChatPreview direct />
+                </TabsPanel>
+              </Tabs>
             </div>
           </section>
 

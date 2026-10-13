@@ -12,7 +12,7 @@
 ## Chat UI
 
 - [Chat UI showcase](https://coss.com/ui/chat): Interactive conversation and state examples.
-- [Chat UI integration](https://coss.com/ui/docs/chat.md): Installation, component map, controlled state, motion, and backend responsibilities.
+- [Chat UI integration](https://coss.com/ui/docs/chat.md): Installation, copyable example, source map, composition contracts, and application responsibilities.
 
 ## Components
 
