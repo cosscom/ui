@@ -1,5 +1,6 @@
 "use client";
 
+import { PhoneIcon, PlusIcon } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import { useEffect, useId, useRef, useState } from "react";
 import { ChatCollapsibleMessage } from "@/registry/default/chat/chat-collapsible-message";
@@ -26,10 +27,18 @@ import {
 } from "@/registry/default/chat-demo/chat-demo-state";
 import { cn } from "@/registry/default/lib/utils";
 import { Badge } from "@/registry/default/ui/badge";
+import { Button } from "@/registry/default/ui/button";
 import {
   type ComposerValue,
   getComposerText,
 } from "@/registry/default/ui/composer";
+import { toastManager } from "@/registry/default/ui/toast";
+import {
+  Tooltip,
+  TooltipPopup,
+  TooltipTrigger,
+} from "@/registry/default/ui/tooltip";
+import { useChatPreviewPlayback } from "./use-chat-preview-playback";
 
 type Status = "sending" | "delivered" | "read";
 
@@ -75,7 +84,7 @@ const GROUP_MESSAGES: PreviewMessage[] = [
   {
     id: 3,
     author: "you",
-    text: "Same here. Let’s ship it ✨",
+    text: "Same here. Let’s ship it 🚀",
     status: "read",
     reactions: [],
   },
@@ -161,6 +170,48 @@ export function ChatPreview({ direct = false }: { direct?: boolean }) {
         message.id === id ? { ...message, status } : message,
       ),
     );
+  };
+
+  const playbackMessageId = useRef<number | null>(null);
+  const playback = useChatPreviewPlayback((step) => {
+    if (step.type === "draft") {
+      setDraft([{ type: "text", text: step.text }]);
+    } else if (step.type === "send") {
+      const id = nextId.current++;
+      playbackMessageId.current = id;
+      scroll.atBottomRef.current = true;
+      setMessages((current) => [
+        ...current,
+        {
+          id,
+          author: "you",
+          text: step.text,
+          status: "sending",
+          reactions: [],
+        },
+      ]);
+      setDraft([]);
+    } else if (step.type === "reply") {
+      const id = nextId.current++;
+      setTyping(false);
+      setMessages((current) => [
+        ...current,
+        { id, author: "maya", text: step.text, reactions: [] },
+      ]);
+    } else if (playbackMessageId.current !== null) {
+      setStatus(
+        playbackMessageId.current,
+        step.type === "delivered" ? "delivered" : "read",
+      );
+      if (step.type === "typing") setTyping(true);
+    }
+  });
+  const stopPlayback = () => {
+    if (!playback.stop()) return;
+    setDraft([]);
+    setTyping(false);
+    if (playbackMessageId.current !== null)
+      setStatus(playbackMessageId.current, "read");
   };
 
   const toggleReaction = (id: number, emoji: string) => {
@@ -313,6 +364,10 @@ export function ChatPreview({ direct = false }: { direct?: boolean }) {
 
   return (
     <section
+      ref={playback.ref}
+      onFocusCapture={(event) => {
+        if (event.target === inputRef.current) stopPlayback();
+      }}
       aria-label={direct ? "Direct message preview" : "Live chat preview"}
       onKeyDown={(event) => {
         if (
@@ -330,7 +385,7 @@ export function ChatPreview({ direct = false }: { direct?: boolean }) {
         <div className="flex items-center gap-3">
           {direct && (
             <div className="relative flex shrink-0">
-              <ChatMemberAvatar member="maya" className="size-10" />
+              <ChatMemberAvatar member="maya" className="size-9" />
               <span
                 aria-hidden="true"
                 className="absolute end-0.5 bottom-0.5 size-2 rounded-full bg-success outline-2 outline-popover"
@@ -346,7 +401,23 @@ export function ChatPreview({ direct = false }: { direct?: boolean }) {
             </p>
           </div>
         </div>
-        {!direct && (
+        {direct ? (
+          <Tooltip>
+            <TooltipTrigger
+              render={<Button variant="ghost" size="icon-lg" />}
+              aria-label="Call Maya"
+              onClick={() => {
+                toastManager.add({
+                  title: "Voice call preview",
+                  description: "Calls aren’t connected in this demo.",
+                });
+              }}
+            >
+              <PhoneIcon aria-hidden="true" />
+            </TooltipTrigger>
+            <TooltipPopup>Call Maya</TooltipPopup>
+          </Tooltip>
+        ) : (
           <div className="flex -space-x-1.5">
             {members.map((member) => (
               <ChatMemberAvatar
@@ -362,6 +433,7 @@ export function ChatPreview({ direct = false }: { direct?: boolean }) {
         className="overflow-clip"
         scroll={scroll}
         label="Preview messages"
+        live={playback.active ? "off" : undefined}
         jumpLabel="Jump to latest"
         inactive={replyFocus !== null}
         overlay={
@@ -555,6 +627,31 @@ export function ChatPreview({ direct = false }: { direct?: boolean }) {
         </div>
       </ChatConversation>
       <ChatDemoComposer
+        className="[&_[data-slot=composer]]:[--composer-min-rows:1] md:[&_[data-slot=composer]]:[--composer-radius:--spacing(6)]"
+        showKeyboardHint={false}
+        startAction={
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full before:rounded-full"
+                />
+              }
+              aria-label="Add attachment"
+              onClick={() => {
+                toastManager.add({
+                  title: "Attachment preview",
+                  description: "Attachments aren’t connected in this demo.",
+                });
+              }}
+            >
+              <PlusIcon aria-hidden="true" />
+            </TooltipTrigger>
+            <TooltipPopup>Add attachment</TooltipPopup>
+          </Tooltip>
+        }
         value={draft}
         onValueChange={setDraft}
         inputRef={inputRef}

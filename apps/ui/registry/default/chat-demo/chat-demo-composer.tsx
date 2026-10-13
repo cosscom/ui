@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowUpIcon } from "lucide-react";
-import type { ReactElement, RefObject } from "react";
+import type { ReactElement, ReactNode, RefObject } from "react";
 import { useId, useMemo } from "react";
 import { useMediaQuery } from "@/registry/default/hooks/use-media-query";
 import { cn } from "@/registry/default/lib/utils";
@@ -42,6 +42,8 @@ export function ChatDemoComposer({
   onValueChange,
   replyAuthor,
   placeholder = "Message the group…",
+  showKeyboardHint = true,
+  startAction,
   mentionMembers,
   onSend,
   inputRef,
@@ -53,6 +55,8 @@ export function ChatDemoComposer({
   onValueChange: (value: ComposerValue) => void;
   replyAuthor?: string;
   placeholder?: string;
+  showKeyboardHint?: boolean;
+  startAction?: ReactNode;
   mentionMembers: readonly MemberId[];
   onSend: () => void;
   inputRef: RefObject<HTMLDivElement | null>;
@@ -94,7 +98,9 @@ export function ChatDemoComposer({
       >
         <ComposerInput
           ref={inputRef}
-          aria-describedby={touchInput ? undefined : hintId}
+          aria-describedby={
+            showKeyboardHint && !touchInput ? hintId : undefined
+          }
           aria-label="Message"
           className="max-md:px-2"
           placeholder={replyAuthor ? `Reply to ${replyAuthor}…` : placeholder}
@@ -118,6 +124,11 @@ export function ChatDemoComposer({
           </ComposerList>
         </ComposerPopup>
         <ComposerActions className="max-md:mx-1">
+          {startAction && (
+            <ComposerActionGroup align="start">
+              {startAction}
+            </ComposerActionGroup>
+          )}
           <ComposerActionGroup align="end">
             <Tooltip>
               <TooltipTrigger
@@ -146,7 +157,7 @@ export function ChatDemoComposer({
       </Composer>
       <div
         className={cn(
-          touchInput && !notice
+          (touchInput || !showKeyboardHint) && !notice
             ? "sr-only"
             : "flex min-h-4 items-center justify-between px-1 text-muted-foreground text-xs",
           disabled && "opacity-50",
@@ -155,7 +166,7 @@ export function ChatDemoComposer({
         <span aria-live="polite" role="status">
           {notice}
         </span>
-        {!touchInput && (
+        {showKeyboardHint && !touchInput && (
           <span
             className={notice ? "sr-only" : "ms-auto pointer-coarse:hidden"}
             id={hintId}

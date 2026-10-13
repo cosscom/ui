@@ -94,7 +94,7 @@ function SectionHeading({
     <div className="mb-10 max-w-xl">
       <h2
         id={id}
-        className="font-bold font-heading text-3xl tracking-tight md:text-4xl"
+        className="font-bold font-heading text-3xl tracking-tight md:text-4xl lg:text-5xl"
       >
         {title}
       </h2>
@@ -117,7 +117,7 @@ export function ChatShowcase() {
                 <MessagesSquareIcon aria-hidden="true" className="size-3.5" />
                 Chat UI
               </Badge>
-              <h1 className="font-bold font-heading text-5xl leading-none tracking-tight lg:text-6xl">
+              <h1 className="font-bold font-heading text-5xl leading-none tracking-tight lg:text-6xl xl:text-7xl">
                 Make room
                 <br />
                 for conversation.
@@ -150,7 +150,7 @@ export function ChatShowcase() {
               </p>
             </div>
             <div className="mx-auto w-full max-w-md">
-              <Tabs defaultValue="direct" className="gap-4">
+              <Tabs defaultValue="direct" className="gap-5">
                 <TabsList
                   aria-label="Conversation type"
                   className="self-center"
@@ -228,7 +228,7 @@ export function ChatShowcase() {
               <div className="flex flex-col items-start">
                 <h2
                   id="chat-build"
-                  className="font-bold font-heading text-3xl tracking-tight md:text-4xl"
+                  className="font-bold font-heading text-3xl tracking-tight md:text-4xl lg:text-5xl"
                 >
                   Start building
                 </h2>

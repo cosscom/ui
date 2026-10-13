@@ -11,6 +11,7 @@ import {
 import { ChatDemoComposer } from "@/registry/default/chat-demo/chat-demo-composer";
 import { ChatTimelineState } from "@/registry/default/chat-demo/chat-demo-scenarios";
 import { Button } from "@/registry/default/ui/button";
+import { ScrollArea } from "@/registry/default/ui/scroll-area";
 import { Tabs, TabsList, TabsPanel, TabsTab } from "@/registry/default/ui/tabs";
 import { ChatWindow, SampleConversation } from "./chat-sample";
 
@@ -37,12 +38,20 @@ function LoadingState() {
   if (loaded) return <SampleConversation focusComposer />;
   return (
     <>
-      <div className="min-h-0 flex-1 overflow-y-auto px-4">
-        <ChatLoadingState label="Loading conversation">
-          <Button variant="outline" size="sm" onClick={() => setLoaded(true)}>
-            Finish loading preview
-          </Button>
-        </ChatLoadingState>
+      <div className="min-h-0 flex-1">
+        <ScrollArea overscrollContain>
+          <div className="px-4">
+            <ChatLoadingState label="Loading conversation">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setLoaded(true)}
+              >
+                Finish loading preview
+              </Button>
+            </ChatLoadingState>
+          </div>
+        </ScrollArea>
       </div>
       <ChatDemoComposer
         inputRef={inputRef}
