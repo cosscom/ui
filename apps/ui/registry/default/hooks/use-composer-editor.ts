@@ -15,9 +15,14 @@ import {
   useState,
 } from "react";
 import {
+  COMPOSER_CLIPBOARD_TYPE,
+  parseComposerClipboard,
+} from "@/registry/default/lib/composer-clipboard";
+import {
   type ActiveQuery,
   type ComposerItemValue,
   type ComposerPart,
+  type ComposerQuery,
   type ComposerSelection,
   type ComposerSnapshot,
   type ComposerTokenPart,
@@ -43,7 +48,9 @@ type UseComposerEditorOptions = {
   value: ComposerValue;
   onValueChange: (value: ComposerValue, details: ComposerChangeDetails) => void;
   onSubmit?: (value: ComposerValue) => void;
-  onQueryChange?: (query: { character: string; text: string } | null) => void;
+  onQueryChange?: (query: ComposerQuery | null) => void;
+  onAction?: (item: ComposerItemValue, query: ComposerQuery) => void;
+  submitOnEmptySuggestions?: boolean;
   triggers?: readonly ComposerTrigger[];
   disabled?: boolean;
   readOnly?: boolean;
@@ -70,6 +77,7 @@ type ComposerEditorController = {
   tokenHosts: readonly HTMLSpanElement[];
   suggestions: {
     enabled: boolean;
+    submitOnEmptySuggestions: boolean;
     items: readonly ComposerItemValue[];
     open: boolean;
     onOpenChange: (open: boolean) => void;
@@ -82,6 +90,8 @@ export function useComposerEditor({
   onValueChange,
   onSubmit,
   onQueryChange,
+  onAction,
+  submitOnEmptySuggestions = false,
   triggers = [],
   disabled = false,
   readOnly = false,
@@ -146,6 +156,7 @@ export function useComposerEditor({
   onQueryChangeRef.current = onQueryChange;
   const queryCharacter = query?.character;
   const queryText = query?.text;
+  const queryKey = query?.key;
 
   const syncTokenHosts = useCallback((input: HTMLDivElement): void => {
     const next = Array.from(
@@ -163,11 +174,11 @@ export function useComposerEditor({
 
   useEffect(() => {
     onQueryChangeRef.current?.(
-      queryCharacter && queryText !== undefined
-        ? { character: queryCharacter, text: queryText }
+      queryCharacter && queryText !== undefined && queryKey
+        ? { character: queryCharacter, text: queryText, key: queryKey }
         : null,
     );
-  }, [queryCharacter, queryText]);
+  }, [queryCharacter, queryText, queryKey]);
 
   useEffect(() => {
     if (
@@ -336,6 +347,20 @@ export function useComposerEditor({
       type: "selection",
       selection: readSelection(input),
     };
+    if (suggestion.type === "action" && onAction) {
+      const range = document.createRange();
+      range.setStart(query.node, query.start);
+      range.setEnd(query.node, query.end);
+      range.deleteContents();
+      range.collapse(true);
+      const selection = window.getSelection();
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+      publish("selection");
+      setQuery(null);
+      onAction(suggestion, query);
+      return;
+    }
     insertItem(input, query, suggestion);
     publish("selection");
     setQuery(null);
@@ -543,9 +568,11 @@ export function useComposerEditor({
           return;
         const fragment = document.createElement("div");
         fragment.append(selection.getRangeAt(0).cloneContents());
+        const copiedValue = readValue(fragment, false);
+        event.clipboardData.setData("text/plain", getComposerText(copiedValue));
         event.clipboardData.setData(
-          "text/plain",
-          getComposerText(readValue(fragment, false)),
+          COMPOSER_CLIPBOARD_TYPE,
+          JSON.stringify(copiedValue),
         );
         event.preventDefault();
       },
@@ -565,9 +592,11 @@ export function useComposerEditor({
           return;
         const fragment = document.createElement("div");
         fragment.append(selection.getRangeAt(0).cloneContents());
+        const copiedValue = readValue(fragment, false);
+        event.clipboardData.setData("text/plain", getComposerText(copiedValue));
         event.clipboardData.setData(
-          "text/plain",
-          getComposerText(readValue(fragment, false)),
+          COMPOSER_CLIPBOARD_TYPE,
+          JSON.stringify(copiedValue),
         );
         event.preventDefault();
         if (disabled || readOnly || composing.current) return;
@@ -590,10 +619,33 @@ export function useComposerEditor({
           type: "paste",
           selection: readSelection(event.currentTarget),
         };
-        insertPlainText(
-          event.currentTarget,
-          event.clipboardData.getData("text/plain"),
+        const pastedValue = parseComposerClipboard(
+          event.clipboardData.getData(COMPOSER_CLIPBOARD_TYPE),
         );
+        if (pastedValue) {
+          const selection = window.getSelection();
+          if (
+            !selection?.rangeCount ||
+            !event.currentTarget.contains(selection.anchorNode) ||
+            !event.currentTarget.contains(selection.focusNode)
+          )
+            return;
+          const range = selection.getRangeAt(0);
+          range.deleteContents();
+          const fragment = document.createElement("div");
+          writeValue(fragment, pastedValue);
+          const nodes = Array.from(fragment.childNodes);
+          const last = nodes.at(-1);
+          for (const node of nodes.reverse()) range.insertNode(node);
+          if (last) range.setStartAfter(last);
+          range.collapse(true);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        } else
+          insertPlainText(
+            event.currentTarget,
+            event.clipboardData.getData("text/plain"),
+          );
         publish();
       },
       onDrop: (event) => {
@@ -653,6 +705,7 @@ export function useComposerEditor({
     },
     status: trigger?.status ?? "ready",
     suggestions: {
+      submitOnEmptySuggestions,
       enabled:
         triggers.length > 0 &&
         !isTextarea &&
@@ -672,13 +725,14 @@ export function useComposerEditor({
 export const useComposerFilter: typeof AutocompletePrimitive.useFilter =
   AutocompletePrimitive.useFilter;
 export {
-  type ComposerPart,
-  type ComposerTokenPart,
-  type ComposerValue,
-  type ComposerItemValue,
-  type ComposerTrigger,
-  type UseComposerEditorOptions,
-  type ComposerEditorController,
   type ComposerChangeDetails,
+  type ComposerEditorController,
+  type ComposerItemValue,
+  type ComposerPart,
+  type ComposerQuery,
+  type ComposerTokenPart,
+  type ComposerTrigger,
+  type ComposerValue,
   getComposerText,
+  type UseComposerEditorOptions,
 };

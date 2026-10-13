@@ -10555,6 +10555,24 @@ export const Index: Record<string, any> = {
     categories: undefined,
     meta: undefined,
   },
+  "composer-clipboard": {
+    name: "composer-clipboard",
+    description: "",
+    type: "registry:lib",
+    registryDependencies: ["@coss/composer-document"],
+    files: [{
+      path: "registry/default/lib/composer-clipboard.ts",
+      type: "registry:lib",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/lib/composer-clipboard.ts")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
   "composer-document": {
     name: "composer-document",
     description: "",
@@ -10721,7 +10739,7 @@ export const Index: Record<string, any> = {
     name: "use-composer-editor",
     description: "",
     type: "registry:hook",
-    registryDependencies: ["@coss/composer-document"],
+    registryDependencies: ["@coss/composer-document","@coss/composer-clipboard"],
     files: [{
       path: "registry/default/hooks/use-composer-editor.ts",
       type: "registry:hook",

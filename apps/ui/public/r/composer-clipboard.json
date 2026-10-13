@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "composer-clipboard",
+  "registryDependencies": [
+    "@coss/composer-document"
+  ],
+  "files": [
+    {
+      "path": "registry/default/lib/composer-clipboard.ts",
+      "content": "import type { ComposerPart, ComposerValue } from \"./composer-document\";\n\nexport const COMPOSER_CLIPBOARD_TYPE = \"application/x-coss-composer\";\n\nexport function parseComposerClipboard(raw: string): ComposerValue | null {\n  if (!raw || raw.length > 100_000) return null;\n  try {\n    const value: unknown = JSON.parse(raw);\n    if (!Array.isArray(value) || value.length > 1_000) return null;\n    const parts: ComposerPart[] = [];\n    for (const part of value) {\n      if (!part || typeof part !== \"object\") return null;\n      if (part.type === \"text\" && typeof part.text === \"string\") {\n        parts.push({ type: \"text\", text: part.text });\n        continue;\n      }\n      if (\n        (part.type !== \"mention\" && part.type !== \"action\") ||\n        typeof part.id !== \"string\" ||\n        typeof part.label !== \"string\" ||\n        typeof part.trigger !== \"string\"\n      )\n        return null;\n      parts.push({\n        type: part.type,\n        id: part.id,\n        label: part.label,\n        trigger: part.trigger,\n        ...(typeof part.kind === \"string\" ? { kind: part.kind } : {}),\n        ...(typeof part.data === \"string\" ? { data: part.data } : {}),\n        ...(typeof part.text === \"string\" ? { text: part.text } : {}),\n      });\n    }\n    return parts;\n  } catch {\n    return null;\n  }\n}\n",
+      "type": "registry:lib"
+    }
+  ],
+  "type": "registry:lib"
+}

@@ -9,6 +9,8 @@ type ComposerPart =
       label: string;
       trigger: string;
       kind?: string;
+      data?: string;
+      text?: string;
     };
 
 type ComposerValue = readonly ComposerPart[];
@@ -22,6 +24,8 @@ type ComposerItemValue = {
   icon?: ReactNode;
   type?: "mention" | "action";
   kind?: string;
+  data?: string;
+  text?: string;
 };
 
 type ComposerTrigger = {
@@ -29,16 +33,21 @@ type ComposerTrigger = {
   items: readonly ComposerItemValue[];
   status?: "ready" | "loading" | "error";
   itemsFor?: string;
+  queryKey?: string;
+  showEmpty?: boolean;
+  maxQueryLength?: number;
   filter?: ((item: ComposerItemValue, query: string) => boolean) | null;
 };
 
-type ActiveQuery = {
-  character: string;
-  text: string;
+type ComposerQuery = { character: string; text: string; key: string };
+
+const queryNodeIds = new WeakMap<Text, number>();
+let nextQueryNodeId = 0;
+
+type ActiveQuery = ComposerQuery & {
   node: Text;
   start: number;
   end: number;
-  key: string;
 };
 
 function pushText(parts: ComposerPart[], text: string): void {
@@ -72,6 +81,12 @@ function readValue(
           label: node.dataset.label ?? "",
           trigger: node.dataset.trigger ?? "@",
           ...(node.dataset.kind ? { kind: node.dataset.kind } : {}),
+          ...(node.dataset.data !== undefined
+            ? { data: node.dataset.data }
+            : {}),
+          ...(node.dataset.text !== undefined
+            ? { text: node.dataset.text }
+            : {}),
         });
       } else if (node.tagName === "BR") {
         if (node.hasAttribute("data-composer-placeholder")) continue;
@@ -128,7 +143,9 @@ function equalValue(left: ComposerValue, right: ComposerValue): boolean {
         other.id === part.id &&
         other.label === part.label &&
         other.trigger === part.trigger &&
-        other.kind === part.kind
+        other.kind === part.kind &&
+        other.data === part.data &&
+        other.text === part.text
       );
     })
   );
@@ -137,7 +154,9 @@ function equalValue(left: ComposerValue, right: ComposerValue): boolean {
 function getComposerText(value: ComposerValue): string {
   return value
     .map((part) =>
-      part.type === "text" ? part.text : `${part.trigger}${part.label}`,
+      part.type === "text"
+        ? part.text
+        : (part.text ?? `${part.trigger}${part.label}`),
     )
     .join("");
 }
@@ -149,10 +168,12 @@ function createToken(part: ComposerTokenPart): HTMLSpanElement {
   token.dataset.label = part.label;
   token.dataset.trigger = part.trigger;
   if (part.kind) token.dataset.kind = part.kind;
+  if (part.data !== undefined) token.dataset.data = part.data;
+  if (part.text !== undefined) token.dataset.text = part.text;
   token.contentEditable = "false";
   const fallback = document.createElement("span");
   fallback.dataset.slot = "composer-token-fallback";
-  fallback.textContent = `${part.trigger}${part.label}`;
+  fallback.textContent = part.text ?? `${part.trigger}${part.label}`;
   const renderer = document.createElement("span");
   renderer.dataset.slot = "composer-token-renderer";
   token.append(fallback, renderer);
@@ -264,17 +285,24 @@ function currentQuery(
     caret,
     triggers.map((trigger) => trigger.character),
   );
-  if (!query) return null;
+  if (
+    !query ||
+    query.text.length >
+      (triggers.find((trigger) => trigger.character === query.character)
+        ?.maxQueryLength ?? Number.POSITIVE_INFINITY)
+  )
+    return null;
   if (
     query.start === 0 &&
     node.previousSibling?.textContent &&
     !/\s$/u.test(node.previousSibling.textContent)
   )
     return null;
+  if (!queryNodeIds.has(node)) queryNodeIds.set(node, ++nextQueryNodeId);
   return {
     ...query,
     node,
-    key: `${query.character}:${query.start}:${caret}:${query.text}`,
+    key: `${queryNodeIds.get(node)}:${query.character}:${query.start}:${caret}:${query.text}`,
   };
 }
 
@@ -287,7 +315,8 @@ function getFilteredItems(
     !trigger ||
     !query ||
     (trigger.status && trigger.status !== "ready") ||
-    (trigger.itemsFor !== undefined && trigger.itemsFor !== query.text)
+    (trigger.itemsFor !== undefined && trigger.itemsFor !== query.text) ||
+    (trigger.queryKey !== undefined && trigger.queryKey !== query.key)
   )
     return [];
   if (trigger.filter === null) return trigger.items;
@@ -305,6 +334,7 @@ function hasVisibleItems(
   return Boolean(
     trigger &&
       (options.length ||
+        trigger.showEmpty ||
         trigger.status === "loading" ||
         trigger.status === "error"),
   );
@@ -328,6 +358,8 @@ function insertItem(
     label: suggestion.label,
     trigger: query.character,
     ...(suggestion.kind ? { kind: suggestion.kind } : {}),
+    ...(suggestion.data !== undefined ? { data: suggestion.data } : {}),
+    ...(suggestion.text !== undefined ? { text: suggestion.text } : {}),
   });
   const hasSeparator = /^\s/u.test(query.node.data.slice(query.end));
   const trailingSpace = hasSeparator ? "" : " ";
@@ -402,8 +434,10 @@ function restoreSelection(
     for (const [index, node] of Array.from(input.childNodes).entries()) {
       const length =
         node instanceof HTMLElement && node.dataset.composerToken
-          ? (node.dataset.trigger ?? "").length +
-            (node.dataset.label ?? "").length
+          ? (
+              node.dataset.text ??
+              `${node.dataset.trigger ?? ""}${node.dataset.label ?? ""}`
+            ).length
           : (node.textContent ?? "").length;
       if (remaining <= length) {
         if (node instanceof Text) return [node, remaining];
@@ -426,23 +460,24 @@ type ComposerSnapshot = {
 };
 
 export {
-  type ComposerPart,
-  type ComposerValue,
-  type ComposerTokenPart,
-  type ComposerItemValue,
-  type ComposerTrigger,
   type ActiveQuery,
+  type ComposerItemValue,
+  type ComposerPart,
+  type ComposerQuery,
   type ComposerSelection,
   type ComposerSnapshot,
+  type ComposerTokenPart,
+  type ComposerTrigger,
+  type ComposerValue,
   currentQuery,
+  equalValue,
+  getComposerText,
   getFilteredItems,
   hasVisibleItems,
   insertItem,
-  readSelection,
-  restoreSelection,
-  readValue,
-  writeValue,
-  equalValue,
   insertPlainText,
-  getComposerText,
+  readSelection,
+  readValue,
+  restoreSelection,
+  writeValue,
 };

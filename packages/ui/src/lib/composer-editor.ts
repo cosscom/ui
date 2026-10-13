@@ -4,6 +4,7 @@ import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
 import {
   type ComposerEditorController,
   type ComposerItemValue,
+  type ComposerQuery,
   type ComposerValue,
   type UseComposerEditorOptions,
   useComposerEditor,
@@ -166,9 +167,11 @@ function ComposerSuggestions({
   onOpenChange,
   onItemSelect,
   getSuggestionsAnnouncement = defaultAnnouncement,
+  submitOnEmptySuggestions,
   children,
 }: {
   enabled: boolean;
+  submitOnEmptySuggestions: boolean;
   items: readonly ComposerItemValue[];
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -224,7 +227,10 @@ function ComposerSuggestions({
       event.stopPropagation();
       onOpenChange(false);
       setHighlightedValue(undefined);
-    } else if (event.key === "Tab") {
+    } else if (
+      event.key === "Tab" ||
+      (event.key === "Enter" && event.shiftKey)
+    ) {
       onOpenChange(false);
     } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
       event.preventDefault();
@@ -239,6 +245,7 @@ function ComposerSuggestions({
       setHighlightedValue(item.id);
       registered.get(item.id)?.element.scrollIntoView({ block: "nearest" });
     } else if (event.key === "Enter" && !event.shiftKey) {
+      if (!enabledItems.length && submitOnEmptySuggestions) return;
       event.preventDefault();
       const item = enabledItems.find((item) => item.id === highlightedId);
       if (item) selectItem(item);
@@ -487,6 +494,7 @@ export {
   type ComposerChangeDetails,
   type ComposerItemValue,
   type ComposerPart,
+  type ComposerQuery,
   type ComposerTokenPart,
   type ComposerTrigger,
   type ComposerValue,
@@ -494,14 +502,13 @@ export {
   useComposerFilter,
 } from "@coss/ui/hooks/use-composer-editor";
 export type { ComposerEditorOptions };
-
 export {
-  useComposerEditorContext,
-  useComposerContext,
-  useComposerAnchorContext,
   ComposerEditorProvider,
-  useComposerSuggestionsContext,
-  useComposerItem,
   focusComposerInput,
+  useComposerAnchorContext,
+  useComposerContext,
+  useComposerEditorContext,
   useComposerInputLayout,
+  useComposerItem,
+  useComposerSuggestionsContext,
 };

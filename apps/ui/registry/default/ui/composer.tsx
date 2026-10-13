@@ -83,7 +83,7 @@ function ComposerFrame({
       </>
     ),
     className: cn(
-      "relative flex min-h-0 min-w-0 cursor-text flex-col rounded-(--composer-radius) border border-input bg-background not-dark:bg-clip-padding pb-[calc(var(--composer-padding)-1px)] text-foreground shadow-xs/5 ring-ring/24 transition-shadow [--composer-max-rows:4] [--composer-padding:--spacing(2)] [--composer-radius:var(--radius-xl)] before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--composer-radius)-1px)] not-data-disabled:not-has-[[data-slot=composer-input]:focus-visible]:not-has-aria-invalid:before:shadow-[0_1px_--theme(--color-black/4%)] has-[[data-slot=composer-input]:focus-visible]:has-aria-invalid:border-destructive/64 has-[[data-slot=composer-input]:focus-visible]:has-aria-invalid:ring-destructive/16 has-[[data-slot=composer-input]:focus-visible]:border-ring has-aria-invalid:border-destructive/36 has-[[data-slot=composer-input]:focus-visible]:shadow-none has-aria-invalid:shadow-none has-[[data-slot=composer-input]:focus-visible]:ring-[3px] aria-invalid:border-destructive/36 aria-invalid:shadow-none data-disabled:opacity-64 data-disabled:shadow-none dark:bg-input/32 dark:aria-invalid:ring-destructive/24 dark:has-aria-invalid:ring-destructive/24 dark:not-data-disabled:not-has-[[data-slot=composer-input]:focus-visible]:not-has-aria-invalid:before:shadow-[0_-1px_--theme(--color-white/6%)] md:[--composer-max-rows:8]",
+      "relative flex min-h-0 min-w-0 cursor-text flex-col rounded-(--composer-radius) border border-input bg-background not-dark:bg-clip-padding pb-[calc(var(--composer-padding)-1px)] text-foreground shadow-xs/5 ring-ring/24 transition-shadow [--composer-radius:var(--radius-xl)] [--composer-max-rows:4] [--composer-padding:--spacing(2)] before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--composer-radius)-1px)] not-data-disabled:not-has-[[data-slot=composer-input]:focus-visible]:not-has-aria-invalid:before:shadow-[0_1px_--theme(--color-black/4%)] has-[[data-slot=composer-input]:focus-visible]:has-aria-invalid:border-destructive/64 has-[[data-slot=composer-input]:focus-visible]:has-aria-invalid:ring-destructive/16 has-[[data-slot=composer-input]:focus-visible]:border-ring has-aria-invalid:border-destructive/36 has-[[data-slot=composer-input]:focus-visible]:shadow-none has-aria-invalid:shadow-none has-[[data-slot=composer-input]:focus-visible]:ring-[3px] aria-invalid:border-destructive/36 aria-invalid:shadow-none data-disabled:opacity-64 data-disabled:shadow-none dark:bg-input/32 dark:aria-invalid:ring-destructive/24 dark:has-aria-invalid:ring-destructive/24 dark:not-data-disabled:not-has-[[data-slot=composer-input]:focus-visible]:not-has-aria-invalid:before:shadow-[0_-1px_--theme(--color-white/6%)] md:[--composer-max-rows:8]",
       "data-[layout=adaptive]:data-multiline:grid-rows-[minmax(0,1fr)_auto] data-[layout=adaptive]:grid data-[layout=adaptive]:grid-cols-[auto_minmax(0,1fr)_auto] data-[layout=adaptive]:items-center data-[layout=adaptive]:not-data-multiline:px-[calc(--spacing(2)-1px)] data-[layout=adaptive]:not-data-multiline:pt-[calc(var(--composer-padding)-1px)]",
       className,
     ),
@@ -109,6 +109,8 @@ export function Composer({
   onValueChange,
   onSubmit,
   onQueryChange,
+  onAction,
+  submitOnEmptySuggestions,
   triggers,
   disabled,
   readOnly,
@@ -126,6 +128,8 @@ export function Composer({
       onValueChange={onValueChange}
       onSubmit={onSubmit}
       onQueryChange={onQueryChange}
+      onAction={onAction}
+      submitOnEmptySuggestions={submitOnEmptySuggestions}
       triggers={triggers}
       disabled={disabled}
       readOnly={readOnly}
@@ -215,6 +219,12 @@ export function ComposerInput({
           label: node.dataset.label ?? "",
           trigger: node.dataset.trigger ?? "@",
           ...(node.dataset.kind ? { kind: node.dataset.kind } : {}),
+          ...(node.dataset.data !== undefined
+            ? { data: node.dataset.data }
+            : {}),
+          ...(node.dataset.text !== undefined
+            ? { text: node.dataset.text }
+            : {}),
         };
         return createPortal(
           renderToken?.(token) ?? <ComposerToken token={token} />,
@@ -489,12 +499,11 @@ export function ComposerSubmit({
   );
 }
 
-export type { ComposerPopupProps, ComposerTokenVariant };
-
 export {
   type ComposerChangeDetails,
   type ComposerItemValue,
   type ComposerPart,
+  type ComposerQuery,
   type ComposerTokenPart,
   type ComposerTrigger,
   type ComposerValue,
@@ -502,3 +511,4 @@ export {
   useComposerContext,
   useComposerFilter,
 } from "@/registry/default/lib/composer-editor";
+export type { ComposerPopupProps, ComposerTokenVariant };

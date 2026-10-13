@@ -2,6 +2,12 @@ import type { Registry } from "shadcn/schema";
 
 export const lib: Registry["items"] = [
   {
+    files: [{ path: "lib/composer-clipboard.ts", type: "registry:lib" }],
+    name: "composer-clipboard",
+    registryDependencies: ["@coss/composer-document"],
+    type: "registry:lib",
+  },
+  {
     files: [{ path: "lib/composer-document.ts", type: "registry:lib" }],
     name: "composer-document",
     registryDependencies: ["@coss/composer-query"],

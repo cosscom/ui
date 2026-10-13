@@ -12526,6 +12526,19 @@
     {
       "files": [
         {
+          "path": "registry/default/lib/composer-clipboard.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "name": "composer-clipboard",
+      "registryDependencies": [
+        "@coss/composer-document"
+      ],
+      "type": "registry:lib"
+    },
+    {
+      "files": [
+        {
           "path": "registry/default/lib/composer-document.ts",
           "type": "registry:lib"
         }
@@ -12653,7 +12666,8 @@
       ],
       "name": "use-composer-editor",
       "registryDependencies": [
-        "@coss/composer-document"
+        "@coss/composer-document",
+        "@coss/composer-clipboard"
       ],
       "type": "registry:hook"
     },
