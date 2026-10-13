@@ -38,7 +38,6 @@
       "!**/apps/origin/public/r",
       "!**/apps/origin/registry.json",
       "!**/apps/ui/public/r",
-      "!**/apps/shipyard/public/assets",
       "!**/apps/ui/registry/__index__.tsx",
       "!**/apps/ui/registry.json",
       "!**/packages/ui/src/components",
