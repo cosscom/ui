@@ -125,7 +125,10 @@ export function ChatDemoComposer({
         </ComposerPopup>
         <ComposerActions className="max-md:mx-1">
           {startAction && (
-            <ComposerActionGroup align="start">
+            <ComposerActionGroup
+              align="start"
+              className="in-[[data-layout=adaptive]:not([data-multiline])]:me-0"
+            >
               {startAction}
             </ComposerActionGroup>
           )}
