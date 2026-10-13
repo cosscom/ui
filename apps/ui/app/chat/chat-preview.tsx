@@ -23,6 +23,7 @@ import {
   CHAT_MEMBERS,
   type MemberId,
 } from "@/registry/default/chat-demo/chat-demo-state";
+import { Badge } from "@/registry/default/ui/badge";
 import {
   type ComposerValue,
   getComposerText,
@@ -80,10 +81,6 @@ const INITIAL_MESSAGES: PreviewMessage[] = [
 
 function getPreview(message: PreviewMessage | undefined) {
   return message?.text ?? "Message unavailable";
-}
-
-function getReactorNames(members: readonly MemberId[]) {
-  return members.map((member) => CHAT_MEMBERS[member].name);
 }
 
 export function ChatPreview() {
@@ -262,12 +259,19 @@ export function ChatPreview() {
         </div>
       </div>
       <ChatConversation
+        className="overflow-clip"
         scroll={scroll}
         label="Preview messages"
         jumpLabel="Jump to latest"
         inactive={replyFocus !== null}
         overlay={
-          <AnimatePresence onExitComplete={() => setReplyFocus(null)}>
+          <AnimatePresence
+            initial={false}
+            onExitComplete={() => {
+              setReplyFocus(null);
+              scroll.updatePosition();
+            }}
+          >
             {replyTo !== null && replyFocus && replyMessage && (
               <ChatReplyPreview
                 key={replyMessage.id}
@@ -322,9 +326,10 @@ export function ChatPreview() {
                             reaction.members.includes("you"),
                           )
                           .map((reaction) => reaction.emoji)}
-                        triggerLabel="Add reaction"
+                        triggerLabel="React to message"
                         triggerTooltip="React"
-                        popupLabel="Reactions"
+                        popupLabel="Choose a reaction"
+                        popupAlign={own ? "start" : "end"}
                         popupAnchor={toolbarRef}
                         onSelect={(emoji) => toggleReaction(message.id, emoji)}
                       />
@@ -347,7 +352,7 @@ export function ChatPreview() {
                         selection?.collapseToEnd();
                       }
                     }}
-                    replyLabel="Reply"
+                    replyLabel={`Reply to ${CHAT_MEMBERS[message.author].name}`}
                     replyTooltip="Reply"
                   />
                 }
@@ -358,22 +363,46 @@ export function ChatPreview() {
                         return (
                           <ChatReactionChip
                             key={reaction.emoji}
-                            animateEntrance
+                            animateEntrance={
+                              !INITIAL_MESSAGES.find(
+                                (item) => item.id === message.id,
+                              )?.reactions.some(
+                                (item) => item.emoji === reaction.emoji,
+                              )
+                            }
                             emoji={reaction.emoji}
                             count={reaction.members.length}
                             selected={selected}
-                            label={`${selected ? "Remove" : "Add"} ${reaction.emoji} reaction`}
-                            reactorLabel={`People who reacted with ${reaction.emoji}`}
+                            label={`${selected ? "Remove" : "Add"} ${reaction.emoji} reaction, ${reaction.members.length} ${reaction.members.length === 1 ? "person" : "people"}`}
+                            reactorLabel={`${reaction.members.length} ${reaction.members.length === 1 ? "reaction" : "reactions"}`}
+                            popupAlign={own ? "end" : "start"}
                             onClick={() =>
                               toggleReaction(message.id, reaction.emoji)
                             }
                             reactorContent={
-                              <ul className="space-y-1 p-1 text-xs">
-                                {getReactorNames(reaction.members).map(
-                                  (name) => (
-                                    <li key={name}>{name}</li>
-                                  ),
-                                )}
+                              <ul
+                                aria-label="People who reacted"
+                                className="flex max-h-48 flex-col overflow-y-auto overscroll-contain"
+                              >
+                                {reaction.members.map((member) => (
+                                  <li
+                                    key={member}
+                                    className="flex items-center gap-2 px-1.5 py-1 text-xs leading-5"
+                                  >
+                                    <ChatMemberAvatar
+                                      member={member}
+                                      className="size-5 text-[.5625rem]"
+                                    />
+                                    <span className="min-w-0 flex-1 truncate">
+                                      {CHAT_MEMBERS[member].name}
+                                    </span>
+                                    {member === "you" && (
+                                      <Badge variant="secondary" size="sm">
+                                        You
+                                      </Badge>
+                                    )}
+                                  </li>
+                                ))}
                               </ul>
                             }
                           />
@@ -400,25 +429,22 @@ export function ChatPreview() {
           <ChatTypingIndicator visible={typing} label="Maya is typing" />
         </div>
       </ChatConversation>
-      <div className="relative z-20 shrink-0 px-4 pb-4">
-        <ChatDemoComposer
-          className="px-0 pb-0"
-          value={draft}
-          onValueChange={setDraft}
-          inputRef={inputRef}
-          mentionMembers={["maya", "jordan", "alex"]}
-          replyAuthor={
-            replyTo !== null && replyMessage
-              ? CHAT_MEMBERS[replyMessage.author].name
-              : undefined
-          }
-          notice=""
-          onSend={() => {
-            const text = getComposerText(draft).trim();
-            if (text) send(text);
-          }}
-        />
-      </div>
+      <ChatDemoComposer
+        value={draft}
+        onValueChange={setDraft}
+        inputRef={inputRef}
+        mentionMembers={["maya", "jordan", "alex"]}
+        replyAuthor={
+          replyTo !== null && replyMessage
+            ? CHAT_MEMBERS[replyMessage.author].name
+            : undefined
+        }
+        notice=""
+        onSend={() => {
+          const text = getComposerText(draft).trim();
+          if (text) send(text);
+        }}
+      />
     </section>
   );
 }

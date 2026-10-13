@@ -120,10 +120,10 @@ export function ChatDemoComposer({
         <ComposerActions className="max-md:mx-1">
           <ComposerActionGroup align="end">
             <Tooltip>
-              <ComposerSubmit
-                aria-label="Send message"
+              <TooltipTrigger
                 render={
-                  <TooltipTrigger
+                  <ComposerSubmit
+                    aria-label="Send message"
                     render={
                       <Button
                         aria-label="Send message"
