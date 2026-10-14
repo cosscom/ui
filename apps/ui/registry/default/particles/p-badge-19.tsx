@@ -8,7 +8,7 @@ import { Checkbox } from "@/registry/default/ui/checkbox";
 export default function Particle() {
   const id = useId();
   return (
-    <Badge className="relative outline-none has-focus-visible:border-ring has-data-unchecked:bg-muted has-data-unchecked:text-muted-foreground has-focus-visible:ring-[3px] has-focus-visible:ring-ring/50">
+    <Badge className="relative outline-none has-data-unchecked:bg-muted has-data-unchecked:text-muted-foreground has-focus-visible:ring-2 has-focus-visible:ring-ring has-focus-visible:ring-offset-1 has-focus-visible:ring-offset-background">
       <Checkbox className="peer sr-only absolute" defaultChecked id={id} />
       <CheckIcon
         aria-hidden="true"
