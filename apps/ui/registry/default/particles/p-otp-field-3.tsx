@@ -1,3 +1,6 @@
+"use client";
+
+import { useId } from "react";
 import {
   OTPField,
   OTPFieldInput,
@@ -13,23 +16,31 @@ const OTP_SLOT_KEYS = Array.from(
 );
 
 export default function Particle() {
+  const id = useId();
   return (
-    <OTPField aria-label="Verification code" length={OTP_LENGTH}>
-      {OTP_SLOT_KEYS.slice(0, GROUP_LENGTH).map((slotKey, index) => (
-        <OTPFieldInput
-          key={slotKey}
-          aria-label={
-            index === 0 ? undefined : `Character ${index + 1} of ${OTP_LENGTH}`
-          }
-        />
-      ))}
-      <OTPFieldSeparator />
-      {OTP_SLOT_KEYS.slice(GROUP_LENGTH).map((slotKey, index) => (
-        <OTPFieldInput
-          key={slotKey}
-          aria-label={`Character ${index + GROUP_LENGTH + 1} of ${OTP_LENGTH}`}
-        />
-      ))}
-    </OTPField>
+    <>
+      <label className="sr-only" htmlFor={id}>
+        Verification code
+      </label>
+      <OTPField id={id} length={OTP_LENGTH}>
+        {OTP_SLOT_KEYS.slice(0, GROUP_LENGTH).map((slotKey, index) => (
+          <OTPFieldInput
+            key={slotKey}
+            aria-label={
+              index === 0
+                ? undefined
+                : `Character ${index + 1} of ${OTP_LENGTH}`
+            }
+          />
+        ))}
+        <OTPFieldSeparator />
+        {OTP_SLOT_KEYS.slice(GROUP_LENGTH).map((slotKey, index) => (
+          <OTPFieldInput
+            key={slotKey}
+            aria-label={`Character ${index + GROUP_LENGTH + 1} of ${OTP_LENGTH}`}
+          />
+        ))}
+      </OTPField>
+    </>
   );
 }

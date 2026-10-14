@@ -11,7 +11,7 @@ export default function Particle() {
   return (
     <Field>
       <FieldLabel>Bio</FieldLabel>
-      <Textarea placeholder="Tell us about yourself…" />
+      <Textarea maxLength={500} placeholder="Tell us about yourself…" />
       <FieldDescription>
         Write a short bio. Maximum 500 characters.
       </FieldDescription>

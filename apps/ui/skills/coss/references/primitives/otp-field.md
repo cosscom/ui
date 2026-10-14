@@ -30,7 +30,10 @@ import {
 ## Minimal pattern
 
 ```tsx
-<OTPField aria-label="Verification code" length={6}>
+const id = useId()
+
+<label className="sr-only" htmlFor={id}>Verification code</label>
+<OTPField id={id} length={6}>
   <OTPFieldInput />
   <OTPFieldInput aria-label="Character 2 of 6" />
   <OTPFieldInput aria-label="Character 3 of 6" />
@@ -48,11 +51,13 @@ import {
 OTP with label and controlled value:
 
 ```tsx
+const id = useId()
 const [value, setValue] = useState("")
 
 <div className="flex flex-col gap-2">
-  <Label>Verification code</Label>
+  <Label htmlFor={id}>Verification code</Label>
   <OTPField
+    id={id}
     length={6}
     value={value}
     onValueChange={setValue}
@@ -79,7 +84,7 @@ See `p-otp-field-1` through `p-otp-field-4` and `p-otp-field-6` through `p-otp-f
 ## Common pitfalls
 
 - Slot count mismatch with `length`, causing broken OTP UX.
-- Missing root labeling (`aria-label` or visible label), or adding per-slot labels to the first input.
+- A root `aria-label` does not name the first input. Associate a visible or visually hidden label with the root `id`; the first input inherits it. Additional slots can use per-slot labels.
 - Using OTP slots for arbitrary text input instead of fixed verification codes.
 
 ## Useful particle references
