@@ -85,7 +85,7 @@ function DayButton(props: DayButtonProps & { prices: Record<string, number> }) {
             className={cn(
               "font-normal text-xs",
               isGoodPrice
-                ? "text-success-foreground"
+                ? "in-data-selected:text-primary-foreground text-success-foreground"
                 : "in-data-selected:text-primary-foreground/70 text-muted-foreground",
             )}
           >
