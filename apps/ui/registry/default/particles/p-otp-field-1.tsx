@@ -1,6 +1,4 @@
-"use client";
-
-import { useId } from "react";
+import { Field, FieldLabel } from "@/registry/default/ui/field";
 import { OTPField, OTPFieldInput } from "@/registry/default/ui/otp-field";
 
 const OTP_LENGTH = 6;
@@ -11,13 +9,10 @@ const OTP_SLOT_KEYS = Array.from(
 );
 
 export default function Particle() {
-  const id = useId();
   return (
-    <>
-      <label className="sr-only" htmlFor={id}>
-        One-time password
-      </label>
-      <OTPField id={id} length={OTP_LENGTH}>
+    <Field>
+      <FieldLabel className="sr-only">One-time password</FieldLabel>
+      <OTPField length={OTP_LENGTH}>
         {OTP_SLOT_KEYS.map((slotKey, index) => (
           <OTPFieldInput
             key={slotKey}
@@ -29,6 +24,6 @@ export default function Particle() {
           />
         ))}
       </OTPField>
-    </>
+    </Field>
   );
 }

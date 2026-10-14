@@ -7327,7 +7327,8 @@
       ],
       "name": "p-otp-field-1",
       "registryDependencies": [
-        "@coss/otp-field"
+        "@coss/otp-field",
+        "@coss/field"
       ],
       "type": "registry:block"
     },
@@ -7345,7 +7346,8 @@
       ],
       "name": "p-otp-field-2",
       "registryDependencies": [
-        "@coss/otp-field"
+        "@coss/otp-field",
+        "@coss/field"
       ],
       "type": "registry:block"
     },
@@ -7363,7 +7365,8 @@
       ],
       "name": "p-otp-field-3",
       "registryDependencies": [
-        "@coss/otp-field"
+        "@coss/otp-field",
+        "@coss/field"
       ],
       "type": "registry:block"
     },

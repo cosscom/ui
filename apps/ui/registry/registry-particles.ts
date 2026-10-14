@@ -3247,7 +3247,7 @@ export const particles: ParticleItem[] = [
     description: "Basic OTP field",
     files: [{ path: "particles/p-otp-field-1.tsx", type: "registry:block" }],
     name: "p-otp-field-1",
-    registryDependencies: ["@coss/otp-field"],
+    registryDependencies: ["@coss/otp-field", "@coss/field"],
     type: "registry:block",
   },
   {
@@ -3255,7 +3255,7 @@ export const particles: ParticleItem[] = [
     description: "Large OTP field",
     files: [{ path: "particles/p-otp-field-2.tsx", type: "registry:block" }],
     name: "p-otp-field-2",
-    registryDependencies: ["@coss/otp-field"],
+    registryDependencies: ["@coss/otp-field", "@coss/field"],
     type: "registry:block",
   },
   {
@@ -3263,7 +3263,7 @@ export const particles: ParticleItem[] = [
     description: "OTP field with separator",
     files: [{ path: "particles/p-otp-field-3.tsx", type: "registry:block" }],
     name: "p-otp-field-3",
-    registryDependencies: ["@coss/otp-field"],
+    registryDependencies: ["@coss/otp-field", "@coss/field"],
     type: "registry:block",
   },
   {

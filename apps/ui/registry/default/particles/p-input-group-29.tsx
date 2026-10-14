@@ -5,6 +5,7 @@ import { Button } from "@/registry/default/ui/button";
 import {
   InputGroup,
   InputGroupAddon,
+  InputGroupText,
   InputGroupTextarea,
 } from "@/registry/default/ui/input-group";
 import {
@@ -33,12 +34,15 @@ export default function Particle() {
           </TooltipTrigger>
           <TooltipPopup>Record voice message</TooltipPopup>
         </Tooltip>
+        <InputGroupText className="ms-auto text-muted-foreground text-xs">
+          Press Enter to send
+        </InputGroupText>
         <Tooltip>
           <TooltipTrigger
             render={
               <Button
                 aria-label="Send message"
-                className="ml-auto rounded-full"
+                className="rounded-full"
                 size="icon-sm"
               />
             }

@@ -8,7 +8,7 @@
   "files": [
     {
       "path": "registry/default/particles/p-textarea-10.tsx",
-      "content": "import { useId } from \"react\";\nimport { Textarea } from \"@/registry/default/ui/textarea\";\n\nexport default function Particle() {\n  const id = useId();\n  return (\n    <Textarea\n      className=\"read-only:bg-muted\"\n      defaultValue=\"This is a read-only textarea\"\n      id={id}\n      readOnly\n    />\n  );\n}\n",
+      "content": "import { useId } from \"react\";\nimport { Textarea } from \"@/registry/default/ui/textarea\";\n\nexport default function Particle() {\n  const id = useId();\n  return (\n    <Textarea\n      aria-label=\"Read-only text\"\n      className=\"read-only:bg-muted\"\n      defaultValue=\"This is a read-only textarea\"\n      id={id}\n      readOnly\n    />\n  );\n}\n",
       "type": "registry:block"
     }
   ],

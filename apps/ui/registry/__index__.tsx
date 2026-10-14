@@ -6301,7 +6301,7 @@ export const Index: Record<string, any> = {
     name: "p-otp-field-1",
     description: "Basic OTP field",
     type: "registry:block",
-    registryDependencies: ["@coss/otp-field"],
+    registryDependencies: ["@coss/otp-field","@coss/field"],
     files: [{
       path: "registry/default/particles/p-otp-field-1.tsx",
       type: "registry:block",
@@ -6319,7 +6319,7 @@ export const Index: Record<string, any> = {
     name: "p-otp-field-2",
     description: "Large OTP field",
     type: "registry:block",
-    registryDependencies: ["@coss/otp-field"],
+    registryDependencies: ["@coss/otp-field","@coss/field"],
     files: [{
       path: "registry/default/particles/p-otp-field-2.tsx",
       type: "registry:block",
@@ -6337,7 +6337,7 @@ export const Index: Record<string, any> = {
     name: "p-otp-field-3",
     description: "OTP field with separator",
     type: "registry:block",
-    registryDependencies: ["@coss/otp-field"],
+    registryDependencies: ["@coss/otp-field","@coss/field"],
     files: [{
       path: "registry/default/particles/p-otp-field-3.tsx",
       type: "registry:block",
