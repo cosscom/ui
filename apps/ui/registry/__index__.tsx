@@ -7741,7 +7741,7 @@ export const Index: Record<string, any> = {
     name: "p-popover-4",
     description: "Split button with popover to confirm multiple occurrences",
     type: "registry:block",
-    registryDependencies: ["@coss/badge","@coss/button","@coss/checkbox","@coss/checkbox-group","@coss/group","@coss/label","@coss/popover"],
+    registryDependencies: ["@coss/button","@coss/checkbox","@coss/checkbox-group","@coss/group","@coss/label","@coss/popover"],
     files: [{
       path: "registry/default/particles/p-popover-4.tsx",
       type: "registry:block",

@@ -9076,7 +9076,6 @@
       ],
       "name": "p-popover-4",
       "registryDependencies": [
-        "@coss/badge",
         "@coss/button",
         "@coss/checkbox",
         "@coss/checkbox-group",
