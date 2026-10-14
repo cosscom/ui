@@ -6,12 +6,13 @@
     "lucide-react"
   ],
   "registryDependencies": [
+    "@coss/use-copy-to-clipboard",
     "@coss/button"
   ],
   "files": [
     {
       "path": "registry/default/particles/p-button-35.tsx",
-      "content": "\"use client\";\n\nimport { CheckIcon, CopyIcon } from \"lucide-react\";\nimport { useState } from \"react\";\nimport { Button } from \"@/registry/default/ui/button\";\n\nexport default function Particle() {\n  const [copied, setCopied] = useState(false);\n\n  const handleCopy = () => {\n    navigator.clipboard.writeText(\"Text copied!\");\n    setCopied(true);\n    setTimeout(() => setCopied(false), 2000);\n  };\n\n  return (\n    <Button\n      aria-label={copied ? \"Copied\" : \"Copy to clipboard\"}\n      onClick={handleCopy}\n      size=\"icon\"\n      variant=\"outline\"\n    >\n      {copied ? (\n        <CheckIcon aria-hidden=\"true\" />\n      ) : (\n        <CopyIcon aria-hidden=\"true\" />\n      )}\n    </Button>\n  );\n}\n",
+      "content": "\"use client\";\n\nimport { CheckIcon, CopyIcon } from \"lucide-react\";\nimport { useCopyToClipboard } from \"@/registry/default/hooks/use-copy-to-clipboard\";\nimport { Button } from \"@/registry/default/ui/button\";\n\nexport default function Particle() {\n  const { copyToClipboard, isCopied } = useCopyToClipboard();\n\n  return (\n    <Button\n      aria-label={isCopied ? \"Copied\" : \"Copy to clipboard\"}\n      onClick={() => copyToClipboard(\"Text copied!\")}\n      size=\"icon\"\n      variant=\"outline\"\n    >\n      {isCopied ? (\n        <CheckIcon aria-hidden=\"true\" />\n      ) : (\n        <CopyIcon aria-hidden=\"true\" />\n      )}\n    </Button>\n  );\n}\n",
       "type": "registry:block"
     }
   ],

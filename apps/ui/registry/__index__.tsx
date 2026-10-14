@@ -3025,7 +3025,7 @@ export const Index: Record<string, any> = {
     name: "p-button-35",
     description: "Icon-only copy button with feedback",
     type: "registry:block",
-    registryDependencies: ["@coss/button"],
+    registryDependencies: ["@coss/use-copy-to-clipboard","@coss/button"],
     files: [{
       path: "registry/default/particles/p-button-35.tsx",
       type: "registry:block",
@@ -3043,7 +3043,7 @@ export const Index: Record<string, any> = {
     name: "p-button-36",
     description: "Copy button with feedback",
     type: "registry:block",
-    registryDependencies: ["@coss/button"],
+    registryDependencies: ["@coss/use-copy-to-clipboard","@coss/button"],
     files: [{
       path: "registry/default/particles/p-button-36.tsx",
       type: "registry:block",
@@ -6949,7 +6949,7 @@ export const Index: Record<string, any> = {
     name: "p-input-group-27",
     description: "Code snippet input with language selector",
     type: "registry:block",
-    registryDependencies: ["@coss/button","@coss/input-group","@coss/select","@coss/tooltip"],
+    registryDependencies: ["@coss/use-copy-to-clipboard","@coss/button","@coss/input-group","@coss/select","@coss/tooltip"],
     files: [{
       path: "registry/default/particles/p-input-group-27.tsx",
       type: "registry:block",

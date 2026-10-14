@@ -1018,7 +1018,7 @@ export const particles: ParticleItem[] = [
     description: "Icon-only copy button with feedback",
     files: [{ path: "particles/p-button-35.tsx", type: "registry:block" }],
     name: "p-button-35",
-    registryDependencies: ["@coss/button"],
+    registryDependencies: ["@coss/use-copy-to-clipboard", "@coss/button"],
     type: "registry:block",
   },
   {
@@ -1027,7 +1027,7 @@ export const particles: ParticleItem[] = [
     description: "Copy button with feedback",
     files: [{ path: "particles/p-button-36.tsx", type: "registry:block" }],
     name: "p-button-36",
-    registryDependencies: ["@coss/button"],
+    registryDependencies: ["@coss/use-copy-to-clipboard", "@coss/button"],
     type: "registry:block",
   },
   {
@@ -3703,6 +3703,7 @@ export const particles: ParticleItem[] = [
     },
     name: "p-input-group-27",
     registryDependencies: [
+      "@coss/use-copy-to-clipboard",
       "@coss/button",
       "@coss/input-group",
       "@coss/select",
