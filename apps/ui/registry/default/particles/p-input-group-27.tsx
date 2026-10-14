@@ -1,7 +1,7 @@
 "use client";
 
 import { CheckIcon, CopyIcon } from "lucide-react";
-import { useRef } from "react";
+import { useState } from "react";
 import { useCopyToClipboard } from "@/registry/default/hooks/use-copy-to-clipboard";
 import { Button } from "@/registry/default/ui/button";
 import {
@@ -31,21 +31,17 @@ const languages = [
 ];
 
 export default function Particle() {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [code, setCode] = useState("");
   const { copyToClipboard, isCopied } = useCopyToClipboard();
-
-  const handleCopy = () => {
-    const content = textareaRef.current?.value || "";
-    copyToClipboard(content);
-  };
 
   return (
     <InputGroup>
       <InputGroupTextarea
         className="font-mono"
+        onChange={(event) => setCode(event.target.value)}
         placeholder="Paste your code here…"
-        ref={textareaRef}
         rows={6}
+        value={code}
       />
       <InputGroupAddon
         align="block-start"
@@ -68,7 +64,8 @@ export default function Particle() {
             render={
               <Button
                 aria-label={isCopied ? "Copied" : "Copy code"}
-                onClick={handleCopy}
+                disabled={!code}
+                onClick={() => copyToClipboard(code)}
                 size="icon-sm"
                 variant="ghost"
               />
