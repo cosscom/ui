@@ -62,6 +62,8 @@ const timeOptions = Array.from({ length: 96 }, (_, i) => {
   return `${displayHours}:${minutes.toString().padStart(2, "0")} ${period}`;
 });
 
+const startTimeOptions = timeOptions.slice(0, -1);
+
 const timeIndex = (time: string) => timeOptions.indexOf(time);
 
 let rangeId = 0;
@@ -325,7 +327,7 @@ export default function Particle() {
                         <Group aria-label={`${day} time range`}>
                           <TimeCombobox
                             ariaLabel={`${day} start time`}
-                            items={timeOptions}
+                            items={startTimeOptions}
                             onChange={(start) =>
                               updateStart(day, range.id, start)
                             }
