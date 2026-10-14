@@ -29,7 +29,7 @@ export default function Particle() {
   return (
     <Group aria-label="URL search">
       <Select defaultValue="both" items={protocols}>
-        <SelectTrigger className="w-fit min-w-none">
+        <SelectTrigger aria-label="Protocol" className="w-fit min-w-none">
           <SelectValue />
         </SelectTrigger>
         <SelectPopup>
@@ -49,7 +49,7 @@ export default function Particle() {
       />
       <GroupSeparator />
       <Select defaultValue={null} items={subdomains}>
-        <SelectTrigger className="w-fit min-w-none">
+        <SelectTrigger aria-label="Subdomain" className="w-fit min-w-none">
           <SelectValue />
         </SelectTrigger>
         <SelectPopup>

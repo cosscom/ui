@@ -41,13 +41,12 @@ export default function Particle() {
 
   return (
     <Select
-      aria-label="Select timezone"
       defaultValue={formattedTimezones.find(
         (tz) => tz.value === "Europe/London",
       )}
       itemToStringValue={(item) => item.value}
     >
-      <SelectTrigger>
+      <SelectTrigger aria-label="Select timezone">
         <SelectValue>
           {(item) => <span className="truncate">{item.label}</span>}
         </SelectValue>

@@ -26,8 +26,8 @@ const backend = [
 
 export default function Particle() {
   return (
-    <Select aria-label="Select framework" items={[...frontend, ...backend]}>
-      <SelectTrigger>
+    <Select items={[...frontend, ...backend]}>
+      <SelectTrigger aria-label="Select framework">
         <SelectValue placeholder="Select framework" />
       </SelectTrigger>
       <SelectPopup>

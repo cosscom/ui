@@ -43,11 +43,10 @@ const allItems = countries.flatMap((c) => c.items);
 export default function Particle() {
   return (
     <Select
-      aria-label="Select country"
       defaultValue={allItems.find((item) => item.value === "ca")}
       itemToStringValue={(item) => item.value}
     >
-      <SelectTrigger>
+      <SelectTrigger aria-label="Select country">
         <SelectValue>
           {(item) => (
             <span className="flex items-center gap-2">

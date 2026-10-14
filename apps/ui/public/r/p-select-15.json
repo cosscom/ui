@@ -8,7 +8,7 @@
   "files": [
     {
       "path": "registry/default/particles/p-select-15.tsx",
-      "content": "import {\n  Select,\n  SelectItem,\n  SelectPopup,\n  SelectTrigger,\n  SelectValue,\n} from \"@/registry/default/ui/select\";\n\nconst items = [\n  { label: \"Active\", value: \"active\" },\n  { label: \"Inactive\", value: \"inactive\" },\n  { label: \"Archived\", value: \"archived\" },\n];\n\nexport default function Particle() {\n  return (\n    <Select aria-label=\"Select filter\" defaultValue=\"active\" items={items}>\n      <SelectTrigger className=\"[--radius-lg:9999px] [--radius:9999px]\">\n        <SelectValue />\n      </SelectTrigger>\n      <SelectPopup>\n        {items.map(({ label, value }) => (\n          <SelectItem key={value} value={value}>\n            {label}\n          </SelectItem>\n        ))}\n      </SelectPopup>\n    </Select>\n  );\n}\n",
+      "content": "import {\n  Select,\n  SelectItem,\n  SelectPopup,\n  SelectTrigger,\n  SelectValue,\n} from \"@/registry/default/ui/select\";\n\nconst items = [\n  { label: \"Active\", value: \"active\" },\n  { label: \"Inactive\", value: \"inactive\" },\n  { label: \"Archived\", value: \"archived\" },\n];\n\nexport default function Particle() {\n  return (\n    <Select defaultValue=\"active\" items={items}>\n      <SelectTrigger\n        aria-label=\"Select filter\"\n        className=\"[--radius-lg:9999px] [--radius:9999px]\"\n      >\n        <SelectValue />\n      </SelectTrigger>\n      <SelectPopup>\n        {items.map(({ label, value }) => (\n          <SelectItem key={value} value={value}>\n            {label}\n          </SelectItem>\n        ))}\n      </SelectPopup>\n    </Select>\n  );\n}\n",
       "type": "registry:block"
     }
   ],

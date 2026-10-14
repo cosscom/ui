@@ -16,8 +16,8 @@ const items = [
 
 export default function Particle() {
   return (
-    <Select aria-label="Select framework" defaultValue="next" items={items}>
-      <SelectTrigger>
+    <Select defaultValue="next" items={items}>
+      <SelectTrigger aria-label="Select framework">
         <SelectValue />
       </SelectTrigger>
       <SelectPopup>

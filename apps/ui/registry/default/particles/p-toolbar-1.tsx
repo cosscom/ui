@@ -127,7 +127,7 @@ export default function Particle() {
                 render={
                   <ToolbarButton
                     render={
-                      <SelectTrigger>
+                      <SelectTrigger aria-label="Font">
                         <SelectValue />
                       </SelectTrigger>
                     }

@@ -17,12 +17,8 @@ const items = [
 
 export default function Particle() {
   return (
-    <Select
-      aria-label="Select language"
-      defaultValue={items[0]}
-      itemToStringValue={(item) => item.value}
-    >
-      <SelectTrigger>
+    <Select defaultValue={items[0]} itemToStringValue={(item) => item.value}>
+      <SelectTrigger aria-label="Select language">
         <SelectValue>
           {(item) => (
             <span>

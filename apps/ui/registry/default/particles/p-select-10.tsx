@@ -17,12 +17,11 @@ const items = [
 
 export default function Particle() {
   return (
-    <Select
-      aria-label="Select framework with command"
-      defaultValue={items[0]}
-      itemToStringValue={(item) => item.value}
-    >
-      <SelectTrigger className="py-1">
+    <Select defaultValue={items[0]} itemToStringValue={(item) => item.value}>
+      <SelectTrigger
+        aria-label="Select framework with command"
+        className="py-1"
+      >
         <SelectValue>
           {(item) => (
             <span className="flex flex-col">

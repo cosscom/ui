@@ -14,8 +14,11 @@ const items = [
 
 export default function Particle() {
   return (
-    <Select aria-label="Select filter" defaultValue="active" items={items}>
-      <SelectTrigger className="[--radius-lg:9999px] [--radius:9999px]">
+    <Select defaultValue="active" items={items}>
+      <SelectTrigger
+        aria-label="Select filter"
+        className="[--radius-lg:9999px] [--radius:9999px]"
+      >
         <SelectValue />
       </SelectTrigger>
       <SelectPopup>

@@ -38,12 +38,8 @@ function renderValue(value: Language[]) {
 
 export default function Particle() {
   return (
-    <Select
-      aria-label="Select languages"
-      defaultValue={["javascript", "typescript"]}
-      multiple
-    >
-      <SelectTrigger>
+    <Select defaultValue={["javascript", "typescript"]} multiple>
+      <SelectTrigger aria-label="Select languages">
         <SelectValue>{renderValue}</SelectValue>
       </SelectTrigger>
       <SelectPopup alignItemWithTrigger={false}>

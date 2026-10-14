@@ -19,7 +19,7 @@ export default function Particle() {
   return (
     <Group aria-label="URL input">
       <Select defaultValue="https" items={protocols}>
-        <SelectTrigger className="w-fit min-w-none">
+        <SelectTrigger aria-label="Protocol" className="w-fit min-w-none">
           <SelectValue />
         </SelectTrigger>
         <SelectPopup>

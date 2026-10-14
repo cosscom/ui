@@ -18,12 +18,8 @@ const items = [
 
 export default function Particle() {
   return (
-    <Select
-      aria-label="Select category"
-      defaultValue={items[0]}
-      itemToStringValue={(item) => item.value}
-    >
-      <SelectTrigger>
+    <Select defaultValue={items[0]} itemToStringValue={(item) => item.value}>
+      <SelectTrigger aria-label="Select category">
         <SelectValue>
           {(item) => (
             <span className="flex items-center gap-2">

@@ -53,7 +53,7 @@ export default function Particle() {
         className="justify-between rounded-t-lg border-b bg-muted/72 p-2!"
       >
         <Select defaultValue="javascript" items={languages}>
-          <SelectTrigger className="w-fit" size="sm">
+          <SelectTrigger aria-label="Code language" className="w-fit" size="sm">
             <SelectValue />
           </SelectTrigger>
           <SelectPopup>

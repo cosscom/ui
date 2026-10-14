@@ -44,7 +44,7 @@ export default function Particle() {
           defaultValue={currencies[0]}
           itemToStringValue={(currency) => currency.value}
         >
-          <SelectTrigger className="w-fit min-w-none">
+          <SelectTrigger aria-label="Currency" className="w-fit min-w-none">
             <SelectValue>{(currency: Currency) => currency.value}</SelectValue>
           </SelectTrigger>
           <SelectPopup className="min-w-48">
