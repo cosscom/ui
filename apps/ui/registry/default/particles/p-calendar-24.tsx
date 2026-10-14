@@ -1,8 +1,11 @@
 "use client";
 
-import type { DayButtonProps } from "@daypicker/react";
+import {
+  DayButton as CalendarDayButton,
+  type DayButtonProps,
+} from "@daypicker/react";
 import { format } from "date-fns";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { cn } from "@/registry/default/lib/utils";
 import { Calendar } from "@/registry/default/ui/calendar";
 
@@ -63,20 +66,26 @@ export default function Particle() {
 }
 
 function DayButton(props: DayButtonProps & { prices: Record<string, number> }) {
-  const { day, prices, modifiers: _modifiers, ...buttonProps } = props;
+  const { day, prices, ...buttonProps } = props;
+  const priceId = useId();
   const price = prices[format(day.date, "yyyy-MM-dd")];
   const isGoodPrice = price !== undefined && price < GOOD_PRICE_THRESHOLD;
 
   return (
-    <button {...buttonProps}>
+    <CalendarDayButton
+      {...buttonProps}
+      aria-describedby={price !== undefined ? priceId : undefined}
+      day={day}
+    >
       <span className="flex flex-col">
         {props.children}
         {price && (
           <span
+            id={priceId}
             className={cn(
               "font-normal text-xs",
               isGoodPrice
-                ? "text-emerald-500"
+                ? "text-success-foreground"
                 : "in-data-selected:text-primary-foreground/70 text-muted-foreground",
             )}
           >
@@ -84,6 +93,6 @@ function DayButton(props: DayButtonProps & { prices: Record<string, number> }) {
           </span>
         )}
       </span>
-    </button>
+    </CalendarDayButton>
   );
 }
