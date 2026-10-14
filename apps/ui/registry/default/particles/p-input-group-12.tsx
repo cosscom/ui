@@ -24,6 +24,7 @@ export default function Particle() {
         </Label>
         <Popover>
           <PopoverTrigger
+            aria-label="Email information"
             className="ml-auto"
             openOnHover
             render={<Button className="-m-1" size="icon-xs" variant="ghost" />}

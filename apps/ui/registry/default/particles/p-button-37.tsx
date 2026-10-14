@@ -9,8 +9,8 @@ export default function Particle() {
 
   return (
     <Button
-      aria-expanded={open}
-      aria-label={open ? "Close menu" : "Open menu"}
+      aria-label="Toggle plus icon animation"
+      aria-pressed={open}
       className="rounded-full before:rounded-full"
       onClick={() => setOpen((prevState) => !prevState)}
       size="icon"
@@ -18,7 +18,7 @@ export default function Particle() {
     >
       <PlusIcon
         aria-hidden="true"
-        className="in-[[aria-expanded=true]]:rotate-[135deg] transition-transform duration-500 ease-[cubic-bezier(0.68,-0.6,0.32,1.6)]"
+        className="in-[[aria-pressed=true]]:rotate-[135deg] transition-transform duration-500 ease-[cubic-bezier(0.68,-0.6,0.32,1.6)]"
       />
     </Button>
   );

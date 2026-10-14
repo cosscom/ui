@@ -1,5 +1,5 @@
 import { Meter } from "@/registry/default/ui/meter";
 
 export default function Particle() {
-  return <Meter value={50} />;
+  return <Meter aria-label="Storage usage" value={50} />;
 }

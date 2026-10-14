@@ -12,13 +12,7 @@ export default function Particle() {
   };
 
   return (
-    <Button
-      aria-controls="expandable-content"
-      aria-expanded={isExpanded}
-      className="gap-1"
-      onClick={toggleExpand}
-      variant="ghost" // Use this ID on the element that this button controls
-    >
+    <Button className="gap-1" onClick={toggleExpand} variant="ghost">
       {isExpanded ? "Show less" : "Show more"}
       {isExpanded ? (
         <ChevronUpIcon aria-hidden="true" className="-me-1" />

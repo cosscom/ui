@@ -15,5 +15,5 @@ export default function Particle() {
     return () => clearInterval(interval);
   }, []);
 
-  return <Progress value={value} />;
+  return <Progress aria-label="Loading progress" value={value} />;
 }

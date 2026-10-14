@@ -14,6 +14,7 @@ export default function Particle() {
         />
         <AvatarFallback className="rounded-lg">LT</AvatarFallback>
       </Avatar>
+      <span className="sr-only">Online</span>
       <span
         aria-hidden="true"
         className="absolute -end-0.5 -top-0.5 size-2 rounded-full bg-emerald-500 outline-2 outline-background"
