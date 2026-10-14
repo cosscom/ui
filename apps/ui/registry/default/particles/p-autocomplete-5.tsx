@@ -30,11 +30,7 @@ export default function Particle() {
     <Autocomplete items={items}>
       <div className="flex flex-col items-start gap-2">
         <Label htmlFor={id}>Fruits</Label>
-        <AutocompleteInput
-          aria-label="Search items"
-          id={id}
-          placeholder="Search items…"
-        />
+        <AutocompleteInput id={id} placeholder="Search items…" />
       </div>
       <AutocompletePopup>
         <AutocompleteEmpty>No items found.</AutocompleteEmpty>
