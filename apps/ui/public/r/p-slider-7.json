@@ -8,7 +8,7 @@
   "files": [
     {
       "path": "registry/default/particles/p-slider-7.tsx",
-      "content": "import { Slider } from \"@/registry/default/ui/slider\";\n\nexport default function Particle() {\n  return <Slider defaultValue={[25, 75]} />;\n}\n",
+      "content": "\"use client\";\n\nimport { Slider } from \"@/registry/default/ui/slider\";\n\nexport default function Particle() {\n  return (\n    <Slider\n      getAriaLabel={(index) =>\n        index === 0 ? \"Minimum value\" : \"Maximum value\"\n      }\n      defaultValue={[25, 75]}\n    />\n  );\n}\n",
       "type": "registry:block"
     }
   ],

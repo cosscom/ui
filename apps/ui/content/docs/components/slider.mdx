@@ -53,7 +53,7 @@ import { Slider, SliderValue } from "@/components/ui/slider"
 ```
 
 ```tsx
-<Slider />
+<Slider getAriaLabel={() => "Volume"} />
 ```
 
 ## API Reference
@@ -66,6 +66,7 @@ Root component. Styled wrapper for `Slider.Root` from Base UI with default min/m
 | ----- | -------- | ------- | ------------------------------------------------ |
 | `min` | `number` | `0`     | Minimum value of the slider                      |
 | `max` | `number` | `100`   | Maximum value of the slider                      |
+| `getAriaLabel` | `(index: number) => string` | — | Accessible name for each generated thumb |
 
 Note: The component sets `thumbAlignment="edge"` by default, which aligns thumbs to the edge of the track rather than centering them.
 
@@ -75,7 +76,18 @@ Displays the current value. Styled wrapper for `Slider.Value` from Base UI.
 
 ## Examples
 
-For accessible labelling and validation, prefer using the `Field` component to wrap checkboxes. See the related example: [Slider field](/ui/docs/components/field#slider-field).
+For accessible labelling and validation, prefer using the `Field` component with an associated `FieldLabel`. See the related example: [Slider field](/ui/docs/components/field#slider-field).
+
+Use `getAriaLabel` when there is no associated label. Name each range endpoint separately:
+
+```tsx
+<Slider
+  defaultValue={[20, 80]}
+  getAriaLabel={(index) => index === 0 ? "Minimum price" : "Maximum price"}
+/>
+```
+
+Callbacks such as `getAriaLabel` must be supplied from a Client Component. An associated `FieldLabel` continues to work without this prop. Setting `aria-label` on the root alone does not name its thumbs.
 
 ### With Label and Value
 

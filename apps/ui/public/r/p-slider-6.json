@@ -8,7 +8,7 @@
   "files": [
     {
       "path": "registry/default/particles/p-slider-6.tsx",
-      "content": "import { Slider } from \"@/registry/default/ui/slider\";\n\nexport default function Particle() {\n  return (\n    <div>\n      <div\n        aria-hidden=\"true\"\n        className=\"mb-3 flex w-full items-center justify-between gap-2 font-medium text-muted-foreground text-xs\"\n      >\n        <span>Low</span>\n        <span>High</span>\n      </div>\n      <Slider\n        aria-label=\"Intensity level from low to high\"\n        defaultValue={50}\n        step={10}\n      />\n    </div>\n  );\n}\n",
+      "content": "\"use client\";\n\nimport { Slider } from \"@/registry/default/ui/slider\";\n\nexport default function Particle() {\n  return (\n    <div>\n      <div\n        aria-hidden=\"true\"\n        className=\"mb-3 flex w-full items-center justify-between gap-2 font-medium text-muted-foreground text-xs\"\n      >\n        <span>Low</span>\n        <span>High</span>\n      </div>\n      <Slider\n        getAriaLabel={() => \"Intensity level from low to high\"}\n        defaultValue={50}\n        step={10}\n      />\n    </div>\n  );\n}\n",
       "type": "registry:block"
     }
   ],

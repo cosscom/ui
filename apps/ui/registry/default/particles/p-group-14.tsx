@@ -57,12 +57,14 @@ export default function Particle() {
         </Select>
         <GroupSeparator />
         <NumberField
-          aria-label="Enter the amount"
           className="gap-0"
           defaultValue={10}
           render={<NumberFieldGroup />}
         >
-          <NumberFieldInput className="text-left" />
+          <NumberFieldInput
+            aria-label="Enter the amount"
+            className="text-left"
+          />
         </NumberField>
       </Group>
       <Group aria-label="Submit">

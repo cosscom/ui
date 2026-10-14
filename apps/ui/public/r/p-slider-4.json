@@ -8,7 +8,7 @@
   "files": [
     {
       "path": "registry/default/particles/p-slider-4.tsx",
-      "content": "import { Slider } from \"@/registry/default/ui/slider\";\n\nexport default function Particle() {\n  return (\n    <div>\n      <Slider\n        aria-label=\"Storage size in GB\"\n        defaultValue={15}\n        max={35}\n        min={5}\n      />\n      <div\n        aria-label=\"Storage size reference values\"\n        className=\"mt-4 flex w-full items-center justify-between gap-1 font-medium text-muted-foreground text-xs\"\n        role=\"group\"\n      >\n        <span>5 GB</span>\n        <span>20 GB</span>\n        <span>35 GB</span>\n      </div>\n    </div>\n  );\n}\n",
+      "content": "\"use client\";\n\nimport { Slider } from \"@/registry/default/ui/slider\";\n\nexport default function Particle() {\n  return (\n    <div>\n      <Slider\n        getAriaLabel={() => \"Storage size in GB\"}\n        defaultValue={15}\n        max={35}\n        min={5}\n      />\n      <div\n        aria-label=\"Storage size reference values\"\n        className=\"mt-4 flex w-full items-center justify-between gap-1 font-medium text-muted-foreground text-xs\"\n        role=\"group\"\n      >\n        <span>5 GB</span>\n        <span>20 GB</span>\n        <span>35 GB</span>\n      </div>\n    </div>\n  );\n}\n",
       "type": "registry:block"
     }
   ],

@@ -1,10 +1,12 @@
+"use client";
+
 import { Slider } from "@/registry/default/ui/slider";
 
 export default function Particle() {
   return (
     <div>
       <Slider
-        aria-label="Storage size in GB"
+        getAriaLabel={() => "Storage size in GB"}
         defaultValue={15}
         max={35}
         min={5}

@@ -202,7 +202,9 @@ export default function Particle() {
           ))}
         </div>
         <Slider
-          aria-label="Price range"
+          getAriaLabel={(index) =>
+            index === 0 ? "Minimum price" : "Maximum price"
+          }
           className="*:min-w-0!"
           max={max}
           min={min}
@@ -214,13 +216,15 @@ export default function Particle() {
       <div className="flex items-center justify-between gap-4">
         <InputGroup>
           <NumberField
-            aria-label="Minimum price"
             max={values[1]}
             min={min}
             onValueChange={(v) => updateValue(0, v)}
             value={values[0]}
           >
-            <NumberFieldInput className="text-left" />
+            <NumberFieldInput
+              aria-label="Minimum price"
+              className="text-left"
+            />
           </NumberField>
           <InputGroupAddon>
             <InputGroupText>$</InputGroupText>
@@ -228,13 +232,15 @@ export default function Particle() {
         </InputGroup>
         <InputGroup>
           <NumberField
-            aria-label="Maximum price"
             max={max}
             min={values[0]}
             onValueChange={(v) => updateValue(1, v)}
             value={values[1]}
           >
-            <NumberFieldInput className="text-left" />
+            <NumberFieldInput
+              aria-label="Maximum price"
+              className="text-left"
+            />
           </NumberField>
           <InputGroupAddon>
             <InputGroupText>$</InputGroupText>

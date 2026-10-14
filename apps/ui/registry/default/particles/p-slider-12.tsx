@@ -17,7 +17,7 @@ export default function Particle() {
   return (
     <div className="flex items-center gap-4">
       <Slider
-        aria-label="Slider with input"
+        getAriaLabel={() => "Slider value"}
         className="flex-1"
         max={max}
         min={min}
@@ -25,7 +25,6 @@ export default function Particle() {
         value={value}
       />
       <NumberField
-        aria-label="Enter slider value"
         className="w-12"
         max={max}
         min={min}
@@ -34,7 +33,7 @@ export default function Particle() {
         size="sm"
         value={value}
       >
-        <NumberFieldInput />
+        <NumberFieldInput aria-label="Enter slider value" />
       </NumberField>
     </div>
   );

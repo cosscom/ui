@@ -21,7 +21,9 @@ export default function Particle() {
         From {formatPrice(values[0] ?? min)} to {formatPrice(values[1] ?? max)}
       </FieldsetLegend>
       <Slider
-        aria-label="Price range"
+        getAriaLabel={(index) =>
+          index === 0 ? "Minimum price" : "Maximum price"
+        }
         className="flex-1"
         max={max}
         min={min}

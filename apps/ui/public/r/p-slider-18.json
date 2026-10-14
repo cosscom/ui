@@ -8,7 +8,7 @@
   "files": [
     {
       "path": "registry/default/particles/p-slider-18.tsx",
-      "content": "import { Slider } from \"@/registry/default/ui/slider\";\n\nexport default function Particle() {\n  return (\n    <div className=\"flex h-40 items-center justify-center\">\n      <Slider defaultValue={[25, 75]} orientation=\"vertical\" />\n    </div>\n  );\n}\n",
+      "content": "\"use client\";\n\nimport { Slider } from \"@/registry/default/ui/slider\";\n\nexport default function Particle() {\n  return (\n    <div className=\"flex h-40 items-center justify-center\">\n      <Slider\n        getAriaLabel={(index) =>\n          index === 0 ? \"Minimum value\" : \"Maximum value\"\n        }\n        defaultValue={[25, 75]}\n        orientation=\"vertical\"\n      />\n    </div>\n  );\n}\n",
       "type": "registry:block"
     }
   ],

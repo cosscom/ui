@@ -26,7 +26,7 @@ import { Slider, SliderValue } from "@/components/ui/slider"
 ## Minimal pattern
 
 ```tsx
-<Slider aria-label="Volume" defaultValue={40} max={100} min={0} />
+<Slider getAriaLabel={() => "Volume"} defaultValue={40} max={100} min={0} />
 ```
 
 ## Patterns from coss particles
@@ -36,34 +36,42 @@ import { Slider, SliderValue } from "@/components/ui/slider"
 Slider with label and live value display:
 
 ```tsx
-<div className="flex flex-col gap-2">
-  <div className="flex justify-between text-sm">
-    <Label>Volume</Label>
-    <SliderValue />
-  </div>
-  <Slider aria-label="Volume" defaultValue={50} min={0} max={100} />
-</div>
+<Field>
+  <Slider defaultValue={50} min={0} max={100}>
+    <div className="mb-2 flex justify-between text-sm">
+      <FieldLabel>Volume</FieldLabel>
+      <SliderValue />
+    </div>
+  </Slider>
+</Field>
 ```
 
 Range slider (two thumbs):
 
 ```tsx
-<Slider aria-label="Price range" defaultValue={[20, 80]} min={0} max={100} />
+<Slider
+  defaultValue={[20, 80]}
+  getAriaLabel={(index) => index === 0 ? "Minimum price" : "Maximum price"}
+  min={0}
+  max={100}
+/>
 ```
 
 ### More examples
 
-See `p-slider-1` through `p-slider-5` for label, range, vertical, and form integration patterns.
+See `p-slider-2`, `p-slider-7`, `p-slider-17`, and `p-slider-23` for label, range, vertical, and form integration patterns.
 
 ## Common pitfalls
 
 - Using slider for discrete option labels where select/radio is clearer.
 - Not exposing current value context in nearby UI text when needed.
 - Confusing single-value vs range value shapes in controlled mode.
+- Labeling the root instead of the generated thumbs. Use `getAriaLabel` for each thumb or an associated `FieldLabel`.
+- Passing `getAriaLabel` from a Server Component; callbacks require a client boundary.
 
 ## Useful particle references
 
 - with label and value: `p-slider-2`
-- range slider: `p-slider-3`
-- vertical: `p-slider-4`
-- form integration: `p-slider-5`
+- range slider: `p-slider-7`
+- vertical: `p-slider-17`
+- form integration: `p-slider-23`
