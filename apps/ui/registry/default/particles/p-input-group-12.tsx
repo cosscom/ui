@@ -30,7 +30,7 @@ export default function Particle() {
           >
             <InfoIcon />
           </PopoverTrigger>
-          <PopoverPopup side="top" tooltipStyle>
+          <PopoverPopup aria-label="Email information" side="top" tooltipStyle>
             <p>We&apos;ll use this to send you notifications</p>
           </PopoverPopup>
         </Popover>

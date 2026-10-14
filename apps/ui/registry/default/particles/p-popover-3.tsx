@@ -76,7 +76,12 @@ export default function Particle() {
       </PopoverTrigger>
       <Popover handle={popoverHandle}>
         {({ payload: Payload }) => (
-          <PopoverPopup className="min-w-none">
+          <PopoverPopup
+            aria-label={
+              Payload === ProfileContent ? "Profile" : "Notifications"
+            }
+            className="min-w-none"
+          >
             {Payload !== undefined && <Payload />}
           </PopoverPopup>
         )}

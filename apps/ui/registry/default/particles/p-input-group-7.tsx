@@ -35,7 +35,11 @@ export default function Particle() {
           >
             <InfoIcon />
           </PopoverTrigger>
-          <PopoverPopup side="top" tooltipStyle>
+          <PopoverPopup
+            aria-label="Password requirements"
+            side="top"
+            tooltipStyle
+          >
             <p>Min. 8 characters</p>
           </PopoverPopup>
         </Popover>

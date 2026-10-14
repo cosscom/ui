@@ -179,7 +179,11 @@ function CopyTimesPopover({
         </PopoverTrigger>
         <TooltipPopup>Copy to other days</TooltipPopup>
       </Tooltip>
-      <PopoverPopup align="end" className="w-44">
+      <PopoverPopup
+        align="end"
+        aria-label={`Copy ${day} times to other days`}
+        className="w-44"
+      >
         <div className="flex flex-col gap-3">
           <div className="font-medium text-foreground text-sm">
             Copy times to
