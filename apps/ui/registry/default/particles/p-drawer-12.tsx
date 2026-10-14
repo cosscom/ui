@@ -61,7 +61,10 @@ export default function Particle() {
             <DrawerTitle>{FORM_TITLE}</DrawerTitle>
             <DrawerDescription>{FORM_DESCRIPTION}</DrawerDescription>
           </DrawerHeader>
-          <Form className="contents">
+          <Form
+            className="contents"
+            onSubmit={(event) => event.preventDefault()}
+          >
             <DrawerPanel className="grid gap-4">
               {formFields}
               <div className="flex flex-col-reverse gap-2">
@@ -87,7 +90,7 @@ export default function Particle() {
           <DialogTitle>{FORM_TITLE}</DialogTitle>
           <DialogDescription>{FORM_DESCRIPTION}</DialogDescription>
         </DialogHeader>
-        <Form className="contents">
+        <Form className="contents" onSubmit={(event) => event.preventDefault()}>
           <DialogPanel className="grid gap-4">{formFields}</DialogPanel>
           <DialogFooter>
             <DialogClose render={<Button variant="ghost" />}>

@@ -25,7 +25,10 @@ export default function Particle() {
             Let us know how we can improve.
           </PopoverDescription>
         </div>
-        <Form className="flex w-full flex-col gap-4">
+        <Form
+          className="flex w-full flex-col gap-4"
+          onSubmit={(event) => event.preventDefault()}
+        >
           <Field>
             <Textarea
               aria-label="Send feedback"

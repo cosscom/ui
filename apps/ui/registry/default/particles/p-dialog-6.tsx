@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/registry/default/ui/button";
 import {
   Dialog,
@@ -27,7 +29,7 @@ export default function Particle() {
             Make changes to your profile here. Click save when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
-        <Form className="contents">
+        <Form className="contents" onSubmit={(event) => event.preventDefault()}>
           <DialogPanel className="grid gap-4">
             <Field>
               <FieldLabel>Name</FieldLabel>

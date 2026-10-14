@@ -1,3 +1,5 @@
+"use client";
+
 import { CircleAlertIcon } from "lucide-react";
 import { Button } from "@/registry/default/ui/button";
 import {
@@ -38,7 +40,10 @@ export default function Particle() {
       </CardFrameHeader>
       <Card className="rounded-b-none!">
         <CardPanel>
-          <Form className="flex w-full flex-col gap-4">
+          <Form
+            className="flex w-full flex-col gap-4"
+            onSubmit={(event) => event.preventDefault()}
+          >
             <Field>
               <FieldLabel>Name</FieldLabel>
               <Input placeholder="Name of your project" type="text" />
