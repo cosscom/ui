@@ -83,7 +83,7 @@ export default function Particle() {
                 render={<Button size="xs" />}
               >
                 Confirm selected
-                <span className="-me-1 text-primary-foreground/64 text-xs">
+                <span className="text-primary-foreground/64 text-xs">
                   {selected.length}
                 </span>
               </PopoverClose>
