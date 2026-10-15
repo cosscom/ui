@@ -60,7 +60,7 @@ Group with input and button:
 </Group>
 ```
 
-Sizes: `sm`, `default`, `lg`. Orientation: vertical via `orientation="vertical"`.
+Sizes: `sm`, `default`, `lg`. Orientation: vertical via `orientation="vertical"`. In a vertical group, set each `GroupSeparator` to `orientation="horizontal"`.
 
 ### More examples
 
@@ -68,7 +68,7 @@ See `p-group-1` through `p-group-9` for input, sizes, disabled, vertical, and la
 
 ## Common pitfalls
 
-- Forgetting `GroupSeparator` between controls in connected groups.
+- Forgetting `GroupSeparator` between adjacent controls in connected groups or leaving it vertical inside a vertical group.
 - Mixing control sizes/variants that break shared group silhouette.
 - Using standalone controls where a grouped action model is expected.
 

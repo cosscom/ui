@@ -39,9 +39,9 @@ import {
 </InputGroup>
 ```
 
-## Critical invariant
+## DOM order convention
 
-`InputGroupAddon` must be after `InputGroupInput`/`InputGroupTextarea` in DOM order for proper focus behavior.
+Keep `InputGroupInput` or `InputGroupTextarea` before `InputGroupAddon` in the DOM as the conventional composition order. The addon's focus handler searches the entire parent group with `querySelector`, so DOM order does not determine whether it finds the control. The `align` prop controls visual placement, including block-start and block-end addons.
 
 ## Patterns from coss particles
 
@@ -62,10 +62,10 @@ URL prefix with text addon:
 
 ```tsx
 <InputGroup>
+  <InputGroupInput placeholder="example.com" />
   <InputGroupAddon>
     <InputGroupText>https://</InputGroupText>
   </InputGroupAddon>
-  <InputGroupInput placeholder="example.com" />
 </InputGroup>
 ```
 
@@ -82,8 +82,6 @@ Input with interactive button addon:
 </InputGroup>
 ```
 
-`InputGroupAddon` must be after `InputGroupInput`/`InputGroupTextarea` in DOM order for proper focus behavior.
-
 ### More examples
 
 See `p-input-group-1` through `p-input-group-29` for icons, text prefixes, interactive addons, textarea layouts, and stateful patterns.
@@ -91,7 +89,7 @@ See `p-input-group-1` through `p-input-group-29` for icons, text prefixes, inter
 ## Common pitfalls
 
 - Using `Input`/`Textarea` directly instead of `InputGroupInput`/`InputGroupTextarea`.
-- Wrong addon DOM order.
+- Reversing the conventional input-first DOM order; the addon focus lookup searches the full group, and `align` controls visual placement.
 - Missing explicit input types.
 
 ## Useful particle references

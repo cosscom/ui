@@ -25,17 +25,28 @@ npm install @base-ui/react
 ## Canonical imports
 
 ```tsx
-import { Meter, MeterLabel, MeterValue } from "@/components/ui/meter"
+import {
+  Meter,
+  MeterIndicator,
+  MeterLabel,
+  MeterTrack,
+  MeterValue,
+} from "@/components/ui/meter"
 ```
 
 ## Minimal pattern
 
 ```tsx
 <Meter value={40}>
-  <MeterLabel>Progress</MeterLabel>
+  <MeterLabel>Storage usage</MeterLabel>
   <MeterValue />
+  <MeterTrack>
+    <MeterIndicator />
+  </MeterTrack>
 </Meter>
 ```
+
+When supplying children (including only a label or value), include `MeterTrack` and `MeterIndicator` to retain the bar. The root renders its default track and indicator only when no children are supplied.
 
 ## Patterns from coss particles
 
@@ -49,13 +60,16 @@ Meter with formatted value and range:
     <MeterLabel>Storage</MeterLabel>
     <MeterValue>{({ formattedValue }) => `${formattedValue} used`}</MeterValue>
   </div>
+  <MeterTrack>
+    <MeterIndicator />
+  </MeterTrack>
 </Meter>
 ```
 
-Minimal meter without label:
+Minimal meter without a visible label:
 
 ```tsx
-<Meter value={40} aria-label="Progress" />
+<Meter value={40} aria-label="Storage usage" />
 ```
 
 ### More examples

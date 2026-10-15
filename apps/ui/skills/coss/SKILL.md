@@ -105,7 +105,7 @@ High-risk primitives (read these guides first -- they have the most composition 
 - `./references/primitives/context-menu.md` — right-click/long-press menus at the pointer
 - `./references/primitives/select.md` — items-first pattern, multiple, object values, groups
 - `./references/primitives/form.md` — Field composition, validation, submission
-- `./references/primitives/input-group.md` — addons, DOM order invariant, textarea layouts
+- `./references/primitives/input-group.md` — input-first DOM convention, addon focus lookup, textarea layouts
 - `./references/primitives/toast.md` — toastManager (not Sonner), anchored toasts, providers
 
 ## Output Checklist

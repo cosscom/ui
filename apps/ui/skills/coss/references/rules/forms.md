@@ -14,7 +14,7 @@ Use this when implementing fields, input groups, validation states, and form exa
 
 ## Input Group Rule
 
-- In `InputGroup`, place `InputGroupAddon` after `InputGroupInput` or `InputGroupTextarea` in DOM order to preserve focus behavior.
+- In `InputGroup`, keep `InputGroupInput` or `InputGroupTextarea` before `InputGroupAddon` as the conventional DOM order. The addon focus handler searches the whole parent group, so DOM order does not enable the lookup; `align` controls visual placement.
 
 ## Input OTP Rule
 
@@ -41,10 +41,6 @@ Use this when implementing fields, input groups, validation states, and form exa
 // Don't
 <Input placeholder="Email" />
 
-<InputGroup>
-  <InputGroupAddon>{/* ... */}</InputGroupAddon>
-  <InputGroupInput type="text" />
-</InputGroup>
 ```
 
 ## Further reading

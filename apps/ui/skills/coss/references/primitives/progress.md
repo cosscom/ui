@@ -27,7 +27,9 @@ npm install @base-ui/react
 ```tsx
 import {
   Progress,
+  ProgressIndicator,
   ProgressLabel,
+  ProgressTrack,
   ProgressValue,
 } from "@/components/ui/progress"
 ```
@@ -35,7 +37,7 @@ import {
 ## Minimal pattern
 
 ```tsx
-<Progress value={40} />
+<Progress aria-label="Upload progress" value={40} />
 ```
 
 ## Patterns from coss particles
@@ -50,8 +52,13 @@ Progress with label and value display:
     <ProgressLabel>Uploading...</ProgressLabel>
     <ProgressValue />
   </div>
+  <ProgressTrack>
+    <ProgressIndicator />
+  </ProgressTrack>
 </Progress>
 ```
+
+When supplying children (including only a label or value), include `ProgressTrack` and `ProgressIndicator` to retain the bar. The root renders its default track and indicator only when no children are supplied.
 
 Determinate progress: bind a numeric `value` (0-100) for known completion states.
 Indeterminate loading: omit `value` or pass `null` when progress cannot be measured.

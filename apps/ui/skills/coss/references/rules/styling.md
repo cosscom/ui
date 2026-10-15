@@ -6,11 +6,15 @@ Use this guide when writing or updating coss primitives, particles, and docs exa
 
 - Use semantic tokens (`text-muted-foreground`, `bg-destructive`) over raw palette classes.
 - Prefer component variants/size props before custom class overrides.
-- Use `flex flex-col gap-*` layouts instead of `space-x-*`/`space-y-*`.
+- Prefer parent-owned flex/grid `gap-*` for ordinary rows and stacks; use `flex flex-col gap-*` for vertical stacks when no component already supplies that layout. Keep intentional `space-y-*` patterns and negative spacing used for overlap (such as avatar stacks).
+- Prefer logical spacing utilities: `ms-*` over `ml-*`, `me-*` over `mr-*`, `ps-*` over `pl-*`, and `pe-*` over `pr-*`, including values such as `ms-auto`.
 - Use `size-*` for square sizing.
 - Use `cn()` for conditional class composition.
 - Avoid redundant classes that defaults already cover (for example `border-border` when border color is already inherited).
 - Before adding layout classes, check whether the target part already provides that layout.
+- Check inherited icon size through the receiving primitive, imported helpers, variants, and every relevant breakpoint before adding or removing a size class; some sizes change responsively.
+- When overriding a surface radius, update each visible reinforcement layer that follows that edge.
+- Adapt compositions to avoid viewport overflow, choosing a fit for the composition rather than a universal breakpoint rule. Prefer first-line icon alignment beside wrapping text when appropriate; preserve intentional vertical centering. Never truncate crucial text; decide whether other text may truncate from its meaning and context.
 - Use Tailwind v4 syntax and conventions in coss examples and snippets.
 - **Do not replace `--alpha()` with `color-mix()` or `rgba()`.** `--alpha()` is a valid Tailwind v4 theme function used throughout coss token definitions (e.g. `--alpha(var(--color-black) / 8%)`). It is processed by Tailwind at build time — it is not invalid CSS.
 
@@ -19,7 +23,7 @@ Use this guide when writing or updating coss primitives, particles, and docs exa
 - Do not use numeric icon `size` props; prefer inherited sizing or `size-*` utility classes.
 - For icons, default to `aria-hidden="true"` when icon is decorative/redundant; do not hide icons that carry unique semantic meaning.
 - Many primitives already define inner SVG sizing. Check existing component styles before adding icon `size-*` classes.
-- Many primitives already define inner SVG opacity (commonly around `opacity-80`). Check existing component styles before adding manual icon opacity classes.
+- Inherit a primitive's icon emphasis by default; use manual opacity only for an intentional adjustment. A class on an SVG opts out of the primitive's opacity selector, and ancestor opacity can compound. Prefer percentages in multiples of 8 (for example, `opacity-64`); use multiples of 4 when finer adjustment is needed. Prefer `opacity-50` for disabled components as an exception; preserve existing defaults unless intentionally changing them. These are preferences, not blanket rounding or autofix rules.
 - Prefer data-slot-aware selectors and `in-*` patterns over `group` where available.
 - Cancel/close buttons in Dialog, AlertDialog, Sheet, and Drawer footers use `variant="ghost"`. Reserve `variant="outline"` for triggers that open overlays, not for dismissing them.
 

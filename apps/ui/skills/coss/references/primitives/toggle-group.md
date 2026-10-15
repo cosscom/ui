@@ -20,16 +20,20 @@ npm install @base-ui/react
 ## Canonical imports
 
 ```tsx
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+  ToggleGroupSeparator,
+} from "@/components/ui/toggle-group"
 ```
 
 ## Minimal pattern
 
 ```tsx
 <ToggleGroup>
-  <ToggleGroupItem>Bold</ToggleGroupItem>
-  <ToggleGroupItem>Italic</ToggleGroupItem>
-  <ToggleGroupItem>Underline</ToggleGroupItem>
+  <ToggleGroupItem value="bold">Bold</ToggleGroupItem>
+  <ToggleGroupItem value="italic">Italic</ToggleGroupItem>
+  <ToggleGroupItem value="underline">Underline</ToggleGroupItem>
 </ToggleGroup>
 ```
 
@@ -55,15 +59,48 @@ Toggle group with icon buttons:
 
 Toggle Group is exclusive by default and may be cleared. Add `multiple` only when more than one item may be pressed.
 
+Outlined groups use connected items: include `ToggleGroupSeparator` between adjacent items. The default variant uses spaced items and does not require separators.
+
+```tsx
+<ToggleGroup variant="outline">
+  <ToggleGroupItem value="bold">Bold</ToggleGroupItem>
+  <ToggleGroupSeparator />
+  <ToggleGroupItem value="italic">Italic</ToggleGroupItem>
+  <ToggleGroupSeparator />
+  <ToggleGroupItem value="underline">Underline</ToggleGroupItem>
+</ToggleGroup>
+```
+
+In a vertical outlined group, separators must be horizontal:
+
+```tsx
+<ToggleGroup orientation="vertical" variant="outline">
+  <ToggleGroupItem value="bold">Bold</ToggleGroupItem>
+  <ToggleGroupSeparator orientation="horizontal" />
+  <ToggleGroupItem value="italic">Italic</ToggleGroupItem>
+  <ToggleGroupSeparator orientation="horizontal" />
+  <ToggleGroupItem value="underline">Underline</ToggleGroupItem>
+</ToggleGroup>
+```
+
+Use the dedicated separator rather than a generic border: the group removes adjoining item borders and coordinates separator styling with hover and pressed states.
+
 Controlled toggle group:
 
 ```tsx
-const [value, setValue] = useState(["bold"])
+import { useState } from "react"
 
-<ToggleGroup value={value} onValueChange={setValue}>
-  <ToggleGroupItem value="bold">Bold</ToggleGroupItem>
-  ...
-</ToggleGroup>
+function ControlledToggleGroup() {
+  const [value, setValue] = useState<string[]>(["bold"])
+
+  return (
+    <ToggleGroup value={value} onValueChange={setValue}>
+      <ToggleGroupItem value="bold">Bold</ToggleGroupItem>
+      <ToggleGroupItem value="italic">Italic</ToggleGroupItem>
+      <ToggleGroupItem value="underline">Underline</ToggleGroupItem>
+    </ToggleGroup>
+  )
+}
 ```
 
 ### More examples
@@ -73,7 +110,8 @@ See `p-toggle-group-1` through `p-toggle-group-9` for sizes, outline, vertical, 
 ## Common pitfalls
 
 - Using toggle-group when plain buttons (no pressed state) are more appropriate.
-- Wrong value shape for mode (`multiple` array vs single selection).
+- Passing a scalar value: both exclusive and multiple modes use arrays; exclusive mode contains at most one selected value.
+- Omitting `ToggleGroupSeparator` in outlined groups or leaving its default vertical orientation inside a vertical group.
 - Missing accessible labels on icon-only toggle items.
 
 ## Useful particle references

@@ -173,7 +173,7 @@ const ref = useRef(null);
 
 **Components with and without built-in icon sizing:**
 
-Some components have built-in icon sizing via CSS selectors like `[&_svg:not([class*='size-'])]:size-4`. For components that don't have this (e.g., `BreadcrumbLink`), you must explicitly set the icon size using a `size-*` class:
+Some components have built-in icon sizing via CSS selectors like `[&_svg:not([class*='size-'])]:size-4`. Check the receiving component, imported helpers, variants, and every relevant breakpoint before adding or removing a size class: inherited sizing can change responsively (for example, Button icons are 18px narrow and 16px wide). For components that do not set the intended size (e.g., `BreadcrumbLink`), add a `size-*` class:
 
 ```tsx
 // ✅ Component with built-in icon sizing (e.g., Button) - no class needed
@@ -190,9 +190,9 @@ Some components have built-in icon sizing via CSS selectors like `[&_svg:not([cl
 ### Icon Opacity Patterns
 
 **Icons inside Buttons:**
-- **Do NOT add opacity classes to icons inside buttons** - the Button component automatically handles icon opacity
-- For decorative icons in buttons with text, use `aria-hidden="true"` without any opacity class
-- For icon-only buttons, use `aria-label` on the button, `aria-hidden="true"` on the icon
+- Inherit the button's icon emphasis by default; add an opacity class only for an intentional visual adjustment. A class on the SVG opts out of the button's inherited opacity selector.
+- Prefer opacity values in multiples of 8 (for example, `opacity-64`); use multiples of 4 when a finer adjustment is needed. Prefer `opacity-50` for disabled components as an exception; preserve existing defaults unless intentionally changing them. These are preferences, not blanket rounding or autofix rules.
+- For decorative icons, use `aria-hidden="true"`; icon-only buttons also need an accessible name.
 
 ```tsx
 // ✅ Icon-only button (no opacity needed)
@@ -206,9 +206,9 @@ Some components have built-in icon sizing via CSS selectors like `[&_svg:not([cl
   Add Item
 </Button>
 
-// ❌ Don't add opacity to icons in buttons
+// ✅ Intentional opacity adjustment when quieter emphasis is wanted
 <Button>
-  <PlusIcon aria-hidden="true" className="opacity-60" />
+  <PlusIcon aria-hidden="true" className="opacity-64" />
   Add Item
 </Button>
 ```
@@ -241,7 +241,7 @@ Some components have built-in icon sizing via CSS selectors like `[&_svg:not([cl
 
 **InputGroupAddon DOM Order:**
 
-When using `InputGroupAddon`, it must always come **after** an `InputGroupInput` or `InputGroupTextarea` in the DOM order. The addon's `onMouseDown` handler uses `querySelector` to find the input/textarea element to focus, so if the addon appears before the input element, it won't be able to find it.
+Keep `InputGroupInput` or `InputGroupTextarea` before `InputGroupAddon` in the DOM as the conventional composition order. The addon's `onMouseDown` handler searches the whole parent group with `querySelector`, so DOM order does not prevent it from finding the control. The `align` prop controls visual placement, including block-start and block-end layouts.
 
 ```tsx
 // ✅ Correct order
@@ -252,16 +252,16 @@ When using `InputGroupAddon`, it must always come **after** an `InputGroupInput`
   </InputGroupAddon>
 </InputGroup>
 
-// ❌ Incorrect - addon won't find the textarea
+// Input-first DOM order also works when the addon is visually above the control.
 <InputGroup>
+  <InputGroupTextarea placeholder="Enter code..." />
   <InputGroupAddon align="block-start">
     <Button>Submit</Button>
   </InputGroupAddon>
-  <InputGroupTextarea placeholder="Enter code..." />
 </InputGroup>
 ```
 
-Note: The `align` prop controls visual positioning (e.g., `block-start` renders at top, `block-end` at bottom), but the DOM order must still have the input/textarea first for the focus behavior to work.
+The input-first DOM order remains the documented composition convention even when `align` places an addon visually above or below the control.
 
 **Icons inside Alerts:**
 - When an alert icon uniquely conveys type/severity, use `role="img"` and a purpose-specific `aria-label`. Lucide icons are hidden by default; omitting `aria-hidden` does not expose their meaning.
@@ -602,10 +602,17 @@ export default function Particle() {
 **Use Tailwind classes directly. Common patterns:**
 
 - **Layout:** `flex`, `grid`, `gap-2`, `items-center`, `justify-between`
-- **Spacing:** `p-4`, `px-3`, `py-2`, `gap-4`
+- **Spacing:** `p-4`, `px-3`, `py-2`, `gap-4`; prefer logical `ms-*`, `me-*`, `ps-*`, and `pe-*` over left/right margin and padding utilities.
 - **Text:** `text-sm`, `text-muted-foreground`, `font-medium`
 - **Sizing:** `w-full`, `max-w-xs`, `h-auto!` (use `!` for important overrides)
 - **Custom overrides:** `className="pe-0"`, `className="*:[input]:px-0!"`
+
+### Layout, text, and surface details
+
+- Prefer parent-owned flex/grid `gap-*` for ordinary rows and stacks; use `flex flex-col gap-*` for vertical stacks when no component already supplies that layout. Keep `space-y-*` where its existing pattern is intentional, and preserve negative spacing used for overlap (such as avatar stacks).
+- Adapt a composition when its content would overflow the viewport; choose the adjustment for that composition rather than applying one universal breakpoint or stacking rule.
+- When an icon sits beside wrapping text, prefer aligning it with the first line; vertical centering remains valid when the composition calls for it. Do not truncate crucial text. Decide whether other text may truncate from its meaning and context.
+- When overriding a surface radius, update each visible reinforcement layer that follows the same edge.
 
 ### Semantic Color Tokens
 
