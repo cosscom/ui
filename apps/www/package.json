@@ -4,7 +4,7 @@
     "@hugeicons/core-free-icons": "^2.0.0",
     "@hugeicons/react": "^1.1.1",
     "lucide-react": "^0.555.0",
-    "next": "16.2.5",
+    "next": "16.4.1",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   },
