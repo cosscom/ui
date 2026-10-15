@@ -61,6 +61,7 @@ export default function Particle() {
           <DialogPanel>
             <Field>
               <Textarea
+                aria-label="Message"
                 onChange={(e) => setValue(e.target.value)}
                 value={value}
               />

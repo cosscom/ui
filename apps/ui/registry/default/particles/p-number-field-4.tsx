@@ -11,7 +11,7 @@ export default function Particle() {
     <NumberField defaultValue={42} disabled>
       <NumberFieldGroup>
         <NumberFieldDecrement />
-        <NumberFieldInput />
+        <NumberFieldInput aria-label="Quantity" />
         <NumberFieldIncrement />
       </NumberFieldGroup>
     </NumberField>

@@ -1,9 +1,13 @@
+"use client";
+
 import { Slider } from "@/registry/default/ui/slider";
 
 export default function Particle() {
   return (
     <Slider
-      aria-label="Dual thumb slider with collision behavior swap"
+      getAriaLabel={(index) =>
+        index === 0 ? "Minimum value" : "Maximum value"
+      }
       defaultValue={[25, 75]}
       thumbCollisionBehavior="swap"
     />

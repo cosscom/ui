@@ -56,6 +56,8 @@ const timeOptions = Array.from({ length: 96 }, (_, i) => {
   return `${displayHours}:${minutes.toString().padStart(2, "0")} ${period}`;
 });
 
+const startTimeOptions = timeOptions.slice(0, -1);
+
 const timeIndex = (time: string) => timeOptions.indexOf(time);
 
 let rangeId = 0;
@@ -170,7 +172,11 @@ function CopyTimesPopover({
         </PopoverTrigger>
         <TooltipPopup>Copy to other days</TooltipPopup>
       </Tooltip>
-      <PopoverPopup align="end" className="w-44">
+      <PopoverPopup
+        align="end"
+        aria-label={`Copy ${day} times to other days`}
+        className="w-44"
+      >
         <div className="flex flex-col gap-3">
           <div className="font-medium text-foreground text-sm">
             Copy times to
@@ -312,7 +318,7 @@ export default function Particle() {
                       <div className="flex items-center gap-2" key={range.id}>
                         <TimeCombobox
                           ariaLabel={`${day} start time`}
-                          items={timeOptions}
+                          items={startTimeOptions}
                           onChange={(start) =>
                             updateStart(day, range.id, start)
                           }

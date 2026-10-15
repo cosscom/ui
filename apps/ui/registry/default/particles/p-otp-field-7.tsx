@@ -45,7 +45,7 @@ export default function Particle() {
       {!valid && !invalid && (
         <FieldDescription>Enter `123456` to pass validation.</FieldDescription>
       )}
-      {invalid && <FieldError>Code must be 123456.</FieldError>}
+      {invalid && <FieldError match>Code must be 123456.</FieldError>}
       {valid && <FieldDescription>Code verified.</FieldDescription>}
     </Field>
   );

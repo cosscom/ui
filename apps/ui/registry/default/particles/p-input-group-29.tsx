@@ -34,7 +34,7 @@ export default function Particle() {
           </TooltipTrigger>
           <TooltipPopup>Record voice message</TooltipPopup>
         </Tooltip>
-        <InputGroupText className="ml-auto text-muted-foreground text-xs">
+        <InputGroupText className="ms-auto text-muted-foreground text-xs">
           Press Enter to send
         </InputGroupText>
         <Tooltip>

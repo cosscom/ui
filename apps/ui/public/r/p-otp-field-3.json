@@ -3,12 +3,13 @@
   "name": "p-otp-field-3",
   "description": "OTP field with separator",
   "registryDependencies": [
-    "@coss/otp-field"
+    "@coss/otp-field",
+    "@coss/field"
   ],
   "files": [
     {
       "path": "registry/default/particles/p-otp-field-3.tsx",
-      "content": "import {\n  OTPField,\n  OTPFieldInput,\n  OTPFieldSeparator,\n} from \"@/registry/default/ui/otp-field\";\n\nconst OTP_LENGTH = 6;\nconst GROUP_LENGTH = 3;\n\nconst OTP_SLOT_KEYS = Array.from(\n  { length: OTP_LENGTH },\n  (_, i) => `otp-slot-${i}`,\n);\n\nexport default function Particle() {\n  return (\n    <OTPField aria-label=\"Verification code\" length={OTP_LENGTH}>\n      {OTP_SLOT_KEYS.slice(0, GROUP_LENGTH).map((slotKey, index) => (\n        <OTPFieldInput\n          key={slotKey}\n          aria-label={\n            index === 0 ? undefined : `Character ${index + 1} of ${OTP_LENGTH}`\n          }\n        />\n      ))}\n      <OTPFieldSeparator />\n      {OTP_SLOT_KEYS.slice(GROUP_LENGTH).map((slotKey, index) => (\n        <OTPFieldInput\n          key={slotKey}\n          aria-label={`Character ${index + GROUP_LENGTH + 1} of ${OTP_LENGTH}`}\n        />\n      ))}\n    </OTPField>\n  );\n}\n",
+      "content": "import { Field, FieldLabel } from \"@/registry/default/ui/field\";\nimport {\n  OTPField,\n  OTPFieldInput,\n  OTPFieldSeparator,\n} from \"@/registry/default/ui/otp-field\";\n\nconst OTP_LENGTH = 6;\nconst GROUP_LENGTH = 3;\n\nconst OTP_SLOT_KEYS = Array.from(\n  { length: OTP_LENGTH },\n  (_, i) => `otp-slot-${i}`,\n);\n\nexport default function Particle() {\n  return (\n    <Field>\n      <FieldLabel className=\"sr-only\">Verification code</FieldLabel>\n      <OTPField length={OTP_LENGTH}>\n        {OTP_SLOT_KEYS.slice(0, GROUP_LENGTH).map((slotKey, index) => (\n          <OTPFieldInput\n            key={slotKey}\n            aria-label={\n              index === 0\n                ? undefined\n                : `Character ${index + 1} of ${OTP_LENGTH}`\n            }\n          />\n        ))}\n        <OTPFieldSeparator />\n        {OTP_SLOT_KEYS.slice(GROUP_LENGTH).map((slotKey, index) => (\n          <OTPFieldInput\n            key={slotKey}\n            aria-label={`Character ${index + GROUP_LENGTH + 1} of ${OTP_LENGTH}`}\n          />\n        ))}\n      </OTPField>\n    </Field>\n  );\n}\n",
       "type": "registry:block"
     }
   ],

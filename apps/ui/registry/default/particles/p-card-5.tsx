@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/registry/default/ui/button";
 import {
   Card,
@@ -36,7 +38,10 @@ export default function Particle() {
       </CardFrameHeader>
       <Card>
         <CardPanel>
-          <Form className="flex w-full flex-col gap-4">
+          <Form
+            className="flex w-full flex-col gap-4"
+            onSubmit={(event) => event.preventDefault()}
+          >
             <Field>
               <FieldLabel>Name</FieldLabel>
               <Input placeholder="Name of your project" type="text" />

@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/registry/default/ui/button";
 import { Field, FieldLabel } from "@/registry/default/ui/field";
 import { Form } from "@/registry/default/ui/form";
@@ -27,7 +29,7 @@ export default function Particle() {
             Make changes to your profile here. Click save when you&apos;re done.
           </SheetDescription>
         </SheetHeader>
-        <Form className="contents">
+        <Form className="contents" onSubmit={(event) => event.preventDefault()}>
           <SheetPanel className="grid gap-4">
             <Field>
               <FieldLabel>Name</FieldLabel>

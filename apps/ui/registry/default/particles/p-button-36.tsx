@@ -1,21 +1,15 @@
 "use client";
 
 import { CheckIcon, CopyIcon } from "lucide-react";
-import { useState } from "react";
+import { useCopyToClipboard } from "@/registry/default/hooks/use-copy-to-clipboard";
 import { Button } from "@/registry/default/ui/button";
 
 export default function Particle() {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText("Text copied!");
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  const { copyToClipboard, isCopied } = useCopyToClipboard();
 
   return (
-    <Button onClick={handleCopy} variant="outline">
-      {copied ? (
+    <Button onClick={() => copyToClipboard("Text copied!")} variant="outline">
+      {isCopied ? (
         <>
           <CheckIcon aria-hidden="true" />
           Copied

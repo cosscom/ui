@@ -8,7 +8,7 @@
   "files": [
     {
       "path": "registry/default/particles/p-number-field-8.tsx",
-      "content": "import {\n  NumberField,\n  NumberFieldDecrement,\n  NumberFieldGroup,\n  NumberFieldIncrement,\n  NumberFieldInput,\n} from \"@/registry/default/ui/number-field\";\n\nexport default function Particle() {\n  return (\n    <NumberField\n      defaultValue={0}\n      format={{ currency: \"USD\", style: \"currency\" }}\n    >\n      <NumberFieldGroup>\n        <NumberFieldDecrement />\n        <NumberFieldInput />\n        <NumberFieldIncrement />\n      </NumberFieldGroup>\n    </NumberField>\n  );\n}\n",
+      "content": "import {\n  NumberField,\n  NumberFieldDecrement,\n  NumberFieldGroup,\n  NumberFieldIncrement,\n  NumberFieldInput,\n} from \"@/registry/default/ui/number-field\";\n\nexport default function Particle() {\n  return (\n    <NumberField\n      defaultValue={0}\n      format={{ currency: \"USD\", style: \"currency\" }}\n    >\n      <NumberFieldGroup>\n        <NumberFieldDecrement />\n        <NumberFieldInput aria-label=\"Amount in USD\" />\n        <NumberFieldIncrement />\n      </NumberFieldGroup>\n    </NumberField>\n  );\n}\n",
       "type": "registry:block"
     }
   ],

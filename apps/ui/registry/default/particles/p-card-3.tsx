@@ -1,3 +1,5 @@
+"use client";
+
 import { ShieldAlertIcon } from "lucide-react";
 import { Button } from "@/registry/default/ui/button";
 import {
@@ -20,7 +22,10 @@ export default function Particle() {
         <CardDescription>Enter email and password to login</CardDescription>
       </CardHeader>
       <CardPanel>
-        <Form className="flex w-full flex-col gap-4">
+        <Form
+          className="flex w-full flex-col gap-4"
+          onSubmit={(event) => event.preventDefault()}
+        >
           <Field>
             <FieldLabel>Email</FieldLabel>
             <Input placeholder="Enter your email" type="email" />

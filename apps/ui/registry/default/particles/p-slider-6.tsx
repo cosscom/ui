@@ -1,3 +1,5 @@
+"use client";
+
 import { Slider } from "@/registry/default/ui/slider";
 
 export default function Particle() {
@@ -11,7 +13,7 @@ export default function Particle() {
         <span>High</span>
       </div>
       <Slider
-        aria-label="Intensity level from low to high"
+        getAriaLabel={() => "Intensity level from low to high"}
         defaultValue={50}
         step={10}
       />

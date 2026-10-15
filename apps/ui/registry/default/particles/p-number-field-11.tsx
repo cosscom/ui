@@ -11,7 +11,7 @@ export default function Particle() {
     <NumberField defaultValue={0}>
       <NumberFieldGroup className="[--radius-lg:9999px] [--radius:9999px]">
         <NumberFieldDecrement />
-        <NumberFieldInput />
+        <NumberFieldInput aria-label="Quantity" />
         <NumberFieldIncrement />
       </NumberFieldGroup>
     </NumberField>

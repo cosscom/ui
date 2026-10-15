@@ -26,6 +26,7 @@ import {
   CommandCreateHandle,
   CommandDialog,
   CommandDialogPopup,
+  CommandDialogTrigger,
   CommandEmpty,
   CommandFooter,
   CommandGroup,
@@ -334,15 +335,18 @@ export default function PCommand2() {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} variant="outline">
+      <CommandDialogTrigger
+        handle={commandHandle}
+        render={<Button variant="outline" />}
+      >
         Cmdk with AI
-      </Button>
+      </CommandDialogTrigger>
       <CommandDialog
         handle={commandHandle}
         onOpenChange={handleOpenChange}
         open={open}
       >
-        <CommandDialogPopup>
+        <CommandDialogPopup aria-label="Command palette with AI">
           {!aiState.mode ? (
             <Command
               filter={filterItem}

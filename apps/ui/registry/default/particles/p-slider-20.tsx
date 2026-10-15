@@ -1,3 +1,5 @@
+"use client";
+
 import { Slider } from "@/registry/default/ui/slider";
 
 const bands = [
@@ -13,7 +15,7 @@ export default function Particle() {
     <div className="flex h-48 justify-center gap-8">
       {bands.map((band) => (
         <Slider
-          aria-label={band.label}
+          getAriaLabel={() => band.label}
           defaultValue={band.value}
           key={band.label}
           max={5}

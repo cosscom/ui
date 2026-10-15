@@ -3220,6 +3220,7 @@
       ],
       "name": "p-button-35",
       "registryDependencies": [
+        "@coss/use-copy-to-clipboard",
         "@coss/button"
       ],
       "type": "registry:block"
@@ -3240,6 +3241,7 @@
       ],
       "name": "p-button-36",
       "registryDependencies": [
+        "@coss/use-copy-to-clipboard",
         "@coss/button"
       ],
       "type": "registry:block"
@@ -7327,7 +7329,8 @@
       ],
       "name": "p-otp-field-1",
       "registryDependencies": [
-        "@coss/otp-field"
+        "@coss/otp-field",
+        "@coss/field"
       ],
       "type": "registry:block"
     },
@@ -7345,7 +7348,8 @@
       ],
       "name": "p-otp-field-2",
       "registryDependencies": [
-        "@coss/otp-field"
+        "@coss/otp-field",
+        "@coss/field"
       ],
       "type": "registry:block"
     },
@@ -7363,7 +7367,8 @@
       ],
       "name": "p-otp-field-3",
       "registryDependencies": [
-        "@coss/otp-field"
+        "@coss/otp-field",
+        "@coss/field"
       ],
       "type": "registry:block"
     },
@@ -8142,6 +8147,7 @@
       },
       "name": "p-input-group-27",
       "registryDependencies": [
+        "@coss/use-copy-to-clipboard",
         "@coss/button",
         "@coss/input-group",
         "@coss/select",
@@ -9076,7 +9082,6 @@
       ],
       "name": "p-popover-4",
       "registryDependencies": [
-        "@coss/badge",
         "@coss/button",
         "@coss/checkbox",
         "@coss/checkbox-group",

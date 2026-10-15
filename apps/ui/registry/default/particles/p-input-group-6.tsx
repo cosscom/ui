@@ -11,8 +11,8 @@ import {
 export default function Particle() {
   return (
     <InputGroup>
-      <NumberField aria-label="Enter the amount" defaultValue={10}>
-        <NumberFieldInput className="text-left" />
+      <NumberField defaultValue={10}>
+        <NumberFieldInput aria-label="Enter the amount" className="text-left" />
       </NumberField>
       <InputGroupAddon>
         <InputGroupText>€</InputGroupText>

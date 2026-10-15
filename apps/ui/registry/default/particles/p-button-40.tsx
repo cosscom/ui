@@ -61,12 +61,6 @@ export default function Particle() {
         });
       });
     } catch (err) {
-      // Close info toast before showing error
-      if (infoToastIdRef.current) {
-        toastManager.close(infoToastIdRef.current);
-        infoToastIdRef.current = null;
-      }
-
       if (err instanceof DOMException && err.name === "AbortError") {
         // Cancelled
         toastManager.add({
@@ -83,6 +77,9 @@ export default function Particle() {
         });
       }
     } finally {
+      if (infoToastIdRef.current) {
+        toastManager.close(infoToastIdRef.current);
+      }
       setIsDownloading(false);
       setProgress(0);
       abortControllerRef.current = null;

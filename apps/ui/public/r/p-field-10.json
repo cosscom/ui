@@ -9,7 +9,7 @@
   "files": [
     {
       "path": "registry/default/particles/p-field-10.tsx",
-      "content": "\"use client\";\n\nimport {\n  Field,\n  FieldDescription,\n  FieldLabel,\n} from \"@/registry/default/ui/field\";\nimport { Textarea } from \"@/registry/default/ui/textarea\";\n\nexport default function Particle() {\n  return (\n    <Field>\n      <FieldLabel>Bio</FieldLabel>\n      <Textarea placeholder=\"Tell us about yourself…\" />\n      <FieldDescription>\n        Write a short bio. Maximum 500 characters.\n      </FieldDescription>\n    </Field>\n  );\n}\n",
+      "content": "\"use client\";\n\nimport {\n  Field,\n  FieldDescription,\n  FieldLabel,\n} from \"@/registry/default/ui/field\";\nimport { Textarea } from \"@/registry/default/ui/textarea\";\n\nexport default function Particle() {\n  return (\n    <Field>\n      <FieldLabel>Bio</FieldLabel>\n      <Textarea maxLength={500} placeholder=\"Tell us about yourself…\" />\n      <FieldDescription>\n        Write a short bio. Maximum 500 characters.\n      </FieldDescription>\n    </Field>\n  );\n}\n",
       "type": "registry:block"
     }
   ],

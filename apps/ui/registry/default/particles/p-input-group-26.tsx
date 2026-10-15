@@ -113,7 +113,7 @@ export default function Particle() {
               />
             )}
             <span
-              className={`text-xs ${req.met ? "text-emerald-600" : "text-muted-foreground"}`}
+              className={`text-xs ${req.met ? "text-success-foreground" : "text-muted-foreground"}`}
             >
               {req.text}
               <span className="sr-only">

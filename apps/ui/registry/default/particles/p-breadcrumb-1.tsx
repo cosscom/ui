@@ -27,6 +27,7 @@ export default function Particle() {
         <BreadcrumbItem>
           <Menu>
             <MenuTrigger
+              aria-label="More pages"
               render={
                 <Button
                   className="-m-1.5 text-muted-foreground"

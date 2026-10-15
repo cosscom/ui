@@ -34,7 +34,7 @@ export default function Particle() {
               {axis.toUpperCase()}
             </Label>
             <Slider
-              aria-label={`${axis.toUpperCase()} position`}
+              getAriaLabel={() => `${axis.toUpperCase()} position`}
               className="flex-1"
               max={max}
               min={min}
@@ -44,7 +44,6 @@ export default function Particle() {
               value={values[axis]}
             />
             <NumberField
-              aria-label={`Enter ${axis.toUpperCase()} value`}
               className="w-16"
               max={max}
               min={min}
@@ -53,7 +52,9 @@ export default function Particle() {
               size="sm"
               value={values[axis]}
             >
-              <NumberFieldInput />
+              <NumberFieldInput
+                aria-label={`Enter ${axis.toUpperCase()} value`}
+              />
             </NumberField>
           </div>
         ))}

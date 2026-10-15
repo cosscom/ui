@@ -44,11 +44,11 @@ import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/u
 
 ### Key patterns
 
-Alert with semantic icon (do NOT use `aria-hidden` — icon conveys status):
+When an icon uniquely conveys alert status, explicitly name it with `role="img"` and `aria-label`. Lucide icons are hidden by default; omitting `aria-hidden` alone does not expose their meaning. Keep icons decorative with `aria-hidden="true"` when visible text already conveys the same meaning:
 
 ```tsx
 <Alert variant="info">
-  <InfoIcon />
+  <InfoIcon aria-label="Information" role="img" />
   <AlertTitle>Heads up!</AlertTitle>
   <AlertDescription>You can add components using the CLI.</AlertDescription>
 </Alert>
@@ -60,7 +60,7 @@ Alert with action buttons (use `AlertAction`):
 
 ```tsx
 <Alert>
-  <InfoIcon />
+  <InfoIcon aria-label="Information" role="img" />
   <AlertTitle>Heads up!</AlertTitle>
   <AlertDescription>Describe what can be done about it here.</AlertDescription>
   <AlertAction>
@@ -78,7 +78,7 @@ See `p-alert-1` through `p-alert-7` for all variants and action patterns.
 
 - Using alert variants for passive decoration instead of meaningful semantic status.
 - Missing title/description structure in complex alerts, reducing scannability.
-- Hiding semantic alert icons with `aria-hidden` when they convey status meaning.
+- Leaving a uniquely meaningful icon unnamed, or repeating status already provided by visible text.
 
 ## Useful particle references
 

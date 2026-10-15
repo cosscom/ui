@@ -8,7 +8,7 @@ import {
 export default function Particle() {
   return (
     <Alert variant="success">
-      <CircleCheckIcon />
+      <CircleCheckIcon aria-label="Success" role="img" />
       <AlertTitle>Heads up!</AlertTitle>
       <AlertDescription>
         Describe what can be done about it here.

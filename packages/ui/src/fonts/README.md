@@ -2,6 +2,8 @@
 
 This directory contains shared font files and configurations used across all apps in the monorepo.
 
+For how to set type with Cal Sans (sizes, weights, axes, punctuation), read the [font guide](font-guide.md).
+
 ## Usage
 
 Import fonts directly from the shared UI package:

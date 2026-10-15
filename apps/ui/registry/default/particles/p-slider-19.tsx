@@ -17,7 +17,7 @@ export default function Particle() {
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <Slider
-        aria-label="Vertical slider with input"
+        getAriaLabel={() => "Slider value"}
         max={max}
         min={min}
         onValueChange={(v) => setValue(Array.isArray(v) ? v[0] : v)}
@@ -25,7 +25,6 @@ export default function Particle() {
         value={value}
       />
       <NumberField
-        aria-label="Enter slider value"
         className="w-16"
         max={max}
         min={min}
@@ -34,7 +33,7 @@ export default function Particle() {
         size="sm"
         value={value}
       >
-        <NumberFieldInput />
+        <NumberFieldInput aria-label="Enter slider value" />
       </NumberField>
     </div>
   );

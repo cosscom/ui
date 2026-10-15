@@ -24,13 +24,14 @@ export default function Particle() {
         </Label>
         <Popover>
           <PopoverTrigger
+            aria-label="Email information"
             className="ml-auto"
             openOnHover
             render={<Button className="-m-1" size="icon-xs" variant="ghost" />}
           >
             <InfoIcon />
           </PopoverTrigger>
-          <PopoverPopup side="top" tooltipStyle>
+          <PopoverPopup aria-label="Email information" side="top" tooltipStyle>
             <p>We&apos;ll use this to send you notifications</p>
           </PopoverPopup>
         </Popover>

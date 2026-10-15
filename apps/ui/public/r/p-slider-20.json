@@ -8,7 +8,7 @@
   "files": [
     {
       "path": "registry/default/particles/p-slider-20.tsx",
-      "content": "import { Slider } from \"@/registry/default/ui/slider\";\n\nconst bands = [\n  { label: \"60 Hz\", value: 2 },\n  { label: \"250 Hz\", value: 1 },\n  { label: \"1k\", value: -1 },\n  { label: \"4k\", value: -3 },\n  { label: \"16k\", value: 2 },\n];\n\nexport default function Particle() {\n  return (\n    <div className=\"flex h-48 justify-center gap-8\">\n      {bands.map((band) => (\n        <Slider\n          aria-label={band.label}\n          defaultValue={band.value}\n          key={band.label}\n          max={5}\n          min={-5}\n          orientation=\"vertical\"\n        />\n      ))}\n    </div>\n  );\n}\n",
+      "content": "\"use client\";\n\nimport { Slider } from \"@/registry/default/ui/slider\";\n\nconst bands = [\n  { label: \"60 Hz\", value: 2 },\n  { label: \"250 Hz\", value: 1 },\n  { label: \"1k\", value: -1 },\n  { label: \"4k\", value: -3 },\n  { label: \"16k\", value: 2 },\n];\n\nexport default function Particle() {\n  return (\n    <div className=\"flex h-48 justify-center gap-8\">\n      {bands.map((band) => (\n        <Slider\n          getAriaLabel={() => band.label}\n          defaultValue={band.value}\n          key={band.label}\n          max={5}\n          min={-5}\n          orientation=\"vertical\"\n        />\n      ))}\n    </div>\n  );\n}\n",
       "type": "registry:block"
     }
   ],

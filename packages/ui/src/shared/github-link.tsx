@@ -3,7 +3,7 @@ import { GitHubLinkClient } from "@coss/ui/shared/github-link-client";
 import * as React from "react";
 
 // The link and its stars are coss's repository unless a product says
-// which of its own (apps/shipyard: cosscom/shipyard).
+// which of its own.
 export function GitHubLink({
   repo = "cosscom/ui",
   href,

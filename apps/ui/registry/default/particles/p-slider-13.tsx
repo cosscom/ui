@@ -32,7 +32,6 @@ export default function Particle() {
   return (
     <div className="flex items-center gap-2">
       <NumberField
-        aria-label="Minimum value"
         className="w-10"
         max={values[1]}
         min={min}
@@ -41,10 +40,12 @@ export default function Particle() {
         size="sm"
         value={values[0]}
       >
-        <NumberFieldInput />
+        <NumberFieldInput aria-label="Minimum value" />
       </NumberField>
       <Slider
-        aria-label="Dual range slider"
+        getAriaLabel={(index) =>
+          index === 0 ? "Minimum value" : "Maximum value"
+        }
         className="flex-1 *:min-w-0!"
         max={max}
         min={min}
@@ -52,7 +53,6 @@ export default function Particle() {
         value={values}
       />
       <NumberField
-        aria-label="Maximum value"
         className="w-10"
         max={max}
         min={values[0]}
@@ -61,7 +61,7 @@ export default function Particle() {
         size="sm"
         value={values[1]}
       >
-        <NumberFieldInput />
+        <NumberFieldInput aria-label="Maximum value" />
       </NumberField>
     </div>
   );

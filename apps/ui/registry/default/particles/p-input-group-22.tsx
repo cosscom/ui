@@ -1,7 +1,7 @@
 "use client";
 
 import { XIcon } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/registry/default/ui/button";
 import {
   InputGroup,
@@ -10,6 +10,7 @@ import {
 } from "@/registry/default/ui/input-group";
 
 export default function Particle() {
+  const inputRef = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState("Clear me");
 
   return (
@@ -18,6 +19,7 @@ export default function Particle() {
         aria-label="Text input with clear button"
         onChange={(e) => setValue(e.target.value)}
         placeholder="Enter text"
+        ref={inputRef}
         type="text"
         value={value}
       />
@@ -25,7 +27,10 @@ export default function Particle() {
         <InputGroupAddon align="inline-end">
           <Button
             aria-label="Clear input"
-            onClick={() => setValue("")}
+            onClick={() => {
+              setValue("");
+              inputRef.current?.focus();
+            }}
             size="icon-xs"
             variant="ghost"
           >

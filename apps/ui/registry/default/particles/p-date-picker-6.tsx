@@ -29,7 +29,12 @@ export default function Particle() {
         {date ? format(date, "PPP") : "Pick a date"}
       </PopoverTrigger>
       <PopoverPopup>
-        <Calendar mode="single" onSelect={handleSelect} selected={date} />
+        <Calendar
+          defaultMonth={date}
+          mode="single"
+          onSelect={handleSelect}
+          selected={date}
+        />
       </PopoverPopup>
     </Popover>
   );

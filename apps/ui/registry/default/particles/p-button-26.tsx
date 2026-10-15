@@ -16,7 +16,7 @@ export default function Particle() {
       />
       <span className="flex items-baseline gap-2">
         {isStarred ? "Starred" : "Star"}
-        <span className="text-primary-foreground/60 text-xs">{count}</span>
+        <span className="text-primary-foreground/64 text-xs">{count}</span>
       </span>
     </Button>
   );

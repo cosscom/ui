@@ -26,7 +26,14 @@ export default function Particle() {
     <Form className="flex w-full flex-col gap-4" onSubmit={onSubmit}>
       <Fieldset className="flex w-full flex-col items-stretch gap-3">
         <Field>
-          <Slider name="volume" onValueChange={setValue} value={value}>
+          <Slider
+            getAriaLabel={(index) =>
+              index === 0 ? "Minimum volume" : "Maximum volume"
+            }
+            name="volume"
+            onValueChange={setValue}
+            value={value}
+          >
             <div className="mb-2 flex items-center justify-between gap-1">
               <FieldsetLegend>Volume</FieldsetLegend>
               <SliderValue />

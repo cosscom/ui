@@ -3,7 +3,7 @@ import { Radio, RadioGroup } from "@/registry/default/ui/radio-group";
 
 export default function Particle() {
   return (
-    <RadioGroup defaultValue="next">
+    <RadioGroup aria-label="Framework" defaultValue="next">
       <Label>
         <Radio value="next" /> Next.js
       </Label>

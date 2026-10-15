@@ -2,7 +2,6 @@
 
 import { ChevronDownIcon } from "lucide-react";
 import { useState } from "react";
-import { Badge } from "@/registry/default/ui/badge";
 import { Button } from "@/registry/default/ui/button";
 import { Checkbox } from "@/registry/default/ui/checkbox";
 import { CheckboxGroup } from "@/registry/default/ui/checkbox-group";
@@ -84,9 +83,9 @@ export default function Particle() {
                 render={<Button size="xs" />}
               >
                 Confirm selected
-                <Badge className="-me-1 text-primary-foreground/60">
+                <span className="text-primary-foreground/64 text-xs">
                   {selected.length}
-                </Badge>
+                </span>
               </PopoverClose>
             </div>
           </PopoverPopup>

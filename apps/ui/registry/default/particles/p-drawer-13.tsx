@@ -60,7 +60,7 @@ export default function Particle() {
         >
           <EllipsisIcon aria-hidden />
         </DrawerTrigger>
-        <DrawerPopup showBar>
+        <DrawerPopup aria-label="Actions" showBar>
           <DrawerPanel>
             <DrawerMenu>
               <DrawerMenuGroup>
@@ -102,7 +102,7 @@ export default function Particle() {
               <DrawerMenuSeparator />
               <Drawer>
                 <DrawerMenuTrigger>Add to Playlist</DrawerMenuTrigger>
-                <DrawerPopup showBar>
+                <DrawerPopup aria-label="Add to Playlist" showBar>
                   <DrawerPanel>
                     <DrawerMenu>
                       <DrawerMenuGroup>
@@ -115,7 +115,7 @@ export default function Particle() {
                       </DrawerClose>
                       <Drawer>
                         <DrawerMenuTrigger>Rock</DrawerMenuTrigger>
-                        <DrawerPopup showBar>
+                        <DrawerPopup aria-label="Rock" showBar>
                           <DrawerPanel>
                             <DrawerMenu>
                               <DrawerMenuGroup>

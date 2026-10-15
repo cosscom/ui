@@ -1018,7 +1018,7 @@ export const particles: ParticleItem[] = [
     description: "Icon-only copy button with feedback",
     files: [{ path: "particles/p-button-35.tsx", type: "registry:block" }],
     name: "p-button-35",
-    registryDependencies: ["@coss/button"],
+    registryDependencies: ["@coss/use-copy-to-clipboard", "@coss/button"],
     type: "registry:block",
   },
   {
@@ -1027,7 +1027,7 @@ export const particles: ParticleItem[] = [
     description: "Copy button with feedback",
     files: [{ path: "particles/p-button-36.tsx", type: "registry:block" }],
     name: "p-button-36",
-    registryDependencies: ["@coss/button"],
+    registryDependencies: ["@coss/use-copy-to-clipboard", "@coss/button"],
     type: "registry:block",
   },
   {
@@ -3247,7 +3247,7 @@ export const particles: ParticleItem[] = [
     description: "Basic OTP field",
     files: [{ path: "particles/p-otp-field-1.tsx", type: "registry:block" }],
     name: "p-otp-field-1",
-    registryDependencies: ["@coss/otp-field"],
+    registryDependencies: ["@coss/otp-field", "@coss/field"],
     type: "registry:block",
   },
   {
@@ -3255,7 +3255,7 @@ export const particles: ParticleItem[] = [
     description: "Large OTP field",
     files: [{ path: "particles/p-otp-field-2.tsx", type: "registry:block" }],
     name: "p-otp-field-2",
-    registryDependencies: ["@coss/otp-field"],
+    registryDependencies: ["@coss/otp-field", "@coss/field"],
     type: "registry:block",
   },
   {
@@ -3263,7 +3263,7 @@ export const particles: ParticleItem[] = [
     description: "OTP field with separator",
     files: [{ path: "particles/p-otp-field-3.tsx", type: "registry:block" }],
     name: "p-otp-field-3",
-    registryDependencies: ["@coss/otp-field"],
+    registryDependencies: ["@coss/otp-field", "@coss/field"],
     type: "registry:block",
   },
   {
@@ -3703,6 +3703,7 @@ export const particles: ParticleItem[] = [
     },
     name: "p-input-group-27",
     registryDependencies: [
+      "@coss/use-copy-to-clipboard",
       "@coss/button",
       "@coss/input-group",
       "@coss/select",
@@ -4202,7 +4203,6 @@ export const particles: ParticleItem[] = [
     files: [{ path: "particles/p-popover-4.tsx", type: "registry:block" }],
     name: "p-popover-4",
     registryDependencies: [
-      "@coss/badge",
       "@coss/button",
       "@coss/checkbox",
       "@coss/checkbox-group",

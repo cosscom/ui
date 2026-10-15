@@ -238,8 +238,16 @@ export default function Particle() {
             <TableRow className="hover:bg-transparent" key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 const columnSize = header.column.getSize();
+                const sort = header.column.getIsSorted();
                 return (
                   <TableHead
+                    aria-sort={
+                      sort === "asc"
+                        ? "ascending"
+                        : sort === "desc"
+                          ? "descending"
+                          : undefined
+                    }
                     key={header.id}
                     style={
                       columnSize ? { width: `${columnSize}px` } : undefined
@@ -275,7 +283,7 @@ export default function Particle() {
                               className="size-4 shrink-0 opacity-80"
                             />
                           ),
-                        }[header.column.getIsSorted() as string] ?? null}
+                        }[sort as string] ?? null}
                       </div>
                     ) : (
                       flexRender(

@@ -20,6 +20,7 @@ npm install @base-ui/react lucide-react
 ## Canonical imports
 
 ```tsx
+import { Field, FieldLabel } from "@/components/ui/field"
 import {
   OTPField,
   OTPFieldInput,
@@ -30,15 +31,18 @@ import {
 ## Minimal pattern
 
 ```tsx
-<OTPField aria-label="Verification code" length={6}>
-  <OTPFieldInput />
-  <OTPFieldInput aria-label="Character 2 of 6" />
-  <OTPFieldInput aria-label="Character 3 of 6" />
-  <OTPFieldSeparator />
-  <OTPFieldInput aria-label="Character 4 of 6" />
-  <OTPFieldInput aria-label="Character 5 of 6" />
-  <OTPFieldInput aria-label="Character 6 of 6" />
-</OTPField>
+<Field>
+  <FieldLabel className="sr-only">Verification code</FieldLabel>
+  <OTPField length={6}>
+    <OTPFieldInput />
+    <OTPFieldInput aria-label="Character 2 of 6" />
+    <OTPFieldInput aria-label="Character 3 of 6" />
+    <OTPFieldSeparator />
+    <OTPFieldInput aria-label="Character 4 of 6" />
+    <OTPFieldInput aria-label="Character 5 of 6" />
+    <OTPFieldInput aria-label="Character 6 of 6" />
+  </OTPField>
+</Field>
 ```
 
 ## Patterns from coss particles
@@ -50,8 +54,8 @@ OTP with label and controlled value:
 ```tsx
 const [value, setValue] = useState("")
 
-<div className="flex flex-col gap-2">
-  <Label>Verification code</Label>
+<Field>
+  <FieldLabel>Verification code</FieldLabel>
   <OTPField
     length={6}
     value={value}
@@ -65,7 +69,7 @@ const [value, setValue] = useState("")
     <OTPFieldInput aria-label="Character 5 of 6" />
     <OTPFieldInput aria-label="Character 6 of 6" />
   </OTPField>
-</div>
+</Field>
 ```
 
 Digit-only SMS-style codes use Base UI’s default `validationType` (`numeric`) and matching `inputMode`; set those props explicitly only when you need different behavior.
@@ -79,7 +83,7 @@ See `p-otp-field-1` through `p-otp-field-4` and `p-otp-field-6` through `p-otp-f
 ## Common pitfalls
 
 - Slot count mismatch with `length`, causing broken OTP UX.
-- Missing root labeling (`aria-label` or visible label), or adding per-slot labels to the first input.
+- A root `aria-label` does not name the first input. Use `Field` with a visible or visually hidden `FieldLabel`; the first input inherits it. Additional slots can use per-slot labels.
 - Using OTP slots for arbitrary text input instead of fixed verification codes.
 
 ## Useful particle references

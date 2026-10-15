@@ -24,6 +24,7 @@ export default function Particle() {
       <Popover>
         <InputGroupAddon>
           <PopoverTrigger
+            aria-label="Connection information"
             render={<Button size="icon-xs" variant="secondary" />}
           >
             <InfoIcon />
@@ -53,6 +54,8 @@ export default function Particle() {
       />
       <InputGroupAddon align="inline-end">
         <Button
+          aria-label="Favorite"
+          aria-pressed={isFavorite}
           onClick={() => setIsFavorite(!isFavorite)}
           size="icon-xs"
           variant="ghost"

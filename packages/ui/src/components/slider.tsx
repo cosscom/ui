@@ -6,13 +6,15 @@ import * as React from "react";
 
 export function Slider({
   className,
+  getAriaLabel,
   children,
   defaultValue,
   value,
   min = 0,
   max = 100,
   ...props
-}: SliderPrimitive.Root.Props): React.ReactElement {
+}: SliderPrimitive.Root.Props &
+  Pick<SliderPrimitive.Thumb.Props, "getAriaLabel">): React.ReactElement {
   const _values = React.useMemo(() => {
     if (value !== undefined) {
       return Array.isArray(value) ? value : [value];
@@ -50,6 +52,7 @@ export function Slider({
             <SliderPrimitive.Thumb
               className="block size-5 shrink-0 select-none rounded-full border border-input bg-white not-dark:bg-clip-padding shadow-xs/5 outline-none transition-[box-shadow,scale] before:absolute before:inset-0 before:rounded-full before:shadow-[0_1px_--theme(--color-black/4%)] has-focus-visible:ring-[3px] has-focus-visible:ring-ring/24 data-dragging:scale-120 sm:size-4 dark:border-background dark:has-focus-visible:ring-ring/48 [:has(*:focus-visible),[data-dragging]]:shadow-none"
               data-slot="slider-thumb"
+              getAriaLabel={getAriaLabel}
               index={index}
               key={String(index)}
             />

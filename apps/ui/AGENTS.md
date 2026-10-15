@@ -264,13 +264,13 @@ When using `InputGroupAddon`, it must always come **after** an `InputGroupInput`
 Note: The `align` prop controls visual positioning (e.g., `block-start` renders at top, `block-end` at bottom), but the DOM order must still have the input/textarea first for the focus behavior to work.
 
 **Icons inside Alerts:**
-- Icons in alerts are semantic (they convey the alert type/severity)
-- Do NOT use `aria-hidden` - screen readers should announce the icon's meaning
+- When an alert icon uniquely conveys type/severity, use `role="img"` and a purpose-specific `aria-label`. Lucide icons are hidden by default; omitting `aria-hidden` does not expose their meaning.
+- When visible text already conveys the same meaning, keep the icon decorative with `aria-hidden="true"`.
 
 ```tsx
-// ✅ Alert with icon (semantic, no aria-hidden)
+// ✅ Alert with an explicitly named semantic icon
 <Alert>
-  <InfoIcon />
+  <InfoIcon aria-label="Information" role="img" />
   <AlertTitle>Heads up!</AlertTitle>
   <AlertDescription>Description here.</AlertDescription>
 </Alert>
@@ -376,7 +376,7 @@ For consistency, always prefer `aria-label` over `sr-only` text for providing ac
 ```
 
 **Do NOT use `aria-hidden` when:**
-- The icon conveys important semantic information (e.g., alert icons that indicate severity/type)
+- The icon conveys unique semantic information; supply `role="img"` and a specific `aria-label` instead (e.g., an alert icon that indicates severity/type)
 - The icon is the only content AND the parent doesn't have `aria-label` (use `aria-label` on parent instead)
 
 ---

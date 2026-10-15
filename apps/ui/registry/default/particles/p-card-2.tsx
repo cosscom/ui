@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/registry/default/ui/button";
 import {
@@ -26,7 +28,10 @@ export default function Particle() {
         </CardAction>
       </CardHeader>
       <CardPanel>
-        <Form className="flex w-full flex-col gap-4">
+        <Form
+          className="flex w-full flex-col gap-4"
+          onSubmit={(event) => event.preventDefault()}
+        >
           <Field>
             <FieldLabel>Email</FieldLabel>
             <Input placeholder="Enter your email" type="email" />
