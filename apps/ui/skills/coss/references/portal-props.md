@@ -10,9 +10,11 @@ Use it when you need portal-level behavior from Base UI, for example:
 
 ## Surfaces that expose `portalProps`
 
-- **Modals / overlays:** `DialogPopup`, `AlertDialogPopup`, `SheetPopup`, `DrawerPopup`, `CommandDialogPopup`
+- **Modals / overlays:** `DialogPopup`, `AlertDialogPopup`, `DrawerPopup`, `CommandDialogPopup`
 - **Floating layers:** `MenuPopup`, `ContextMenuPopup`, `PopoverPopup`, `TooltipPopup`, `PreviewCardPopup`, `AutocompletePopup`, `ComboboxPopup`, `SelectPopup`
 - **Toast (providers, not a `*Popup` name):** `ToastProvider`, `AnchoredToastProvider` — `portalProps` is forwarded to the internal `Toast.Portal` for the stacked and anchored viewports, respectively
+
+The legacy `SheetPopup` also accepts `portalProps`; this is compatibility information, not a recommendation to use Sheet. Use [Drawer](primitives/drawer.md) instead.
 
 Only these surfaces accept `portalProps`. Any other registry component that portals content but is not listed here keeps the portal internal and is out of scope for this prop—compose Base UI parts yourself if you need direct portal control.
 

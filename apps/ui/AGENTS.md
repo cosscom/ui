@@ -535,7 +535,7 @@ When using Field components, place the checkbox/radio inside `FieldLabel`:
 </Field>
 ```
 
-**Dialog / sheet / drawer forms:** Keep **`DialogHeader`** (or sheet/drawer header) **outside** `<Form>`. Wrap **`DialogPanel`** + **`DialogFooter`** in **`<Form className="contents">`** (or native `<form className="contents">`) so the popup flex layout stays correct.
+**Dialog / drawer forms:** Use Drawer for edge panels; Sheet has been replaced and must not be introduced. Keep **`DialogHeader`** (or drawer header) **outside** `<Form>`. Wrap **`DialogPanel`** + **`DialogFooter`** in **`<Form className="contents">`** (or native `<form className="contents">`) so the popup flex layout stays correct.
 
 ---
 

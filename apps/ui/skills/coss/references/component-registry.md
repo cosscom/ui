@@ -10,7 +10,7 @@ For optional **`portalProps`** on composed `*Popup` components and **toast** pro
 ## Overlays & Popups
 - **Dialog** — Centered modal requiring user focus. `./references/primitives/dialog.md`
 - **AlertDialog** — Destructive/critical confirmation modal. `./references/primitives/alert-dialog.md`
-- **Sheet** — Side-panel overlay for settings/details. `./references/primitives/sheet.md`
+- **Sheet (legacy)** — Replaced by Drawer; do not use for new UI. Migration reference: `./references/primitives/sheet.md`
 - **Drawer** — Bottom/side drawer, often mobile-responsive. `./references/primitives/drawer.md`
 - **Popover** — Anchored non-modal floating content. `./references/primitives/popover.md`
 - **Tooltip** — Short hover/focus hint text. `./references/primitives/tooltip.md`

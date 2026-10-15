@@ -49,6 +49,7 @@ Always apply before returning coss code:
 
 - Do not invent coss APIs. Verify against component docs first.
 - For trigger-based primitives (Dialog, Menu, Select, Popover, Tooltip), follow each primitive's documented trigger/content hierarchy and composition API; do not mix patterns across components.
+- Use Drawer for edge panels on desktop and mobile. Sheet has been replaced by Drawer; do not introduce Sheet usage.
 - Preserve accessibility labels and error semantics.
 - Consult primitive-specific guides for component invariants and edge cases.
 - For manual install guidance, include all required dependencies and local component files referenced by imports.

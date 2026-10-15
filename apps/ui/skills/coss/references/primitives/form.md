@@ -47,7 +47,7 @@ import { Input } from "@/components/ui/input"
 ## Patterns from coss particles
 
 - `Form` usage in particles is intentionally lightweight; use the Base UI forms handbook patterns below for deeper validation/library integrations.
-- **Dialog / sheet / drawer:** Header **outside** the form; **`Form className="contents"`** wraps **panel + footer** only (`p-dialog-1`, `p-sheet-1`, `p-sheet-2`, `p-drawer-10`, `p-drawer-12`).
+- **Dialog / drawer:** Header **outside** the form; **`Form className="contents"`** wraps **panel + footer** only (`p-dialog-1`, `p-drawer-10`, `p-drawer-12`).
 
 ## Patterns from coss/Base UI forms
 

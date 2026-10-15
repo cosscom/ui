@@ -7,7 +7,7 @@
 
 ## When NOT to use
 
-- If the overlay should slide from the edge -> use Sheet or Drawer instead.
+- If the overlay should slide from the edge -> use Drawer instead.
 - If the interaction is a destructive confirmation -> use AlertDialog instead.
 - If the content is non-blocking contextual info -> use Popover instead.
 

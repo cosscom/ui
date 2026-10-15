@@ -20,7 +20,7 @@ Use this when composing complex UI from coss primitives and particles.
 | Tabs ([Tabs](../primitives/tabs.md)) | Tabs and panels with matching values | `TabsList` renders its active indicator |
 | Combobox chips ([Combobox](../primitives/combobox.md)) | Selected chip content | `ComboboxChip` renders its remove control |
 | Scrollable content ([Scroll Area](../primitives/scroll-area.md)) | Content | `ScrollArea` renders the viewport and scrollbars |
-| Overlay close affordance ([Dialog](../primitives/dialog.md), [Sheet](../primitives/sheet.md), [Drawer](../primitives/drawer.md)) | Add a close control to `DrawerPopup` when wanted | Dialog and Sheet popups show one by default; Drawer does not |
+| Overlay close affordance ([Dialog](../primitives/dialog.md), [Drawer](../primitives/drawer.md)) | Add a close control to `DrawerPopup` when wanted | Dialog popups show one by default; Drawer does not |
 
 ## Patterns
 
