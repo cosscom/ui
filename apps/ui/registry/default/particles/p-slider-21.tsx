@@ -64,7 +64,7 @@ export default function Particle() {
         onClick={() => setValues(defaultValues)}
         variant="outline"
       >
-        <RotateCcwIcon aria-hidden="true" className="-ms-1 opacity-60" />
+        <RotateCcwIcon aria-hidden="true" className="-ms-1 opacity-64" />
         Reset
       </Button>
     </Fieldset>
