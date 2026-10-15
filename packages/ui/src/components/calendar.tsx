@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@coss/ui/lib/utils";
-import { DayPicker } from "@daypicker/react";
+import { type DateLib, DayPicker } from "@daypicker/react";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -123,8 +123,8 @@ export function Calendar({
     components: mergedComponents,
     "data-slot": "calendar",
     formatters: {
-      formatMonthDropdown: (date: Date) =>
-        date.toLocaleString("default", { month: "short" }),
+      formatMonthDropdown: (month: Date, dateLib: DateLib) =>
+        dateLib.format(month, "LLL"),
     } as React.ComponentProps<typeof DayPicker>["formatters"],
     mode,
     showOutsideDays,
