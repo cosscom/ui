@@ -63,6 +63,22 @@ Tooltip on an icon-only button:
 </Tooltip>
 ```
 
+Tooltip explaining why a button is disabled:
+
+```tsx
+<Tooltip>
+  <TooltipTrigger render={<span className="inline-flex" tabIndex={0} />}>
+    <Button disabled>Publish</Button>
+  </TooltipTrigger>
+  <TooltipPopup>Add a title before publishing</TooltipPopup>
+</Tooltip>
+```
+
+- A disabled `Button` sets the native `disabled` attribute and `pointer-events-none`, so it never receives hover or focus. Putting `TooltipTrigger render={<Button disabled />}` directly on it means the tooltip never opens.
+- Render the trigger as a wrapper `span` instead (`TooltipTrigger` renders a `<button>` by default, which cannot contain another button). Hover passes through the disabled button to the span.
+- `tabIndex={0}` keeps the reason reachable by keyboard, since the disabled button is skipped in tab order. Use `inline-flex` (or `block`/`w-full` for full-width buttons) so the wrapper matches the button's box.
+- When the button becomes enabled, drop the wrapper or render the tooltip only while disabled, so the span does not add an extra tab stop.
+
 Grouped tooltips (shared delay/provider):
 
 ```tsx
@@ -87,6 +103,7 @@ See `p-tooltip-1` through `p-tooltip-3` for basic, grouped, and animated tooltip
 - Placing interactive controls inside tooltip content (tooltip should stay informational).
 - Relying on tooltip as sole label for icon-only controls (still provide accessible name).
 - Using tooltip for long-form content that should be popover/dialog.
+- Attaching a tooltip trigger directly to a disabled button; wrap it in a focusable `span` trigger instead (see above).
 
 ## Useful particle references
 

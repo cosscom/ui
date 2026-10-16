@@ -87,12 +87,14 @@ Drawer with a visible drag handle:
       {/* Form content */}
     </DrawerPanel>
     <DrawerFooter>
-      <Button>Save</Button>
       <DrawerClose render={<Button variant="ghost" />}>Cancel</DrawerClose>
+      <Button>Save</Button>
     </DrawerFooter>
   </DrawerPopup>
 </Drawer>
 ```
+
+**Footer action order**: write Cancel first and the primary action last. `DrawerFooter` is `flex-col-reverse` on mobile and `sm:flex-row sm:justify-end` from `sm` up, so source order puts the primary action on the right on desktop and on top when stacked. The same applies to `DialogFooter` and `AlertDialogFooter`.
 
 Responsive drawer + dialog (drawer on mobile, dialog on desktop): see `p-drawer-12`.
 
@@ -104,6 +106,7 @@ See `p-drawer-1` through `p-drawer-13` for inset, straight, scrollable, nested, 
 
 - Choosing Sheet for desktop side panels; use Drawer. Use Dialog for centered modal flows.
 - Forgetting responsive switch logic when drawer is mobile-only variant.
+- Putting the primary action before Cancel in `DrawerFooter`; the reversed mobile stack then puts Cancel on top and the primary on the left on desktop.
 - Breaking section layout by putting the whole dialog in a block-level `<form>`; prefer **header outside**, **`Form className="contents"`** around **panel + footer** (see dialog/form skills).
 
 ## Useful particle references

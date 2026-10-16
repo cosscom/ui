@@ -99,6 +99,7 @@ Prefer the `loading` prop for typical async actions. Use the composite approach 
 
 - Omitting explicit `type` inside forms/dialogs and triggering unintended submit behavior.
 - Using icon-only buttons without `aria-label` on the button.
+- Expecting a disabled button to show a tooltip: `disabled` sets the native attribute plus `pointer-events-none`, so the button gets no hover or focus. Wrap it in a focusable `span` rendered as the `TooltipTrigger` (see [tooltip.md](./tooltip.md)).
 - Rebuilding button state styling with ad-hoc classes instead of variants/sizes.
 - Using `SelectButton` as if it were a general-purpose `Button`; `SelectButton` is a select-flavored trigger helper and should be treated as a `select`/`combobox` pattern.
 

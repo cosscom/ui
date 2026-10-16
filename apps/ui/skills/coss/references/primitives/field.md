@@ -50,16 +50,43 @@ import { Input } from "@/components/ui/input"
 
 ### Key patterns
 
-Required field with error:
+Required field with error (Base UI constraint validation):
 
 ```tsx
 <Field name="email">
-  <FieldLabel>Email *</FieldLabel>
+  <FieldLabel>
+    Email <span className="text-destructive-foreground">*</span>
+  </FieldLabel>
   <Input type="email" required placeholder="name@company.com" />
   <FieldDescription>We'll never share your email.</FieldDescription>
   <FieldError>Please enter a valid email.</FieldError>
 </Field>
 ```
+
+Native constraint attributes (`required`, `type="email"`, `min`, `pattern`, …) are the validation source here: `Field` reads the control's `ValidityState` and `FieldError` renders when it fails. Use this only when the browser constraints are the single source of truth.
+
+Required field with React Hook Form (or another schema/form library):
+
+```tsx
+const { formState: { errors }, handleSubmit, register } = useForm<Values>({
+  resolver: zodResolver(schema),
+})
+
+<form noValidate onSubmit={handleSubmit(onSubmit)}>
+  <Field invalid={!!errors.email} name="email">
+    <FieldLabel>
+      Email <span className="text-destructive-foreground">*</span>
+    </FieldLabel>
+    <Input type="email" {...register("email")} placeholder="name@company.com" />
+    <FieldError>{errors.email?.message}</FieldError>
+  </Field>
+</form>
+```
+
+- Let the library own validation: drop `required` (and other constraint attributes like `min`/`max`/`pattern`) from the control and express them in the schema.
+- Use a plain `<form noValidate>`. Without `noValidate`, the browser's native validation blocks submit and shows its own bubble before `handleSubmit` runs; with it, `type="email"` can stay for the mobile keyboard and autofill.
+- If you wrap the fields in coss `Form` instead: it already sets `noValidate`, but each `Field` inside it still runs native constraint checks on submit (including `type="email"` mismatches) and cancels the submit, focusing the first invalid control, before your `onSubmit` handler fires. Remove every constraint attribute in that case (use `inputMode="email"` for the keyboard).
+- Drive the error state from the library: `invalid` on `Field` and the message as `FieldError` children. The asterisk is visual only; the schema enforces it.
 
 Field wrapping an autocomplete:
 
@@ -86,6 +113,7 @@ See `p-field-1` through `p-field-9` for required, disabled, error, validity, inp
 
 - Rendering errors detached from the related control, breaking context.
 - Missing `name` in form flows, causing silent submit omissions.
+- Mixing native constraint attributes (`required`, `min`, `pattern`) with React Hook Form or another schema validator; native/Base UI validation runs first and the library's errors never show.
 - Using field wrapper without corresponding label/description/error semantics.
 
 ## Useful particle references

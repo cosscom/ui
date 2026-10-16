@@ -62,6 +62,31 @@ import {
 
 Use popup positioning props like `align` / `sideOffset` only when a layout needs explicit tuning.
 
+Destructive item with confirmation:
+
+```tsx
+const [confirmOpen, setConfirmOpen] = useState(false)
+
+<>
+  <Menu>
+    <MenuTrigger render={<Button aria-label="Project actions" size="icon" variant="ghost" />}>
+      <EllipsisIcon aria-hidden="true" />
+    </MenuTrigger>
+    <MenuPopup align="end">
+      <MenuItem>Rename</MenuItem>
+      <MenuItem>Duplicate</MenuItem>
+      <MenuSeparator />
+      <MenuItem onClick={() => setConfirmOpen(true)} variant="destructive">
+        Delete
+      </MenuItem>
+    </MenuPopup>
+  </Menu>
+  <AlertDialog onOpenChange={setConfirmOpen} open={confirmOpen}>
+    <AlertDialogPopup>{/* header + footer, see alert-dialog.md */}</AlertDialogPopup>
+  </AlertDialog>
+</>
+```
+
 ## Patterns from coss particles
 
 - **Portal forwarding**: optional `portalProps` on `MenuPopup` → Base UI `Menu.Portal` (`keepMounted`, `container`, …). See [portal-props.md](../portal-props.md).
@@ -72,7 +97,8 @@ Use popup positioning props like `align` / `sideOffset` only when a layout needs
 - Use `MenuCheckboxItem variant="switch"` for toggle-style preferences.
 - Use `MenuRadioGroup` + `MenuRadioItem` with a `defaultValue` when enforcing single-choice selection.
 - Use `MenuShortcut` to display keyboard hints in dense command menus.
-- Use `variant="destructive"` on dangerous actions.
+- Use `variant="destructive"` on dangerous actions, and put them last, after a `MenuSeparator`, so they are visually apart from routine actions and harder to hit by accident.
+- When an item needs confirmation (e.g. Delete), the item only sets state; render the `AlertDialog` (or `Dialog`) as a sibling of `Menu`, controlled by `open` / `onOpenChange`. Never nest the dialog inside `MenuPopup`: the popup unmounts when the menu closes, taking the dialog with it. See `p-dialog-2`.
 - For responsive action menus, keep desktop on `Menu` and switch mobile to `DrawerMenu` / `DrawerMenuTrigger` / `DrawerMenuItem` patterns.
 - In `DrawerMenu` flows, wrap actionable rows with `DrawerClose render={<DrawerMenuItem />}` when selection should dismiss the drawer.
 
@@ -81,6 +107,8 @@ Use popup positioning props like `align` / `sideOffset` only when a layout needs
 - Forgetting `MenuGroup` around grouped structures.
 - Missing submenu pair (`MenuSubTrigger` + `MenuSubPopup`) for nested actions.
 - Mixing navigation and action items without clear close behavior (`closeOnClick`) and semantics.
+- Placing destructive items in the middle of the list or without a separator.
+- Nesting an `AlertDialog`/`Dialog` (or its trigger) inside `MenuPopup` for a confirm step; keep it a sibling of `Menu` driven by state.
 
 ## Useful particle references
 
