@@ -100,9 +100,7 @@ A `size-*` utility still resizes a single avatar, because tailwind-merge replace
 
 <ComponentPreview name="p-avatar-3" />
 
-Because the property is inherited, one declaration on a container sizes every avatar inside it:
-
-<ComponentPreview name="p-avatar-19" />
+Because the property is inherited, one declaration on a container sizes every avatar inside it.
 
 ## API Reference
 
@@ -178,49 +176,11 @@ The "+N" chip that ends a group. It is an `Avatar` with a fallback, so it is siz
 
 <ComponentPreview name="p-avatar-2" />
 
-### Icon Fallback
-
-<ComponentPreview name="p-avatar-6" />
-
 ### Different Radius
 
 <ComponentPreview name="p-avatar-4" />
 
-### As A Button
-
-Use Base UI's `render` prop rather than wrapping the avatar. Give it an accessible name and a focus-visible treatment.
-
-<ComponentPreview name="p-avatar-17" />
-
-### As A Link
-
-<ComponentPreview name="p-avatar-18" />
-
-### With A Tooltip
-
-`TooltipTrigger` renders the avatar, so the trigger and the avatar are the same element.
-
-<ComponentPreview name="p-avatar-20" />
-
-### Status
-
-A status dot sits outside the avatar, in a `relative` wrapper, because the avatar clips its own content.
-
-<ComponentPreview name="p-avatar-7" />
-
-<ComponentPreview name="p-avatar-9" />
-
-### Notification Badge
-
-<ComponentPreview name="p-avatar-10" />
-
-### Verified Badge
-
-<ComponentPreview name="p-avatar-12" />
-
-### Avatar Group
-
-The first avatar stays a whole circle and every avatar after it is clipped by the one before.
+### Group Avatars
 
 <ComponentPreview name="p-avatar-5" />
 
@@ -229,18 +189,3 @@ The first avatar stays a whole circle and every avatar after it is clipped by th
 Set `topmost="last"` for the conventional order, where the last avatar is the one left intact.
 
 <ComponentPreview name="p-avatar-16" />
-
-### Group With Tooltips
-
-`Tooltip` renders no element of its own, so each avatar stays a direct child of the group and the clipping still works. Note that `TooltipTrigger` replaces the avatar's `data-slot` with `tooltip-trigger`, so any CSS you write against `[data-slot=avatar]` will not match a tooltipped avatar.
-
-<ComponentPreview name="p-avatar-21" />
-
-### Group Sizes
-
-Size the group, not the avatars inside it.
-
-<ComponentPreview name="p-avatar-13" />
-
-<ComponentPreview name="p-avatar-14" />
-
