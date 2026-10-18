@@ -1761,6 +1761,24 @@ export const Index: Record<string, any> = {
     categories: ["avatar"],
     meta: undefined,
   },
+  "p-avatar-16": {
+    name: "p-avatar-16",
+    description: "Avatar group with a count and the last avatar on top",
+    type: "registry:block",
+    registryDependencies: ["@coss/avatar"],
+    files: [{
+      path: "registry/default/particles/p-avatar-16.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-avatar-16.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["avatar"],
+    meta: undefined,
+  },
   "p-avatar-6": {
     name: "p-avatar-6",
     description: "Avatar with user icon fallback",
@@ -1917,6 +1935,24 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/default/particles/p-avatar-14.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["avatar"],
+    meta: undefined,
+  },
+  "p-avatar-15": {
+    name: "p-avatar-15",
+    description: "Avatar group with the last avatar on top",
+    type: "registry:block",
+    registryDependencies: ["@coss/avatar"],
+    files: [{
+      path: "registry/default/particles/p-avatar-15.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-avatar-15.tsx")
       const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
       return { default: mod.default || mod[exportName] }
     }),

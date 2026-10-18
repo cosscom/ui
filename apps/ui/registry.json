@@ -1915,6 +1915,23 @@
       "categories": [
         "avatar"
       ],
+      "description": "Avatar group with a count and the last avatar on top",
+      "files": [
+        {
+          "path": "registry/default/particles/p-avatar-16.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "name": "p-avatar-16",
+      "registryDependencies": [
+        "@coss/avatar"
+      ],
+      "type": "registry:block"
+    },
+    {
+      "categories": [
+        "avatar"
+      ],
       "dependencies": [
         "lucide-react"
       ],
@@ -2064,6 +2081,23 @@
         }
       ],
       "name": "p-avatar-14",
+      "registryDependencies": [
+        "@coss/avatar"
+      ],
+      "type": "registry:block"
+    },
+    {
+      "categories": [
+        "avatar"
+      ],
+      "description": "Avatar group with the last avatar on top",
+      "files": [
+        {
+          "path": "registry/default/particles/p-avatar-15.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "name": "p-avatar-15",
       "registryDependencies": [
         "@coss/avatar"
       ],
