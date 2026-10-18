@@ -1707,6 +1707,24 @@ export const Index: Record<string, any> = {
     categories: ["avatar"],
     meta: undefined,
   },
+  "p-avatar-6": {
+    name: "p-avatar-6",
+    description: "Avatar with user icon fallback",
+    type: "registry:block",
+    registryDependencies: ["@coss/avatar"],
+    files: [{
+      path: "registry/default/particles/p-avatar-6.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-avatar-6.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["avatar"],
+    meta: undefined,
+  },
   "p-avatar-3": {
     name: "p-avatar-3",
     description: "Avatars with different sizes",
@@ -1725,6 +1743,24 @@ export const Index: Record<string, any> = {
     categories: ["avatar"],
     meta: undefined,
   },
+  "p-avatar-19": {
+    name: "p-avatar-19",
+    description: "Avatars sized from a parent element",
+    type: "registry:block",
+    registryDependencies: ["@coss/avatar"],
+    files: [{
+      path: "registry/default/particles/p-avatar-19.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-avatar-19.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["avatar"],
+    meta: undefined,
+  },
   "p-avatar-4": {
     name: "p-avatar-4",
     description: "Avatars with different radii",
@@ -1737,60 +1773,6 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/default/particles/p-avatar-4.tsx")
-      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
-      return { default: mod.default || mod[exportName] }
-    }),
-    categories: ["avatar"],
-    meta: undefined,
-  },
-  "p-avatar-5": {
-    name: "p-avatar-5",
-    description: "Overlapping avatar group",
-    type: "registry:block",
-    registryDependencies: ["@coss/avatar"],
-    files: [{
-      path: "registry/default/particles/p-avatar-5.tsx",
-      type: "registry:block",
-      target: ""
-    }],
-    component: React.lazy(async () => {
-      const mod = await import("@/registry/default/particles/p-avatar-5.tsx")
-      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
-      return { default: mod.default || mod[exportName] }
-    }),
-    categories: ["avatar"],
-    meta: undefined,
-  },
-  "p-avatar-16": {
-    name: "p-avatar-16",
-    description: "Avatar group with a count and the last avatar on top",
-    type: "registry:block",
-    registryDependencies: ["@coss/avatar"],
-    files: [{
-      path: "registry/default/particles/p-avatar-16.tsx",
-      type: "registry:block",
-      target: ""
-    }],
-    component: React.lazy(async () => {
-      const mod = await import("@/registry/default/particles/p-avatar-16.tsx")
-      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
-      return { default: mod.default || mod[exportName] }
-    }),
-    categories: ["avatar"],
-    meta: undefined,
-  },
-  "p-avatar-6": {
-    name: "p-avatar-6",
-    description: "Avatar with user icon fallback",
-    type: "registry:block",
-    registryDependencies: ["@coss/avatar"],
-    files: [{
-      path: "registry/default/particles/p-avatar-6.tsx",
-      type: "registry:block",
-      target: ""
-    }],
-    component: React.lazy(async () => {
-      const mod = await import("@/registry/default/particles/p-avatar-6.tsx")
       const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
       return { default: mod.default || mod[exportName] }
     }),
@@ -1905,6 +1887,60 @@ export const Index: Record<string, any> = {
     categories: ["avatar"],
     meta: undefined,
   },
+  "p-avatar-5": {
+    name: "p-avatar-5",
+    description: "Overlapping avatar group",
+    type: "registry:block",
+    registryDependencies: ["@coss/avatar"],
+    files: [{
+      path: "registry/default/particles/p-avatar-5.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-avatar-5.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["avatar"],
+    meta: undefined,
+  },
+  "p-avatar-16": {
+    name: "p-avatar-16",
+    description: "Avatar group with a count and the last avatar on top",
+    type: "registry:block",
+    registryDependencies: ["@coss/avatar"],
+    files: [{
+      path: "registry/default/particles/p-avatar-16.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-avatar-16.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["avatar"],
+    meta: undefined,
+  },
+  "p-avatar-15": {
+    name: "p-avatar-15",
+    description: "Avatar group with the last avatar on top",
+    type: "registry:block",
+    registryDependencies: ["@coss/avatar"],
+    files: [{
+      path: "registry/default/particles/p-avatar-15.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-avatar-15.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["avatar"],
+    meta: undefined,
+  },
   "p-avatar-13": {
     name: "p-avatar-13",
     description: "Small overlapping avatar group",
@@ -1941,18 +1977,36 @@ export const Index: Record<string, any> = {
     categories: ["avatar"],
     meta: undefined,
   },
-  "p-avatar-15": {
-    name: "p-avatar-15",
-    description: "Avatar group with the last avatar on top",
+  "p-avatar-18": {
+    name: "p-avatar-18",
+    description: "Avatar group with custom overlap and gap",
     type: "registry:block",
     registryDependencies: ["@coss/avatar"],
     files: [{
-      path: "registry/default/particles/p-avatar-15.tsx",
+      path: "registry/default/particles/p-avatar-18.tsx",
       type: "registry:block",
       target: ""
     }],
     component: React.lazy(async () => {
-      const mod = await import("@/registry/default/particles/p-avatar-15.tsx")
+      const mod = await import("@/registry/default/particles/p-avatar-18.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["avatar"],
+    meta: undefined,
+  },
+  "p-avatar-17": {
+    name: "p-avatar-17",
+    description: "Avatar group clipped over a gradient surface",
+    type: "registry:block",
+    registryDependencies: ["@coss/avatar"],
+    files: [{
+      path: "registry/default/particles/p-avatar-17.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-avatar-17.tsx")
       const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
       return { default: mod.default || mod[exportName] }
     }),

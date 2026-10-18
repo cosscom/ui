@@ -3,6 +3,73 @@ title: Changelog
 description: Breaking changes, migration guides, and notable updates.
 ---
 
+## October 18, 2026
+
+### Avatar group clipping and inherited sizing
+
+**`AvatarGroup`** and **`AvatarGroupCount`** are new. Overlapping avatars are separated by masking each one with its neighbour's circle, so the gap between them is **transparent rather than a coloured ring**. A stack now keeps its shape on gradients, photographs and translucent panels, where a ring tinted with the page background does not.
+
+```tsx
+<AvatarGroup>
+  <Avatar>…</Avatar>
+  <Avatar>…</Avatar>
+  <AvatarGroupCount>+2</AvatarGroupCount>
+</AvatarGroup>
+```
+
+**`topmost`** picks which end of the stack stays a whole circle — **`"first"`** by default, **`"last"`** for the conventional order.
+
+**`Avatar`** now takes every dimension from one inherited custom property, **`--avatar-size`** (default 32px). Font size scales with it, and a group derives its overlap, gap and initials nudge from it. Set it on the avatar, the group, or any ancestor:
+
+```tsx
+<div className="[--avatar-size:--spacing(10)]">{/* every avatar below is 40px */}</div>
+```
+
+**`--avatar-overlap`**, **`--avatar-gap`** and **`--avatar-nudge`** tune a group and inherit the same way.
+
+Two defaults changed: **`AvatarFallback`** uses **`bg-border`** instead of **`bg-muted`**, which is twice the contrast, and **`Avatar`** no longer paints **`bg-background`** behind its content. **`AvatarImage`** and **`AvatarFallback`** now follow the root radius through **`rounded-[inherit]`**, so a rounded avatar no longer has to repeat its radius on the fallback.
+
+Browsers without **`mask-composite`** (Chrome and Edge 111–119) fall back to a plain overlap with no gap. Nothing else degrades.
+
+**Migration:**
+
+Existing **`Avatar`** JSX requires no changes. A **`size-*`** class still resizes a single avatar, because tailwind-merge replaces the base size utility — but it leaves **`--avatar-size`** untouched, so the font size and any group geometry stay at the inherited value. Prefer the property:
+
+```diff
+- <Avatar className="size-10">
++ <Avatar className="[--avatar-size:--spacing(10)]">
+```
+
+Once an avatar is sized this way, a hand-tuned font size on its fallback is usually redundant:
+
+```diff
+- <AvatarFallback className="text-[10px]">JD</AvatarFallback>
++ <AvatarFallback>JD</AvatarFallback>
+```
+
+Replacing a hand-rolled ring stack with **`AvatarGroup`** means dropping the negative spacing and the ring utilities:
+
+```diff
+- <div className="flex -space-x-2">
+-   <Avatar className="ring-2 ring-background">…</Avatar>
+- </div>
++ <AvatarGroup>
++   <Avatar>…</Avatar>
++ </AvatarGroup>
+```
+
+If you relied on the lighter **`bg-muted`** fallback or on **`bg-background`** behind a transparent image, set those explicitly on your own instances.
+
+```bash
+npx shadcn@latest add @coss/avatar
+```
+
+**Agent migration prompt:**
+
+```text
+Update the local coss Avatar component to the version with AvatarGroup, then migrate call sites. Install with `npx shadcn@latest add @coss/avatar`. Avatar now derives its box, font size and group geometry from one inherited custom property, --avatar-size (default 32px); --avatar-overlap, --avatar-gap and --avatar-nudge tune groups and inherit the same way. Replace size-* classes on Avatar with [--avatar-size:--spacing(N)] using the same N, and set it on a shared ancestor when several avatars share a size. After converting, delete hand-tuned text-* classes on AvatarFallback unless the design needs a size other than the derived one — the derived size is --avatar-size * 0.375. Replace hand-rolled overlapping stacks (flex with -space-x-* plus ring-2 ring-background on each avatar) with AvatarGroup, removing the negative spacing and ring utilities; add topmost="last" if the original kept the last avatar whole. Use AvatarGroupCount for a trailing "+N" chip instead of an Avatar with a fallback. Inside a group every avatar must be the same size, so set --avatar-size on the group, never on individual avatars. A status dot or badge on a clipped avatar is clipped with it; keep those on the avatar that stays whole, and place them in a relative wrapper as a sibling of Avatar rather than inside it. Note two visual default changes to review: AvatarFallback uses bg-border instead of bg-muted, and Avatar no longer paints bg-background. Run formatting and typechecking, then visually check avatars at every size the app uses, including any on gradients or images.
+```
+
 ## August 19, 2026
 
 ### Tabs sizing and segmented control styles

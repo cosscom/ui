@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "p-avatar-19",
+  "description": "Avatars sized from a parent element",
+  "registryDependencies": [
+    "@coss/avatar"
+  ],
+  "files": [
+    {
+      "path": "registry/default/particles/p-avatar-19.tsx",
+      "content": "import {\n  Avatar,\n  AvatarFallback,\n  AvatarImage,\n} from \"@/registry/default/ui/avatar\";\n\nconst people = [\n  {\n    initials: \"FK\",\n    name: \"Frida Kahlo\",\n    photo: \"photo-1543610892-0b1f7e6d8ac1\",\n    role: \"Design\",\n  },\n  {\n    initials: \"NE\",\n    name: \"Nadia Ekman\",\n    photo: \"photo-1628157588553-5eeea00af15c\",\n    role: \"Engineering\",\n  },\n  { initials: \"EW\", name: \"Eli Wren\", photo: \"\", role: \"Research\" },\n];\n\nexport default function Particle() {\n  return (\n    <div className=\"flex w-full flex-col gap-4 [--avatar-size:--spacing(10)]\">\n      {people.map((person) => (\n        <div className=\"flex items-center gap-3\" key={person.initials}>\n          <Avatar>\n            {person.photo ? (\n              <AvatarImage\n                alt={person.name}\n                src={`https://images.unsplash.com/${person.photo}?w=120&h=120&dpr=2&q=80`}\n              />\n            ) : null}\n            <AvatarFallback>{person.initials}</AvatarFallback>\n          </Avatar>\n          <div className=\"flex min-w-0 flex-col\">\n            <span className=\"truncate font-medium text-sm\">{person.name}</span>\n            <span className=\"truncate text-muted-foreground text-xs\">\n              {person.role}\n            </span>\n          </div>\n        </div>\n      ))}\n    </div>\n  );\n}\n",
+      "type": "registry:block"
+    }
+  ],
+  "categories": [
+    "avatar"
+  ],
+  "type": "registry:block"
+}

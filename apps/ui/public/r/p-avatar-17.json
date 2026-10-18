@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "p-avatar-17",
+  "description": "Avatar group clipped over a gradient surface",
+  "registryDependencies": [
+    "@coss/avatar"
+  ],
+  "files": [
+    {
+      "path": "registry/default/particles/p-avatar-17.tsx",
+      "content": "import {\n  Avatar,\n  AvatarFallback,\n  AvatarGroup,\n  AvatarGroupCount,\n  AvatarImage,\n} from \"@/registry/default/ui/avatar\";\n\nexport default function Particle() {\n  return (\n    <div className=\"rounded-xl bg-linear-to-br from-indigo-300 via-fuchsia-300 to-amber-200 p-6\">\n      <AvatarGroup>\n        <Avatar>\n          <AvatarImage\n            alt=\"Frida Kahlo\"\n            src=\"https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?w=96&h=96&dpr=2&q=80\"\n          />\n          <AvatarFallback>FK</AvatarFallback>\n        </Avatar>\n        <Avatar>\n          <AvatarImage\n            alt=\"Nadia Ekman\"\n            src=\"https://images.unsplash.com/photo-1628157588553-5eeea00af15c?w=96&h=96&dpr=2&q=80\"\n          />\n          <AvatarFallback>NE</AvatarFallback>\n        </Avatar>\n        <Avatar>\n          <AvatarImage\n            alt=\"Eli Wren\"\n            src=\"https://images.unsplash.com/photo-1655874819398-c6dfbec68ac7?w=96&h=96&dpr=2&q=80\"\n          />\n          <AvatarFallback>EW</AvatarFallback>\n        </Avatar>\n        <AvatarGroupCount>+2</AvatarGroupCount>\n      </AvatarGroup>\n    </div>\n  );\n}\n",
+      "type": "registry:block"
+    }
+  ],
+  "categories": [
+    "avatar"
+  ],
+  "type": "registry:block"
+}

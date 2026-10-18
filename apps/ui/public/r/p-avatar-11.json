@@ -9,7 +9,7 @@
   "files": [
     {
       "path": "registry/default/particles/p-avatar-11.tsx",
-      "content": "import {\n  Avatar,\n  AvatarFallback,\n  AvatarImage,\n} from \"@/registry/default/ui/avatar\";\nimport { Badge } from \"@/registry/default/ui/badge\";\n\nexport default function Particle() {\n  return (\n    <div className=\"relative\">\n      <Avatar className=\"rounded-lg\">\n        <AvatarImage\n          alt=\"User\"\n          src=\"https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?w=128&h=128&dpr=2&q=80\"\n        />\n        <AvatarFallback className=\"rounded-lg\">LT</AvatarFallback>\n      </Avatar>\n      <Badge\n        className=\"absolute -end-1.5 -top-1.5 rounded-full outline-2 outline-background outline-solid\"\n        size=\"sm\"\n      >\n        6\n      </Badge>\n    </div>\n  );\n}\n",
+      "content": "import {\n  Avatar,\n  AvatarFallback,\n  AvatarImage,\n} from \"@/registry/default/ui/avatar\";\nimport { Badge } from \"@/registry/default/ui/badge\";\n\nexport default function Particle() {\n  return (\n    <div className=\"relative\">\n      <Avatar className=\"rounded-lg\">\n        <AvatarImage\n          alt=\"User\"\n          src=\"https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?w=128&h=128&dpr=2&q=80\"\n        />\n        <AvatarFallback>LT</AvatarFallback>\n      </Avatar>\n      <Badge\n        className=\"absolute -end-1.5 -top-1.5 rounded-full outline-2 outline-background outline-solid\"\n        size=\"sm\"\n      >\n        6\n      </Badge>\n    </div>\n  );\n}\n",
       "type": "registry:block"
     }
   ],

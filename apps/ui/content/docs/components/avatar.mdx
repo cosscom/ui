@@ -80,31 +80,90 @@ Use `keepMounted` when the image relies on native lazy loading or an optimized i
 </Avatar>
 ```
 
+## Sizing
+
+Every dimension of an avatar comes from one inherited custom property, `--avatar-size`. It defaults to 32px, and the font size, the group overlap, the gap and the initials nudge are all derived from it.
+
+Set it on the avatar, on a group, or on any ancestor:
+
+```tsx
+<Avatar className="[--avatar-size:--spacing(12)]">…</Avatar>
+
+<AvatarGroup className="[--avatar-size:--spacing(6)]">…</AvatarGroup>
+
+<div className="[--avatar-size:--spacing(10)]">
+  {/* every avatar below is 40px */}
+</div>
+```
+
+A `size-*` utility still resizes a single avatar, because tailwind-merge replaces the base size utility. It does **not** update `--avatar-size`, so the font size and any group geometry stay at the inherited value. Prefer `--avatar-size` and reach for `size-*` only when you want the box to change and nothing else.
+
+<ComponentPreview name="p-avatar-3" />
+
+Because the property is inherited, one declaration on a container sizes every avatar inside it:
+
+<ComponentPreview name="p-avatar-19" />
+
 ## API Reference
 
 ### Avatar
 
-Root component. Styled wrapper for `Avatar.Root` from Base UI with rounded-full styling.
+Root component. Styled wrapper for `Avatar.Root` from Base UI, round by default and sized from `--avatar-size`.
 
-Sizing is driven by `--avatar-size`, which defaults to 32px and scales the font size with it. The property is inherited, so set it on the avatar itself or on any ancestor — an `AvatarGroup`, a card, a whole page:
+It renders a `<span>`. To make an avatar interactive, use Base UI's `render` prop rather than wrapping it:
 
 ```tsx
-<Avatar className="[--avatar-size:--spacing(12)]">…</Avatar>
+<Avatar render={<button type="button" />}>…</Avatar>
+<Avatar render={<a href="/people/ada" />}>…</Avatar>
 ```
 
-A `size-*` utility still resizes a single avatar, but it leaves `--avatar-size` alone, so the font size and any group geometry stay at the inherited value.
+An interactive avatar needs an accessible name. `AvatarImage`'s `alt` supplies one; a fallback-only avatar does not, so add `aria-label`.
 
 ### AvatarImage
 
-Image element for the avatar. Styled wrapper for `Avatar.Image` from Base UI with support for `keepMounted` images.
+Image element. Styled wrapper for `Avatar.Image` from Base UI, with support for `keepMounted` images.
 
 ### AvatarFallback
 
-Fallback content displayed when the image fails to load. Styled wrapper for `Avatar.Fallback` from Base UI with muted background.
+Shown while the image loads or when it fails, and whenever no image is given. Base UI unmounts it once the image loads.
+
+It inherits its font size from the avatar, so it scales automatically. Override it on the fallback when a specific size is needed:
+
+```tsx
+<AvatarFallback className="text-[10px]">JD</AvatarFallback>
+```
+
+### AvatarGroup
+
+Lays out overlapping avatars. Each avatar is masked with a circle matching its neighbour, so the avatars are separated by a **transparent gap rather than a ring**. The stack therefore holds its shape on gradients, images and translucent panels, where a ring tinted with the page background would not.
+
+| Prop      | Type                | Default   | Description                                  |
+| --------- | ------------------- | --------- | -------------------------------------------- |
+| `topmost` | `"first" \| "last"` | `"first"` | Which end of the stack stays a whole circle. |
+
+Geometry is derived from the inherited `--avatar-size`, so sizing a stack is the same gesture as sizing one avatar. Three further properties tune the layout, and all of them inherit:
+
+| Property           | Default                          | Description                              |
+| ------------------ | -------------------------------- | ---------------------------------------- |
+| `--avatar-overlap` | `calc(var(--avatar-size) * 0.3)` | How far each avatar sits over the previous one. |
+| `--avatar-gap`     | `calc(var(--avatar-size) / 16)`  | Thickness of the transparent gap.        |
+| `--avatar-nudge`   | `calc((var(--avatar-overlap) + var(--avatar-gap)) * 0.3)` | How far initials shift out of the clipped edge. Set to `0` to centre them geometrically. |
+
+```tsx
+<AvatarGroup className="[--avatar-size:--spacing(12)] [--avatar-overlap:--spacing(7)]">
+  …
+</AvatarGroup>
+```
+
+**Constraints worth knowing:**
+
+- Every avatar in a group must be the same size. The mask is positioned from the group's `--avatar-size`, so a per-avatar override misplaces the cut. Set the size on the group.
+- A status dot or badge on a clipped avatar is clipped with it, and is cropped to the circle. Put one on the avatar that stays whole — the first with `topmost="first"`, the last with `topmost="last"`.
+- Browsers without `mask-composite` (Chrome and Edge 111–119) fall back to a plain overlap with no gap. Nothing else degrades.
 
 ### AvatarGroupCount
 
-The "+N" chip at the end of a group. It is an `Avatar` with a fallback, so it is sized, overlapped and clipped like its neighbours, and its label uses `text-muted-foreground`:
+The "+N" chip that ends a group. It is an `Avatar` with a fallback, so it is sized, overlapped and clipped like its neighbours; its label uses `text-muted-foreground`.
 
 ```tsx
 <AvatarGroup>
@@ -113,63 +172,62 @@ The "+N" chip at the end of a group. It is an `Avatar` with a fallback, so it is
 </AvatarGroup>
 ```
 
-### AvatarGroup
-
-Lays out overlapping avatars. Each avatar is clipped by a circle matching its neighbor, so the avatars are separated by a transparent gap instead of a ring and the stack holds up on gradients, images and other non-solid surfaces.
-
-| Prop      | Type                | Default   | Description                                  |
-| --------- | ------------------- | --------- | -------------------------------------------- |
-| `topmost` | `"first" \| "last"` | `"first"` | Which end of the stack stays a whole circle. |
-
-The group derives its geometry from the `--avatar-size` it inherits, so sizing a stack is the same gesture as sizing one avatar. The clip math assumes every avatar in a group is the same size, so set the property on the group rather than on individual avatars.
-
-Fallback initials are nudged out of the clipped edge so they read as centered in what is left of the circle. The rest of the layout is driven by custom properties you can override:
-
-| Property           | Default                          | Description                              |
-| ------------------ | -------------------------------- | ---------------------------------------- |
-| `--avatar-overlap` | `calc(var(--avatar-size) * 0.3)` | How far each avatar sits over the previous one. |
-| `--avatar-gap`     | `calc(var(--avatar-size) / 16)`  | Thickness of the transparent gap.        |
-| `--avatar-nudge`   | `calc((var(--avatar-overlap) + var(--avatar-gap)) * 0.3)` | How far initials shift out of the bite. Set to `0` to center them geometrically. |
-
-Like `--avatar-size`, all three are inherited, so you can set them on the group or on any ancestor to restyle every stack below it:
-
-```tsx
-<AvatarGroup className="[--avatar-size:--spacing(14)] [--avatar-overlap:--spacing(6)]">
-  …
-</AvatarGroup>
-```
-
-Masking replaces the whole avatar, so a status dot or badge placed on a clipped avatar is clipped with it. Put those on the avatar that stays whole.
-
 ## Examples
 
 ### Fallback Only
 
 <ComponentPreview name="p-avatar-2" />
 
-### Different Sizes
+### Icon Fallback
 
-Sizes are set with `--avatar-size` — 16, 24, 32, 40 and 48px below. Initials scale with the circle, so a fallback reads the same at every size.
-
-<ComponentPreview name="p-avatar-3" />
+<ComponentPreview name="p-avatar-6" />
 
 ### Different Radius
 
 <ComponentPreview name="p-avatar-4" />
 
-### Group Avatars
+### Status
+
+A status dot sits outside the avatar, in a `relative` wrapper, because the avatar clips its own content.
+
+<ComponentPreview name="p-avatar-7" />
+
+<ComponentPreview name="p-avatar-9" />
+
+### Notification Badge
+
+<ComponentPreview name="p-avatar-10" />
+
+### Verified Badge
+
+<ComponentPreview name="p-avatar-12" />
+
+### Avatar Group
+
+The first avatar stays a whole circle and every avatar after it is clipped by the one before.
 
 <ComponentPreview name="p-avatar-5" />
 
+### Last Avatar On Top
+
+Set `topmost="last"` for the conventional order, where the last avatar is the one left intact.
+
+<ComponentPreview name="p-avatar-16" />
+
 ### Group Sizes
+
+Size the group, not the avatars inside it.
 
 <ComponentPreview name="p-avatar-13" />
 
 <ComponentPreview name="p-avatar-14" />
 
-### Last Avatar On Top
+### Custom Overlap And Gap
 
-By default the first avatar stays a whole circle and every avatar after it is clipped. Set `topmost="last"` for the conventional order, where the last avatar is the one left intact.
+<ComponentPreview name="p-avatar-18" />
 
-<ComponentPreview name="p-avatar-15" />
+### Non-Solid Surfaces
 
+Clipping needs no separator colour, so the stack keeps its shape over a gradient, a photo or a translucent panel.
+
+<ComponentPreview name="p-avatar-17" />
