@@ -85,11 +85,9 @@ function MemberAvatar({
   className?: string;
 }) {
   return (
-    <Avatar className={cn("size-5", className)}>
+    <Avatar className={cn("[--avatar-size:--spacing(5)]", className)}>
       {avatarUrl ? <AvatarImage alt={name} src={avatarUrl} /> : null}
-      <AvatarFallback className="text-[0.5rem]">
-        {getInitials(name)}
-      </AvatarFallback>
+      <AvatarFallback>{getInitials(name)}</AvatarFallback>
     </Avatar>
   );
 }

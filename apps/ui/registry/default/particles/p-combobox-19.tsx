@@ -127,11 +127,9 @@ export default function Particle() {
               className="flex items-center gap-2 rounded-lg border border-input p-1 ps-2 text-base sm:text-sm"
               key={member.value}
             >
-              <Avatar className="size-5">
+              <Avatar className="[--avatar-size:--spacing(5)]">
                 <AvatarImage alt={member.label} src={member.avatar} />
-                <AvatarFallback className="text-[.625rem]">
-                  {member.initials}
-                </AvatarFallback>
+                <AvatarFallback>{member.initials}</AvatarFallback>
               </Avatar>
               <span className="truncate font-medium">{member.label}</span>
               <Badge className="ms-auto" variant="outline">

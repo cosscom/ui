@@ -9,7 +9,7 @@
   "files": [
     {
       "path": "registry/default/particles/p-button-28.tsx",
-      "content": "import {\n  Avatar,\n  AvatarFallback,\n  AvatarImage,\n} from \"@/registry/default/ui/avatar\";\nimport { Button } from \"@/registry/default/ui/button\";\n\nexport default function Particle() {\n  return (\n    <Button className=\"rounded-full ps-1\">\n      <Avatar className=\"size-6\">\n        <AvatarImage\n          alt=\"Luke Tracy\"\n          src=\"https://images.unsplash.com/photo-1628157588553-5eeea00af15c?w=128&h=128&dpr=2&q=80\"\n        />\n        <AvatarFallback>LT</AvatarFallback>\n      </Avatar>\n      @georgelucas\n    </Button>\n  );\n}\n",
+      "content": "import {\n  Avatar,\n  AvatarFallback,\n  AvatarImage,\n} from \"@/registry/default/ui/avatar\";\nimport { Button } from \"@/registry/default/ui/button\";\n\nexport default function Particle() {\n  return (\n    <Button className=\"rounded-full ps-1\">\n      <Avatar className=\"[--avatar-size:--spacing(6)]\">\n        <AvatarImage\n          alt=\"Luke Tracy\"\n          src=\"https://images.unsplash.com/photo-1628157588553-5eeea00af15c?w=128&h=128&dpr=2&q=80\"\n        />\n        <AvatarFallback>LT</AvatarFallback>\n      </Avatar>\n      @georgelucas\n    </Button>\n  );\n}\n",
       "type": "registry:block"
     }
   ],

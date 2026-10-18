@@ -47,7 +47,7 @@ export default function Particle() {
         <SelectValue>
           {(item) => (
             <span className="flex items-center gap-2">
-              <Avatar className="size-8">
+              <Avatar>
                 <AvatarImage alt={item.label} src={item.avatar} />
                 <AvatarFallback>{item.initials}</AvatarFallback>
               </Avatar>
@@ -65,7 +65,7 @@ export default function Particle() {
         {users.map((item) => (
           <SelectItem className="py-1.5" key={item.value} value={item}>
             <span className="flex items-center gap-2">
-              <Avatar className="size-8">
+              <Avatar>
                 <AvatarImage alt={item.label} src={item.avatar} />
                 <AvatarFallback>{item.initials}</AvatarFallback>
               </Avatar>

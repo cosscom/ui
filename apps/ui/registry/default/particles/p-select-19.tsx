@@ -46,11 +46,9 @@ export default function Particle() {
         <SelectValue>
           {(item) => (
             <span className="flex items-center gap-2">
-              <Avatar className="size-5">
+              <Avatar className="[--avatar-size:--spacing(5)]">
                 <AvatarImage alt={item.label} src={item.avatar} />
-                <AvatarFallback className="text-[.625rem]">
-                  {item.initials}
-                </AvatarFallback>
+                <AvatarFallback>{item.initials}</AvatarFallback>
               </Avatar>
               <span className="truncate">{item.label}</span>
             </span>
@@ -63,11 +61,9 @@ export default function Particle() {
           {users.map((item) => (
             <SelectItem key={item.value} value={item}>
               <span className="flex items-center gap-2">
-                <Avatar className="size-5">
+                <Avatar className="[--avatar-size:--spacing(5)]">
                   <AvatarImage alt={item.label} src={item.avatar} />
-                  <AvatarFallback className="text-[10px]">
-                    {item.initials}
-                  </AvatarFallback>
+                  <AvatarFallback>{item.initials}</AvatarFallback>
                 </Avatar>
                 <span className="truncate">{item.label}</span>
               </span>

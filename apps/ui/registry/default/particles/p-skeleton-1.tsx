@@ -57,7 +57,7 @@ function UserCard({ delay, user }: { delay: number; user: (typeof users)[0] }) {
 
   return (
     <>
-      <Avatar className="size-10">
+      <Avatar className="[--avatar-size:--spacing(10)]">
         <AvatarImage alt={user.name} src={user.image} />
         <AvatarFallback>{user.fallback}</AvatarFallback>
       </Avatar>
