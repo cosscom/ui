@@ -189,3 +189,7 @@ The "+N" chip that ends a group. It is an `Avatar` with a fallback, so it is siz
 Set `topmost="last"` for the conventional order, where the last avatar is the one left intact.
 
 <ComponentPreview name="p-avatar-16" />
+
+## Changelog
+
+- [October 18, 2026](/ui/docs/changelog#avatar-group-clipping-and-inherited-sizing) — **`AvatarGroup`** and **`AvatarGroupCount`** added; overlapping avatars are separated by a transparent clipped gap instead of a ring. **`Avatar`** now derives its box, type and group geometry from the inherited **`--avatar-size`**. **`AvatarFallback`** moves from **`bg-muted`** to **`bg-border`**, and **`Avatar`** no longer paints **`bg-background`**.
