@@ -108,7 +108,9 @@ Because the property is inherited, one declaration on a container sizes every av
 
 Root component. Styled wrapper for `Avatar.Root` from Base UI, round by default and sized from `--avatar-size`.
 
-It renders a `<span>`. To make an avatar interactive, use Base UI's `render` prop rather than wrapping it:
+It declares no props of its own; everything from `Avatar.Root` passes through, including `className` and `render`.
+
+It renders a `<span>`. To make an avatar interactive, use `render` rather than wrapping it:
 
 ```tsx
 <Avatar render={<button type="button" />}>…</Avatar>
@@ -119,11 +121,20 @@ An interactive avatar needs an accessible name. `AvatarImage`'s `alt` supplies o
 
 ### AvatarImage
 
-Image element. Styled wrapper for `Avatar.Image` from Base UI, with support for `keepMounted` images.
+Image element. Styled wrapper for `Avatar.Image` from Base UI.
+
+| Prop                    | Type                                  | Default | Description                                                                                  |
+| ----------------------- | ------------------------------------- | ------- | -------------------------------------------------------------------------------------------- |
+| `keepMounted`           | `boolean`                             | `false` | Keep the image mounted and let it load in place, for `loading="lazy"` and `next/image`        |
+| `onLoadingStatusChange` | `(status: ImageLoadingStatus) => void` | -       | Fired when loading status changes: `"idle"`, `"loading"`, `"loaded"` or `"error"`             |
 
 ### AvatarFallback
 
 Shown while the image loads or when it fails, and whenever no image is given. Base UI unmounts it once the image loads.
+
+| Prop    | Type     | Default | Description                                            |
+| ------- | -------- | ------- | ------------------------------------------------------ |
+| `delay` | `number` | `0`     | Milliseconds to wait before showing the fallback       |
 
 It inherits its font size from the avatar, so it scales automatically. Override it on the fallback when a specific size is needed:
 
