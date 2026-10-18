@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "p-avatar-21",
+  "description": "Avatar group with a tooltip per member",
+  "registryDependencies": [
+    "@coss/avatar",
+    "@coss/tooltip"
+  ],
+  "files": [
+    {
+      "path": "registry/default/particles/p-avatar-21.tsx",
+      "content": "import {\n  Avatar,\n  AvatarFallback,\n  AvatarGroup,\n  AvatarGroupCount,\n  AvatarImage,\n} from \"@/registry/default/ui/avatar\";\nimport {\n  Tooltip,\n  TooltipPopup,\n  TooltipTrigger,\n} from \"@/registry/default/ui/tooltip\";\n\nconst people = [\n  {\n    initials: \"FK\",\n    name: \"Frida Kahlo\",\n    photo: \"photo-1543610892-0b1f7e6d8ac1\",\n  },\n  {\n    initials: \"NE\",\n    name: \"Nadia Ekman\",\n    photo: \"photo-1628157588553-5eeea00af15c\",\n  },\n  {\n    initials: \"EW\",\n    name: \"Eli Wren\",\n    photo: \"photo-1655874819398-c6dfbec68ac7\",\n  },\n];\n\nexport default function Particle() {\n  return (\n    <AvatarGroup>\n      {people.map((person) => (\n        <Tooltip key={person.initials}>\n          <TooltipTrigger render={<Avatar />}>\n            <AvatarImage\n              alt={person.name}\n              src={`https://images.unsplash.com/${person.photo}?w=96&h=96&dpr=2&q=80`}\n            />\n            <AvatarFallback>{person.initials}</AvatarFallback>\n          </TooltipTrigger>\n          <TooltipPopup>{person.name}</TooltipPopup>\n        </Tooltip>\n      ))}\n      <AvatarGroupCount>+2</AvatarGroupCount>\n    </AvatarGroup>\n  );\n}\n",
+      "type": "registry:block"
+    }
+  ],
+  "categories": [
+    "avatar"
+  ],
+  "type": "registry:block"
+}

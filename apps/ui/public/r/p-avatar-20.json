@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "p-avatar-20",
+  "description": "Avatar with a tooltip",
+  "registryDependencies": [
+    "@coss/avatar",
+    "@coss/tooltip"
+  ],
+  "files": [
+    {
+      "path": "registry/default/particles/p-avatar-20.tsx",
+      "content": "import {\n  Avatar,\n  AvatarFallback,\n  AvatarImage,\n} from \"@/registry/default/ui/avatar\";\nimport {\n  Tooltip,\n  TooltipPopup,\n  TooltipTrigger,\n} from \"@/registry/default/ui/tooltip\";\n\nexport default function Particle() {\n  return (\n    <Tooltip>\n      <TooltipTrigger render={<Avatar />}>\n        <AvatarImage\n          alt=\"Frida Kahlo\"\n          src=\"https://images.unsplash.com/photo-1543610892-0b1f7e6d8ac1?w=96&h=96&dpr=2&q=80\"\n        />\n        <AvatarFallback>FK</AvatarFallback>\n      </TooltipTrigger>\n      <TooltipPopup>Frida Kahlo</TooltipPopup>\n    </Tooltip>\n  );\n}\n",
+      "type": "registry:block"
+    }
+  ],
+  "categories": [
+    "avatar"
+  ],
+  "type": "registry:block"
+}

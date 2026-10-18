@@ -1935,6 +1935,58 @@
       "categories": [
         "avatar"
       ],
+      "description": "Avatar rendered as a button",
+      "files": [
+        {
+          "path": "registry/default/particles/p-avatar-17.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "name": "p-avatar-17",
+      "registryDependencies": [
+        "@coss/avatar"
+      ],
+      "type": "registry:block"
+    },
+    {
+      "categories": [
+        "avatar"
+      ],
+      "description": "Avatar rendered as a link",
+      "files": [
+        {
+          "path": "registry/default/particles/p-avatar-18.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "name": "p-avatar-18",
+      "registryDependencies": [
+        "@coss/avatar"
+      ],
+      "type": "registry:block"
+    },
+    {
+      "categories": [
+        "avatar"
+      ],
+      "description": "Avatar with a tooltip",
+      "files": [
+        {
+          "path": "registry/default/particles/p-avatar-20.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "name": "p-avatar-20",
+      "registryDependencies": [
+        "@coss/avatar",
+        "@coss/tooltip"
+      ],
+      "type": "registry:block"
+    },
+    {
+      "categories": [
+        "avatar"
+      ],
       "description": "Avatar with emerald status dot",
       "files": [
         {
@@ -2090,6 +2142,24 @@
       "categories": [
         "avatar"
       ],
+      "description": "Avatar group with a tooltip per member",
+      "files": [
+        {
+          "path": "registry/default/particles/p-avatar-21.tsx",
+          "type": "registry:block"
+        }
+      ],
+      "name": "p-avatar-21",
+      "registryDependencies": [
+        "@coss/avatar",
+        "@coss/tooltip"
+      ],
+      "type": "registry:block"
+    },
+    {
+      "categories": [
+        "avatar"
+      ],
       "description": "Small overlapping avatar group",
       "files": [
         {
@@ -2115,40 +2185,6 @@
         }
       ],
       "name": "p-avatar-14",
-      "registryDependencies": [
-        "@coss/avatar"
-      ],
-      "type": "registry:block"
-    },
-    {
-      "categories": [
-        "avatar"
-      ],
-      "description": "Avatar group with custom overlap and gap",
-      "files": [
-        {
-          "path": "registry/default/particles/p-avatar-18.tsx",
-          "type": "registry:block"
-        }
-      ],
-      "name": "p-avatar-18",
-      "registryDependencies": [
-        "@coss/avatar"
-      ],
-      "type": "registry:block"
-    },
-    {
-      "categories": [
-        "avatar"
-      ],
-      "description": "Avatar group clipped over a gradient surface",
-      "files": [
-        {
-          "path": "registry/default/particles/p-avatar-17.tsx",
-          "type": "registry:block"
-        }
-      ],
-      "name": "p-avatar-17",
       "registryDependencies": [
         "@coss/avatar"
       ],

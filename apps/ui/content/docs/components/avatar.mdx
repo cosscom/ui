@@ -186,6 +186,22 @@ The "+N" chip that ends a group. It is an `Avatar` with a fallback, so it is siz
 
 <ComponentPreview name="p-avatar-4" />
 
+### As A Button
+
+Use Base UI's `render` prop rather than wrapping the avatar. Give it an accessible name and a focus-visible treatment.
+
+<ComponentPreview name="p-avatar-17" />
+
+### As A Link
+
+<ComponentPreview name="p-avatar-18" />
+
+### With A Tooltip
+
+`TooltipTrigger` renders the avatar, so the trigger and the avatar are the same element.
+
+<ComponentPreview name="p-avatar-20" />
+
 ### Status
 
 A status dot sits outside the avatar, in a `relative` wrapper, because the avatar clips its own content.
@@ -214,6 +230,12 @@ Set `topmost="last"` for the conventional order, where the last avatar is the on
 
 <ComponentPreview name="p-avatar-16" />
 
+### Group With Tooltips
+
+`Tooltip` renders no element of its own, so each avatar stays a direct child of the group and the clipping still works. Note that `TooltipTrigger` replaces the avatar's `data-slot` with `tooltip-trigger`, so any CSS you write against `[data-slot=avatar]` will not match a tooltipped avatar.
+
+<ComponentPreview name="p-avatar-21" />
+
 ### Group Sizes
 
 Size the group, not the avatars inside it.
@@ -222,12 +244,3 @@ Size the group, not the avatars inside it.
 
 <ComponentPreview name="p-avatar-14" />
 
-### Custom Overlap And Gap
-
-<ComponentPreview name="p-avatar-18" />
-
-### Non-Solid Surfaces
-
-Clipping needs no separator colour, so the stack keeps its shape over a gradient, a photo or a translucent panel.
-
-<ComponentPreview name="p-avatar-17" />
