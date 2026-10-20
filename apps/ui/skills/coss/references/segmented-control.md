@@ -54,7 +54,7 @@ const itemClassName = segmentedControlItemVariants({
 - `state: "pressed"` for Toggle Group
 - `size: "sm" | "default" | "lg"`
 
-The `state` variants only set the active item’s text color; they do not paint a background. Render `<SegmentedControlIndicator />` as the last child of the root so the selection pill appears:
+The `state` variants paint a static pill on the active item. Render `<SegmentedControlIndicator />` as the last child of the root to animate it; while the indicator is visible, items drop their static pill:
 
 ```tsx
 <RadioGroupPrimitive className={segmentedControlRootClassName}>

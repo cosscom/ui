@@ -9,6 +9,8 @@ const activeItemSelector =
 
 const observedAttributes = ["data-checked", "aria-current", "data-pressed"];
 
+const MAX_LAYOUT_ROUNDING_ERROR = 2;
+
 interface ActiveItemRect {
   height: number;
   left: number;
@@ -28,18 +30,67 @@ function isSameRect(
   );
 }
 
-/**
- * Animated selection pill for a segmented control. Render it as the last child
- * of the element that has `segmentedControlRootClassName`; it follows whichever
- * direct child is checked, current, or pressed.
- */
+function getCssSize(element: HTMLElement): { height: number; width: number } {
+  const style = getComputedStyle(element);
+  const width = Number.parseFloat(style.width) || 0;
+  const height = Number.parseFloat(style.height) || 0;
+  if (
+    Math.round(width) !== element.offsetWidth ||
+    Math.round(height) !== element.offsetHeight
+  ) {
+    return { height: element.offsetHeight, width: element.offsetWidth };
+  }
+  return { height, width };
+}
+
+function measureItem(item: HTMLElement, root: HTMLElement): ActiveItemRect {
+  const { width, height } = getCssSize(item);
+  const rootSize = getCssSize(root);
+  const itemRect = item.getBoundingClientRect();
+  const rootRect = root.getBoundingClientRect();
+  const scaleX = rootSize.width > 0 ? rootRect.width / rootSize.width : 1;
+  const scaleY = rootSize.height > 0 ? rootRect.height / rootSize.height : 1;
+
+  const rectLeft =
+    (itemRect.left - rootRect.left) / scaleX -
+    root.clientLeft +
+    root.scrollLeft;
+  const rectTop =
+    (itemRect.top - rootRect.top) / scaleY - root.clientTop + root.scrollTop;
+
+  const isUndistorted =
+    Math.abs(rectLeft - item.offsetLeft) <= MAX_LAYOUT_ROUNDING_ERROR &&
+    Math.abs(rectTop - item.offsetTop) <= MAX_LAYOUT_ROUNDING_ERROR;
+
+  return {
+    height,
+    left: isUndistorted ? rectLeft : item.offsetLeft,
+    top: isUndistorted ? rectTop : item.offsetTop,
+    width,
+  };
+}
+
 export function SegmentedControlIndicator({
   className,
+  ref: refProp,
   style,
   ...props
 }: React.ComponentProps<"span">): React.ReactElement {
   const ref = React.useRef<HTMLSpanElement>(null);
   const [rect, setRect] = React.useState<ActiveItemRect | null>(null);
+
+  const mergedRef = React.useCallback(
+    (node: HTMLSpanElement | null) => {
+      ref.current = node;
+      if (typeof refProp === "function") {
+        return refProp(node);
+      }
+      if (refProp) {
+        refProp.current = node;
+      }
+    },
+    [refProp],
+  );
 
   React.useLayoutEffect(() => {
     const root = ref.current?.parentElement;
@@ -49,41 +100,32 @@ export function SegmentedControlIndicator({
 
     const update = () => {
       const item = root.querySelector<HTMLElement>(activeItemSelector);
-      const next: ActiveItemRect | null = item
-        ? {
-            height: item.offsetHeight,
-            left: item.offsetLeft,
-            top: item.offsetTop,
-            width: item.offsetWidth,
-          }
-        : null;
+      const next = item ? measureItem(item, root) : null;
       setRect((previous) => (isSameRect(previous, next) ? previous : next));
     };
 
     update();
 
     const resizeObserver = new ResizeObserver(update);
-    const observeItems = () => {
-      resizeObserver.disconnect();
-      resizeObserver.observe(root);
-      for (const child of root.children) {
-        resizeObserver.observe(child);
-      }
-    };
-    observeItems();
-
     const mutationObserver = new MutationObserver((records) => {
       if (records.some((record) => record.type === "childList")) {
         observeItems();
       }
       update();
     });
-    mutationObserver.observe(root, {
-      attributeFilter: observedAttributes,
-      attributes: true,
-      childList: true,
-      subtree: true,
-    });
+    const observeItems = () => {
+      resizeObserver.disconnect();
+      resizeObserver.observe(root);
+      for (const child of root.children) {
+        resizeObserver.observe(child);
+        mutationObserver.observe(child, {
+          attributeFilter: observedAttributes,
+          attributes: true,
+        });
+      }
+    };
+    mutationObserver.observe(root, { childList: true });
+    observeItems();
 
     return () => {
       resizeObserver.disconnect();
@@ -97,7 +139,7 @@ export function SegmentedControlIndicator({
       className={cn(segmentedControlIndicatorClassName, className)}
       data-slot="segmented-control-indicator"
       hidden={!rect}
-      ref={ref}
+      ref={mergedRef}
       style={
         {
           "--active-item-height": `${rect?.height ?? 0}px`,

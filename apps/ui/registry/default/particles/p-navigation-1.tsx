@@ -27,10 +27,7 @@ export default function Particle() {
             className={itemClassName}
             href={link.href}
             key={link.href}
-            onClick={(event) => {
-              event.preventDefault();
-              setCurrent(link.href);
-            }}
+            onClick={() => setCurrent(link.href)}
           >
             {link.label}
           </a>

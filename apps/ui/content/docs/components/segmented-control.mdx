@@ -65,7 +65,7 @@ const itemClassName = segmentedControlItemVariants({
 | Option | Values | Description |
 | ------ | ------ | ----------- |
 | `size` | `"sm" \| "default" \| "lg"` | Controls item height and horizontal padding. |
-| `state` | `"checked" \| "current" \| "pressed"` | Selects the state attribute that sets the active item’s text color. |
+| `state` | `"checked" \| "current" \| "pressed"` | Selects the state attribute used by the underlying element. |
 
 Use `checked` with Radio Group, `current` with navigation links, and `pressed` with Toggle Group. Tabs do not use the shared state recipe; they reuse `segmentedControlItemLayoutClassName` so icons match the other segmented implementations.
 
@@ -78,7 +78,7 @@ At the outside edges, the item padding and the surface’s `p-0.5` inset combine
 
 ### Indicator
 
-The item recipe does not paint the active background. The selection pill is a separate element that slides to the active item, so a custom composition must render it:
+The item recipe paints a static pill on the active item. To animate the selection, add the indicator, a separate element that slides to the active item:
 
 ```bash
 npx shadcn@latest add @coss/segmented-control-indicator
@@ -102,7 +102,7 @@ Render `SegmentedControlIndicator` as the last child of the element with `segmen
 </RadioGroupPrimitive>
 ```
 
-The indicator follows whichever direct child has `data-checked`, `aria-current="page"`, or `data-pressed`. It moves with a 200ms ease-in-out transition, stays still when the user prefers reduced motion, and is hidden when no item is active. For navigation, the pill animates only when the root persists across route changes, such as in a shared layout; otherwise it appears in place on each page.
+The indicator follows whichever direct child has `data-checked`, `aria-current="page"`, or `data-pressed`. It moves with a 200ms ease-in-out transition, stays still when the user prefers reduced motion, and is hidden when no item is active. While it is visible, the items drop their static pill; before hydration or without JavaScript, the static pill shows the selection. For navigation, the pill animates only when the root persists across route changes, such as in a shared layout; otherwise it appears in place on each page.
 
 Tabs use Base UI’s `Tabs.Indicator` instead of this component, but share its surface through `segmentedControlIndicatorSurfaceClassName` so both pills look the same.
 
