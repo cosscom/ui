@@ -6,7 +6,7 @@ import {
   segmentedControlIndicatorSurfaceClassName,
   segmentedControlItemLayoutClassName,
   segmentedControlItemSizeClassNames,
-} from "@coss/ui/lib/segmented-control";
+} from "@coss/ui/components/segmented-control";
 import { cn } from "@coss/ui/lib/utils";
 import * as React from "react";
 

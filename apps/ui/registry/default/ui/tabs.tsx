@@ -2,13 +2,13 @@
 
 import { Tabs as TabsPrimitive } from "@base-ui/react/tabs";
 import * as React from "react";
+import { cn } from "@/registry/default/lib/utils";
 import {
   type SegmentedControlSize,
   segmentedControlIndicatorSurfaceClassName,
   segmentedControlItemLayoutClassName,
   segmentedControlItemSizeClassNames,
-} from "@/registry/default/lib/segmented-control";
-import { cn } from "@/registry/default/lib/utils";
+} from "@/registry/default/ui/segmented-control";
 
 type TabsVariant = "default" | "underline";
 type TabsSize = SegmentedControlSize;

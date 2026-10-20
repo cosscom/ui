@@ -2,15 +2,9 @@
 
 import { useState } from "react";
 import {
-  segmentedControlItemVariants,
-  segmentedControlRootClassName,
-} from "@/registry/default/lib/segmented-control";
-import { SegmentedControlIndicator } from "@/registry/default/lib/segmented-control-indicator";
-
-const itemClassName = segmentedControlItemVariants({
-  size: "lg",
-  state: "current",
-});
+  SegmentedControl,
+  SegmentedControlItem,
+} from "@/registry/default/ui/segmented-control";
 
 const links = [
   { href: "#overview", label: "Overview" },
@@ -22,21 +16,22 @@ export default function Particle() {
   const [current, setCurrent] = useState("#overview");
 
   return (
-    <nav aria-label="Project sections">
-      <div className={segmentedControlRootClassName}>
-        {links.map((link) => (
-          <a
-            aria-current={link.href === current ? "page" : undefined}
-            className={itemClassName}
-            href={link.href}
-            key={link.href}
-            onClick={() => setCurrent(link.href)}
-          >
-            {link.label}
-          </a>
-        ))}
-        <SegmentedControlIndicator />
-      </div>
-    </nav>
+    <SegmentedControl aria-label="Project sections" render={<nav />} size="lg">
+      {links.map((link) => (
+        <SegmentedControlItem
+          key={link.href}
+          render={
+            // biome-ignore lint/a11y/useAnchorContent: SegmentedControlItem supplies the link content through the render prop.
+            <a
+              aria-current={link.href === current ? "page" : undefined}
+              href={link.href}
+              onClick={() => setCurrent(link.href)}
+            />
+          }
+        >
+          {link.label}
+        </SegmentedControlItem>
+      ))}
+    </SegmentedControl>
   );
 }

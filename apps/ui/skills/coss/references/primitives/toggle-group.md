@@ -105,7 +105,7 @@ function ControlledToggleGroup() {
 
 ### More examples
 
-See `p-toggle-group-1` through `p-toggle-group-9` for sizes, outline, vertical, disabled, multiple, and tooltip patterns. Read `../segmented-control.md` before applying segmented styling to a custom reversible mode.
+See `p-toggle-group-1` through `p-toggle-group-9` for sizes, outline, vertical, disabled, multiple, and tooltip patterns. Read `./segmented-control.md` before rendering a reversible mode as a segmented control.
 
 ## Common pitfalls
 

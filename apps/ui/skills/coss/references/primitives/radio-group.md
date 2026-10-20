@@ -86,7 +86,7 @@ const [value, setValue] = useState("default")
 
 ### More examples
 
-See `p-radio-group-1` through `p-radio-group-5` for disabled, description, card-style, and form integration patterns. For a segmented presentation, use `p-radio-group-7`, `p-radio-group-8`, or `p-radio-group-9`; read `../segmented-control.md` before choosing the underlying primitive.
+See `p-radio-group-1` through `p-radio-group-5` for disabled, description, card-style, and form integration patterns. For a segmented presentation, use `p-radio-group-7`, `p-radio-group-8`, or `p-radio-group-9`; read `./segmented-control.md` before choosing the underlying primitive.
 
 ## Common pitfalls
 

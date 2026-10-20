@@ -595,6 +595,17 @@ export const ui: Registry["items"] = [
     dependencies: ["@base-ui/react"],
     files: [
       {
+        path: "ui/segmented-control.tsx",
+        type: "registry:ui",
+      },
+    ],
+    name: "segmented-control",
+    type: "registry:ui",
+  },
+  {
+    dependencies: ["@base-ui/react"],
+    files: [
+      {
         path: "ui/separator.tsx",
         type: "registry:ui",
       },

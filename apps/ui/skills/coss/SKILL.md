@@ -61,12 +61,11 @@ Rule references (read on demand when the task touches these areas):
 - `./references/rules/forms.md` — Field composition, validation, input patterns
 - `./references/rules/composition.md` — Trigger/popup hierarchies, grouped controls
 - `./references/rules/migration.md` — shadcn/Radix to coss/Base UI migration patterns
-- `./references/segmented-control.md` — choose Radio Group, links, Toggle Group, or Tabs before applying segmented-control styling
 - `./references/portal-props.md` — optional `portalProps` on composed popups and toast providers (`keepMounted`, `container`, which surfaces support it)
 
 ## Component discovery
 
-All 54 primitives have dedicated reference guides at `./references/primitives/<name>.md`. To find the right one for a task, consult the component registry index:
+All 55 primitives have dedicated reference guides at `./references/primitives/<name>.md`. To find the right one for a task, consult the component registry index:
 
 - `./references/component-registry.md`
 

@@ -4,13 +4,12 @@
   "description": "Segmented control built with a radio group",
   "registryDependencies": [
     "@coss/radio-group",
-    "@coss/segmented-control",
-    "@coss/segmented-control-indicator"
+    "@coss/segmented-control"
   ],
   "files": [
     {
       "path": "registry/default/particles/p-radio-group-8.tsx",
-      "content": "\"use client\";\n\nimport {\n  segmentedControlItemVariants,\n  segmentedControlRootClassName,\n} from \"@/registry/default/lib/segmented-control\";\nimport { SegmentedControlIndicator } from \"@/registry/default/lib/segmented-control-indicator\";\nimport {\n  RadioGroupPrimitive,\n  RadioPrimitive,\n} from \"@/registry/default/ui/radio-group\";\n\nconst itemClassName = segmentedControlItemVariants({\n  className: \"grow\",\n  state: \"checked\",\n});\n\nexport default function Particle() {\n  return (\n    <RadioGroupPrimitive\n      aria-label=\"Billing period\"\n      className={segmentedControlRootClassName}\n      defaultValue=\"monthly\"\n    >\n      <RadioPrimitive.Root className={itemClassName} value=\"monthly\">\n        Monthly\n      </RadioPrimitive.Root>\n      <RadioPrimitive.Root className={itemClassName} value=\"yearly\">\n        Yearly\n      </RadioPrimitive.Root>\n      <SegmentedControlIndicator />\n    </RadioGroupPrimitive>\n  );\n}\n",
+      "content": "\"use client\";\n\nimport {\n  RadioGroupPrimitive,\n  RadioPrimitive,\n} from \"@/registry/default/ui/radio-group\";\nimport {\n  SegmentedControl,\n  SegmentedControlItem,\n} from \"@/registry/default/ui/segmented-control\";\n\nexport default function Particle() {\n  return (\n    <SegmentedControl\n      aria-label=\"Billing period\"\n      render={<RadioGroupPrimitive defaultValue=\"monthly\" />}\n    >\n      <SegmentedControlItem\n        className=\"grow\"\n        render={<RadioPrimitive.Root value=\"monthly\" />}\n      >\n        Monthly\n      </SegmentedControlItem>\n      <SegmentedControlItem\n        className=\"grow\"\n        render={<RadioPrimitive.Root value=\"yearly\" />}\n      >\n        Yearly\n      </SegmentedControlItem>\n    </SegmentedControl>\n  );\n}\n",
       "type": "registry:block"
     }
   ],

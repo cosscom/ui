@@ -4,9 +4,6 @@ Use this file to quickly identify the right coss primitive for a UI task. Each e
 
 For optional **`portalProps`** on composed `*Popup` components and **toast** providers (Base UI portal forwarding), see `./references/portal-props.md`.
 
-## Cross-component patterns
-- **Segmented Control** — Shared visual treatment for radio choices, navigation links, exclusive toggles, or tabbed panels; choose semantics first. `./references/segmented-control.md`
-
 ## Overlays & Popups
 - **Dialog** — Centered modal requiring user focus. `./references/primitives/dialog.md`
 - **AlertDialog** — Destructive/critical confirmation modal. `./references/primitives/alert-dialog.md`
@@ -41,6 +38,7 @@ For optional **`portalProps`** on composed `*Popup` components and **toast** pro
 - **Checkbox** — Single boolean toggle. `./references/primitives/checkbox.md`
 - **CheckboxGroup** — Multiple-selection set. `./references/primitives/checkbox-group.md`
 - **RadioGroup** — Mutually exclusive single choice. `./references/primitives/radio-group.md`
+- **SegmentedControl** — Segmented presentation rendered over radio choices, navigation links, or exclusive toggles; choose semantics first. `./references/primitives/segmented-control.md`
 - **Switch** — Binary on/off preference toggle. `./references/primitives/switch.md`
 - **Toggle** — Pressable two-state command button. `./references/primitives/toggle.md`
 - **ToggleGroup** — Grouped pressed-state controls. `./references/primitives/toggle-group.md`

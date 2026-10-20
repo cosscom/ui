@@ -14,10 +14,10 @@ npx shadcn@latest add @coss/tabs
 Manual deps from docs:
 
 ```bash
-npm install @base-ui/react class-variance-authority
+npm install @base-ui/react
 ```
 
-The CLI installs the shared `@coss/segmented-control` registry dependency automatically. For a manual installation, also copy `lib/segmented-control.ts` before copying the Tabs component.
+The CLI installs the `@coss/segmented-control` component automatically. For a manual installation, also copy `components/ui/segmented-control.tsx` before copying the Tabs component.
 
 ## Canonical imports
 
@@ -90,7 +90,7 @@ Underline variant:
 
 - Mismatching `TabsTab value` and `TabsPanel value` pairs.
 - Using tabs for workflows that require route-level navigation instead.
-- Using tabs for a form value or reversible filter just because it looks like a segmented control. Read `../segmented-control.md` and choose semantics first.
+- Using tabs for a form value or reversible filter just because it looks like a segmented control. Read `./segmented-control.md` and choose semantics first.
 - Mounting expensive panel content without considering visibility/performance.
 
 ## Useful particle references

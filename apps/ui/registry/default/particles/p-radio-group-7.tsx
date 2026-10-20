@@ -1,35 +1,33 @@
 "use client";
 
 import {
-  segmentedControlItemVariants,
-  segmentedControlRootClassName,
-} from "@/registry/default/lib/segmented-control";
-import { SegmentedControlIndicator } from "@/registry/default/lib/segmented-control-indicator";
-import {
   RadioGroupPrimitive,
   RadioPrimitive,
 } from "@/registry/default/ui/radio-group";
-
-const itemClassName = segmentedControlItemVariants({
-  className: "grow",
-  size: "sm",
-  state: "checked",
-});
+import {
+  SegmentedControl,
+  SegmentedControlItem,
+} from "@/registry/default/ui/segmented-control";
 
 export default function Particle() {
   return (
-    <RadioGroupPrimitive
+    <SegmentedControl
       aria-label="Billing period"
-      className={segmentedControlRootClassName}
-      defaultValue="monthly"
+      render={<RadioGroupPrimitive defaultValue="monthly" />}
+      size="sm"
     >
-      <RadioPrimitive.Root className={itemClassName} value="monthly">
+      <SegmentedControlItem
+        className="grow"
+        render={<RadioPrimitive.Root value="monthly" />}
+      >
         Monthly
-      </RadioPrimitive.Root>
-      <RadioPrimitive.Root className={itemClassName} value="yearly">
+      </SegmentedControlItem>
+      <SegmentedControlItem
+        className="grow"
+        render={<RadioPrimitive.Root value="yearly" />}
+      >
         Yearly
-      </RadioPrimitive.Root>
-      <SegmentedControlIndicator />
-    </RadioGroupPrimitive>
+      </SegmentedControlItem>
+    </SegmentedControl>
   );
 }

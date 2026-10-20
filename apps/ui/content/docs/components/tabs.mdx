@@ -22,7 +22,7 @@ links:
 npx shadcn@latest add @coss/tabs
 ```
 
-The CLI installs the shared `@coss/segmented-control` registry dependency automatically.
+The CLI installs the `@coss/segmented-control` component automatically, because Tabs shares its sizes, icon layout, and indicator surface.
 
 </TabsPanel>
 
@@ -33,12 +33,15 @@ The CLI installs the shared `@coss/segmented-control` registry dependency automa
 <Step>Install the following dependencies:</Step>
 
 ```bash
-npm install @base-ui/react class-variance-authority
+npm install @base-ui/react
 ```
 
-<Step>Copy the shared segmented control styling into your project.</Step>
+<Step>Copy the Segmented Control component into your project.</Step>
 
-<ComponentSource name="segmented-control" title="lib/segmented-control.ts" />
+<ComponentSource
+  name="segmented-control"
+  title="components/ui/segmented-control.tsx"
+/>
 
 <Step>Copy and paste the Tabs component into your project.</Step>
 
@@ -100,7 +103,7 @@ Visual indicator for the active tab. Styled wrapper for `Tabs.Indicator` from Ba
 
 ## Examples
 
-For guidance on choosing between Tabs, Radio Group, Toggle Group, and navigation links, see the [Segmented Control](/ui/docs/components/segmented-control) pattern.
+For guidance on choosing between Tabs, Radio Group, Toggle Group, and navigation links, see [Segmented Control](/ui/docs/components/segmented-control).
 
 Tabs use the same optical sizing as segmented controls. The default surface is slightly taller than a Button of the same size so its inset active indicator remains visually balanced alongside adjacent controls.
 
@@ -123,3 +126,8 @@ Tabs use the same optical sizing as segmented controls. The default surface is s
 ### Underline with Vertical Orientation
 
 <ComponentPreview name="p-tabs-4" />
+
+## Changelog
+
+- [Oct 20, 2026](/ui/docs/changelog#segmented-control-component) — Shared sizing and indicator surface now come from `components/ui/segmented-control.tsx`
+- [Aug 19, 2026](/ui/docs/changelog#tabs-sizing-and-segmented-control-styles) — `TabsList` `size` prop and segmented control sizing

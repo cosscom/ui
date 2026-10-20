@@ -3,6 +3,92 @@ title: Changelog
 description: Breaking changes, migration guides, and notable updates.
 ---
 
+## October 20, 2026
+
+### Segmented Control component
+
+**`@coss/segmented-control`** is now a component at **`components/ui/segmented-control.tsx`** instead of a styling library at **`lib/segmented-control.ts`**. It exports **`SegmentedControl`** and **`SegmentedControlItem`**. The element you pass to **`render`** still decides the behavior — a Radio Group, links, or a Toggle Group — so the semantics stay those of the primitive you choose.
+
+```tsx
+<SegmentedControl
+  aria-label="Billing period"
+  render={<RadioGroupPrimitive defaultValue="monthly" />}
+>
+  <SegmentedControlItem render={<RadioPrimitive.Root value="monthly" />}>
+    Monthly
+  </SegmentedControlItem>
+  <SegmentedControlItem render={<RadioPrimitive.Root value="yearly" />}>
+    Yearly
+  </SegmentedControlItem>
+</SegmentedControl>
+```
+
+The sliding indicator is built in. **`SegmentedControl`** renders it after its children, so there is nothing to add or order by hand, and before hydration the active item paints its own static pill. **`size`** is set once on **`SegmentedControl`** and inherited by its items; an item can still override it. One item recipe now covers **`data-checked`**, **`aria-current="page"`**, and **`data-pressed`**, so there is no **`state`** option.
+
+These exports were removed: **`segmentedControlRootClassName`**, **`segmentedControlItemVariants`**, **`segmentedControlIndicatorClassName`**, and **`SegmentedControlIndicator`**. The **`@coss/segmented-control-indicator`** registry item no longer exists. **`SegmentedControlSize`**, **`segmentedControlItemSizeClassNames`**, **`segmentedControlItemLayoutClassName`**, and **`segmentedControlIndicatorSurfaceClassName`** are still exported, from the component file. Tabs imports them from there, and **`@coss/tabs`** declares the component as a registry dependency.
+
+**Migration:**
+
+Install the component, then update Tabs so it no longer imports from the library:
+
+```bash
+npx shadcn@latest add @coss/segmented-control @coss/tabs
+```
+
+If you maintain a local Tabs, change its import instead of overwriting it:
+
+```diff
+- } from "@/lib/segmented-control"
++ } from "@/components/ui/segmented-control"
+```
+
+Replace class-based compositions. Move the root class and the indicator into **`SegmentedControl`**, and each item recipe into **`SegmentedControlItem`**, keeping behavior props on the rendered element:
+
+```diff
+- <RadioGroupPrimitive
+-   aria-label="Billing period"
+-   className={segmentedControlRootClassName}
+-   defaultValue="monthly"
+- >
+-   <RadioPrimitive.Root className={itemClassName} value="monthly">
++ <SegmentedControl
++   aria-label="Billing period"
++   render={<RadioGroupPrimitive defaultValue="monthly" />}
++ >
++   <SegmentedControlItem render={<RadioPrimitive.Root value="monthly" />}>
+      Monthly
+-   </RadioPrimitive.Root>
+-   <SegmentedControlIndicator />
+- </RadioGroupPrimitive>
++   </SegmentedControlItem>
++ </SegmentedControl>
+```
+
+Navigation follows the same shape, with the **`<nav>`** as the rendered root and the link on each item:
+
+```diff
+- <nav aria-label="Project sections">
+-   <div className={segmentedControlRootClassName}>
+-     <a aria-current="page" className={itemClassName} href="/overview">
+-       Overview
+-     </a>
+-   </div>
+- </nav>
++ <SegmentedControl aria-label="Project sections" render={<nav />}>
++   <SegmentedControlItem render={<a aria-current="page" href="/overview" />}>
++     Overview
++   </SegmentedControlItem>
++ </SegmentedControl>
+```
+
+Extra classes from **`segmentedControlItemVariants({ className })`** move to **`className`** on **`SegmentedControlItem`**. Once nothing imports **`@/lib/segmented-control`** or **`@/lib/segmented-control-indicator`**, delete both files.
+
+**Agent migration prompt:**
+
+```text
+Migrate my codebase from the coss segmented-control styling library to the Segmented Control component. Install the component with `npx shadcn@latest add @coss/segmented-control`; it is written to components/ui/segmented-control.tsx and exports SegmentedControl, SegmentedControlItem, SegmentedControlSize, segmentedControlItemSizeClassNames, segmentedControlItemLayoutClassName, and segmentedControlIndicatorSurfaceClassName. Update the local Tabs component first: either reinstall it with `npx shadcn@latest add @coss/tabs`, or, if it has project-specific changes, only change its segmented-control import from @/lib/segmented-control to @/components/ui/segmented-control. Then find every file that imports segmentedControlRootClassName, segmentedControlItemVariants, segmentedControlIndicatorClassName, or SegmentedControlIndicator. For each composition, replace the element that has segmentedControlRootClassName with <SegmentedControl render={<ThatElement {...itsBehaviorProps} />}>: Radio Group roots become render={<RadioGroupPrimitive defaultValue=… />}, Toggle Group roots become render={<ToggleGroupPrimitive … />}, and a plain wrapper div inside a <nav> collapses so the nav itself is the rendered root via render={<nav />}. Keep accessibility props such as aria-label on SegmentedControl. Replace each item that used segmentedControlItemVariants with <SegmentedControlItem render={<ThatItem {...itsBehaviorProps} />}>, for example render={<RadioPrimitive.Root value="monthly" />} or render={<a href="/overview" aria-current={…} />}; put value, href, onClick, aria-current, and other behavior props on the rendered element, and move any className passed to segmentedControlItemVariants onto SegmentedControlItem. Drop the state option entirely. Move a shared size option to the size prop on SegmentedControl, and keep a per-item size prop only where items genuinely differ. Delete every <SegmentedControlIndicator /> element, because SegmentedControl renders the indicator itself. Do not convert Tabs call sites; Tabs keeps its own component. When nothing imports @/lib/segmented-control or @/lib/segmented-control-indicator any more, delete those files. Run formatting and typechecking, then visually check each segmented control in light and dark mode: the pill should sit exactly on the active item and slide when the selection changes.
+```
+
 ## October 18, 2026
 
 ### Avatar group clipping and inherited sizing
