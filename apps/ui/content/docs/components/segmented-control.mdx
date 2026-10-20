@@ -45,7 +45,7 @@ For a custom composition, install the styling library directly:
 npx shadcn@latest add @coss/segmented-control
 ```
 
-The library exports a root class, an item recipe, and a shared item layout class for icons:
+The library exports a root class, an item recipe, a shared item layout class for icons, and the indicator surface class:
 
 ```tsx
 import {
@@ -65,15 +65,50 @@ const itemClassName = segmentedControlItemVariants({
 | Option | Values | Description |
 | ------ | ------ | ----------- |
 | `size` | `"sm" \| "default" \| "lg"` | Controls item height and horizontal padding. |
-| `state` | `"checked" \| "current" \| "pressed"` | Selects the state attribute used by the underlying element. |
+| `state` | `"checked" \| "current" \| "pressed"` | Selects the state attribute that sets the active item’s text color. |
 
-Use `checked` with Radio Group, `current` with navigation links, and `pressed` with Toggle Group. Tabs retain their own animated indicator and do not use the shared state recipe. They reuse `segmentedControlItemLayoutClassName` so icons match the other segmented implementations.
+Use `checked` with Radio Group, `current` with navigation links, and `pressed` with Toggle Group. Tabs do not use the shared state recipe; they reuse `segmentedControlItemLayoutClassName` so icons match the other segmented implementations.
 
-At the outside edges, the item padding and the surface's `p-0.5` inset combine to match the horizontal padding of the corresponding Button size. The outer segmented surface is slightly taller than that Button to optically balance its inset selected item when the controls appear next to each other.
+At the outside edges, the item padding and the surface’s `p-0.5` inset combine to match the horizontal padding of the corresponding Button size. The outer segmented surface is slightly taller than that Button to optically balance its inset selected item when the controls appear next to each other.
 
 <ComponentSource
   name="segmented-control"
   title="lib/segmented-control.ts"
+/>
+
+### Indicator
+
+The item recipe does not paint the active background. The selection pill is a separate element that slides to the active item, so a custom composition must render it:
+
+```bash
+npx shadcn@latest add @coss/segmented-control-indicator
+```
+
+```tsx
+import { SegmentedControlIndicator } from "@/lib/segmented-control-indicator"
+```
+
+Render `SegmentedControlIndicator` as the last child of the element with `segmentedControlRootClassName`:
+
+```tsx
+<RadioGroupPrimitive className={segmentedControlRootClassName}>
+  <RadioPrimitive.Root className={itemClassName} value="monthly">
+    Monthly
+  </RadioPrimitive.Root>
+  <RadioPrimitive.Root className={itemClassName} value="yearly">
+    Yearly
+  </RadioPrimitive.Root>
+  <SegmentedControlIndicator />
+</RadioGroupPrimitive>
+```
+
+The indicator follows whichever direct child has `data-checked`, `aria-current="page"`, or `data-pressed`. It moves with a 200ms ease-in-out transition, stays still when the user prefers reduced motion, and is hidden when no item is active. For navigation, the pill animates only when the root persists across route changes, such as in a shared layout; otherwise it appears in place on each page.
+
+Tabs use Base UI’s `Tabs.Indicator` instead of this component, but share its surface through `segmentedControlIndicatorSurfaceClassName` so both pills look the same.
+
+<ComponentSource
+  name="segmented-control-indicator"
+  title="lib/segmented-control-indicator.tsx"
 />
 
 ## Radio options
@@ -110,6 +145,6 @@ Use links when each segment points to a different destination. Apply `aria-curre
 
 ## Related content
 
-Use Tabs when each segment controls an associated content panel. Tabs share the visual language of segmented controls but keep their animated indicator, orientation support, and panel semantics.
+Use Tabs when each segment controls an associated content panel. Tabs share the visual language of segmented controls, including the sliding indicator, and add orientation support and panel semantics.
 
 <ComponentPreview name="p-tabs-1" />

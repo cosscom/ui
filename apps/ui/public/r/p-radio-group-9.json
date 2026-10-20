@@ -4,12 +4,13 @@
   "description": "Large segmented control built with a radio group",
   "registryDependencies": [
     "@coss/radio-group",
-    "@coss/segmented-control"
+    "@coss/segmented-control",
+    "@coss/segmented-control-indicator"
   ],
   "files": [
     {
       "path": "registry/default/particles/p-radio-group-9.tsx",
-      "content": "\"use client\";\n\nimport {\n  segmentedControlItemVariants,\n  segmentedControlRootClassName,\n} from \"@/registry/default/lib/segmented-control\";\nimport {\n  RadioGroupPrimitive,\n  RadioPrimitive,\n} from \"@/registry/default/ui/radio-group\";\n\nconst itemClassName = segmentedControlItemVariants({\n  className: \"grow\",\n  size: \"lg\",\n  state: \"checked\",\n});\n\nexport default function Particle() {\n  return (\n    <RadioGroupPrimitive\n      aria-label=\"Billing period\"\n      className={segmentedControlRootClassName}\n      defaultValue=\"monthly\"\n    >\n      <RadioPrimitive.Root className={itemClassName} value=\"monthly\">\n        Monthly\n      </RadioPrimitive.Root>\n      <RadioPrimitive.Root className={itemClassName} value=\"yearly\">\n        Yearly\n      </RadioPrimitive.Root>\n    </RadioGroupPrimitive>\n  );\n}\n",
+      "content": "\"use client\";\n\nimport {\n  segmentedControlItemVariants,\n  segmentedControlRootClassName,\n} from \"@/registry/default/lib/segmented-control\";\nimport { SegmentedControlIndicator } from \"@/registry/default/lib/segmented-control-indicator\";\nimport {\n  RadioGroupPrimitive,\n  RadioPrimitive,\n} from \"@/registry/default/ui/radio-group\";\n\nconst itemClassName = segmentedControlItemVariants({\n  className: \"grow\",\n  size: \"lg\",\n  state: \"checked\",\n});\n\nexport default function Particle() {\n  return (\n    <RadioGroupPrimitive\n      aria-label=\"Billing period\"\n      className={segmentedControlRootClassName}\n      defaultValue=\"monthly\"\n    >\n      <RadioPrimitive.Root className={itemClassName} value=\"monthly\">\n        Monthly\n      </RadioPrimitive.Root>\n      <RadioPrimitive.Root className={itemClassName} value=\"yearly\">\n        Yearly\n      </RadioPrimitive.Root>\n      <SegmentedControlIndicator />\n    </RadioGroupPrimitive>\n  );\n}\n",
       "type": "registry:block"
     }
   ],

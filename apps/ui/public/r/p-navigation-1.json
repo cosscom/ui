@@ -3,12 +3,13 @@
   "name": "p-navigation-1",
   "description": "Segmented navigation built with links",
   "registryDependencies": [
-    "@coss/segmented-control"
+    "@coss/segmented-control",
+    "@coss/segmented-control-indicator"
   ],
   "files": [
     {
       "path": "registry/default/particles/p-navigation-1.tsx",
-      "content": "import {\n  segmentedControlItemVariants,\n  segmentedControlRootClassName,\n} from \"@/registry/default/lib/segmented-control\";\n\nconst itemClassName = segmentedControlItemVariants({ state: \"current\" });\n\nexport default function Particle() {\n  return (\n    <nav aria-label=\"Project sections\">\n      <div className={segmentedControlRootClassName}>\n        <a aria-current=\"page\" className={itemClassName} href=\"#overview\">\n          Overview\n        </a>\n        <a className={itemClassName} href=\"#activity\">\n          Activity\n        </a>\n        <a className={itemClassName} href=\"#settings\">\n          Settings\n        </a>\n      </div>\n    </nav>\n  );\n}\n",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport {\n  segmentedControlItemVariants,\n  segmentedControlRootClassName,\n} from \"@/registry/default/lib/segmented-control\";\nimport { SegmentedControlIndicator } from \"@/registry/default/lib/segmented-control-indicator\";\n\nconst itemClassName = segmentedControlItemVariants({ state: \"current\" });\n\nconst links = [\n  { href: \"#overview\", label: \"Overview\" },\n  { href: \"#activity\", label: \"Activity\" },\n  { href: \"#settings\", label: \"Settings\" },\n];\n\nexport default function Particle() {\n  const [current, setCurrent] = useState(links[0].href);\n\n  return (\n    <nav aria-label=\"Project sections\">\n      <div className={segmentedControlRootClassName}>\n        {links.map((link) => (\n          <a\n            aria-current={link.href === current ? \"page\" : undefined}\n            className={itemClassName}\n            href={link.href}\n            key={link.href}\n            onClick={(event) => {\n              event.preventDefault();\n              setCurrent(link.href);\n            }}\n          >\n            {link.label}\n          </a>\n        ))}\n        <SegmentedControlIndicator />\n      </div>\n    </nav>\n  );\n}\n",
       "type": "registry:block"
     }
   ],

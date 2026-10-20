@@ -4165,7 +4165,10 @@ export const particles: ParticleItem[] = [
     description: "Segmented navigation built with links",
     files: [{ path: "particles/p-navigation-1.tsx", type: "registry:block" }],
     name: "p-navigation-1",
-    registryDependencies: ["@coss/segmented-control"],
+    registryDependencies: [
+      "@coss/segmented-control",
+      "@coss/segmented-control-indicator",
+    ],
     type: "registry:block",
   },
   {
@@ -4173,7 +4176,10 @@ export const particles: ParticleItem[] = [
     description: "Small segmented navigation built with links",
     files: [{ path: "particles/p-navigation-2.tsx", type: "registry:block" }],
     name: "p-navigation-2",
-    registryDependencies: ["@coss/segmented-control"],
+    registryDependencies: [
+      "@coss/segmented-control",
+      "@coss/segmented-control-indicator",
+    ],
     type: "registry:block",
   },
   {
@@ -4181,7 +4187,10 @@ export const particles: ParticleItem[] = [
     description: "Large segmented navigation built with links",
     files: [{ path: "particles/p-navigation-3.tsx", type: "registry:block" }],
     name: "p-navigation-3",
-    registryDependencies: ["@coss/segmented-control"],
+    registryDependencies: [
+      "@coss/segmented-control",
+      "@coss/segmented-control-indicator",
+    ],
     type: "registry:block",
   },
   {
@@ -4381,7 +4390,11 @@ export const particles: ParticleItem[] = [
     description: "Small segmented control built with a radio group",
     files: [{ path: "particles/p-radio-group-7.tsx", type: "registry:block" }],
     name: "p-radio-group-7",
-    registryDependencies: ["@coss/radio-group", "@coss/segmented-control"],
+    registryDependencies: [
+      "@coss/radio-group",
+      "@coss/segmented-control",
+      "@coss/segmented-control-indicator",
+    ],
     type: "registry:block",
   },
   {
@@ -4389,7 +4402,11 @@ export const particles: ParticleItem[] = [
     description: "Segmented control built with a radio group",
     files: [{ path: "particles/p-radio-group-8.tsx", type: "registry:block" }],
     name: "p-radio-group-8",
-    registryDependencies: ["@coss/radio-group", "@coss/segmented-control"],
+    registryDependencies: [
+      "@coss/radio-group",
+      "@coss/segmented-control",
+      "@coss/segmented-control-indicator",
+    ],
     type: "registry:block",
   },
   {
@@ -4397,7 +4414,11 @@ export const particles: ParticleItem[] = [
     description: "Large segmented control built with a radio group",
     files: [{ path: "particles/p-radio-group-9.tsx", type: "registry:block" }],
     name: "p-radio-group-9",
-    registryDependencies: ["@coss/radio-group", "@coss/segmented-control"],
+    registryDependencies: [
+      "@coss/radio-group",
+      "@coss/segmented-control",
+      "@coss/segmented-control-indicator",
+    ],
     type: "registry:block",
   },
   {

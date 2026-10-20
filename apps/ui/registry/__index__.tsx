@@ -7705,7 +7705,7 @@ export const Index: Record<string, any> = {
     name: "p-navigation-1",
     description: "Segmented navigation built with links",
     type: "registry:block",
-    registryDependencies: ["@coss/segmented-control"],
+    registryDependencies: ["@coss/segmented-control","@coss/segmented-control-indicator"],
     files: [{
       path: "registry/default/particles/p-navigation-1.tsx",
       type: "registry:block",
@@ -7723,7 +7723,7 @@ export const Index: Record<string, any> = {
     name: "p-navigation-2",
     description: "Small segmented navigation built with links",
     type: "registry:block",
-    registryDependencies: ["@coss/segmented-control"],
+    registryDependencies: ["@coss/segmented-control","@coss/segmented-control-indicator"],
     files: [{
       path: "registry/default/particles/p-navigation-2.tsx",
       type: "registry:block",
@@ -7741,7 +7741,7 @@ export const Index: Record<string, any> = {
     name: "p-navigation-3",
     description: "Large segmented navigation built with links",
     type: "registry:block",
-    registryDependencies: ["@coss/segmented-control"],
+    registryDependencies: ["@coss/segmented-control","@coss/segmented-control-indicator"],
     files: [{
       path: "registry/default/particles/p-navigation-3.tsx",
       type: "registry:block",
@@ -8065,7 +8065,7 @@ export const Index: Record<string, any> = {
     name: "p-radio-group-7",
     description: "Small segmented control built with a radio group",
     type: "registry:block",
-    registryDependencies: ["@coss/radio-group","@coss/segmented-control"],
+    registryDependencies: ["@coss/radio-group","@coss/segmented-control","@coss/segmented-control-indicator"],
     files: [{
       path: "registry/default/particles/p-radio-group-7.tsx",
       type: "registry:block",
@@ -8083,7 +8083,7 @@ export const Index: Record<string, any> = {
     name: "p-radio-group-8",
     description: "Segmented control built with a radio group",
     type: "registry:block",
-    registryDependencies: ["@coss/radio-group","@coss/segmented-control"],
+    registryDependencies: ["@coss/radio-group","@coss/segmented-control","@coss/segmented-control-indicator"],
     files: [{
       path: "registry/default/particles/p-radio-group-8.tsx",
       type: "registry:block",
@@ -8101,7 +8101,7 @@ export const Index: Record<string, any> = {
     name: "p-radio-group-9",
     description: "Large segmented control built with a radio group",
     type: "registry:block",
-    registryDependencies: ["@coss/radio-group","@coss/segmented-control"],
+    registryDependencies: ["@coss/radio-group","@coss/segmented-control","@coss/segmented-control-indicator"],
     files: [{
       path: "registry/default/particles/p-radio-group-9.tsx",
       type: "registry:block",
@@ -10765,6 +10765,24 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/default/lib/segmented-control.ts")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
+  "segmented-control-indicator": {
+    name: "segmented-control-indicator",
+    description: "",
+    type: "registry:lib",
+    registryDependencies: ["@coss/segmented-control","@coss/utils"],
+    files: [{
+      path: "registry/default/lib/segmented-control-indicator.tsx",
+      type: "registry:lib",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/lib/segmented-control-indicator.tsx")
       const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
       return { default: mod.default || mod[exportName] }
     }),

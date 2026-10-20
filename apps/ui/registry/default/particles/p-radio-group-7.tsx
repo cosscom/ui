@@ -4,6 +4,7 @@ import {
   segmentedControlItemVariants,
   segmentedControlRootClassName,
 } from "@/registry/default/lib/segmented-control";
+import { SegmentedControlIndicator } from "@/registry/default/lib/segmented-control-indicator";
 import {
   RadioGroupPrimitive,
   RadioPrimitive,
@@ -28,6 +29,7 @@ export default function Particle() {
       <RadioPrimitive.Root className={itemClassName} value="yearly">
         Yearly
       </RadioPrimitive.Root>
+      <SegmentedControlIndicator />
     </RadioGroupPrimitive>
   );
 }

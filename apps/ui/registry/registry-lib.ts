@@ -37,6 +37,17 @@ export const lib: Registry["items"] = [
     type: "registry:lib",
   },
   {
+    files: [
+      {
+        path: "lib/segmented-control-indicator.tsx",
+        type: "registry:lib",
+      },
+    ],
+    name: "segmented-control-indicator",
+    registryDependencies: ["@coss/segmented-control", "@coss/utils"],
+    type: "registry:lib",
+  },
+  {
     dependencies: ["clsx", "tailwind-merge"],
     files: [
       {

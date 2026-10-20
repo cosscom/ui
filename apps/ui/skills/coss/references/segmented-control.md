@@ -20,7 +20,7 @@ Do not use Tabs for navigation links, form values, or filters merely because the
 | Radio Group | `@coss/p-radio-group-7` | `@coss/p-radio-group-8` | `@coss/p-radio-group-9` |
 | Navigation links | `@coss/p-navigation-2` | `@coss/p-navigation-1` | `@coss/p-navigation-3` |
 
-The CLI installs the relevant primitive and the shared `@coss/segmented-control` styling library automatically.
+The CLI installs the relevant primitive, the shared `@coss/segmented-control` styling library, and the `@coss/segmented-control-indicator` sliding pill automatically.
 
 COSS does not publish a Toggle Group segmented particle. Use the shared styling directly only when a reversible mode genuinely allows no active option.
 
@@ -29,7 +29,7 @@ COSS does not publish a Toggle Group segmented particle. Use the shared styling 
 Install the styling library directly when none of the particles matches:
 
 ```bash
-npx shadcn@latest add @coss/segmented-control
+npx shadcn@latest add @coss/segmented-control @coss/segmented-control-indicator
 ```
 
 ```tsx
@@ -37,6 +37,7 @@ import {
   segmentedControlItemVariants,
   segmentedControlRootClassName,
 } from "@/lib/segmented-control"
+import { SegmentedControlIndicator } from "@/lib/segmented-control-indicator"
 ```
 
 Apply `segmentedControlRootClassName` to the group surface. Generate one item class with the matching state selector:
@@ -53,8 +54,21 @@ const itemClassName = segmentedControlItemVariants({
 - `state: "pressed"` for Toggle Group
 - `size: "sm" | "default" | "lg"`
 
+The `state` variants only set the active item’s text color; they do not paint a background. Render `<SegmentedControlIndicator />` as the last child of the root so the selection pill appears:
+
+```tsx
+<RadioGroupPrimitive className={segmentedControlRootClassName}>
+  <RadioPrimitive.Root className={itemClassName} value="monthly">
+    Monthly
+  </RadioPrimitive.Root>
+  <SegmentedControlIndicator />
+</RadioGroupPrimitive>
+```
+
+The indicator tracks the direct child with `data-checked`, `aria-current="page"`, or `data-pressed`, slides to it (200ms ease-in-out, none under reduced motion), and hides when no item is active. For navigation links, it animates only when the root persists across route changes, such as in a shared layout.
+
 Use the exported Radio Group primitives for a custom segmented radio presentation so the native radio indicator is not rendered. Keep a default or controlled value when the interface requires one option to remain selected.
 
-Tabs do not use the shared state recipe because they retain their animated indicator. They import the shared size map and `segmentedControlItemLayoutClassName`: set `size="sm" | "default" | "lg"` on `TabsList`, and use a `TabsTab` size only as an item-level override.
+Tabs do not use the shared state recipe or `SegmentedControlIndicator`; they use Base UI’s `Tabs.Indicator`, styled with the shared `segmentedControlIndicatorSurfaceClassName`. They also import the shared size map and `segmentedControlItemLayoutClassName`: set `size="sm" | "default" | "lg"` on `TabsList`, and use a `TabsTab` size only as an item-level override.
 
-Reuse the shared root, item, and layout recipes instead of copying their classes into a new segmented particle. This keeps Tabs and the radio, navigation, and toggle implementations optically aligned.
+Reuse the shared root, item, layout, and indicator recipes instead of copying their classes into a new segmented particle. This keeps Tabs and the radio, navigation, and toggle implementations optically aligned.
