@@ -19,7 +19,7 @@ const links = [
 ];
 
 export default function Particle() {
-  const [current, setCurrent] = useState(links[0].href);
+  const [current, setCurrent] = useState("#overview");
 
   return (
     <nav aria-label="Project sections">
