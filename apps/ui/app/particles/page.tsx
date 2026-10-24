@@ -67,9 +67,11 @@ export default function Page({
           <PageHeaderDescription className="text-pretty">
             {description}
           </PageHeaderDescription>
-          <Suspense>
-            <SearchContainer />
-          </Suspense>
+          <div className="mt-2 min-h-12 w-full sm:min-h-11">
+            <Suspense>
+              <SearchContainer />
+            </Suspense>
+          </div>
         </div>
         <div className="pointer-events-none mx-auto hidden w-full max-w-140 select-none lg:-my-14 lg:block">
           <ParticlesBlueprint />

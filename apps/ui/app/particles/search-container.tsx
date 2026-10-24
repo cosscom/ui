@@ -50,12 +50,10 @@ export default function SearchContainer() {
   );
 
   return (
-    <div className="mt-2 w-full">
-      <SearchField
-        items={searchItems}
-        onItemsChange={updateSelectedItems}
-        selectedItems={selectedItems}
-      />
-    </div>
+    <SearchField
+      items={searchItems}
+      onItemsChange={updateSelectedItems}
+      selectedItems={selectedItems}
+    />
   );
 }
