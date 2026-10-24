@@ -17,7 +17,6 @@ import {
 } from "@/registry/default/ui/card";
 import { particles } from "@/registry/registry-particles";
 import { getCategoryThumbnail } from "@/components/category-thumbnails";
-import { PageHero } from "@/components/page-hero";
 import { PrimitivesBlueprint } from "@/components/primitives-blueprint";
 import { categories } from "@/config/categories";
 import { PAGES_NEW } from "@/lib/docs";
@@ -33,24 +32,29 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <>
-      <PageHero illustration={<PrimitivesBlueprint />}>
-        <PageHeaderHeading>
-          A new, modern UI component library built on top of Base UI.
-        </PageHeaderHeading>
-        <PageHeaderDescription>{description}</PageHeaderDescription>
-        <div className="mt-1 flex flex-wrap gap-2">
-          <Button render={<Link href="/docs" />} size="lg">
-            Get started
-          </Button>
-          <Button
-            render={<Link href="/particles" />}
-            size="lg"
-            variant="outline"
-          >
-            Browse {particleCount} particles
-          </Button>
+      <section className="container grid w-full items-center gap-6 py-10 md:py-14 lg:grid-cols-2 lg:gap-10 lg:py-16 xl:gap-16">
+        <div className="flex min-w-0 flex-col items-start gap-5 [font-optical-sizing:auto] [font-synthesis:none]">
+          <PageHeaderHeading className="text-balance leading-[1.08] [font-variation-settings:'GEOM'_50] xl:text-[3.5rem]">
+            A new, modern UI component library built on top of Base UI.
+          </PageHeaderHeading>
+          <PageHeaderDescription>{description}</PageHeaderDescription>
+          <div className="mt-1 flex flex-wrap gap-2">
+            <Button render={<Link href="/docs" />} size="lg">
+              Get started
+            </Button>
+            <Button
+              render={<Link href="/particles" />}
+              size="lg"
+              variant="outline"
+            >
+              Browse {particleCount} particles
+            </Button>
+          </div>
         </div>
-      </PageHero>
+        <div className="pointer-events-none mx-auto w-full max-w-140 select-none max-lg:max-w-112">
+          <PrimitivesBlueprint />
+        </div>
+      </section>
       <div className="relative before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-border/64">
         <div
           aria-hidden="true"

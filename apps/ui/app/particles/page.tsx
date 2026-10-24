@@ -10,7 +10,6 @@ import { isValidRegistryCategory } from "@/registry/registry-categories";
 import { particles } from "@/registry/registry-particles";
 import { ParticlesDisplay } from "./particles-display";
 import SearchContainer from "./search-container";
-import { PageHero } from "@/components/page-hero";
 import { ParticlesBlueprint } from "@/components/particles-blueprint";
 
 const particleCount = particles.length;
@@ -62,20 +61,27 @@ export default function Page({
 }) {
   return (
     <>
-      <PageHero illustration={<ParticlesBlueprint />}>
-        <PageHeaderHeading>Browse Particles</PageHeaderHeading>
-        <PageHeaderDescription className="max-w-lg text-pretty">
-          {description}
-        </PageHeaderDescription>
-        <div className="mt-1 flex flex-wrap gap-2">
-          <Button render={<Link href="#particles" />} size="lg">
-            Explore {particleCount} particles
-          </Button>
-          <Button render={<Link href="/docs" />} size="lg" variant="outline">
-            Read the docs
-          </Button>
+      <section className="container grid w-full items-center gap-6 py-10 md:py-14 lg:grid-cols-2 lg:gap-10 lg:py-16 xl:gap-16">
+        <div className="flex min-w-0 flex-col items-start gap-5 [font-optical-sizing:auto] [font-synthesis:none]">
+          <PageHeaderHeading className="text-balance leading-[1.08] [font-variation-settings:'GEOM'_50] xl:text-[3.5rem]">
+            Browse Particles
+          </PageHeaderHeading>
+          <PageHeaderDescription className="max-w-lg text-pretty">
+            {description}
+          </PageHeaderDescription>
+          <div className="mt-1 flex flex-wrap gap-2">
+            <Button render={<Link href="#particles" />} size="lg">
+              Explore {particleCount} particles
+            </Button>
+            <Button render={<Link href="/docs" />} size="lg" variant="outline">
+              Read the docs
+            </Button>
+          </div>
         </div>
-      </PageHero>
+        <div className="pointer-events-none mx-auto w-full max-w-140 select-none max-lg:max-w-112">
+          <ParticlesBlueprint />
+        </div>
+      </section>
       <div className="border-t pt-8 md:pt-12">
         <div className="container w-full scroll-mt-24" id="particles">
           <Suspense>

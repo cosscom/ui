@@ -7,7 +7,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/registry/default/ui/button";
 import { NotFoundBlueprint } from "@/components/not-found-blueprint";
-import { PageHero } from "@/components/page-hero";
 
 export const metadata: Metadata = {
   description:
@@ -17,8 +16,13 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <PageHero illustration={<NotFoundBlueprint />}>
-      <PageHeaderHeading>Page Not Found</PageHeaderHeading>
+    <section className="container flex w-full flex-col items-center gap-5 py-10 text-center [font-optical-sizing:auto] [font-synthesis:none] md:py-14 lg:py-16">
+      <div className="pointer-events-none w-full max-w-112 select-none">
+        <NotFoundBlueprint />
+      </div>
+      <PageHeaderHeading className="text-balance leading-[1.08] [font-variation-settings:'GEOM'_50]">
+        Page Not Found
+      </PageHeaderHeading>
       <PageHeaderDescription className="max-w-md text-pretty">
         The page you’re looking for doesn’t exist or may have been moved.
       </PageHeaderDescription>
@@ -28,6 +32,6 @@ export default function NotFound() {
           Back to Home
         </Button>
       </div>
-    </PageHero>
+    </section>
   );
 }
