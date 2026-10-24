@@ -1,14 +1,17 @@
 import {
-  PageHeader,
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@coss/ui/shared/page-header";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Suspense } from "react";
+import { Button } from "@/registry/default/ui/button";
 import { isValidRegistryCategory } from "@/registry/registry-categories";
 import { particles } from "@/registry/registry-particles";
 import { ParticlesDisplay } from "./particles-display";
 import SearchContainer from "./search-container";
+import { PageHero } from "@/components/page-hero";
+import { ParticlesBlueprint } from "@/components/particles-blueprint";
 
 const particleCount = particles.length;
 
@@ -58,19 +61,31 @@ export default function Page({
   searchParams: Promise<{ tags?: string }>;
 }) {
   return (
-    <div className="container w-full">
-      <PageHeader className="*:pb-8!">
+    <>
+      <PageHero illustration={<ParticlesBlueprint />}>
         <PageHeaderHeading>Browse Particles</PageHeaderHeading>
-        <PageHeaderDescription className="max-w-2xl">
+        <PageHeaderDescription className="max-w-lg text-pretty">
           {description}
         </PageHeaderDescription>
-      </PageHeader>
-      <Suspense>
-        <SearchContainer />
-      </Suspense>
-      <Suspense>
-        <ParticlesDisplayServer searchParams={searchParams} />
-      </Suspense>
-    </div>
+        <div className="mt-1 flex flex-wrap gap-2">
+          <Button render={<Link href="#particles" />} size="lg">
+            Explore {particleCount} particles
+          </Button>
+          <Button render={<Link href="/docs" />} size="lg" variant="outline">
+            Read the docs
+          </Button>
+        </div>
+      </PageHero>
+      <div className="border-t pt-8 md:pt-12">
+        <div className="container w-full scroll-mt-24" id="particles">
+          <Suspense>
+            <SearchContainer />
+          </Suspense>
+          <Suspense>
+            <ParticlesDisplayServer searchParams={searchParams} />
+          </Suspense>
+        </div>
+      </div>
+    </>
   );
 }

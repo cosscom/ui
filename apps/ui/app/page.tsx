@@ -1,5 +1,4 @@
 import {
-  PageHeader,
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@coss/ui/shared/page-header";
@@ -18,6 +17,8 @@ import {
 } from "@/registry/default/ui/card";
 import { particles } from "@/registry/registry-particles";
 import { getCategoryThumbnail } from "@/components/category-thumbnails";
+import { PageHero } from "@/components/page-hero";
+import { PrimitivesBlueprint } from "@/components/primitives-blueprint";
 import { categories } from "@/config/categories";
 import { PAGES_NEW } from "@/lib/docs";
 
@@ -32,26 +33,24 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <>
-      <div className="container w-full">
-        <PageHeader className="max-w-2xl *:items-start *:text-left">
-          <PageHeaderHeading>
-            A new, modern UI component library built on top of Base UI.
-          </PageHeaderHeading>
-          <PageHeaderDescription>{description}</PageHeaderDescription>
-          <div className="mt-2 flex gap-2">
-            <Button render={<Link href="/docs" />} size="lg">
-              Get started
-            </Button>
-            <Button
-              render={<Link href="/particles" />}
-              size="lg"
-              variant="outline"
-            >
-              Browse {particleCount} particles
-            </Button>
-          </div>
-        </PageHeader>
-      </div>
+      <PageHero illustration={<PrimitivesBlueprint />}>
+        <PageHeaderHeading>
+          A new, modern UI component library built on top of Base UI.
+        </PageHeaderHeading>
+        <PageHeaderDescription>{description}</PageHeaderDescription>
+        <div className="mt-1 flex flex-wrap gap-2">
+          <Button render={<Link href="/docs" />} size="lg">
+            Get started
+          </Button>
+          <Button
+            render={<Link href="/particles" />}
+            size="lg"
+            variant="outline"
+          >
+            Browse {particleCount} particles
+          </Button>
+        </div>
+      </PageHero>
       <div className="relative before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-border/64">
         <div
           aria-hidden="true"
