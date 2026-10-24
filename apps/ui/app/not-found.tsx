@@ -1,44 +1,33 @@
 import {
-  PageHeader,
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@coss/ui/shared/page-header";
-import { RiArrowLeftLine } from "@remixicon/react";
+import { ArrowLeftIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/registry/default/ui/button";
+import { NotFoundBlueprint } from "@/components/not-found-blueprint";
+import { PageHero } from "@/components/page-hero";
 
 export const metadata: Metadata = {
   description:
-    "The page you're looking for doesn't exist or may have been moved.",
+    "The page you’re looking for doesn’t exist or may have been moved.",
   title: "Page Not Found",
 };
 
 export default function NotFound() {
   return (
-    <div className="container w-full">
-      <PageHeader>
-        <PageHeaderHeading>Page Not Found</PageHeaderHeading>
-        <PageHeaderDescription>
-          The page you&apos;re looking for doesn&apos;t exist or may have been
-          moved.
-        </PageHeaderDescription>
-        <div className="mt-4">
-          <Button
-            className="group"
-            render={
-              <Link href="/">
-                <RiArrowLeftLine
-                  aria-hidden="true"
-                  className="-ms-1 opacity-60 transition-transform group-hover:-translate-x-0.5"
-                />
-                Back to Home
-              </Link>
-            }
-            size="lg"
-          />
-        </div>
-      </PageHeader>
-    </div>
+    <PageHero illustration={<NotFoundBlueprint />}>
+      <PageHeaderHeading>Page Not Found</PageHeaderHeading>
+      <PageHeaderDescription className="max-w-md text-pretty">
+        The page you’re looking for doesn’t exist or may have been moved.
+      </PageHeaderDescription>
+      <div className="mt-1">
+        <Button render={<Link href="/" />} size="lg">
+          <ArrowLeftIcon aria-hidden="true" />
+          Back to Home
+        </Button>
+      </div>
+    </PageHero>
   );
 }
