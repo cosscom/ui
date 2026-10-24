@@ -13,11 +13,8 @@ export function ParticlesBlueprint() {
     <BlueprintDrawing>
       <g transform="translate(0 -24)">
         <g opacity="0.12" strokeWidth="0.6">
-          <path d="M72 132H488 M72 176H488 M72 232H488 M72 276H488 M72 320H488 M72 364H488" />
+          <path d="M72 132H488 M72 176H488 M72 232H488 M72 364H488" />
           <path d="M88 112V380 M176 112V380 M200 112V380 M224 112V380 M336 112V380 M360 112V380 M384 112V380 M472 112V380" />
-        </g>
-        <g opacity="0.07" strokeWidth="0.6">
-          <path d="M72 154H488 M72 254H488 M72 298H488 M72 342H488" />
         </g>
         <g opacity="0.19" strokeDasharray="4 6" strokeWidth="0.6">
           <path d="M144 112V176 M144 232V380 M280 112V176 M280 232V380 M416 112V176 M416 232V380" />
