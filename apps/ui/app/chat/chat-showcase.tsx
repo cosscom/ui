@@ -81,6 +81,15 @@ function InstallCommand({ command }: { command: string }) {
   );
 }
 
+function SectionMarkers() {
+  return (
+    <div
+      aria-hidden="true"
+      className="container pointer-events-none absolute inset-0 z-50 before:absolute before:top-[-4.5px] before:-left-[11.5px] before:z-1 before:-ml-1 before:size-2 before:rounded-[2px] before:border before:border-border before:bg-popover before:bg-clip-padding before:shadow-xs after:absolute after:top-[-4.5px] after:-right-[11.5px] after:z-1 after:-mr-1 after:size-2 after:rounded-[2px] after:border after:border-border after:bg-background after:bg-clip-padding after:shadow-xs dark:after:bg-clip-border dark:before:bg-clip-border"
+    />
+  );
+}
+
 function SectionHeading({
   id,
   title,
@@ -170,8 +179,9 @@ export function ChatShowcase() {
 
           <section
             aria-labelledby="chat-features"
-            className="border-t bg-muted/24"
+            className="relative border-t bg-muted/24"
           >
+            <SectionMarkers />
             <div className="container py-14 md:py-20">
               <SectionHeading
                 id="chat-features"
@@ -182,7 +192,8 @@ export function ChatShowcase() {
             </div>
           </section>
 
-          <section aria-labelledby="chat-states" className="border-t">
+          <section aria-labelledby="chat-states" className="relative border-t">
+            <SectionMarkers />
             <div className="container py-14 md:py-20">
               <SectionHeading
                 id="chat-states"
@@ -211,8 +222,9 @@ export function ChatShowcase() {
 
           <section
             aria-labelledby="chat-layouts"
-            className="border-t bg-muted/24"
+            className="relative border-t bg-muted/24"
           >
+            <SectionMarkers />
             <div className="container py-14 md:py-20">
               <SectionHeading
                 id="chat-layouts"
@@ -223,7 +235,8 @@ export function ChatShowcase() {
             </div>
           </section>
 
-          <section aria-labelledby="chat-build" className="border-t">
+          <section aria-labelledby="chat-build" className="relative border-t">
+            <SectionMarkers />
             <div className="container grid gap-12 py-14 md:grid-cols-[2fr_3fr] md:py-20">
               <div className="flex flex-col items-start">
                 <h2
