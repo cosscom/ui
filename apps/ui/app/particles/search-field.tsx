@@ -3,7 +3,7 @@
 import { LabelIcon, Search01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as React from "react";
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { Index } from "@/registry/__index__";
 import {
   Combobox,
@@ -11,12 +11,13 @@ import {
   ComboboxChips,
   ComboboxChipsInput,
   ComboboxCollection,
+  ComboboxContext,
   ComboboxEmpty,
   ComboboxGroup,
   ComboboxGroupLabel,
   ComboboxItem,
   ComboboxList,
-  ComboboxPopup,
+  ComboboxPrimitive,
   ComboboxSeparator,
   ComboboxValue,
 } from "@/registry/default/ui/combobox";
@@ -177,7 +178,7 @@ export default function SearchField({
             )}
           </ComboboxValue>
         </ComboboxChips>
-        <ComboboxPopup>
+        <SearchPopup>
           <ComboboxEmpty>No filters found.</ComboboxEmpty>
           <ComboboxList>
             {(group: (typeof groupedItems)[number]) => (
@@ -213,8 +214,40 @@ export default function SearchField({
               </React.Fragment>
             )}
           </ComboboxList>
-        </ComboboxPopup>
+        </SearchPopup>
       </Combobox>
     </div>
+  );
+}
+
+// Keep this page’s search below the field without changing the shared popup.
+function SearchPopup({ children }: { children: React.ReactNode }) {
+  const { chipsRef } = useContext(ComboboxContext);
+
+  return (
+    <ComboboxPrimitive.Portal>
+      <ComboboxPrimitive.Positioner
+        align="start"
+        anchor={chipsRef}
+        className="z-50 select-none"
+        collisionAvoidance={{
+          side: "none",
+          align: "shift",
+          fallbackAxisSide: "none",
+        }}
+        data-slot="combobox-positioner"
+        side="bottom"
+        sideOffset={4}
+      >
+        <span className="relative flex max-h-full min-w-(--anchor-width) max-w-(--available-width) origin-(--transform-origin) rounded-lg border bg-popover not-dark:bg-clip-padding shadow-lg/5 transition-[scale,opacity] before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-lg)-1px)] before:shadow-[0_1px_--theme(--color-black/4%)] dark:before:shadow-[0_-1px_--theme(--color-white/6%)]">
+          <ComboboxPrimitive.Popup
+            className="flex max-h-[min(var(--available-height),23rem)] flex-1 flex-col text-foreground"
+            data-slot="combobox-popup"
+          >
+            {children}
+          </ComboboxPrimitive.Popup>
+        </span>
+      </ComboboxPrimitive.Positioner>
+    </ComboboxPrimitive.Portal>
   );
 }
