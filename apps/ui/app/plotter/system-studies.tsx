@@ -400,7 +400,7 @@ export const systemStudies: IllustrationStudy[] = [
     title: "Tangency",
     description:
       "A circle meets two straightedges. The contact points make a simple construction rule the central gesture.",
-    category: "Primitives",
+    category: "Foundations",
     illustration: <TangencyStudy />,
   },
   {
@@ -409,7 +409,7 @@ export const systemStudies: IllustrationStudy[] = [
     title: "The corner rule",
     description:
       "One enlarged corner reveals the radius, offset, and tangent points behind a familiar interface shape.",
-    category: "Primitives",
+    category: "Foundations",
     illustration: <CornerRuleStudy />,
   },
   {
@@ -418,7 +418,7 @@ export const systemStudies: IllustrationStudy[] = [
     title: "A system of proportions",
     description:
       "Four squares grow from one shared unit. A single diagonal connects the scale into a structural rhythm.",
-    category: "Primitives",
+    category: "Foundations",
     illustration: <ProportionStudy />,
   },
   {
@@ -427,7 +427,7 @@ export const systemStudies: IllustrationStudy[] = [
     title: "An assembly of parts",
     description:
       "An icon, a label, and a status pill align into one row, shown as an exploded technical drawing.",
-    category: "Particles",
+    category: "Interfaces",
     illustration: <AssemblyStudy />,
   },
   {
@@ -436,7 +436,7 @@ export const systemStudies: IllustrationStudy[] = [
     title: "A modular tray",
     description:
       "Different interface fragments occupy a shared grid, like precisely fitted pieces in an architectural plan.",
-    category: "Particles",
+    category: "Interfaces",
     illustration: <ModularTrayStudy />,
   },
   {
@@ -445,7 +445,7 @@ export const systemStudies: IllustrationStudy[] = [
     title: "Recombination",
     description:
       "Identity, visibility, and action combine into one compact panel. Each of the three fragments keeps its role in the assembled result.",
-    category: "Particles",
+    category: "Interfaces",
     illustration: <ParticlesBlueprint />,
   },
 ];

@@ -1,18 +1,13 @@
 import type { ReactNode } from "react";
 
 export type StudyCategory =
-  | "Cal.com"
+  | "Foundations"
   | "Interfaces"
+  | "Scheduling"
   | "Services"
-  | "Documents"
-  | "Workflows"
+  | "Systems"
   | "Objects"
-  | "Data"
-  | "Typography"
-  | "States"
-  | "404"
-  | "Primitives"
-  | "Particles";
+  | "Empty states";
 
 export type IllustrationStudy = {
   id: string;
@@ -21,9 +16,4 @@ export type IllustrationStudy = {
   description: string;
   category: StudyCategory;
   illustration: ReactNode;
-  baseline?: boolean;
-  selected?: boolean;
-  revision?: boolean;
-  review?: "reference" | "outside" | "partial";
-  reviewNote?: string;
 };

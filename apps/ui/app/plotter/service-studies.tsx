@@ -430,7 +430,6 @@ export const serviceStudies: IllustrationStudy[] = [
       "An edge cache between visitor and origin: a hit returns locally, while a miss continues outward. A study of Cloudflare’s CDN role.",
     category: "Services",
     illustration: <CloudflareEdgeStudy />,
-    revision: true,
   },
   {
     id: "service-vercel-deploy",
@@ -440,7 +439,6 @@ export const serviceStudies: IllustrationStudy[] = [
       "Preview 02 is selected for production. Matching outlines identify the same source version; promotion rebuilds it for the production environment.",
     category: "Services",
     illustration: <VercelDeploymentStudy />,
-    revision: true,
   },
   {
     id: "service-stripe-settlement",

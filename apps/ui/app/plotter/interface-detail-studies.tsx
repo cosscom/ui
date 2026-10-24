@@ -206,7 +206,6 @@ export const interfaceDetailStudies: IllustrationStudy[] = [
       "An enlarged corner of browser chrome. A tab, navigation controls, and an open address field reveal the window’s construction while dashed edges continue beyond the drawing.",
     category: "Interfaces",
     illustration: <BrowserPlanStudy />,
-    revision: true,
   },
   {
     id: "interface-phone-plan",
@@ -225,6 +224,5 @@ export const interfaceDetailStudies: IllustrationStudy[] = [
       "Two rounded message blocks pair with circular avatars. Shared radius, text inset, and avatar spacing construct the conversation without pointed tails.",
     category: "Interfaces",
     illustration: <ChatPlanStudy />,
-    revision: true,
   },
 ];

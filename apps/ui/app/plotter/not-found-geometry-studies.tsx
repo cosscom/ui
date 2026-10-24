@@ -1,76 +1,6 @@
 import { BlueprintDrawing } from "./blueprint-drawing";
 import type { IllustrationStudy } from "./study-types";
 
-function OffTheGrid() {
-  return (
-    <BlueprintDrawing>
-      <g opacity="0.09" strokeWidth="0.6">
-        <path d="M146 128V336M198 128V336M250 128V336M302 128V336M354 128V336" />
-        <path d="M130 128H370M130 180H370M130 232H370M130 284H370M130 336H370" />
-      </g>
-      <g opacity="0.24" strokeWidth="0.65">
-        <path d="M250 103V354M112 232H380" strokeDasharray="5 5" />
-        <path d="M198 160V308M302 160V308M178 180H324M178 284H324" />
-        <path d="M138 120H154M146 112V128M346 336H362M354 336V352" />
-        <path d="M250 232 414 124" strokeDasharray="3 5" />
-        <path d="M250 112H414V232" strokeDasharray="3 5" />
-      </g>
-
-      <g strokeWidth="0.95">
-        <rect
-          height="104"
-          opacity="0.32"
-          strokeDasharray="4 5"
-          width="104"
-          x="198"
-          y="180"
-        />
-        <path d="M198 194V180H212M288 180H302V194M302 270V284H288M212 284H198V270" />
-        <rect
-          fill="var(--color-sidebar)"
-          height="64"
-          transform="rotate(12 414 124)"
-          width="64"
-          x="382"
-          y="92"
-        />
-        <path d="M244 232H256M250 226V238" opacity="0.55" />
-      </g>
-
-      <g opacity="0.4" strokeWidth="0.65">
-        <path d="M198 322H242M258 322H302M198 316V328M302 316V328" />
-        <path d="m194 326 8-8m96 8 8-8" />
-        <path d="M250 80H315M348 80H414M250 74V86M414 74V86" />
-        <path d="m246 84 8-8m156 8 8-8" />
-        <path d="M446 192H466L479 179M458 124V167M458 202V232" />
-        <path d="M452 124H464M452 232H464" />
-        <path d="M310 190H336L350 176" />
-        <path d="M403 124H425M414 113V135" />
-      </g>
-      <g fill="currentColor" fontSize="10" opacity="0.5" stroke="none">
-        <text textAnchor="middle" x="250" y="326">
-          u
-        </text>
-        <text textAnchor="middle" x="332" y="83">
-          Δx
-        </text>
-        <text x="478" y="174">
-          Δy
-        </text>
-        <text x="353" y="174">
-          ∅
-        </text>
-        <text x="146" y="383">
-          Outside the system
-        </text>
-        <text textAnchor="end" x="448" y="383">
-          01 → 00
-        </text>
-      </g>
-    </BlueprintDrawing>
-  );
-}
-
 function UnbuiltArch() {
   return (
     <BlueprintDrawing>
@@ -137,21 +67,12 @@ function UnbuiltArch() {
 
 export const notFoundGeometryStudies: IllustrationStudy[] = [
   {
-    id: "404-off-grid",
-    code: "E05",
-    title: "Off the grid",
-    description:
-      "One displaced form leaves an empty address in the construction grid, suggesting a page outside the system.",
-    category: "404",
-    illustration: <OffTheGrid />,
-  },
-  {
     id: "404-unbuilt-arch",
     code: "E06",
     title: "An unbuilt arch",
     description:
       "An arch awaits its central keystone, turning the missing page into an unfinished architectural connection.",
-    category: "404",
+    category: "Empty states",
     illustration: <UnbuiltArch />,
   },
 ];

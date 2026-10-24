@@ -51,62 +51,6 @@ function MissingDestination() {
   );
 }
 
-function CompleteAssembly() {
-  return (
-    <BlueprintDrawing>
-      <g opacity="0.1" strokeWidth="0.6">
-        <path d="M160 88V352M220 88V352M280 88V352M340 88V352M400 88V352" />
-        <path d="M132 100H430M132 160H430M132 220H430M132 280H430M132 340H430" />
-      </g>
-      <g opacity="0.28" strokeWidth="0.6">
-        <path d="M280 76V364M120 220H440" strokeDasharray="5 6" />
-        <path d="M154 94h12M160 88v12M394 346h12M400 340v12" />
-        <path d="M160 370H400M160 363v14M400 363v14m-244-3 8-8m232 8 8-8" />
-        <path d="M126 100V340M120 100h12M120 340h12" />
-      </g>
-      <g fill="var(--color-sidebar)" strokeWidth="0.9">
-        <path d="M174 100H268V208H160V114a14 14 0 0 1 14-14Z" />
-        <path d="M292 100H386a14 14 0 0 1 14 14V208H292Z" />
-        <path d="M160 232H400V326a14 14 0 0 1-14 14H174a14 14 0 0 1-14-14Z" />
-      </g>
-      <g opacity="0.3" strokeWidth="0.6">
-        <path d="m204 220 48 48 108-108" strokeDasharray="4 5" />
-        <path d="M198 214H210M204 208V220M354 166H366M360 160V172" />
-        <path d="M252 268V296M240 284H268" />
-        <path d="M276 244a34 34 0 0 0-48 0" />
-      </g>
-      <path
-        d="m196 220 17-17 39 39 99-99 17 17-116 116Z"
-        fill="var(--color-sidebar)"
-        strokeWidth="1.1"
-      />
-      <path
-        d="m204.5 211.5 47.5 47.5 107.5-107.5"
-        opacity="0.18"
-        strokeWidth="0.6"
-      />
-      <g opacity="0.4" strokeWidth="0.6">
-        <path d="M292 118H316L334 87H370" />
-        <path d="M268 120H292M268 114v12M292 114v12" />
-      </g>
-      <g fill="currentColor" fontSize="10" opacity="0.52" stroke="none">
-        <text x="375" y="90">
-          Aligned
-        </text>
-        <text textAnchor="end" x="113" y="224">
-          1 : 1
-        </text>
-        <text textAnchor="middle" x="280" y="391">
-          All in place
-        </text>
-        <text textAnchor="middle" x="252" y="303">
-          90°
-        </text>
-      </g>
-    </BlueprintDrawing>
-  );
-}
-
 export const stateStudies: IllustrationStudy[] = [
   {
     id: "state-missing-page",
@@ -114,16 +58,7 @@ export const stateStudies: IllustrationStudy[] = [
     title: "The missing destination",
     description:
       "A clear route reaches the outline of a page that isn’t there. The absence belongs to the destination.",
-    category: "States",
+    category: "Empty states",
     illustration: <MissingDestination />,
-  },
-  {
-    id: "state-complete",
-    code: "S02",
-    title: "Everything in place",
-    description:
-      "Three fitted panels become one complete assembly, with a precisely constructed check marking the finished work.",
-    category: "States",
-    illustration: <CompleteAssembly />,
   },
 ];

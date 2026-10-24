@@ -244,7 +244,6 @@ export const flatSystemStudies: IllustrationStudy[] = [
       "Three separate elements project into one control. Equal gaps, a common centerline, and a shared radius make the assembly rule visible.",
     category: "Interfaces",
     illustration: <SpacingPlanStudy />,
-    revision: true,
   },
   {
     id: "workflow-switch-plan",
@@ -252,9 +251,8 @@ export const flatSystemStudies: IllustrationStudy[] = [
     title: "A connection, located",
     description:
       "Three inputs meet three outputs on a regular switching grid. A single closed junction connects B to 02, turning an abstract matrix into a precise route.",
-    category: "Workflows",
+    category: "Systems",
     illustration: <SwitchPlanStudy />,
-    revision: true,
   },
   {
     id: "data-coordinate-plan",
@@ -262,8 +260,7 @@ export const flatSystemStudies: IllustrationStudy[] = [
     title: "A measured distribution",
     description:
       "A small cluster occupies a regular coordinate field. Two projected measurements locate one point and make the underlying rule visible.",
-    category: "Data",
+    category: "Systems",
     illustration: <CoordinatePlanStudy />,
-    revision: true,
   },
 ];

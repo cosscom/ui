@@ -225,7 +225,6 @@ export const flatObjectStudies: IllustrationStudy[] = [
       "An enlarged portion of a keyboard, with staggered letter rows and wider modifiers. Open edges and dashed continuation reveal a detail within a larger system.",
     category: "Objects",
     illustration: <KeyboardPlanStudy />,
-    revision: true,
   },
   {
     id: "object-lamp-elevation",
@@ -244,6 +243,5 @@ export const flatObjectStudies: IllustrationStudy[] = [
       "Three independent folders share one tab, radius, and outline. Equal spacing and a common centerline turn a familiar shape into a small construction system.",
     category: "Objects",
     illustration: <FolderPlanStudy />,
-    revision: true,
   },
 ];

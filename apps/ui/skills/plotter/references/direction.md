@@ -8,11 +8,11 @@ The user explicitly called the original Primitives and Particles illustrations t
 
 The user also explicitly said they “love the Linear example” (B04). Use [Linear](linear.png) as a service-concept reference: issue units aligned to a cycle and release. This endorses that example, not every service drawing.
 
-The gallery gives the entire Primitives/Particles categories reference status. That metadata is broader than the user’s clearest endorsement of the original two drawings.
+The former lab assigned reference status to the entire Primitives/Particles categories. That metadata exceeded the user’s clearest endorsement of the original two drawings and is not an approval source.
 
 ## Production selections
 
-The user explicitly selected **P00** for the main page, [**C03** for Particles](particles-recombination.png), and [**E02** for the 404](not-found-interrupted-path.png). These are current implementation decisions. The original Primitives/Particles references and loved Linear study still guide the broader style. The lab owns independent snapshots of the selected drawings, so it can ship separately from the production integration. Original C00 and E00 remain separate historical studies.
+The user explicitly selected **P00** for the main page, [**C03** for Particles](particles-recombination.png), and [**E02** for the 404](not-found-interrupted-path.png). These are current implementation decisions. The original Primitives/Particles references and loved Linear study still guide the broader style. The Plotter showcase owns independent snapshots of the selected drawings, so it can ship separately from the production integration. Original C00 and E00 remain separate examples.
 
 ## Review evidence
 
@@ -20,8 +20,8 @@ The user explicitly selected **P00** for the main page, [**C03** for Particles](
 | --- | --- |
 | C03: requests a third element so the composition becomes “A + B + C” | Revise C03 in place. Added an Open action alongside identity and visibility, repeated as the third row of the assembled panel; three equal rows measure 3u. This is a requested experiment, awaiting review. |
 | C03 A + B + C: “it’s not vertical aligned” and the underlying grid “looks bad or it’s sparse” | Optically center the composition within its SVG and use continuous construction guides aligned to component edges and row boundaries. This is the implementation response to the critique, awaiting review. |
-| User asks to hide the home and Particles illustrations on smaller screens | Show those two hero drawings only from the existing desktop split-layout breakpoint (`lg`, 1024px). This does not change the 404 or standalone lab studies. |
-| User rejects a shared page-hero component and asks for the 404 heading to stay centered with the illustration above | Keep main and Particles split layouts in their pages. Use an illustration-first centered stack for the 404, including its lab hero previews. |
+| User asks to hide the home and Particles illustrations on smaller screens | Show those two hero drawings only from the existing desktop split-layout breakpoint (`lg`, 1024px). This does not change the 404 or standalone showcase illustrations. |
+| User rejects a shared page-hero component and asks for the 404 heading to stay centered with the illustration above | Keep main and Particles split layouts in their pages. Use an illustration-first centered stack for the production 404 page. The showcase presents the drawing on its own. |
 | User asks to restore the previous Particles page, then explicitly confirms “Keep C03; restore search beneath heading” and references PR #895 for headings | Keep C03 on the right, restore search beneath the left-aligned heading/description, and remove the added hero CTAs. Use PR #895’s fluid 36–64px heading scale, leading-none, and GEOM50 on the main and Particles pages. |
 | User rejected K01, K04, K05, I01, I02, D01, D02, W01, O01, O02, A01, A02, S02; W02 partly | Explicit group feedback: these went beyond the desired set. The stated general boundary was flat 2D electrical/architectural blueprints, with no 3D or skewed views. |
 | K06: not clear it is a week | Revised with Mon–Sun, hourly rows, and a labeled Thursday interval. A seven-column grid alone did not establish the subject. |
@@ -45,6 +45,12 @@ The user explicitly selected **P00** for the main page, [**C03** for Particles](
 | Request for more popular-service examples | New B05–B09 are exploration, awaiting user review. |
 
 The earlier K06/K08/I03/W02/W03 revision pass is captured in coss commit `285493c9` on `codex/blueprint-illustration-studies`. The preceding flat-direction pass is `e9077a93`. Preserve this evidence if gallery metadata later changes.
+
+## Showcase curation
+
+The user subsequently asked to remove unwanted and discarded examples and turn the lab into a showcase named **Plotter illustrations**. The collection now contains 39 illustrations at `/ui/plotter`, with category filters and enlarged previews. Shortlists, review controls, and page-hero mockups have been removed.
+
+The 13 explicitly rejected entries (K01, K04, K05, I01, I02, D01, D02, W01, O01, O02, A01, A02, S02) and the assistant-set-aside E03/E05 were removed from the drawing code. E04 was already absent. W02 stays because its revised planar route received the later collective “much better” response. Retained revisions of other critiqued examples remain subject to the evidence above: curation is not individual approval or promotion to a style anchor.
 
 ## Expanded subject brief
 

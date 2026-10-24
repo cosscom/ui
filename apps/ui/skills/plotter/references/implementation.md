@@ -17,26 +17,26 @@ Find the checkout from the current workspace; the skill does not require a parti
 
 | Purpose | Repository-relative source |
 | --- | --- |
-| Shared viewBox, typography, strokes | `apps/ui/app/illustration-lab/blueprint-drawing.tsx` |
-| Primary geometry reference | `apps/ui/app/illustration-lab/primitives-blueprint.tsx` |
-| Selected Particles composition (C03) | `apps/ui/app/illustration-lab/particles-blueprint.tsx` |
-| Selected 404 composition (E02) | `apps/ui/app/illustration-lab/not-found-blueprint.tsx` |
-| Original Particles style anchor (C00) | `apps/ui/app/illustration-lab/original-particles-blueprint.tsx` |
+| Shared viewBox, typography, strokes | `apps/ui/app/plotter/blueprint-drawing.tsx` |
+| Primary geometry reference | `apps/ui/app/plotter/primitives-blueprint.tsx` |
+| Selected Particles composition (C03) | `apps/ui/app/plotter/particles-blueprint.tsx` |
+| Selected 404 composition (E02) | `apps/ui/app/plotter/not-found-blueprint.tsx` |
+| Original Particles style anchor (C00) | `apps/ui/app/plotter/original-particles-blueprint.tsx` |
 | Main integration target | `apps/ui/app/page.tsx` |
 | Particles integration target | `apps/ui/app/particles/page.tsx` |
 | 404 integration target | `apps/ui/app/not-found.tsx` |
-| Review gallery and study IDs | `apps/ui/app/illustration-lab/` |
-| Revision feedback metadata | `apps/ui/app/illustration-lab/study-direction.ts` |
+| Showcase and illustration IDs | `apps/ui/app/plotter/` |
+| Feedback evidence | `apps/ui/skills/plotter/references/direction.md` |
 | Typography rules | `packages/ui/src/fonts/font-guide.md` |
 
-The lab owns its drawings and wrapper independently of the production integration in PR #912. Use the lab’s `BlueprintDrawing` wrapper for compatible studies. It supplies monochrome foreground, Cal Sans, automatic optical sizing, and GEOM25. Preserve semantic surface masks such as `var(--color-sidebar)` and inspect them against the actual host background. Static illustration components do not need client-side state.
+The showcase owns its drawings and wrapper independently of the production integration in PR #912. Use its `BlueprintDrawing` wrapper for compatible illustrations. It supplies monochrome foreground, Cal Sans, automatic optical sizing, and GEOM25. Preserve semantic surface masks such as `var(--color-sidebar)` and inspect them against the actual host background. Static illustration components do not need client-side state.
 
-Keep page layouts local, as explicitly requested by the user. Do not recreate a shared page-hero component. The lab’s hero mode should use the centered illustration-first arrangement for 404 studies and the split layout for other categories.
+Keep production page layouts local, as explicitly requested by the user. Do not recreate a shared page-hero component. The showcase displays standalone drawings in a gallery with enlarged previews.
 
 The selected production integration for Main, Particles, and Chat uses the heading treatment from [PR #895](https://github.com/cosscom/ui/pull/895): `clamp(2.25rem, 1.5rem + 2.6vw, 4rem)`, line-height 1, and GEOM50, with normal letter spacing and automatic optical sizing. These settings are scoped to those pages. Particles keeps C03 on the right and its search/filter directly beneath the left-aligned description, rather than adding hero CTAs.
 
 Keep the project’s typography: no added letter-spacing, no synthesized bold/italic, one GEOM value per role, and typeset punctuation. Read the current guide for details instead of copying font configuration into every drawing.
 
-The unlinked comparison route is `/ui/illustration-lab?variant=<study-id>&view=drawing` (or `view=hero`). Original IDs are `primitives-reference` and `particles-reference`; recent IDs include `cal-week-grid`, `cal-availability-plan`, `interface-spacing-plan`, `workflow-switch-plan`, and `workflow-branch`. Inspect current app configuration for the running address. Use bundled references when this checkout is unavailable; do not assume localhost is running. The lab has no navigation or sitemap link and opts out of indexing.
+The unlinked showcase route is `/ui/plotter`; `?variant=<study-id>` opens an enlarged preview. Category filters organize the collection. Original IDs are `primitives-reference` and `particles-reference`; recent IDs include `cal-week-grid`, `cal-availability-plan`, `interface-spacing-plan`, `workflow-switch-plan`, and `workflow-branch`. The old lab and prototype routes redirect here with their query parameters. Inspect current app configuration for the running address. Use bundled references when this checkout is unavailable; do not assume localhost is running. The showcase has no navigation or sitemap link and opts out of indexing.
 
-Use focused repository formatting/type checks appropriate to the edited files, plus browser inspection. Keep unselected drawings on the lab page until the user chooses a production integration. When revising a production drawing, inspect its current source and update the corresponding lab snapshot explicitly when both should show the same revision. Keep lab imports local so either addition can ship independently. This skill does not authorize publishing, pushing, or creating a PR by itself.
+Use focused repository formatting/type checks appropriate to the edited files, plus browser inspection. Keep standalone illustrations in the showcase until the user chooses a production integration. Removed drawings remain documented in the feedback ledger rather than retained as hidden gallery entries. When revising a production drawing, inspect its current source and update the corresponding showcase snapshot explicitly when both should show the same revision. Keep showcase imports local so either addition can ship independently. This skill does not authorize publishing, pushing, or creating a PR by itself.

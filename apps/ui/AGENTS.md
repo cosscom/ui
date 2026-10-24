@@ -1,6 +1,6 @@
 # Particle Component Development Guide for @coss/ui
 
-For blueprint illustration work, read [Plotter](skills/plotter/SKILL.md). It records the visual direction, reference images, and review feedback for the production heroes and the unlinked `/ui/illustration-lab` page.
+For blueprint illustration work, read [Plotter](skills/plotter/SKILL.md). It records the visual direction, reference images, and review feedback for the production heroes and the unlinked `/ui/plotter` showcase.
 
 This guide provides comprehensive instructions for creating new particle components that match the existing library's patterns and best practices. Use this when creating equivalents of origin components or building new particles from scratch.
 

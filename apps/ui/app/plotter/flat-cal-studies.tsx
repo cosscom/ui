@@ -233,9 +233,8 @@ export const flatCalStudies: IllustrationStudy[] = [
     title: "A week, constructed",
     description:
       "Monday through Sunday on a measured hourly grid. One constructed circle locates a meeting on Thursday, from 10:00 to 11:00.",
-    category: "Cal.com",
+    category: "Scheduling",
     illustration: <WeekConstruction />,
-    revision: true,
   },
   {
     id: "cal-time-modules",
@@ -243,9 +242,8 @@ export const flatCalStudies: IllustrationStudy[] = [
     title: "The shape of a time slot",
     description:
       "Two measured intervals combine into one reusable time slot. Duration becomes a rule of composition.",
-    category: "Cal.com",
+    category: "Scheduling",
     illustration: <TimeSlotConstruction />,
-    revision: true,
   },
   {
     id: "cal-availability-plan",
@@ -253,8 +251,7 @@ export const flatCalStudies: IllustrationStudy[] = [
     title: "Where schedules meet",
     description:
       "Alex’s and Sam’s availability meet in one shared slot. Named bands and a meeting callout make the overlap explicit.",
-    category: "Cal.com",
+    category: "Scheduling",
     illustration: <AvailabilityConstruction />,
-    revision: true,
   },
 ];

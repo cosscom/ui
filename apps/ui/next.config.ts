@@ -8,8 +8,13 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/illustration-lab",
+        destination: "/plotter",
+        permanent: false,
+      },
+      {
         source: "/illustration-lab-prototype",
-        destination: "/illustration-lab",
+        destination: "/plotter",
         permanent: false,
       },
       {

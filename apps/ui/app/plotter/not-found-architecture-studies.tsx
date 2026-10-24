@@ -87,77 +87,6 @@ function UnopenedDoor() {
   );
 }
 
-function VacantSheet() {
-  return (
-    <BlueprintDrawing>
-      <g opacity="0.17" strokeWidth="0.6">
-        <path d="M124 104H438M124 344H438M168 62V374M392 62V374" />
-        <path d="M280 54V390M100 224H460" strokeDasharray="5 5" />
-        <path d="M156 92H168V104M392 92H404V104M156 344H168V356M392 344H404V356" />
-      </g>
-
-      <g transform="rotate(-8 280 220)">
-        <path
-          d="M184 82H326L376 132V350H184Z"
-          fill="var(--color-sidebar)"
-          strokeWidth="1"
-        />
-        <path d="M326 82V132H376" strokeWidth="0.9" />
-        <path d="M326 82 376 132" opacity="0.5" strokeWidth="0.65" />
-        <path
-          d="M326 132 351 107"
-          opacity="0.28"
-          strokeDasharray="3 4"
-          strokeWidth="0.65"
-        />
-        <path
-          d="M198 140V98H312M198 290V334H362V146"
-          opacity="0.27"
-          strokeWidth="0.65"
-        />
-
-        <g opacity="0.32" strokeWidth="0.65">
-          <path d="M220 162h18M220 162v18M340 162h-18M340 162v18" />
-          <path d="M220 274h18M220 274v-18M340 274h-18M340 274v-18" />
-          <path d="M272 218H288M280 210V226" />
-        </g>
-        <path d="M198 306H362M312 306V334" opacity="0.45" strokeWidth="0.65" />
-        <path d="M208 318H246M208 324H230" opacity="0.24" strokeWidth="0.65" />
-        <g fill="currentColor" fontSize="10" opacity="0.5" stroke="none">
-          <text textAnchor="middle" x="337" y="324">
-            404
-          </text>
-        </g>
-
-        <g opacity="0.5" strokeWidth="0.65">
-          <path d="M184 56H326M184 48V64M326 48V64" />
-          <path d="m180 60 8-8m134 8 8-8" />
-          <path d="M404 132V350M396 132H412M396 350H412" />
-          <path d="m400 136 8-8m-8 226 8-8" />
-        </g>
-      </g>
-
-      <g opacity="0.45" strokeWidth="0.65">
-        <path d="M205 230H136L120 246" />
-        <path d="M326 99H426L442 83" />
-      </g>
-      <g fill="currentColor" fontSize="10" opacity="0.52" stroke="none">
-        <text x="91" y="264">
-          No content
-        </text>
-        <text x="447" y="81">
-          01
-        </text>
-      </g>
-
-      <g opacity="0.35" strokeWidth="0.65">
-        <path d="M100 86h12M106 80v12M448 354h12M454 348v12" />
-        <path d="M262 406h36M280 400v12" />
-      </g>
-    </BlueprintDrawing>
-  );
-}
-
 export const notFoundArchitectureStudies: IllustrationStudy[] = [
   {
     id: "404-doorway",
@@ -165,7 +94,7 @@ export const notFoundArchitectureStudies: IllustrationStudy[] = [
     title: "An empty threshold",
     description:
       "A precise architectural threshold opens onto empty space, suggesting a destination that was never built.",
-    category: "404",
+    category: "Empty states",
     illustration: <UnopenedDoor />,
   },
   {
@@ -174,17 +103,7 @@ export const notFoundArchitectureStudies: IllustrationStudy[] = [
     title: "An interrupted path",
     description:
       "A measured route stops at a missing link. Its paired outlines and unresolved destination make the interruption the central gesture.",
-    category: "404",
+    category: "Empty states",
     illustration: <NotFoundBlueprint />,
-    revision: true,
-  },
-  {
-    id: "404-vacant-sheet",
-    code: "E03",
-    title: "A vacant sheet",
-    description:
-      "A carefully measured document preserves its frame and registration marks while the page itself remains absent.",
-    category: "404",
-    illustration: <VacantSheet />,
   },
 ];

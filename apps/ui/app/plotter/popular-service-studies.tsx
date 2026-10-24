@@ -361,6 +361,5 @@ export const popularServiceStudies: IllustrationStudy[] = [
       "Two Postgres table fragments connect a user’s primary key to project ownership. A single measured route expresses the relational foundation beneath an application.",
     category: "Services",
     illustration: <SupabaseRelationsStudy />,
-    revision: true,
   },
 ];
