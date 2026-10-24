@@ -2,7 +2,7 @@ import {
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@coss/ui/shared/page-header";
-import { ArrowLeftIcon } from "lucide-react";
+import { RiArrowLeftLine } from "@remixicon/react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/registry/default/ui/button";
@@ -27,10 +27,19 @@ export default function NotFound() {
         The page you’re looking for doesn’t exist or may have been moved.
       </PageHeaderDescription>
       <div className="mt-1">
-        <Button render={<Link href="/" />} size="lg">
-          <ArrowLeftIcon aria-hidden="true" />
-          Back to Home
-        </Button>
+        <Button
+          className="group"
+          render={
+            <Link href="/">
+              <RiArrowLeftLine
+                aria-hidden="true"
+                className="-ms-1 opacity-60 transition-transform group-hover:-translate-x-0.5"
+              />
+              Back to Home
+            </Link>
+          }
+          size="lg"
+        />
       </div>
     </section>
   );
