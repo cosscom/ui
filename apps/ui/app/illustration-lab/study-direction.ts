@@ -46,7 +46,7 @@ export function applyStudyDirection(
       revision: true,
       selected: true,
       reviewNote:
-        "Selected for the Particles page. The requested A + B + C revision adds an Open action to identity and visibility; awaiting review.",
+        "Selected for the Particles page. The A + B + C revision adds an Open action. After feedback on vertical alignment and a sparse grid, the composition is optically centered with continuous edge and row guides; awaiting review.",
     };
   }
   if (["P00", "E02"].includes(study.code)) {
