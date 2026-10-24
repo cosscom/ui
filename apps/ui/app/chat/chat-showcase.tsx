@@ -179,7 +179,7 @@ export function ChatShowcase() {
 
           <section
             aria-labelledby="chat-features"
-            className="relative border-t bg-muted/24"
+            className="relative border-t"
           >
             <SectionMarkers />
             <div className="container py-14 md:py-20">
@@ -220,10 +220,7 @@ export function ChatShowcase() {
             </div>
           </section>
 
-          <section
-            aria-labelledby="chat-layouts"
-            className="relative border-t bg-muted/24"
-          >
+          <section aria-labelledby="chat-layouts" className="relative border-t">
             <SectionMarkers />
             <div className="container py-14 md:py-20">
               <SectionHeading
