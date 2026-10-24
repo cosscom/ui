@@ -38,7 +38,17 @@ export default function Page() {
           <PageHeaderHeading className="text-balance text-[clamp(2.25rem,1.5rem+2.6vw,4rem)] leading-none [font-variation-settings:'GEOM'_50] lg:text-[clamp(2.25rem,1.5rem+2.6vw,4rem)]">
             A modern React UI component library.
           </PageHeaderHeading>
-          <PageHeaderDescription>{description}</PageHeaderDescription>
+          <PageHeaderDescription>
+            Accessible React components we use to build{" "}
+            <Link
+              className="underline underline-offset-4 hover:text-foreground"
+              href="https://cal.com"
+            >
+              Cal.com
+            </Link>
+            , powered by Base UI and styled with Tailwind CSS. Designed for
+            developers and AI, with source code you can make your own.
+          </PageHeaderDescription>
           <div className="mt-1 flex flex-wrap gap-2">
             <Button render={<Link href="/docs" />} size="lg">
               Get started
