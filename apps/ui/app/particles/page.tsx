@@ -3,9 +3,7 @@ import {
   PageHeaderHeading,
 } from "@coss/ui/shared/page-header";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Suspense } from "react";
-import { Button } from "@/registry/default/ui/button";
 import { isValidRegistryCategory } from "@/registry/registry-categories";
 import { particles } from "@/registry/registry-particles";
 import { ParticlesDisplay } from "./particles-display";
@@ -63,34 +61,24 @@ export default function Page({
     <>
       <section className="container grid w-full items-center gap-6 py-10 md:py-14 lg:grid-cols-2 lg:gap-10 lg:py-16 xl:gap-16">
         <div className="flex min-w-0 flex-col items-start gap-5 [font-optical-sizing:auto] [font-synthesis:none]">
-          <PageHeaderHeading className="text-balance leading-[1.08] [font-variation-settings:'GEOM'_50] xl:text-[3.5rem]">
+          <PageHeaderHeading className="text-balance text-[clamp(2.25rem,1.5rem+2.6vw,4rem)] leading-none [font-variation-settings:'GEOM'_50] lg:text-[clamp(2.25rem,1.5rem+2.6vw,4rem)]">
             Browse Particles
           </PageHeaderHeading>
           <PageHeaderDescription className="max-w-lg text-pretty">
             {description}
           </PageHeaderDescription>
-          <div className="mt-1 flex flex-wrap gap-2">
-            <Button render={<Link href="#particles" />} size="lg">
-              Explore {particleCount} particles
-            </Button>
-            <Button render={<Link href="/docs" />} size="lg" variant="outline">
-              Read the docs
-            </Button>
-          </div>
+          <Suspense>
+            <SearchContainer />
+          </Suspense>
         </div>
         <div className="pointer-events-none mx-auto w-full max-w-140 select-none max-lg:max-w-112">
           <ParticlesBlueprint />
         </div>
       </section>
-      <div className="border-t pt-8 md:pt-12">
-        <div className="container w-full scroll-mt-24" id="particles">
-          <Suspense>
-            <SearchContainer />
-          </Suspense>
-          <Suspense>
-            <ParticlesDisplayServer searchParams={searchParams} />
-          </Suspense>
-        </div>
+      <div className="container w-full pt-8 md:pt-12">
+        <Suspense>
+          <ParticlesDisplayServer searchParams={searchParams} />
+        </Suspense>
       </div>
     </>
   );

@@ -3,7 +3,7 @@
 import { LabelIcon, Search01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as React from "react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Index } from "@/registry/__index__";
 import {
   Combobox,
@@ -43,7 +43,14 @@ export default function SearchField({
   onItemsChange,
   items,
 }: SearchFieldProps) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(selectedItems.length === 0);
+
+  // Keep popup open when no selection is made
+  useEffect(() => {
+    if (selectedItems.length === 0) {
+      setOpen(true);
+    }
+  }, [selectedItems.length]);
 
   const groupedItems = useMemo(() => {
     const selectedValues = selectedItems.map((item) => item.value);
@@ -125,7 +132,7 @@ export default function SearchField({
   };
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="w-full max-w-xl">
       <Combobox
         aria-label="Filter particles"
         autoHighlight
@@ -163,7 +170,7 @@ export default function SearchField({
                 ))}
                 <ComboboxChipsInput
                   aria-label="Search components"
-                  placeholder="Filter by component or category…"
+                  autoFocus
                   size="lg"
                 />
               </>

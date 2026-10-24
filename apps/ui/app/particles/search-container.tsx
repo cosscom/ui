@@ -50,7 +50,7 @@ export default function SearchContainer() {
   );
 
   return (
-    <div className="mb-8 md:mb-12 lg:mb-16">
+    <div className="mt-2 w-full">
       <SearchField
         items={searchItems}
         onItemsChange={updateSelectedItems}
