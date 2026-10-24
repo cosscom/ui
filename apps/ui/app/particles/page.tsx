@@ -64,7 +64,7 @@ export default function Page({
           <PageHeaderHeading className="text-balance text-[clamp(2.25rem,1.5rem+2.6vw,4rem)] leading-none [font-variation-settings:'GEOM'_50] lg:text-[clamp(2.25rem,1.5rem+2.6vw,4rem)]">
             Build more with Particles.
           </PageHeaderHeading>
-          <PageHeaderDescription className="max-w-lg text-pretty">
+          <PageHeaderDescription className="text-pretty">
             {description}
           </PageHeaderDescription>
           <Suspense>
