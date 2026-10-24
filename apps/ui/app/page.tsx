@@ -22,7 +22,7 @@ import { categories } from "@/config/categories";
 import { PAGES_NEW } from "@/lib/docs";
 
 const description =
-  "Accessible React components built on Base UI and styled with Tailwind CSS. Designed for developers and AI, with source code you can make your own.";
+  "Accessible React components we use to build Cal.com, powered by Base UI and styled with Tailwind CSS. Designed for developers and AI, with source code you can make your own.";
 const particleCount = particles.length;
 
 export const metadata: Metadata = {
