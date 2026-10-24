@@ -71,7 +71,7 @@ export default function Page({
             <SearchContainer />
           </Suspense>
         </div>
-        <div className="pointer-events-none mx-auto hidden w-full max-w-140 select-none lg:block">
+        <div className="pointer-events-none mx-auto hidden w-full max-w-140 select-none lg:-my-24 lg:block">
           <ParticlesBlueprint />
         </div>
       </section>
