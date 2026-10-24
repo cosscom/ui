@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/illustration-lab-prototype",
+        destination: "/illustration-lab",
+        permanent: false,
+      },
+      {
         destination: "/docs/radix-migration",
         permanent: true,
         source: "/docs/radix-shadcn-migration",

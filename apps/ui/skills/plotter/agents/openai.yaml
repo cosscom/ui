@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plotter"
+  short_description: "Refine flat monochrome construction illustrations"
+  default_prompt: "Use $plotter to create an illustration in our established flat construction style."
