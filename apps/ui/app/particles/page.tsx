@@ -73,7 +73,7 @@ export default function Page({
             </Suspense>
           </div>
         </div>
-        <div className="pointer-events-none mx-auto hidden w-full max-w-140 select-none lg:-my-14 lg:block">
+        <div className="pointer-events-none mx-auto hidden w-full max-w-140 select-none lg:-my-12 lg:block">
           <ParticlesBlueprint />
         </div>
       </section>
