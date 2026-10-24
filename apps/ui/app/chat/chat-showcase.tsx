@@ -118,7 +118,7 @@ export function ChatShowcase() {
       renderTriggers={(select) => (
         <>
           <section className="container grid items-center gap-12 py-14 md:grid-cols-2 md:gap-14 md:py-20 lg:gap-24">
-            <div className="flex min-w-0 flex-col items-start">
+            <div className="flex w-full min-w-0 max-w-xl flex-col items-start">
               <Badge
                 variant="outline"
                 className="mb-6 h-7 gap-1.5 rounded-full px-2.5 text-xs shadow-xs/5 sm:h-7"
@@ -131,7 +131,7 @@ export function ChatShowcase() {
                 <br />
                 for conversation.
               </h1>
-              <p className="mt-6 max-w-md text-pretty text-lg text-muted-foreground">
+              <p className="mt-6 text-pretty text-lg text-muted-foreground">
                 Chat components for React with replies, reactions, mentions, and
                 delivery states built in. Copy the source and make it yours.
               </p>
