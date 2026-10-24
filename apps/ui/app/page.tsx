@@ -21,12 +21,13 @@ import { PrimitivesBlueprint } from "@/components/primitives-blueprint";
 import { categories } from "@/config/categories";
 import { PAGES_NEW } from "@/lib/docs";
 
-const description = "Built for developers and AI.";
+const description =
+  "Accessible React components built on Base UI and styled with Tailwind CSS. Designed for developers and AI, with source code you can make your own.";
 const particleCount = particles.length;
 
 export const metadata: Metadata = {
   description,
-  title: "A new, modern UI component library built on top of Base UI - coss ui",
+  title: "A modern React UI component library – coss ui",
 };
 
 export default function Page() {
@@ -35,7 +36,7 @@ export default function Page() {
       <section className="container grid w-full items-center gap-6 py-10 md:py-14 lg:grid-cols-2 lg:gap-10 lg:py-16 xl:gap-16">
         <div className="flex min-w-0 flex-col items-start gap-5 [font-optical-sizing:auto] [font-synthesis:none]">
           <PageHeaderHeading className="text-balance text-[clamp(2.25rem,1.5rem+2.6vw,4rem)] leading-none [font-variation-settings:'GEOM'_50] lg:text-[clamp(2.25rem,1.5rem+2.6vw,4rem)]">
-            A new, modern UI component library built on top of Base UI.
+            A modern React UI component library.
           </PageHeaderHeading>
           <PageHeaderDescription>{description}</PageHeaderDescription>
           <div className="mt-1 flex flex-wrap gap-2">

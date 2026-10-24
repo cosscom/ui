@@ -12,11 +12,11 @@ import { ParticlesBlueprint } from "@/components/particles-blueprint";
 
 const particleCount = particles.length;
 
-const description = `Discover ${particleCount} ready-to-use particles, the building blocks of your design system. Filter by category to find the perfect component for your project.`;
+const description = `Explore ${particleCount} ready-to-use UI patterns built from coss ui components. Copy the code, customize the details, and make them part of your product.`;
 
 export const metadata: Metadata = {
   description,
-  title: "Browse Particles - coss ui",
+  title: "Build more with Particles – coss ui",
 };
 
 async function ParticlesDisplayServer({
@@ -62,7 +62,7 @@ export default function Page({
       <section className="container grid w-full items-center gap-6 py-10 md:py-14 lg:grid-cols-2 lg:gap-10 lg:py-16 xl:gap-16">
         <div className="flex min-w-0 flex-col items-start gap-5 [font-optical-sizing:auto] [font-synthesis:none]">
           <PageHeaderHeading className="text-balance text-[clamp(2.25rem,1.5rem+2.6vw,4rem)] leading-none [font-variation-settings:'GEOM'_50] lg:text-[clamp(2.25rem,1.5rem+2.6vw,4rem)]">
-            Browse Particles
+            Build more with Particles.
           </PageHeaderHeading>
           <PageHeaderDescription className="max-w-lg text-pretty">
             {description}
