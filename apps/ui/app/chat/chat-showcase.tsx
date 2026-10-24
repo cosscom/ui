@@ -158,7 +158,7 @@ export function ChatShowcase() {
                 Built with Base UI, Tailwind CSS, and Motion
               </p>
             </div>
-            <div className="mx-auto w-full max-w-md lg:-my-24">
+            <div className="mx-auto w-full max-w-md lg:-my-12">
               <Tabs defaultValue="direct" className="gap-5">
                 <TabsList
                   aria-label="Conversation type"
