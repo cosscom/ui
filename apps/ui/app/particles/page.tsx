@@ -1,5 +1,4 @@
 import {
-  PageHeader,
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@coss/ui/shared/page-header";
@@ -9,14 +8,15 @@ import { isValidRegistryCategory } from "@/registry/registry-categories";
 import { particles } from "@/registry/registry-particles";
 import { ParticlesDisplay } from "./particles-display";
 import SearchContainer from "./search-container";
+import { ParticlesBlueprint } from "@/components/particles-blueprint";
 
 const particleCount = particles.length;
 
-const description = `Discover ${particleCount} ready-to-use particles, the building blocks of your design system. Filter by category to find the perfect component for your project.`;
+const description = `Explore ${particleCount} ready-to-use UI patterns built from coss ui components. Copy the code, customize the details, and make them part of your product.`;
 
 export const metadata: Metadata = {
   description,
-  title: "Browse Particles - coss ui",
+  title: "Build more with Particles – coss ui",
 };
 
 async function ParticlesDisplayServer({
@@ -58,19 +58,36 @@ export default function Page({
   searchParams: Promise<{ tags?: string }>;
 }) {
   return (
-    <div className="container w-full">
-      <PageHeader className="*:pb-8!">
-        <PageHeaderHeading>Browse Particles</PageHeaderHeading>
-        <PageHeaderDescription className="max-w-2xl">
-          {description}
-        </PageHeaderDescription>
-      </PageHeader>
-      <Suspense>
-        <SearchContainer />
-      </Suspense>
-      <Suspense>
-        <ParticlesDisplayServer searchParams={searchParams} />
-      </Suspense>
-    </div>
+    <>
+      <section className="container grid w-full items-center gap-6 py-10 md:py-14 lg:grid-cols-2 lg:gap-10 lg:py-28 xl:gap-16">
+        <div className="flex w-full min-w-0 max-w-xl flex-col items-start gap-5 [font-optical-sizing:auto] [font-synthesis:none]">
+          <PageHeaderHeading className="text-balance text-[clamp(2.25rem,1.5rem+2.6vw,4rem)] leading-none [font-variation-settings:'GEOM'_50] lg:text-[clamp(2.25rem,1.5rem+2.6vw,4rem)]">
+            Build more with Particles.
+          </PageHeaderHeading>
+          <PageHeaderDescription className="text-pretty">
+            {description}
+          </PageHeaderDescription>
+          <div className="mt-2 min-h-12 w-full sm:min-h-11">
+            <Suspense>
+              <SearchContainer />
+            </Suspense>
+          </div>
+        </div>
+        <div className="pointer-events-none mx-auto hidden w-full max-w-140 select-none lg:-my-24 lg:block">
+          <ParticlesBlueprint />
+        </div>
+      </section>
+      <div className="relative before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-border/64">
+        <div
+          aria-hidden="true"
+          className="container pointer-events-none absolute inset-0 z-50 before:absolute before:top-[-3.5px] before:-left-[11.5px] before:z-1 before:-ml-1 before:size-2 before:rounded-[2px] before:border before:border-border before:bg-popover before:bg-clip-padding before:shadow-xs after:absolute after:top-[-3.5px] after:-right-[11.5px] after:z-1 after:-mr-1 after:size-2 after:rounded-[2px] after:border after:border-border after:bg-background after:bg-clip-padding after:shadow-xs dark:after:bg-clip-border dark:before:bg-clip-border"
+        />
+        <div className="container w-full pt-8 md:pt-12">
+          <Suspense>
+            <ParticlesDisplayServer searchParams={searchParams} />
+          </Suspense>
+        </div>
+      </div>
+    </>
   );
 }

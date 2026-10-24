@@ -1,5 +1,4 @@
 import {
-  PageHeader,
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@coss/ui/shared/page-header";
@@ -18,27 +17,39 @@ import {
 } from "@/registry/default/ui/card";
 import { particles } from "@/registry/registry-particles";
 import { getCategoryThumbnail } from "@/components/category-thumbnails";
+import { PrimitivesBlueprint } from "@/components/primitives-blueprint";
 import { categories } from "@/config/categories";
 import { PAGES_NEW } from "@/lib/docs";
 
-const description = "Built for developers and AI.";
+const description =
+  "Accessible React components we use to build Cal.com, powered by Base UI and styled with Tailwind CSS. Designed for developers and AI, with source code you can make your own.";
 const particleCount = particles.length;
 
 export const metadata: Metadata = {
   description,
-  title: "A new, modern UI component library built on top of Base UI - coss ui",
+  title: "A modern React UI component library – coss ui",
 };
 
 export default function Page() {
   return (
     <>
-      <div className="container w-full">
-        <PageHeader className="max-w-2xl *:items-start *:text-left">
-          <PageHeaderHeading>
-            A new, modern UI component library built on top of Base UI.
+      <section className="container grid w-full items-center gap-6 py-10 md:py-14 lg:grid-cols-2 lg:gap-10 lg:py-28 xl:gap-16">
+        <div className="flex w-full min-w-0 max-w-xl flex-col items-start gap-5 [font-optical-sizing:auto] [font-synthesis:none]">
+          <PageHeaderHeading className="text-balance text-[clamp(2.25rem,1.5rem+2.6vw,4rem)] leading-none [font-variation-settings:'GEOM'_50] lg:text-[clamp(2.25rem,1.5rem+2.6vw,4rem)]">
+            A modern React UI component library.
           </PageHeaderHeading>
-          <PageHeaderDescription>{description}</PageHeaderDescription>
-          <div className="mt-2 flex gap-2">
+          <PageHeaderDescription>
+            Accessible React components we use to build{" "}
+            <Link
+              className="underline underline-offset-4 hover:text-foreground"
+              href="https://cal.com"
+            >
+              Cal.com
+            </Link>
+            , powered by Base UI and styled with Tailwind CSS. Designed for
+            developers and AI, with source code you can make your own.
+          </PageHeaderDescription>
+          <div className="mt-1 flex flex-wrap gap-2">
             <Button render={<Link href="/docs" />} size="lg">
               Get started
             </Button>
@@ -50,8 +61,11 @@ export default function Page() {
               Browse {particleCount} particles
             </Button>
           </div>
-        </PageHeader>
-      </div>
+        </div>
+        <div className="pointer-events-none mx-auto hidden w-full max-w-140 select-none lg:-my-24 lg:block">
+          <PrimitivesBlueprint />
+        </div>
+      </section>
       <div className="relative before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-border/64">
         <div
           aria-hidden="true"
