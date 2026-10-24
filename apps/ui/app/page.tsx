@@ -52,7 +52,7 @@ export default function Page() {
             </Button>
           </div>
         </div>
-        <div className="pointer-events-none mx-auto w-full max-w-140 select-none max-lg:max-w-112">
+        <div className="pointer-events-none mx-auto hidden w-full max-w-140 select-none lg:block">
           <PrimitivesBlueprint />
         </div>
       </section>
