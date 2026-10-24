@@ -117,7 +117,7 @@ export function ChatShowcase() {
     <ChatDemo
       renderTriggers={(select) => (
         <>
-          <section className="container grid items-center gap-12 py-14 md:grid-cols-2 md:gap-14 md:py-20 lg:gap-24">
+          <section className="container grid items-center gap-12 py-14 md:grid-cols-2 md:gap-14 md:py-20 lg:gap-24 lg:py-28">
             <div className="flex w-full min-w-0 max-w-xl flex-col items-start">
               <Badge
                 variant="outline"

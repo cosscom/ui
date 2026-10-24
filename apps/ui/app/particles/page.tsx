@@ -59,7 +59,7 @@ export default function Page({
 }) {
   return (
     <>
-      <section className="container grid w-full items-center gap-6 py-10 md:py-14 lg:grid-cols-2 lg:gap-10 lg:py-16 xl:gap-16">
+      <section className="container grid w-full items-center gap-6 py-10 md:py-14 lg:grid-cols-2 lg:gap-10 lg:py-28 xl:gap-16">
         <div className="flex w-full min-w-0 max-w-xl flex-col items-start gap-5 [font-optical-sizing:auto] [font-synthesis:none]">
           <PageHeaderHeading className="text-balance text-[clamp(2.25rem,1.5rem+2.6vw,4rem)] leading-none [font-variation-settings:'GEOM'_50] lg:text-[clamp(2.25rem,1.5rem+2.6vw,4rem)]">
             Build more with Particles.
@@ -73,7 +73,7 @@ export default function Page({
             </Suspense>
           </div>
         </div>
-        <div className="pointer-events-none mx-auto hidden w-full max-w-140 select-none lg:-my-12 lg:block">
+        <div className="pointer-events-none mx-auto hidden w-full max-w-140 select-none lg:-my-24 lg:block">
           <ParticlesBlueprint />
         </div>
       </section>
