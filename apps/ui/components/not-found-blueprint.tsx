@@ -3,87 +3,64 @@ import { BlueprintDrawing } from "./blueprint-drawing";
 export function NotFoundBlueprint() {
   return (
     <BlueprintDrawing>
-      <g opacity="0.075" strokeWidth="0.6">
-        <path d="M200 72V352M240 72V352M320 212V352M360 212V352" />
-        <path d="M140 132H280M140 172H280M140 252H420M140 292H420" />
+      <g opacity="0.1" strokeWidth="0.6">
+        <path d="M112 116H448M112 176H448M112 244H328M112 304H328M172 80V340M232 80V340M292 80V340M416 80V200" />
       </g>
-
-      <g opacity="0.23" strokeWidth="0.65">
-        <path d="M160 64V354M400 64V354M132 92H428M132 332H428" />
-        <path d="M280 66V356M132 212H426" strokeDasharray="5 5" />
-        <path d="M144 76H160V92M400 76H416V92M144 332H160V348M400 332H416V348" />
+      <g opacity="0.25" strokeWidth="0.6">
+        <path d="M100 304H292M232 84V350M272 116H464" strokeDasharray="4 6" />
+        <circle cx="172" cy="244" r="60" strokeDasharray="3 6" />
+        <circle cx="292" cy="176" r="60" strokeDasharray="3 6" />
+        <path d="M164 244H180M172 236V252M284 176H300M292 168V184" />
       </g>
 
       <path
-        d="M160 92H280V212H400V332H160Z"
+        d="M124 296H172A52 52 0 0 0 224 244V176A68 68 0 0 1 292 108H308V124H292A52 52 0 0 0 240 176V244A68 68 0 0 1 172 312H124Z"
         fill="currentColor"
         fillOpacity="0.025"
-        stroke="none"
+        strokeWidth="0.95"
       />
-
-      <g opacity="0.27" strokeWidth="0.65">
-        <path d="M160 292 200 332M160 304 188 332M160 316 176 332M160 328 164 332" />
-        <path d="M160 280V332H212" />
+      <path
+        d="M124 304H172A60 60 0 0 0 232 244V176A60 60 0 0 1 292 116H308"
+        opacity="0.27"
+        strokeDasharray="3 5"
+        strokeWidth="0.6"
+      />
+      <g opacity="0.38" strokeWidth="0.75">
+        <path d="M364 108H389.17M364 124H389.17M364 108V124" />
+        <circle cx="416" cy="116" r="28" strokeDasharray="3 5" />
+        <path d="M408 116H424M416 108V124" />
       </g>
-
-      <g strokeWidth="1">
-        <path d="M160 92H280V212H400V332H160Z" />
-        <path d="M160 212H280V332" opacity="0.42" />
+      <g opacity="0.72" strokeWidth="0.8">
+        <path d="m303 103 10 26m46-26 10 26" />
       </g>
-
-      <g opacity="0.36" strokeWidth="0.7">
-        <path d="M292 92H400V200" strokeDasharray="4 5" />
-        <path d="M280 104V92H292M388 212H400V200" />
-        <path d="M292 104H306M292 104V118M374 104H388V118M388 186V200H374" />
-        <path d="M304 152H316M364 152H376M340 116V128M340 176V188" />
+      <g opacity="0.45" strokeWidth="0.6">
+        <path d="M308 140V161M364 140V161M308 153H364m-60 4 8-8m48 8 8-8" />
+        <path d="M172 244 214.4 286.4m-6 0h6v-6" />
+        <path d="M124 332V356M172 332V356M124 348H140M156 348H172m-52 4 8-8m40 8 8-8" />
+        <path d="M224 184V212M240 184V212M224 200H240m-20 4 8-8m8 8 8-8M248 200H258" />
+        <path d="M416 156V188H440" />
       </g>
-
-      <g opacity="0.5" strokeWidth="0.65">
-        <path d="M160 54H262M298 54H400M160 46V62M400 46V62" />
-        <path d="m156 58 8-8 m232 8 8-8" />
-        <path d="M442 92V196M442 228V332M434 92H450M434 332H450" />
-        <path d="m438 96 8-8 m-8 248 8-8" />
-        <path d="M160 360V380M280 360V380M160 372H205M235 372H280" />
-        <path d="m156 376 8-8 m112 8 8-8" />
-        <path d="M280 212 310 182M280 196H264V212" />
-        <path d="M160 272H110L94 288" />
-      </g>
-
-      <g fill="var(--color-sidebar)" strokeWidth="0.8">
-        <path d="M157.5 89.5h5v5h-5zM277.5 89.5h5v5h-5zM397.5 209.5h5v5h-5zM397.5 329.5h5v5h-5zM157.5 329.5h5v5h-5z" />
-        <circle cx="280" cy="212" r="3" />
-      </g>
-
-      <g fill="currentColor" fontSize="10" opacity="0.52" stroke="none">
-        <text textAnchor="middle" x="280" y="57">
-          6u
+      <g fill="currentColor" fontSize="11" opacity="0.72" stroke="none">
+        <text textAnchor="middle" x="336" y="180">
+          Missing link
         </text>
-        <text textAnchor="middle" x="442" y="216">
-          6u
+        <text x="392" y="207">
+          Unresolved
         </text>
-        <text textAnchor="middle" x="220" y="375">
-          3u
-        </text>
-        <text x="77" y="304">
-          03
+        <text x="124" y="282">
+          Request
         </text>
       </g>
-
-      <text
-        fill="currentColor"
-        fontSize="12"
-        opacity="0.6"
-        stroke="none"
-        textAnchor="middle"
-        x="340"
-        y="156"
-      >
-        404
-      </text>
-
-      <g opacity="0.35" strokeWidth="0.65">
-        <path d="M78 92h12M84 86v12M468 332h12M474 326v12" />
-        <path d="M262 408h36M280 402v12" />
+      <g fill="currentColor" fontSize="10" opacity="0.5" stroke="none">
+        <text textAnchor="middle" x="148" y="351">
+          u
+        </text>
+        <text x="180" y="270">
+          R60
+        </text>
+        <text x="264" y="204">
+          16
+        </text>
       </g>
     </BlueprintDrawing>
   );

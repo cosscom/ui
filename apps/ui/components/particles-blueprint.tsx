@@ -1,120 +1,100 @@
 import { BlueprintDrawing } from "./blueprint-drawing";
 
+function Registration() {
+  return (
+    <g opacity="0.32" strokeWidth="0.6">
+      <path d="M100 82h12 M106 76v12 M448 342h12 M454 336v12" />
+      <path d="M266 382h28 M280 376v12" />
+    </g>
+  );
+}
+
 export function ParticlesBlueprint() {
   return (
     <BlueprintDrawing>
-      <g opacity="0.065" strokeWidth="0.6">
-        <path d="M180 160H444M180 184H444M180 208H444M180 232H444M180 256H444M180 280H444M180 304H444M180 328H444" />
-        <path d="M204 136V352M228 136V352M252 136V352M276 136V352M300 136V352M324 136V352M348 136V352M372 136V352M396 136V352M420 136V352" />
+      <g opacity="0.12" strokeWidth="0.6">
+        <path d="M120 132H440 M120 176H440 M176 244H384 M176 288H384 M176 332H384" />
+        <path d="M176 100V352 M224 100V352 M336 100V352 M384 100V352" />
       </g>
-
-      <g opacity="0.27" strokeWidth="0.6">
-        <path d="M104 160H453M104 324H453M204 140V363M428 140V363" />
-        <path d="M320 88V155M428 88V155" />
-        <path d="M320 137V184M428 137V184" strokeDasharray="3 5" />
-        <path d="M302 188H443M302 232H443" strokeDasharray="3 5" />
-        <path d="M122 178V244M302 178V244" />
-        <path d="M195 151L213 169M419 315L437 333" />
-        <path d="M113 160H131M122 151V169M419 160H437M428 151V169" />
-      </g>
-
-      <g opacity="0.37" strokeWidth="0.7">
+      <g opacity="0.37" strokeWidth="0.65">
         <path
-          d="M204 182V176A16 16 0 0 1 220 160H412A16 16 0 0 1 428 176V248M204 240V308A16 16 0 0 0 220 324H228"
-          strokeDasharray="4 5"
+          d="M176 187V202L232 230 M384 187V202L328 230"
+          strokeDasharray="3 5"
         />
-        <path d="M320 184H428M320 180V188M428 180V188" />
-        <path d="M327 210H360M355 205L360 210L355 215" />
-        <path d="M374 141V168M369 163L374 168L379 163" />
+        <path d="M230 226 232 230 227 230 M330 226 328 230 333 230" />
+        <path d="M120 120v-8h18 M214 112h18v8 M328 120v-8h18 M422 112h18v8" />
+        <path d="M176 355H384 M176 349v12 M384 349v12 m-212-2 8-8 m200 8 8-8" />
       </g>
-
-      <g opacity="0.48" strokeWidth="0.65">
-        <path d="M204 354H428M204 349V359M428 349V359" />
-        <path d="M201 357L207 351M425 357L431 351" />
-        <path d="M320 87H428M320 83V91M428 83V91" />
-        <path d="M99 188V232M95 188H103M95 232H103" />
-        <path d="M96 191L102 185M96 235L102 229" />
-      </g>
-
       <g strokeWidth="0.95">
         <rect
           fill="var(--color-sidebar)"
           height="44"
-          rx="9"
-          strokeOpacity="0.85"
-          width="180"
-          x="122"
-          y="188"
+          rx="8"
+          width="112"
+          x="120"
+          y="132"
         />
-        <rect height="20" opacity="0.78" rx="4" width="20" x="136" y="200" />
-        <path d="M142 204V216M150 204V216M140 210H152" opacity="0.68" />
-        <path d="M280 206L284 210L280 214" opacity="0.65" />
-
+        <circle cx="142" cy="154" r="10" />
+        <path d="M138 154h8 M142 150v8" opacity="0.7" />
         <rect
           fill="var(--color-sidebar)"
-          height="32"
-          rx="16"
-          strokeOpacity="0.85"
-          width="108"
-          x="320"
-          y="104"
+          height="44"
+          rx="8"
+          width="112"
+          x="328"
+          y="132"
         />
-        <path d="M334 120L337 123L343 117" opacity="0.8" />
-        <path d="M409 117L415 123M415 117L409 123" opacity="0.5" />
-
-        <path
-          d="M244 264H412A16 16 0 0 1 428 280V308A16 16 0 0 1 412 324H244A16 16 0 0 1 228 308V280A16 16 0 0 1 244 264Z"
+        <rect height="18" rx="9" width="30" x="395" y="145" />
+        <circle cx="416" cy="154" r="5.5" />
+        <rect
           fill="var(--color-sidebar)"
-          strokeOpacity="0.85"
+          height="88"
+          rx="11"
+          width="208"
+          x="176"
+          y="244"
         />
-        <rect height="22" opacity="0.8" rx="11" width="38" x="370" y="283" />
-        <circle cx="397" cy="294" opacity="0.8" r="7" />
+        <path d="M176 288H384" opacity="0.32" />
+        <circle cx="200" cy="266" r="10" />
+        <path d="M196 266h8 M200 262v8" opacity="0.7" />
+        <path d="m365 263 3 3-3 3" opacity="0.55" />
+        <rect height="18" rx="9" width="30" x="340" y="301" />
+        <circle cx="361" cy="310" r="5.5" />
       </g>
-
-      <g opacity="0.35" strokeWidth="0.6">
-        <path d="M412 300V332M404 308H436" />
-        <path d="M412 324A16 16 0 0 0 428 308" />
-        <path d="M412 308L448 344H472" />
-        <path d="M244 254V274M234 264H254" />
-        <path d="M228 274A10 10 0 0 1 238 264" />
+      <g opacity="0.34" strokeWidth="0.6">
+        <path d="M190 234v20 M180 244h20 M370 322v20 M360 332h20" />
+        <path d="M156 244V332 M151 244h10 M151 332h10" />
+        <path d="M187 244a11 11 0 0 0-11 11 M373 332a11 11 0 0 0 11-11" />
       </g>
-
-      <g fill="currentColor" fontSize="11" stroke="none">
-        <text opacity="0.7" x="168" y="214">
-          Workspace
+      <g fill="currentColor" fontSize="11" opacity="0.76" stroke="none">
+        <text x="160" y="158">
+          Studio
         </text>
-        <text opacity="0.7" x="352" y="124">
-          Ready
+        <text x="341" y="158">
+          Public
         </text>
-        <text opacity="0.7" x="248" y="298">
-          Available
+        <text x="220" y="270">
+          Studio
         </text>
-      </g>
-
-      <g fill="currentColor" fontSize="10" opacity="0.5" stroke="none">
-        <text textAnchor="middle" x="374" y="78">
-          108
-        </text>
-        <text textAnchor="middle" x="316" y="371">
-          224
-        </text>
-        <text textAnchor="end" x="89" y="214">
-          44
-        </text>
-        <text x="448" y="338">
-          R16
-        </text>
-        <text x="112" y="391">
-          02 / Composition
-        </text>
-        <text textAnchor="end" x="449" y="391">
-          1 : 1
+        <text x="190" y="314">
+          Public
         </text>
       </g>
-
-      <g opacity="0.3" strokeWidth="0.6">
-        <path d="M112 373V381M108 377H116M449 373V381M445 377H453" />
+      <g fill="currentColor" fontSize="10" opacity="0.52" stroke="none">
+        <text textAnchor="middle" x="176" y="97">
+          A / Identity
+        </text>
+        <text textAnchor="middle" x="384" y="97">
+          B / Visibility
+        </text>
+        <text textAnchor="middle" x="280" y="374">
+          A + B
+        </text>
+        <text textAnchor="end" x="145" y="292">
+          2u
+        </text>
       </g>
+      <Registration />
     </BlueprintDrawing>
   );
 }
