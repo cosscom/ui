@@ -117,7 +117,7 @@ export function ChatShowcase() {
                 <MessagesSquareIcon aria-hidden="true" className="size-3.5" />
                 Chat UI
               </Badge>
-              <h1 className="font-bold font-heading text-5xl leading-none tracking-tight lg:text-6xl xl:text-7xl">
+              <h1 className="text-balance font-bold font-heading text-[clamp(2.25rem,1.5rem+2.6vw,4rem)] leading-none [font-optical-sizing:auto] [font-synthesis:none] [font-variation-settings:'GEOM'_50]">
                 Make room
                 <br />
                 for conversation.
