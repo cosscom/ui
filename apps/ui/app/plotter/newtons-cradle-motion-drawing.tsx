@@ -7,7 +7,9 @@ const cradle = {
   radius: 22,
   pivotRadius: 2.4,
   amplitude: 30,
+  interiorAmplitude: 0.75,
   duration: 2,
+  turnaroundEmphasis: 0.25,
 } as const;
 const restY = cradle.pivotY + cradle.length;
 
@@ -15,10 +17,13 @@ const restY = cradle.pivotY + cradle.length;
 // θ = 2 asin(k cos φ), k = sin(θmax/2), gives dt/dφ below. Simpson sampling
 // supplies one descent; reflection supplies the remaining three quarters.
 // The user’s video reference suggests a roughly 2.4 s cycle and 30° release.
-// The requested speed refinements use 2 s with the same pendulum curve.
+// A smooth quarter-flight time remap gives the turn more breathing room while
+// retaining the requested 2 s cycle. This is an illustration timing accent,
+// not an unmodified gravity trajectory. Velocities include its chain rule.
 // Contacts at ¼ and ¾ of each cycle transfer velocity without dwell.
 // The complete bob sweep remains inside x = 106…502, clear of the witnesses.
-// This idealization omits collision compliance, damping, and interior motion.
+// A small phase-locked sway gives the touching group a shared response. This
+// remains a motion study, not a simulation of collision compliance or damping.
 function swingSamples() {
   const count = 96;
   const step = Math.PI / (2 * count);
@@ -43,13 +48,21 @@ function swingSamples() {
     const reverse = quarter % 2 === 1;
     return (reverse ? [...descent].reverse() : descent)
       .slice(quarter ? 1 : 0)
-      .map(({ time, angle, speed }) => ({
-        time: (quarter + (reverse ? 1 - time / elapsed : time / elapsed)) / 4,
-        angle: (quarter === 1 || quarter === 2 ? -1 : 1) * angle,
-        // Angular velocity per normalized cycle, from the same energy integral.
-        velocity:
-          ((quarter < 2 ? -1 : 1) * 1440 * elapsed * k * speed) / Math.PI,
-      }));
+      .map(({ time, angle, speed }) => {
+        const progress = time / elapsed;
+        const flightTime =
+          progress +
+          (cradle.turnaroundEmphasis * Math.sin(Math.PI * progress)) / Math.PI;
+        const timeRate =
+          1 + cradle.turnaroundEmphasis * Math.cos(Math.PI * progress);
+        return {
+          time: (quarter + (reverse ? 1 - flightTime : flightTime)) / 4,
+          angle: (quarter === 1 || quarter === 2 ? -1 : 1) * angle,
+          velocity:
+            ((quarter < 2 ? -1 : 1) * 1440 * elapsed * k * speed) /
+            (Math.PI * timeRate),
+        };
+      });
   });
   return {
     samples,
@@ -60,11 +73,18 @@ function swingSamples() {
 const { samples, duration } = swingSamples();
 const keyTimes = samples.map(({ time }) => time).join(";");
 
-function swingMotion(side: "left" | "right", pivotX: number) {
+type PendulumRole = "left" | "middle" | "right";
+
+function swingScale(side: PendulumRole, angle: number) {
+  const active =
+    (side === "left" && angle > 0) || (side === "right" && angle < 0);
+  return active ? 1 : cradle.interiorAmplitude / cradle.amplitude;
+}
+
+function swingMotion(side: PendulumRole, pivotX: number) {
   const frames = samples.map((sample) => ({
     ...sample,
-    angle:
-      side === "left" ? Math.max(0, sample.angle) : Math.min(0, sample.angle),
+    angle: sample.angle * swingScale(side, sample.angle),
   }));
   return {
     values: frames
@@ -80,8 +100,11 @@ function swingMotion(side: "left" | "right", pivotX: number) {
         const angle = next.angle - current.angle;
         if (!angle) return ["0 0 1 1"];
         const scale = (next.time - current.time) / (3 * angle);
+        // Pick the segment's side of contact: the end bob exchanges the main
+        // and shared velocities there, while the middle three stay continuous.
+        const response = swingScale(side, current.angle + next.angle);
         return [
-          `0.333333333 ${(current.velocity * scale).toFixed(9)} 0.666666667 ${(1 - next.velocity * scale).toFixed(9)}`,
+          `0.333333333 ${(current.velocity * response * scale).toFixed(9)} 0.666666667 ${(1 - next.velocity * response * scale).toFixed(9)}`,
         ];
       })
       .join(";"),
@@ -95,16 +118,20 @@ function Pendulum({ x }: { x: number }) {
         d={`M${x} ${cradle.pivotY + cradle.pivotRadius}V${restY - cradle.radius}`}
       />
       <circle cx={x} cy={restY} r={cradle.radius} />
+      {x === 304 && (
+        <path d="M300 296h8 M304 292v8" opacity="0.5" strokeWidth="0.65" />
+      )}
     </>
   );
 }
 
-function SwingingPendulum({ side, x }: { side: "left" | "right"; x: number }) {
+function SwingingPendulum({ side, x }: { side: PendulumRole; x: number }) {
   const motion = swingMotion(side, x);
   return (
     <g
-      data-cradle-end={side}
-      transform={`rotate(${side === "left" ? cradle.amplitude : 0} ${x} ${cradle.pivotY})`}
+      data-cradle-end={side === "middle" ? undefined : side}
+      data-cradle-middle={side === "middle" ? x : undefined}
+      transform={`rotate(${cradle.amplitude * swingScale(side, cradle.amplitude)} ${x} ${cradle.pivotY})`}
     >
       <animateTransform
         attributeName="transform"
@@ -123,7 +150,18 @@ function SwingingPendulum({ side, x }: { side: "left" | "right"; x: number }) {
 }
 
 const radiusOffset = cradle.radius / Math.SQRT2;
-const radiusPoint = { x: 304 - radiusOffset, y: restY + radiusOffset };
+
+function radiusLeader(angle: number) {
+  const radians = (angle * Math.PI) / 180;
+  const x = 304 - cradle.length * Math.sin(radians) - radiusOffset;
+  const y = cradle.pivotY + cradle.length * Math.cos(radians) + radiusOffset;
+  // Keep the label and horizontal landing fixed; the 45° tip tracks the bob.
+  return `M${x} ${y} ${x + y - 328} 328H248 M${x} ${y + 6}V${y}H${x - 6}`;
+}
+
+const radiusLeaderValues = samples
+  .map(({ angle }) => radiusLeader(angle * swingScale("middle", angle)))
+  .join(";");
 
 export function NewtonsCradleMotionDrawing() {
   return (
@@ -149,7 +187,7 @@ export function NewtonsCradleMotionDrawing() {
       <path d="M172 112H424" strokeWidth="0.95" />
       <g strokeWidth="0.95">
         {cradle.pivots.slice(1, -1).map((x) => (
-          <Pendulum key={x} x={x} />
+          <SwingingPendulum key={x} side="middle" x={x} />
         ))}
         <SwingingPendulum side="left" x={216} />
         <SwingingPendulum side="right" x={392} />
@@ -158,11 +196,17 @@ export function NewtonsCradleMotionDrawing() {
         {/* Both length witnesses lie beyond the complete swept bob envelope. */}
         <path d="M530 120V194 M530 218V296 M524 120h12 M524 296h12 m-10-172 8-8 m-8 184 8-8" />
         <path d="M304 346H348 M304 340v12 M348 340v12 m-48-2 8-8 m36 8 8-8" />
-        {/* Radius leader belongs to the stationary middle bob, below the sweep. */}
-        <path
-          d={`M${radiusPoint.x} ${radiusPoint.y} 272 328H248 M${radiusPoint.x} ${radiusPoint.y + 6}V${radiusPoint.y}H${radiusPoint.x - 6}`}
-        />
-        <path d="M300 296h8 M304 292v8" />
+        <path d={radiusLeader(cradle.interiorAmplitude)}>
+          <animate
+            attributeName="d"
+            begin="0s"
+            calcMode="linear"
+            dur={`${duration}s`}
+            keyTimes={keyTimes}
+            repeatCount="indefinite"
+            values={radiusLeaderValues}
+          />
+        </path>
       </g>
       <g fill="currentColor" fontSize="10" opacity="0.58" stroke="none">
         <text textAnchor="middle" x="530" y="210">
