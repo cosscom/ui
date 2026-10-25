@@ -64,6 +64,12 @@ For the capsule, the user requested a 45° upper-left 2u radius and removal of t
 
 The user then said “love it” and requested a separate animation section. The refined loop is now the first example, M01 / Changing geometry, under Animations on `/ui/plotter`. P00 remains a static illustration in the gallery. Preserve manual pause and reduced-motion behavior; inline examples also pause while offscreen.
 
+When relating the forms to UI elements, the user questioned the chamfer’s role, was unconvinced by a tag metaphor, and then explicitly discarded a play-triangle trial. They requested a switch derived from the pill, or placed before it, then a rounded rectangle between the switch and square. The current sequence is Avatar → Pill → Switch → Button → Card, using those UI names in the drawing. One of the pill’s generating circles becomes the sliding switch thumb; its track then becomes the rounded rectangular button before turning into the square card. This revision is awaiting review.
+
+The user explicitly said “never a solid bg” after seeing the filled switch thumb. Keep illustrated forms transparent: no opaque fills to hide guides, no solid background patches, and no area tint. Construction lines remain visible through the thumb; line hatching can still describe a measured region.
+
+The user asked for consistent continuous secondary lines, using the pill’s diagonal radius as the reference after noticing that the card’s inner square looked different. In M01, use the shared secondary-line style (0.65 SVG units, 50% opacity, butt caps and miter joins) for continuous construction geometry, inset frames, dimensions, and their marks. Keep primary outlines and the faint grid/reference scaffolding in their separate visual roles.
+
 ## Expanded subject brief
 
 The user explicitly requested a keyboard, browser window, table lamp, folder, smartphone, chat, and service concepts for Cloudflare, Vercel, Stripe, and Linear, then asked for more popular-service examples. These are requested exploration areas; only the specific feedback above establishes preference or approval. The expansion does not rehabilitate earlier rejected object drawings. Render familiar objects as flat plans or elevations with meaningful construction relationships. Preserve the established no-perspective rule.

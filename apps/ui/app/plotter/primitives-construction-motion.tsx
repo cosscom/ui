@@ -1,4 +1,9 @@
 import type { ReactNode } from "react";
+import {
+  morphCycleDuration,
+  morphKeyTimes,
+  morphStageDuration,
+} from "./primitives-morph-timing";
 
 // Construction finishes during the first second of each 2.4s hold. Reset only
 // after its parent is hidden, so subsequent cycles never flash the final state.
@@ -21,18 +26,18 @@ export function ConstructionMotion({
 }) {
   const timing = {
     attributeName,
-    begin: `${stage * 3.2}s`,
+    begin: `${stage * morphStageDuration}s`,
     calcMode: "spline" as const,
-    dur: "12.8s",
+    dur: `${morphCycleDuration}s`,
     keySplines: "0 0 1 1;0.22 0 0.12 1;0 0 1 1;0 0 1 1;0 0 1 1",
-    keyTimes: [
+    keyTimes: morphKeyTimes(
       0,
-      delay / 12.8,
-      (delay + duration) / 12.8,
-      2.45 / 12.8,
-      2.5 / 12.8,
-      1,
-    ].join(";"),
+      delay,
+      delay + duration,
+      2.45,
+      2.5,
+      morphCycleDuration,
+    ),
     repeatCount: "indefinite",
     values: [from, from, to, to, from, from].join(";"),
   };

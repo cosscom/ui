@@ -1,8 +1,10 @@
+import { secondaryLine } from "./primitives-morph-style";
+import { morphCycleDuration as duration } from "./primitives-morph-timing";
+
 type Timing = { start: number; end: number };
 
-const duration = 12.8;
 const circleToCapsule = { start: 2.4, end: 3.2 };
-const capsuleToRounded = { start: 5.6, end: 6.4 };
+const buttonToCard = { start: 12, end: 12.8 };
 
 function TransitionVisibility({ start, end }: Timing) {
   return (
@@ -77,15 +79,9 @@ export function PrimitivesMorphTransitions() {
             </circle>
           ))}
         </g>
-        <g opacity="0.6" strokeWidth="0.85">
+        <g {...secondaryLine}>
           {[204, 364].map((center) => (
-            <circle
-              cx="284"
-              cy="204"
-              fill="var(--color-sidebar)"
-              key={center}
-              r="3"
-            >
+            <circle cx="284" cy="204" key={center} r="3">
               <TransitionMotion
                 {...circleToCapsule}
                 attributeName="cx"
@@ -96,39 +92,45 @@ export function PrimitivesMorphTransitions() {
           ))}
         </g>
       </g>
-      <g data-transition="capsule-to-rounded" opacity="0">
-        <TransitionVisibility {...capsuleToRounded} />
+      <g data-transition="button-to-card" opacity="0">
+        <TransitionVisibility {...buttonToCard} />
         <g opacity="0.3" strokeDasharray="4 4" strokeWidth="0.65">
           {corners.map(({ id, x, y }) => (
-            <circle cx={284 + x * 80} cy="204" key={id} r="80">
+            <circle cx={284 + x * 136} cy={204 + y * 56} key={id} r="24">
               <TransitionMotion
-                {...capsuleToRounded}
+                {...buttonToCard}
+                attributeName="cx"
+                from={284 + x * 136}
+                to={284 + x * 80}
+              />
+              <TransitionMotion
+                {...buttonToCard}
                 attributeName="cy"
-                from={204}
+                from={204 + y * 56}
                 to={204 + y * 80}
               />
               <TransitionMotion
-                {...capsuleToRounded}
+                {...buttonToCard}
                 attributeName="r"
-                from={80}
+                from={24}
                 to={40}
               />
             </circle>
           ))}
         </g>
-        <g opacity="0.55" strokeWidth="0.85">
+        <g {...secondaryLine}>
           {corners.map(({ id, x, y }) => (
-            <circle
-              cx={284 + x * 80}
-              cy="204"
-              fill="var(--color-sidebar)"
-              key={id}
-              r="2.5"
-            >
+            <circle cx={284 + x * 136} cy={204 + y * 56} key={id} r="2.5">
               <TransitionMotion
-                {...capsuleToRounded}
+                {...buttonToCard}
+                attributeName="cx"
+                from={284 + x * 136}
+                to={284 + x * 80}
+              />
+              <TransitionMotion
+                {...buttonToCard}
                 attributeName="cy"
-                from={204}
+                from={204 + y * 56}
                 to={204 + y * 80}
               />
             </circle>

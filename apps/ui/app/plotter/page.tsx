@@ -48,8 +48,8 @@ export default function Page() {
                 Changing geometry
               </h3>
               <p className="max-w-sm text-pretty text-muted-foreground text-sm">
-                Four forms, one continuous loop. Each shape reveals its own
-                construction, with measurements that follow the geometry.
+                Avatar, pill, switch, button, card. Five familiar UI elements,
+                one continuous loop, with measurements that follow the geometry.
               </p>
             </div>
             <div className="min-w-0 border-t lg:border-s lg:border-t-0">

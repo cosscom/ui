@@ -3,20 +3,27 @@
 import { useEffect, useId, useRef } from "react";
 import { BlueprintDrawing } from "./blueprint-drawing";
 import { MorphDetails, morphDetailIds } from "./primitives-morph-details";
+import { secondaryLine } from "./primitives-morph-style";
+import {
+  morphCycleDuration,
+  morphHoldDuration,
+  morphKeyTimes,
+  morphStageDuration,
+} from "./primitives-morph-timing";
 import { PrimitivesMorphTransitions } from "./primitives-morph-transitions";
 import styles from "./primitives-motion.module.css";
+import { SwitchThumb } from "./primitives-switch";
 
-type Shape = { width: number; height: number; corner: number; bevel?: boolean };
+type Shape = { width: number; height: number; corner: number };
 
 // All stages share four straight edges and four cubic corners, including the
 // circle’s zero-length edges. Matching topology keeps every point continuous.
-function construct({ width, height, corner: r, bevel }: Shape) {
+function construct({ width, height, corner: r }: Shape) {
   const left = 284 - width / 2;
   const right = 284 + width / 2;
   const top = 204 - height / 2;
   const bottom = 204 + height / 2;
-  const a = bevel ? r / 3 : r * 0.55228475;
-  const b = bevel ? r / 3 : 0;
+  const a = r * 0.55228475;
   const points = {
     "top-left": [left + r, top],
     "top-right": [right - r, top],
@@ -30,13 +37,13 @@ function construct({ width, height, corner: r, bevel }: Shape) {
   return {
     points,
     outline: `M${left + r} ${top} L${right - r} ${top}
-      C${right - r + a} ${top + b} ${right - b} ${top + r - a} ${right} ${top + r}
+      C${right - r + a} ${top} ${right} ${top + r - a} ${right} ${top + r}
       L${right} ${bottom - r}
-      C${right - b} ${bottom - r + a} ${right - r + a} ${bottom - b} ${right - r} ${bottom}
+      C${right} ${bottom - r + a} ${right - r + a} ${bottom} ${right - r} ${bottom}
       L${left + r} ${bottom}
-      C${left + r - a} ${bottom - b} ${left + b} ${bottom - r + a} ${left} ${bottom - r}
+      C${left + r - a} ${bottom} ${left} ${bottom - r + a} ${left} ${bottom - r}
       L${left} ${top + r}
-      C${left + b} ${top + r - a} ${left + r - a} ${top + b} ${left + r} ${top} Z`,
+      C${left} ${top + r - a} ${left + r - a} ${top} ${left + r} ${top} Z`,
     // One continuous guide owns each extension; measurement marks never retrace it.
     guides: `M${left} 38V348 M${right} 38V348
       M${left - 24} ${top}H490 M${left - 24} ${bottom}H490
@@ -49,11 +56,13 @@ function construct({ width, height, corner: r, bevel }: Shape) {
 }
 
 const circle = construct({ width: 240, height: 240, corner: 120 });
+const pill = construct({ width: 320, height: 160, corner: 80 });
 const stages = [
   circle,
-  construct({ width: 320, height: 160, corner: 80 }),
+  pill,
+  pill,
+  construct({ width: 320, height: 160, corner: 24 }),
   construct({ width: 240, height: 240, corner: 40 }),
-  construct({ width: 240, height: 240, corner: 60, bevel: true }),
   circle,
 ];
 
@@ -70,9 +79,21 @@ function Morph({
     <animate
       attributeName={attributeName}
       calcMode="spline"
-      dur="12.8s"
-      keySplines="0 0 1 1;0.4 0 0.2 1;0 0 1 1;0.4 0 0.2 1;0 0 1 1;0.4 0 0.2 1;0 0 1 1;0.4 0 0.2 1"
-      keyTimes="0;0.1875;0.25;0.4375;0.5;0.6875;0.75;0.9375;1"
+      dur={`${morphCycleDuration}s`}
+      keySplines={values
+        .slice(0, -1)
+        .flatMap(() => ["0 0 1 1", "0.4 0 0.2 1"])
+        .join(";")}
+      keyTimes={morphKeyTimes(
+        ...values.flatMap((_, index) =>
+          index === values.length - 1
+            ? [morphCycleDuration]
+            : [
+                index * morphStageDuration,
+                index * morphStageDuration + morphHoldDuration,
+              ],
+        ),
+      )}
       repeatCount="indefinite"
       values={values
         .flatMap((value, index) =>
@@ -172,13 +193,6 @@ export function PrimitivesMorph({ paused }: { paused: boolean }) {
             patternUnits="userSpaceOnUse"
             width="10"
           >
-            <rect
-              fill="currentColor"
-              height="10"
-              opacity="0.028"
-              stroke="none"
-              width="10"
-            />
             <path d="M0 10 10 0" opacity="0.27" strokeWidth="0.65" />
           </pattern>
         </defs>
@@ -191,24 +205,19 @@ export function PrimitivesMorph({ paused }: { paused: boolean }) {
           ))}
         </g>
         <use href={`#${guideId}`} opacity="0.24" strokeWidth="0.65" />
-        <path d={circle.dimensions} opacity="0.45" strokeWidth="0.65">
+        <path {...secondaryLine} d={circle.dimensions}>
           <Morph
             attributeName="d"
             values={stages.map((stage) => stage.dimensions)}
           />
         </path>
-        <path
-          d={circle.outline}
-          fill="currentColor"
-          fillOpacity="0.018"
-          strokeWidth="1"
-        >
+        <path d={circle.outline} strokeWidth="1">
           <Morph
             attributeName="d"
             values={stages.map((stage) => stage.outline)}
           />
         </path>
-        <g fill="var(--color-sidebar)" strokeWidth="0.8">
+        <g strokeWidth="0.8">
           {tangentIds.map((id) => (
             <circle
               data-anchor={id}
@@ -233,9 +242,15 @@ export function PrimitivesMorph({ paused }: { paused: boolean }) {
           <g data-construction={stage} key={stage} opacity="0">
             <animate
               attributeName="opacity"
-              begin={`${index * 3.2}s`}
-              dur="12.8s"
-              keyTimes="0;0.0140625;0.171875;0.1875;1"
+              begin={`${index * morphStageDuration}s`}
+              dur={`${morphCycleDuration}s`}
+              keyTimes={morphKeyTimes(
+                0,
+                0.18,
+                2.2,
+                morphHoldDuration,
+                morphCycleDuration,
+              )}
               repeatCount="indefinite"
               values="0;1;1;0;0"
             />
@@ -253,11 +268,12 @@ export function PrimitivesMorph({ paused }: { paused: boolean }) {
             u
           </text>
         </g>
-        <g opacity="0.4" strokeWidth="0.65">
+        <g {...secondaryLine}>
           <path d="M164 364H204 m-44 4 8-8 m32 8 8-8" />
           <path d="M76 82h12 M82 76v12 M470 340h12 M476 334v12 M278 204h12 M284 198v12" />
           <path d="M266 401h36 M284 395v12" />
         </g>
+        <SwitchThumb />
       </BlueprintDrawing>
     </div>
   );
