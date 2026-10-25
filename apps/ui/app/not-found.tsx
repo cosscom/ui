@@ -20,7 +20,7 @@ export default function NotFound() {
   return (
     <>
       <section className="container flex w-full flex-1 flex-col items-center gap-5 py-10 text-center [font-optical-sizing:auto] [font-synthesis:none] md:py-14 lg:py-16">
-        <div className="pointer-events-none w-full max-w-112 select-none lg:-my-12">
+        <div className="pointer-events-none w-full max-w-140 select-none lg:-my-12">
           <NotFoundMotion>
             <NotFoundBlueprint />
           </NotFoundMotion>
