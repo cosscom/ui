@@ -1,0 +1,13 @@
+.construction {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .drawing[data-live] .construction {
+    display: block;
+  }
+
+  .drawing[data-live] .original {
+    visibility: hidden;
+  }
+}

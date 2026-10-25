@@ -1,6 +1,6 @@
 # Direction and feedback
 
-Evidence captured from the coss UI illustration reviews on 2026-10-24. This is a living art-direction record, not a claim that every study has been approved.
+Evidence captured from the coss UI illustration reviews on 2026-10-24–25. This is a living art-direction record, not a claim that every study has been approved.
 
 ## Anchors
 
@@ -51,6 +51,18 @@ The earlier K06/K08/I03/W02/W03 revision pass is captured in coss commit `285493
 The user subsequently asked to remove unwanted and discarded examples and turn the lab into a showcase named **Plotter illustrations**. The collection now contains 39 illustrations at `/ui/plotter`, with category filters and enlarged previews. Shortlists, review controls, and page-hero mockups have been removed.
 
 The 13 explicitly rejected entries (K01, K04, K05, I01, I02, D01, D02, W01, O01, O02, A01, A02, S02) and the assistant-set-aside E03/E05 were removed from the drawing code. E04 was already absent. W02 stays because its revised planar route received the later collective “much better” response. Retained revisions of other critiqued examples remain subject to the evidence above: curation is not individual approval or promotion to a style anchor.
+
+## Motion studies
+
+For the P00 experiment, the user requested continuous shape changes, changing measurements, faster morphs, and longer holds. They then clarified that “every shape has its own characteristics”: carrying the same diagonal and bottom-left shaded area through every form felt repetitive. Give each stage a construction relationship specific to its geometry; let its guides and shaded regions enter and leave with that relationship. The user subsequently said “love” about the sector, tangency, inset, and chamfer sequence and requested more visual impact. This endorses that sequence, not mandatory motifs for future drawings. The next experiment animates each construction and carries generating geometry between stages, then rests; that motion refinement is awaiting review.
+
+The user later rejected both dotted-guide animation experiments (marching dashes and progressive drawing); both were removed. They also disliked the rounded square’s inset breaking apart into chamfer cuts. That bridge was removed while retaining the inset construction within its own stage. The circle’s requested 45° radius must coincide exactly with the first hatch line, rather than run beside it.
+
+The user flagged gaps and overlapping strokes where measurement extensions meet construction guides, allowing caps or continuous lines. The response uses continuous shared guides, joins the unit-scale extensions, and excludes coincident grid strokes. Give each shared segment one stroke; avoid opacity changes caused by retracing it in separate layers.
+
+For the capsule, the user requested a 45° upper-left 2u radius and removal of the continuous line connecting the generating-circle centers. Keep that shared axis dashed, including during the circle-to-capsule transition.
+
+The user then said “love it” and requested a separate animation section. The refined loop is now the first example, M01 / Changing geometry, under Animations on `/ui/plotter`. P00 remains a static illustration in the gallery. Preserve manual pause and reduced-motion behavior; inline examples also pause while offscreen.
 
 ## Expanded subject brief
 

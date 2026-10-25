@@ -127,7 +127,7 @@ export function IllustrationGallery({
               </div>
               <div className="flex w-full items-start justify-between gap-3 px-1 pt-4">
                 <div className="space-y-1">
-                  <h2 className="font-medium text-sm">{item.title}</h2>
+                  <h3 className="font-medium text-sm">{item.title}</h3>
                   <p className="text-muted-foreground text-xs">
                     {item.category}
                   </p>
