@@ -9,6 +9,7 @@ import { particles } from "@/registry/registry-particles";
 import { ParticlesDisplay } from "./particles-display";
 import SearchContainer from "./search-container";
 import { ParticlesBlueprint } from "@/components/particles-blueprint";
+import { ParticlesMotion } from "@/components/particles-motion";
 
 const particleCount = particles.length;
 
@@ -74,7 +75,9 @@ export default function Page({
           </div>
         </div>
         <div className="pointer-events-none mx-auto hidden w-full max-w-140 select-none lg:-my-24 lg:block">
-          <ParticlesBlueprint />
+          <ParticlesMotion>
+            <ParticlesBlueprint />
+          </ParticlesMotion>
         </div>
       </section>
       <div className="relative before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-border/64">
