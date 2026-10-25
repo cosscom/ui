@@ -6,10 +6,7 @@ import { NotFoundBlueprint } from "./not-found-blueprint";
 
 export function NotFoundMotion({ children }: { children: ReactNode }) {
   return (
-    <BlueprintMotion
-      controlClassName="bottom-12"
-      renderAnimation={() => <NotFoundBlueprint animated />}
-    >
+    <BlueprintMotion renderAnimation={() => <NotFoundBlueprint animated />}>
       {children}
     </BlueprintMotion>
   );
