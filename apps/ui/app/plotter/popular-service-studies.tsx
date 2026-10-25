@@ -148,81 +148,56 @@ function NotionBlocksStudy() {
   return (
     <BlueprintDrawing>
       <g opacity="0.1" strokeWidth="0.6">
-        <path d="M156 96V348M204 96V348M252 120V348M300 120V348M360 96V348M408 96V348M128 132H436M128 176H436M128 204H436M128 248H436M128 276H436M128 320H436" />
+        <path d="M160 88V200 M400 88V200 M144 216H416 M144 384H416" />
+        <path d="M180 152V224 M380 152V224 M180 392V408 M380 392V408" />
       </g>
-      <g opacity="0.3" strokeWidth="0.6">
-        <path
-          d="M204 100V352M408 100V352M144 154H424M188 226H424M188 298H424"
-          strokeDasharray="3 5"
-        />
-        <path d="M204 88H290M322 88H408M204 80V96M408 80V96m-208-4 8-8m196 8 8-8" />
-        <path d="M440 204V248M434 204H446M434 248H446M440 276V320M434 276H446M434 320H446" />
-        <path d="M204 132H408V176H204Z" strokeDasharray="4 5" />
-        <path d="M192 120V108H420V332H192V320" strokeDasharray="5 6" />
+      <g opacity="0.28" strokeDasharray="4 6" strokeWidth="0.6">
+        <path d="M180 152V208 M380 152V208" />
+        <rect height="40" rx="6" width="200" x="180" y="280" />
       </g>
-
       <g strokeWidth="0.95">
-        <rect
-          fill="var(--color-sidebar)"
-          height="44"
-          rx="6"
-          width="204"
-          x="156"
-          y="132"
-        />
-        <rect
-          fill="var(--color-sidebar)"
-          height="44"
-          rx="6"
-          width="204"
-          x="204"
-          y="204"
-        />
-        <rect
-          fill="var(--color-sidebar)"
-          height="44"
-          rx="6"
-          width="204"
-          x="204"
-          y="276"
-        />
-        <path d="M174 146V162M184 146V162M174 154H184" opacity="0.65" />
-        <path d="M222 220H236M222 226H233M222 232H236" opacity="0.65" />
+        <rect height="40" rx="6" width="200" x="180" y="104" />
+        <rect height="168" rx="8" width="240" x="160" y="216" />
+        <rect height="40" rx="6" width="200" x="180" y="232" />
+        <rect height="40" rx="6" width="200" x="180" y="328" />
+      </g>
+      <g opacity="0.5" strokeWidth="0.65">
+        <path d="M196 118h14 M196 124h10 M196 130h14" />
+        <path d="M196 244v16 M206 244v16 M196 252h10" />
+        <rect height="10" rx="2" width="10" x="196" y="339" />
+        <path d="m198 344 2 2 4-4" />
         <path
-          d="M222 290H238V306H222ZM222 295H238M230 295V306"
-          opacity="0.65"
+          d="M386 300H408A24 24 0 0 0 432 276V148A24 24 0 0 0 408 124H388"
+          strokeDasharray="4 6"
         />
+        <path d="m390.24 295.76-4.24 4.24 4.24 4.24" />
+        <path d="M180 80H266 M294 80H380 M180 72V96 M380 72V96" />
+        <path d="m176 84 8-8 m192 8 8-8" />
+        <path d="M140 216V232 M134 216h12 M134 232h12" />
       </g>
-      <g opacity="0.43" strokeWidth="0.65">
-        <path d="M372 154H396m-5-5 5 5-5 5" />
-        <path d="M156 190H204M156 186V194M204 186V194" />
-        <path d="M184 204V248M180 204H188M180 248H188M184 248V276M180 276H188" />
-        <path d="M204 356H408M204 350V362M408 350V362m-208-2 8-8m196 8 8-8" />
-        <path d="M204 132h12v12M396 308h12v12" opacity="0.5" />
-      </g>
-      <g fill="currentColor" fontSize="11" opacity="0.72" stroke="none">
-        <text x="200" y="158">
-          Heading
-        </text>
-        <text x="252" y="230">
+      <g fill="currentColor" fontSize="11" opacity="0.75" stroke="none">
+        <text x="224" y="128">
           Text
         </text>
-        <text x="252" y="302">
-          Database
+        <text x="224" y="256">
+          Title
         </text>
-        <text x="426" y="112">
-          Page
+        <text x="224" y="348">
+          Tasks
         </text>
       </g>
-      <g fill="currentColor" fontSize="10" opacity="0.5" stroke="none">
-        <text textAnchor="middle" x="306" y="91">
-          204
+      <g fill="currentColor" fontSize="10" opacity="0.52" stroke="none">
+        <text textAnchor="middle" x="280" y="83">
+          5u
         </text>
-        <text textAnchor="middle" x="306" y="376">
-          Shared width
+        <text textAnchor="middle" x="280" y="304">
+          Insert block
         </text>
-        <text textAnchor="end" x="174" y="266">
-          28
+        <text x="160" y="402">
+          Page
+        </text>
+        <text textAnchor="end" x="128" y="228">
+          Inset
         </text>
       </g>
     </BlueprintDrawing>
@@ -349,7 +324,7 @@ export const popularServiceStudies: IllustrationStudy[] = [
     code: "B08",
     title: "Notion · Knowledge, assembled",
     description:
-      "Heading, text, and database blocks share one width and a repeatable gap. An offset block moves into the page’s common alignment frame.",
+      "A reusable text block fits an open position in a page. Shared widths, repeated gaps, and one insertion route explain the assembly.",
     category: "Services",
     illustration: <NotionBlocksStudy />,
   },

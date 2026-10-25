@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { IllustrationGallery } from "./illustration-gallery";
 import { illustrations } from "./illustrations";
+import { ParticlesBlueprint } from "./particles-blueprint";
+import { ParticlesMotion } from "./particles-motion";
 import { PrimitivesBlueprint } from "./primitives-blueprint";
 import { PrimitivesMotionPreview } from "./primitives-motion-preview";
 
@@ -39,7 +41,7 @@ export default function Page() {
             >
               Animations
             </h2>
-            <p className="text-muted-foreground text-xs">1 example</p>
+            <p className="text-muted-foreground text-xs">2 examples</p>
           </div>
           <div className="grid overflow-hidden rounded-lg border border-border/64 bg-sidebar lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
             <div className="flex flex-col items-start justify-center gap-4 p-6 sm:p-8">
@@ -59,6 +61,31 @@ export default function Page() {
               </PrimitivesMotionPreview>
             </div>
           </div>
+          <article
+            aria-labelledby="particles-animation-title"
+            className="mt-6 grid scroll-mt-20 overflow-hidden rounded-lg border border-border/64 bg-sidebar lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]"
+            id="particles-animation"
+          >
+            <div className="flex flex-col items-start justify-center gap-4 p-6 sm:p-8">
+              <p className="text-muted-foreground text-xs">Particles / C03</p>
+              <h3
+                className="font-heading font-semibold text-2xl [font-variation-settings:'GEOM'_50]"
+                id="particles-animation-title"
+              >
+                Three assemblies
+              </h3>
+              <p className="max-w-sm text-pretty text-muted-foreground text-sm">
+                Workspace, booking, activity. Three sets of independent elements
+                assemble into three different interfaces in a repeating
+                sequence.
+              </p>
+            </div>
+            <div className="min-w-0 border-t lg:border-s lg:border-t-0">
+              <ParticlesMotion controls="preview">
+                <ParticlesBlueprint />
+              </ParticlesMotion>
+            </div>
+          </article>
         </section>
         <section
           aria-labelledby="illustrations-heading"

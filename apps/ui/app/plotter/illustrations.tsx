@@ -1,4 +1,5 @@
 import { calStudies } from "./cal-studies";
+import { contentStateStudies } from "./content-state-studies";
 import { flatCalStudies } from "./flat-cal-studies";
 import { flatObjectStudies } from "./flat-object-studies";
 import { flatSystemStudies } from "./flat-system-studies";
@@ -14,6 +15,7 @@ import { PrimitivesBlueprint } from "./primitives-blueprint";
 import { serviceStudies } from "./service-studies";
 import { stateStudies } from "./state-studies";
 import type { IllustrationStudy } from "./study-types";
+import { systemStateStudies } from "./system-state-studies";
 import { systemStudies } from "./system-studies";
 
 const collection: IllustrationStudy[] = [
@@ -46,6 +48,8 @@ const collection: IllustrationStudy[] = [
   ...networkStudies,
   ...objectStudies,
   ...stateStudies,
+  ...contentStateStudies,
+  ...systemStateStudies,
   ...notFoundArchitectureStudies,
   ...notFoundGeometryStudies,
   {

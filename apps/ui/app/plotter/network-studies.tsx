@@ -11,85 +11,53 @@ function RegistrationMarks() {
 }
 
 function BranchingWorkflowStudy() {
-  const routes =
-    "M132 224H216A24 24 0 0 0 240 200V152A24 24 0 0 1 264 128H420 M132 224H420 M132 224H216A24 24 0 0 1 240 248V296A24 24 0 0 0 264 320H420";
-
   return (
     <BlueprintDrawing>
-      <g opacity="0.08" strokeWidth="0.6">
-        {[168, 192, 216, 240, 264, 288, 312, 336, 360, 384].map((x) => (
-          <path d={`M${x} 104V344`} key={x} />
-        ))}
-        {[152, 176, 200, 248, 272, 296].map((y) => (
-          <path d={`M108 ${y}H444`} key={y} />
-        ))}
+      <g opacity="0.1" strokeWidth="0.6">
+        <path d="M132 104V208 M132 240V344 M240 104V120 M240 160V192 M240 256V344 M424 104V116 M424 140V212 M424 236V308 M424 332V344" />
+        <path d="M108 128H224 M108 320H224 M280 176H444 M280 272H444" />
       </g>
-      <g opacity="0.24" strokeWidth="0.6">
-        <path
-          d="M108 128H470 M108 224H470 M108 320H470"
-          strokeDasharray="5 5"
-        />
-        <path d="M132 105V361 M420 105V361 M240 92V350" />
+      <g opacity="0.28" strokeDasharray="4 6" strokeWidth="0.65">
+        <path d="M216 224H420 M216 224A24 24 0 0 1 240 248V296A24 24 0 0 0 264 320H420" />
+        <path d="M240 152a24 24 0 1 0 24-24" />
       </g>
-
-      {/* Parallel outlines make the route itself the constructed form. */}
-      <path d={routes} opacity="0.8" strokeWidth="13" />
-      <path d={routes} stroke="var(--color-sidebar)" strokeWidth="11" />
-      <g opacity="0.8" strokeWidth="1">
-        <path d="M132 218V230 M420 122V134 M420 218V230 M420 314V326" />
+      <g strokeWidth="0.95">
+        <path d="M136 224H216A24 24 0 0 0 240 200V152A24 24 0 0 1 264 128H420" />
+        <circle cx="132" cy="224" r="4" />
+        <circle cx="424" cy="128" r="4" />
       </g>
-      <path d={routes} opacity="0.25" strokeDasharray="3 5" strokeWidth="0.6" />
-      <path
-        d="M132 224H216A24 24 0 0 0 240 200V152A24 24 0 0 1 264 128H420"
-        opacity="0.6"
-        strokeWidth="0.7"
-      />
-
-      <g opacity="0.37" strokeWidth="0.65">
-        <circle cx="264" cy="152" r="24" strokeDasharray="2 4" />
-        <path d="M264 119V162 M230 152H274 M258 152h12 M264 146v12" />
-        <path d="M264 152 296 120 310 106H342" />
-        <path d="M228 210H216V198" />
-        <path d="M216 224A24 24 0 0 0 240 200" />
-        <path d="M170 218V188H192 M170 230V248 M164 218h12 M164 230h12" />
+      <g opacity="0.5" strokeWidth="0.65">
+        <circle cx="424" cy="224" r="4" />
+        <circle cx="424" cy="320" r="4" />
+        <path d="M258 152h12 M264 146v12 M268 148 280.97 135.03" />
         <path d="M460 128V164 M460 188V224 M460 224V260 M460 284V320" />
-        <path d="M454 128h12 M454 224h12 M454 320h12" />
+        <path d="M434 128H470 M434 224H470 M434 320H470" />
         <path d="m456 132 8-8 m-8 104 8-8 m-8 104 8-8" />
-        <path d="M132 356H252 M300 356H420 M132 348V364 M420 348V364" />
-        <path d="m128 360 8-8 m280 8 8-8" />
+        <path d="M216 338V364 M240 350V364 M216 356H240 m-28 4 8-8 m16 8 8-8" />
       </g>
-      <g fill="var(--color-sidebar)" strokeWidth="0.8">
-        <circle cx="132" cy="224" r="2.5" />
-        <circle cx="420" cy="128" r="2.5" />
-        <circle cx="420" cy="224" r="2.5" />
-        <circle cx="420" cy="320" r="2.5" />
-      </g>
-      <g fill="currentColor" fontSize="10" opacity="0.55" stroke="none">
-        <text x="348" y="109">
-          R24
-        </text>
-        <text x="154" y="180">
-          w = 12
+      <g fill="currentColor" fontSize="10" opacity="0.52" stroke="none">
+        <text x="296" y="158">
+          r
         </text>
         <text textAnchor="middle" x="460" y="179">
-          96
+          4r
         </text>
         <text textAnchor="middle" x="460" y="275">
-          96
+          4r
         </text>
-        <text textAnchor="middle" x="276" y="359">
-          288
+        <text textAnchor="middle" x="228" y="378">
+          r
         </text>
-        <text textAnchor="end" x="119" y="211">
+        <text textAnchor="end" x="120" y="213">
           in
         </text>
-        <text x="430" y="117">
+        <text x="408" y="111">
           01
         </text>
-        <text x="430" y="213">
+        <text x="408" y="207">
           02
         </text>
-        <text x="430" y="309">
+        <text x="408" y="303">
           03
         </text>
       </g>
@@ -104,7 +72,7 @@ export const networkStudies: IllustrationStudy[] = [
     code: "W02",
     title: "A route, constructed",
     description:
-      "One continuous route, three outlets. Parallel outlines reveal its width, repeated bend radius, and equal branch spacing.",
+      "One selected route and two alternatives share a junction. A repeated bend radius establishes the spacing between the three outlets.",
     category: "Systems",
     illustration: <BranchingWorkflowStudy />,
   },

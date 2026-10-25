@@ -29,7 +29,9 @@ Find the checkout from the current workspace; the skill does not require a parti
 | Feedback evidence | `apps/ui/skills/plotter/references/direction.md` |
 | Typography rules | `packages/ui/src/fonts/font-guide.md` |
 
-The showcase owns its drawings and wrapper independently of the production integration in PR #912. Use its `BlueprintDrawing` wrapper for compatible illustrations. It supplies monochrome foreground, Cal Sans, automatic optical sizing, and GEOM25. Preserve semantic surface masks such as `var(--color-sidebar)` and inspect them against the actual host background. Static illustration components do not need client-side state.
+The showcase owns its drawings and wrapper independently of the production integration in PR #912. Use its `BlueprintDrawing` wrapper for compatible illustrations. It supplies monochrome foreground, Cal Sans, automatic optical sizing, and GEOM25. Follow the current transparency and grid-construction feedback in [direction.md](direction.md) when revising these drawings. Static illustration components do not need client-side state.
+
+Choose style references from [the approved set](approved-references.md); production placement and bundled historical screenshots are separate from reference approval.
 
 Keep production page layouts local, as explicitly requested by the user. Do not recreate a shared page-hero component. The showcase displays standalone drawings in a gallery with enlarged previews.
 

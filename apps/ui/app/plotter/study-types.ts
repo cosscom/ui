@@ -16,4 +16,9 @@ export type IllustrationStudy = {
   description: string;
   category: StudyCategory;
   illustration: ReactNode;
+  emptyState?: {
+    title: string;
+    description: string;
+    illustration: ReactNode;
+  };
 };

@@ -104,81 +104,60 @@ function SharedAvailability() {
   );
 }
 
-function ClockFace({ cx, hour }: { cx: number; hour: number }) {
-  const hourAngle = (hour / 12) * Math.PI * 2;
-
-  return (
-    <g>
-      <circle cx={cx} cy="220" opacity="0.18" r="82" strokeWidth="0.6" />
-      <circle
-        cx={cx}
-        cy="220"
-        fill="var(--color-sidebar)"
-        r="74"
-        strokeWidth="1"
-      />
-      <g opacity="0.52" strokeWidth="0.65">
-        {Array.from({ length: 12 }, (_, index) => index).map((hourTick) => (
-          <path
-            d={`M${cx} 154V${hourTick % 3 === 0 ? 164 : 160}`}
-            key={hourTick}
-            transform={`rotate(${hourTick * 30} ${cx} 220)`}
-          />
-        ))}
-      </g>
-      <g opacity="0.18" strokeWidth="0.6">
-        <path
-          d={`M${cx - 48} 220H${cx + 48}M${cx} 172V268`}
-          strokeDasharray="3 5"
-        />
-        <circle cx={cx} cy="220" r="44" strokeDasharray="3 5" />
-      </g>
-      <path
-        d={`M${cx + Math.sin(hourAngle) * 44} ${220 - Math.cos(hourAngle) * 44}L${cx} 220V277`}
-        strokeLinecap="round"
-        strokeWidth="1.1"
-      />
-      <circle
-        cx={cx}
-        cy="220"
-        fill="var(--color-sidebar)"
-        r="3.5"
-        strokeWidth="0.9"
-      />
-    </g>
-  );
-}
-
 function TwoTimeZones() {
   return (
     <BlueprintDrawing>
-      <g opacity="0.2" strokeWidth="0.6">
-        <path d="M188 76V342M374 76V342M94 220H468" strokeDasharray="5 5" />
-        <path d="M100 146H460M100 294H460" />
+      <g opacity="0.1" strokeWidth="0.6">
+        <path d="M104 124V316 M176 124V316 M392 124V316 M464 124V316" />
+        <path d="M88 136H232 M336 136H480 M88 248H232 M336 248H480" />
+      </g>
+      <g opacity="0.28" strokeDasharray="4 6" strokeWidth="0.6">
+        <path d="M248 212V240 M320 212V240 M248 324V332 M320 324V332" />
       </g>
       <g opacity="0.5" strokeWidth="0.65">
-        <path d="M188 100H256M306 100H374M188 92V108M374 92V108" />
-        <path d="m184 104 8-8m178 8 8-8" />
-        <path d="M262 220H300" />
-        <path d="M277 215V225M285 215V225" />
+        <path d="M104 184H464 M104 296H464" />
+        {[104, 176, 248, 320, 392, 464].map((x) => (
+          <path d={`M${x} 180v8 M${x} 292v8`} key={x} />
+        ))}
+        <path d="M248 104H270 M298 104H320 M248 96V120 M320 96V120" />
+        <path d="m244 108 8-8 m64 8 8-8" />
+        <path d="M274 220h20 M274 228h20" />
+        <path d="M248 328H320 M248 324v8 M320 324v8" />
       </g>
-      <ClockFace cx={188} hour={9.5} />
-      <ClockFace cx={374} hour={3.5} />
-      <g fill="currentColor" fontSize="10" opacity="0.55" stroke="none">
-        <text textAnchor="middle" x="281" y="103">
-          +6h
-        </text>
-        <text fontSize="12" textAnchor="middle" x="188" y="326">
-          09:30
-        </text>
-        <text textAnchor="middle" x="188" y="344">
+      <g strokeWidth="0.95">
+        <rect height="40" rx="6" width="72" x="248" y="136" />
+        <rect height="40" rx="6" width="72" x="248" y="248" />
+      </g>
+      <g fill="currentColor" fontSize="11" opacity="0.75" stroke="none">
+        <text x="104" y="160">
           UTC
         </text>
-        <text fontSize="12" textAnchor="middle" x="374" y="326">
-          15:30
+        <text x="104" y="272">
+          UTC+03
         </text>
-        <text textAnchor="middle" x="374" y="344">
-          UTC+6
+        <text textAnchor="middle" x="284" y="160">
+          09:00
+        </text>
+        <text textAnchor="middle" x="284" y="272">
+          12:00
+        </text>
+      </g>
+      <g fill="currentColor" fontSize="10" opacity="0.52" stroke="none">
+        {["07", "08", "09", "10", "11", "12"].map((hour, index) => (
+          <text key={hour} textAnchor="middle" x={104 + index * 72} y="204">
+            {hour}
+          </text>
+        ))}
+        {["10", "11", "12", "13", "14", "15"].map((hour, index) => (
+          <text key={hour} textAnchor="middle" x={104 + index * 72} y="316">
+            {hour}
+          </text>
+        ))}
+        <text textAnchor="middle" x="284" y="107">
+          1h
+        </text>
+        <text textAnchor="middle" x="284" y="354">
+          Same booking
         </text>
       </g>
       <RegistrationMarks />
@@ -201,7 +180,7 @@ export const calStudies: IllustrationStudy[] = [
     code: "K03",
     title: "One moment, two places",
     description:
-      "Two clock faces show the same instant six hours apart. Their shared minute hand and connecting datum make the time difference tangible.",
+      "Two hour scales describe the same booking. An aligned one-hour interval stays fixed while the local time changes by three hours.",
     category: "Scheduling",
     illustration: <TwoTimeZones />,
   },

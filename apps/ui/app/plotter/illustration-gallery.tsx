@@ -11,6 +11,13 @@ import {
   DialogPopup,
   DialogTitle,
 } from "@/registry/default/ui/dialog";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/registry/default/ui/empty";
 import type { IllustrationStudy, StudyCategory } from "./study-types";
 
 const categories: StudyCategory[] = [
@@ -181,6 +188,21 @@ export function IllustrationGallery({
                     {active.description}
                   </DialogDescription>
                 </div>
+                {active.emptyState && (
+                  <div className="mt-6 rounded-lg border bg-background">
+                    <Empty className="md:py-12">
+                      <EmptyHeader>
+                        <EmptyMedia className="size-24">
+                          {active.emptyState.illustration}
+                        </EmptyMedia>
+                        <EmptyTitle>{active.emptyState.title}</EmptyTitle>
+                        <EmptyDescription>
+                          {active.emptyState.description}
+                        </EmptyDescription>
+                      </EmptyHeader>
+                    </Empty>
+                  </div>
+                )}
               </DialogPanel>
               <div className="flex items-center justify-between border-t p-3 sm:px-6">
                 <Button

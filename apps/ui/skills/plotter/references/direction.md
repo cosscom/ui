@@ -2,19 +2,49 @@
 
 Evidence captured from the coss UI illustration reviews on 2026-10-24–25. This is a living art-direction record, not a claim that every study has been approved.
 
-## Anchors
+## Current references
 
-The user explicitly called the original Primitives and Particles illustrations the better work and asked that they guide further experiments. Their screenshots are bundled beside this file. Primitives centers a circle/square relationship with radius, tangency, alignment, and restrained hatching. Particles composes a pill, label row, and toggle fragment on a common planar construction frame.
+The user explicitly selected the [27 approved references](approved-references.md) on 2026-10-25. Use that exact set for future drawing and critique. It supersedes the earlier blanket emphasis on original Primitives/Particles and the historical pending-review labels below. Other current examples need refinement or a clearer fit; the user did not yet specify a reason for each and did not ask to remove them.
 
-The user also explicitly said they “love the Linear example” (B04). Use [Linear](linear.png) as a service-concept reference: issue units aligned to a cycle and release. This endorses that example, not every service drawing.
+Original Primitives/P00 and Linear/B04 remain approved. Original Particles/C00 is now a historical reference. Earlier endorsements of a particular detail, such as C00’s arrow caps, remain evidence about that detail rather than approval of the whole composition.
 
-The former lab assigned reference status to the entire Primitives/Particles categories. That metadata exceeded the user’s clearest endorsement of the original two drawings and is not an approval source.
+## Reference-led refinement pass
+
+The user next asked to improve the remaining drawings using the selected references. All 24 candidates were revised in place: C00, C03, P01, K03, I04, I05, W02, O03, O04, O05, B08, S01, and S03–S14. Their IDs and subjects remain stable; the 27 approved SVGs are unchanged. These new revisions await user review and are not additional style references.
+
+The implementation response concentrates each drawing on one relationship:
+
+- P01 shares a tangent between two radii; K03 aligns one booking across two hour scales; W02 selects one route through a measured junction.
+- C00 repeats an inset across fragments; C03 recombines equal-width parts into three equal rows; B08 inserts a reusable block into a matching page slot.
+- O03 shows quarter-pitch stagger, I04 an enlarged browser corner, I05 a concentric frame and safe area, O04 a semicircle on its support axis, and O05 a tab shared by two folder widths.
+- The empty states give absence a structural role: a missing index entry, an ended notification stream, an unwritten page, an empty coordinate field or week, an unoccupied image frame, an interrupted route, a locked boundary, a pending message, separated pitch circles, disconnected contacts, or an unresolved location.
+
+The revised forms are transparent. Grid paths are omitted or split where they would add noise or cross labels; no background patches hide them. Hero and compact empty-state versions were checked separately. This pass changes the showcase’s static studies, not the production heroes or the animation sequences.
+
+### Follow-up on the revised set
+
+The user reviewed ten studies and gave these corrections. This is specific feedback on the reference-led pass, not approval or rejection of the other revisions:
+
+- **C00/C03:** the user clarified that C02 is the switch reference. Use its 30 × 18 track, R9 corners, R5.5 thumb, 3.5 inset, and primary 0.95 stroke at full opacity. Matching C00 to C03’s muted secondary stroke did not resolve the inconsistency; geometry and stroke treatment must both match C02. The animated switch already follows this treatment.
+- **I04:** the browser’s upper-left radius is excessive and its three chrome circles are undersized. Reduce the corner and enlarge/re-align the controls within the same detail crop.
+- **I05:** the external lines feel bland. Use exterior dimensions and extensions to explain the frame and safe-area insets; extra lines need a geometric purpose.
+- **B08:** the insertion route and arrow should be dashed. Treat it as movement, with a solid open cap meeting the first dash at its tip.
+- **S13:** the circle around Wednesday feels inconsistent. Use a restrained weekday underline while retaining the column alignment.
+- **S08:** the lock body lacks construction geometry. Explain the rounded body, keyhole axis, and their relationship, not just the shackle.
+- **S09:** the separated letter/envelope result is not liked. The response uses one open envelope with its folded flap projected across the crease.
+- **S10:** the two-gear result is not liked; the user suggests a third, smaller gear. The response uses a 12/8/6-tooth train: the smaller pair engages while the main drive remains separated. Keep tooth pitch and construction circles coherent across the mechanism.
+- **S11:** the symmetric plug/socket revision is worse; the user preferred the former wall section on the right. Restore the fixed wall/socket relationship and its section hatching.
+- **S12:** the composition is too vertical. Broaden the coordinate field and shorten the pin-to-target relationship without rotating the represented object.
+
+These responses remain subject to review. Preserve the other studies, the approved reference set, and the animation work.
 
 ## Production selections
 
-The user explicitly selected **P00** for the main page, [**C03** for Particles](particles-recombination.png), and [**E02** for the 404](not-found-interrupted-path.png). These are current implementation decisions. The original Primitives/Particles references and loved Linear study still guide the broader style. The Plotter showcase owns independent snapshots of the selected drawings, so it can ship separately from the production integration. Original C00 and E00 remain separate examples.
+The user explicitly selected **P00** for the main page, [**C03** for Particles](particles-recombination.png), and [**E02** for the 404](not-found-interrupted-path.png). These are current implementation decisions. Use the current approved reference set for the broader style; C03’s production selection does not make it a reference. The Plotter showcase owns independent snapshots of the selected drawings, so it can ship separately from the production integration. Original C00 and E00 remain separate examples.
 
-## Review evidence
+## Historical review evidence
+
+These entries record earlier feedback and its implementation response. Current reference status comes from the explicit selection above.
 
 | Evidence | Status and implication |
 | --- | --- |
@@ -29,26 +59,26 @@ The user explicitly selected **P00** for the main page, [**C03** for Particles](
 | I03: good, not an excellent example | Revised from a single generic row to separate elements projecting into a shared control. |
 | W03: a bit weak | Replaced the isolated switch with a switching matrix and one selected junction. |
 | W02: does not really seem a blueprint; user could not say why | Replaced rounded endpoint cards and checkmarks with a continuous route whose width, bend radius, and branch spacing are measured. |
-| Response to those five revisions: “much better” | Collective positive feedback. Promising revised examples, not five individually designated canonical anchors. |
+| Response to those five revisions: “much better” | Initially collective positive feedback. K06, K08, I03, and W03 were later explicitly selected as references; W02 was omitted. |
 | E03/E05 set aside by the assistant | Inferred conflict with the no-tilt rule; not individually rejected by the user. |
-| O03 keyboard: “doesn’t look good”; asks to show a portion and use more subtle/dashed lines | Revised as a deliberate keyboard detail with credible staggered rows and modifiers, quiet outlines, and dashed continuation. Revision unreviewed. |
-| I04 browser: “same problem as keyboard before” | Interpreted as a request for a deliberate enlarged browser detail, with subdued strokes and dashed continuation. Latest revision unreviewed. |
-| I06 chat: asks to add an avatar and remove the triangle on the bubble | Pair rounded, tail-free message blocks with circular avatars. Latest revision unreviewed. |
-| O05 folder: asks for two or three instead of one | Revised as three separate flat outlines sharing tab geometry and alignment. Revision unreviewed. |
+| O03 keyboard: “doesn’t look good”; asks to show a portion and use more subtle/dashed lines | Revised as a deliberate keyboard detail with credible staggered rows and modifiers, quiet outlines, and dashed continuation. O03 is outside the current approved reference set. |
+| I04 browser: “same problem as keyboard before” | Interpreted as a request for a deliberate enlarged browser detail, with subdued strokes and dashed continuation. I04 is outside the current approved reference set. |
+| I06 chat: asks to add an avatar and remove the triangle on the bubble | Pair rounded, tail-free message blocks with circular avatars. I06 was later explicitly selected as a reference. |
+| O05 folder: asks for two or three instead of one | Revised as three separate flat outlines sharing tab geometry and alignment. O05 is outside the current approved reference set. |
 | E04: “remove” | Explicitly removed. This is a choice about E04, not a blanket rejection of all absence metaphors. |
 | E02: good idea but bland/weak | Preserve the idea while strengthening its composition. Selected for the 404 page after revision. |
-| B02 Vercel: not loved; wants more conceptual/metaphoric, then asks whether it is accurate and requests improvement | Replaced the broadcast-like aperture with separate preview frames and one selected preview promoted to an identical production frame. “Preview” / “Production” replaces “Draft” / “Live” because previews are already reachable deployments. Matching outlines identify the same source version, not the same build: preview promotion rebuilds for the production environment. User approved this direction of work; the resulting drawing is still unreviewed. |
-| B03 Stripe: “ok”; wants an alternative focused on what it does | Keep B03 and add B05 as an alternative. “Ok” is not a request to replace it or make it a canonical anchor. |
-| B01 Cloudflare: asks whether the representation is accurate | A request for factual review, not approval or rejection. Scope the concept clearly; latest revision unreviewed. |
-| B09 Supabase: points to the crowded connector at owner_id and says it does not look good | Replaced the branching endpoint with a circular port and a short straight approach after the bend. This is a critique of that junction, not rejection of the study or all relationship notation. Revision unreviewed. |
+| B02 Vercel: not loved; wants more conceptual/metaphoric, then asks whether it is accurate and requests improvement | Replaced the broadcast-like aperture with separate preview frames and one selected preview promoted to an identical production frame. “Preview” / “Production” replaces “Draft” / “Live” because previews are already reachable deployments. Matching outlines identify the same source version, not the same build: preview promotion rebuilds for the production environment. The revised B02 drawing was later explicitly selected as a reference. |
+| B03 Stripe: “ok”; wants an alternative focused on what it does | Kept B03 and added B05 as an alternative. Both were later explicitly selected as references. |
+| B01 Cloudflare: asks whether the representation is accurate | Initially a request for factual review. Scope the concept clearly; B01 was later explicitly selected as a reference. |
+| B09 Supabase: points to the crowded connector at owner_id and says it does not look good | Replaced the branching endpoint with a circular port and a short straight approach after the bend. This critiques that junction, not all relationship notation. Revised B09 was later explicitly selected as a reference. |
 | B04 Linear: “love the Linear example” | Explicit positive reference for service concepts; preserve it. |
-| Request for more popular-service examples | New B05–B09 are exploration, awaiting user review. |
+| Request for more popular-service examples | B05, B06, B07, and B09 were later explicitly selected as references; B08 was omitted. |
 
 The earlier K06/K08/I03/W02/W03 revision pass is captured in coss commit `285493c9` on `codex/blueprint-illustration-studies`. The preceding flat-direction pass is `e9077a93`. Preserve this evidence if gallery metadata later changes.
 
 ## Showcase curation
 
-The user subsequently asked to remove unwanted and discarded examples and turn the lab into a showcase named **Plotter illustrations**. The collection now contains 39 illustrations at `/ui/plotter`, with category filters and enlarged previews. Shortlists, review controls, and page-hero mockups have been removed.
+The user subsequently asked to remove unwanted and discarded examples and turn the lab into a showcase named **Plotter illustrations**. The gallery at `/ui/plotter` has category filters and enlarged previews. Shortlists, review controls, and page-hero mockups have been removed.
 
 The 13 explicitly rejected entries (K01, K04, K05, I01, I02, D01, D02, W01, O01, O02, A01, A02, S02) and the assistant-set-aside E03/E05 were removed from the drawing code. E04 was already absent. W02 stays because its revised planar route received the later collective “much better” response. Retained revisions of other critiqued examples remain subject to the evidence above: curation is not individual approval or promotion to a style anchor.
 
@@ -76,9 +106,54 @@ The first Slider trial was weak: the user could barely see its dotted line and w
 
 The user questioned whether the sector animation suited an avatar but said they liked it. After a suggestion to rename the stage Circle, they explicitly chose to leave it as is and commit. Preserve both the Avatar label and its sector construction.
 
+The user next requested an animation for the Particles page, specifically C03. They liked the top-to-bottom assembly concept but criticized the first trial’s unstable grid, vacant destination, and stretching elements. They found the subsequent centered exploded stack boring and explicitly asked to restore the original concept, suggesting two isolated grids like B03 and a lower block that starts with only a dashed border. Build bottom-up and separate top-down using clear side lanes, with one owner for each joined seam. Both grids remain stationary.
+
+The next feedback explicitly requests fully rounded A, B, and C in their initial positions and dashed outlines left behind when they depart. Keep fragments rigid at 3u × 1u during travel; flatten their shared corners only at contact. Reveal the 3u × 3u dimensions and A + B + C only after assembly, then widen the completed block, and toggle the switch later. This post-assembly enlargement is explicitly requested; it does not endorse stretching separate fragments in transit. The current trial expands to 6u × 3u around its center, preserving stroke widths, corner radii, text, and control sizes. Update the width annotation with the geometry; shrink before separation. Preserve pause, offscreen pause, and reduced-motion behavior in the Particles hero and Plotter preview. This revision is awaiting review.
+
+The user then asked to improve C03’s grid by avoiding lines that cut through the elements. They explicitly rejected masking or covering the existing lines: rework the grid geometry itself. The lower field’s half-cell vertical offset put horizontal strokes through row centers, making it look misplaced. Use fixed, intentional edge and row-alignment guides, aligned to the actual row boundaries and the composition’s common center. Leave unnecessary interior strokes out of the paths entirely; no animated grid masks or background patches. This grid revision is awaiting review.
+
+For C03’s three-assembly animation, the user wants the parts to become a new common shape. They rejected withdrawing whole borders and retaining independent boxes inside a new container. Exterior paths must form the silhouette themselves, with one owner for each shared divider. They then asked to improve the colliding-edge morph and explicitly rejected changing the movement: “i just wanted the colliding edge morph be better.” Preserve the original straight eased trajectories, travel-time resizing, stagger, receiver guides, and chapter pacing. Do not add curved docking paths or early enlargement to solve this detail. The current response separates straight edges from exterior corner arcs: paired corners retain their radius until contact, then flatten together over 0.22 seconds while the surviving edge becomes the secondary divider. Only the duplicate facing line feathers out over the last 0.08 seconds before contact; no whole fragment outline disappears. Keep the 0.9-second flights, 5.4-second chapters, 16.2-second loop, source ghosts, fixed grids, and later switch toggle. This edge-only revision awaits review and stays separate from the production hero.
+
 ## Expanded subject brief
 
 The user explicitly requested a keyboard, browser window, table lamp, folder, smartphone, chat, and service concepts for Cloudflare, Vercel, Stripe, and Linear, then asked for more popular-service examples. These are requested exploration areas; only the specific feedback above establishes preference or approval. The expansion does not rehabilitate earlier rejected object drawings. Render familiar objects as flat plans or elevations with meaningful construction relationships. Preserve the established no-perspective rule.
+
+## Empty-state set
+
+The user asked for concepts, states, or objects that fit this style and are in high demand, and wanted advice. They chose all twelve suggested object-for-state pairings, static, at both hero and compact empty-state sizes:
+
+- search (no results)
+- offline
+- notifications
+- files
+- data
+- access
+- email
+- maintenance
+- disconnected integration
+- location
+- bookings
+- image
+
+These are S03–S14 under Empty states. Each one adds a 96px version, shown in the coss `Empty` component in its preview dialog. The compact version reuses the hero geometry with non-scaling 1px strokes and no labels. All twelve remain outside the current approved reference set.
+
+When the user asked for an honest assessment, the assistant judged most of the set to be annotated pictograms. In those, the state lived in a caption rather than the geometry, and the compact versions read as generic outline icons. The user replied “ok improve them”. The four strongest were reworked using E02’s grammar:
+
+- **S04:** a route from this device, cut by break slashes, with a dashed ghost reaching a cloud of tangent circles.
+- **S06:** an empty text area scaled on the page diagonal, holding only a cursor.
+- **S11:** the measured gap is labeled as the state.
+- **S12:** the pin is held above an empty dashed target.
+
+The reworked studies use two label tiers: semantic labels at 11 / 72% and measurements at 10 / 50%. Each compact version keeps one construction cue that survives at 96px: the break, the empty text area, the gap, or the target. Asked whether to cut, rework, or keep the remaining eight, the user chose to rework them one or two at a time for review. Two more have been reworked so far:
+
+- **S03:** a typed query above a dashed four-row results list, in the style of C03’s interface fragments.
+- **S10:** two gears with matching teeth, their pitch circles 40 apart instead of tangent.
+
+At that point S05, S07–S09, S13, and S14 remained to be reworked; the reference-led refinement pass above now covers them.
+
+On S11, the user noted that drawings like these often use tiny arrows to show direction. They expected one pointing right along the dashed prong lines. Use small open arrowheads in the secondary-line style on a path or axis that implies movement. Place them within the gap or route, pointing toward the destination. Hero only: they vanish at 96px.
+
+The user then pointed to E02, C00, and P02 as well-executed arrow caps, and to C03 and S11 as inconsistent. Draw every cap the way those three do: an open 90° chevron, each leg about 6 long at 45° to its shaft. Put it in the same group and opacity as the shaft, with the tip exactly on the end of a drawn line. On a 45° shaft the legs are axis-aligned (`m-6 0h6v-6`). On an axis-aligned shaft they offset ±4.24 on both axes. On other angles, rotate the reversed shaft direction by ±45°. On a dashed shaft, start the path at the tip so a dash, not a gap, meets the cap, or place the tip at the end of a dash.
 
 ## Working interpretations
 
@@ -89,7 +164,7 @@ These diagnoses come from examining the drawings, not from more specific user qu
 - The main geometry should carry the idea; adding technical marks to a weak subject does not make it fit.
 - Perspective belongs to the represented object, not every diagonal mark. Radius lines and annotation leaders remain useful.
 - For O03, interpreting “show a portion” as an intentional detail crop resolves the earlier ambiguous miniature keyboard. The user asked for a portion and subdued/dashed lines; credible stagger and modifier widths are our implementation response.
-- Service metaphors can be conceptually clear without illustrating every product. Accuracy concerns the relationship depicted and its stated scope. In the Vercel study, we diagnosed the expanding arcs as too suggestive of broadcasting; the user requested improvement after that explanation. The selected-preview construction is our response, not a newly approved anchor.
+- Service metaphors can be conceptually clear without illustrating every product. Accuracy concerns the relationship depicted and its stated scope. In the Vercel study, we diagnosed the expanding arcs as too suggestive of broadcasting; the user requested improvement after that explanation. The selected-preview construction was our response and was later explicitly included in the approved reference set.
 
 ## Subject guidance
 

@@ -4,61 +4,55 @@ import type { IllustrationStudy } from "./study-types";
 function BrowserPlanStudy() {
   return (
     <BlueprintDrawing>
-      <g opacity="0.12" strokeDasharray="3 6" strokeWidth="0.55">
-        <path d="M92 112H488 M92 172H488 M92 232H488" />
-        <path d="M112 88V368 M144 244V344 M256 168V244" />
-        <path d="M136 150H212 M136 202H480 M144 256H480" />
+      <g opacity="0.09" strokeWidth="0.6">
+        <path d="M128 88V104 M152 88V104 M128 344V380 M152 344V380" />
+        <path d="M104 112H120 M104 176H120" />
+        <path d="M288 112V120 M396 112V120 M216 208H432" />
       </g>
-      <g strokeOpacity="0.65" strokeWidth="0.8">
-        <path d="M112 324V136A24 24 0 0 1 136 112H448" />
-        <path d="M112 172H224 M380 172H448 M112 232H448" />
-        <path d="M224 172A12 12 0 0 0 236 160V140A12 12 0 0 1 248 128H356A12 12 0 0 1 368 140V160A12 12 0 0 0 380 172" />
+      <g opacity="0.28" strokeWidth="0.65">
+        <path d="M152 112A24 24 0 1 1 128 136" strokeDasharray="3 6" />
+        <path d="M144 136H160 M152 128V144" />
+        <path d="M152 208V336" strokeDasharray="3 6" />
+        <path
+          d="M432 112H480 M432 176H480 M128 328V376"
+          strokeDasharray="3 6"
+        />
       </g>
-      <g opacity="0.23" strokeDasharray="3 6" strokeWidth="0.6">
-        <path d="M448 112H488 M448 172H488 M448 232H488 M112 324V368" />
-        <path d="M448 184H488 M448 220H488" />
+      <g strokeWidth="0.95">
+        <path d="M128 328V136A24 24 0 0 1 152 112H432" />
+        <path d="M128 176H264" />
+        <path d="M264 176A12 12 0 0 0 276 164V140A12 12 0 0 1 288 128H396A12 12 0 0 1 408 140V164A12 12 0 0 0 420 176H432" />
       </g>
-      <g strokeOpacity="0.57" strokeWidth="0.7">
-        <circle cx="156" cy="150" r="4" />
-        <circle cx="174" cy="150" r="4" />
-        <circle cx="192" cy="150" r="4" />
-        <path d="M344 146 352 154 M352 146 344 154 M420 150h12 M426 144v12" />
-        <path d="M158 202H146l5-5 M146 202l5 5" />
-        <path d="M178 202H190l-5-5 M190 202l-5 5" opacity="0.55" />
-        <path d="M221.66 196.34A8 8 0 1 0 221.66 207.66 M222 192V198H216" />
-        <path d="M448 184H274A18 18 0 0 0 256 202A18 18 0 0 0 274 220H448" />
-        <circle cx="274" cy="202" r="3.5" />
+      <g opacity="0.65" strokeWidth="0.75">
+        <circle cx="184" cy="152" r="6" />
+        <circle cx="208" cy="152" r="6" />
+        <circle cx="232" cy="152" r="6" />
+        <path d="m389 148 8 8 m0-8-8 8" />
       </g>
-      <g fill="currentColor" fontSize="11" opacity="0.62" stroke="none">
-        <text x="252" y="154">
+      <g opacity="0.5" strokeWidth="0.65">
+        <path d="M152 136 135.03 119.03 m0 6v-6h6" />
+        <path d="M135.03 119.03 108 92H76" />
+        <path d="M408 140 440 108H460" />
+        <path d="M128 360H152 M128 352V368 M152 352V368 m-28-4 8-8 m16 8 8-8" />
+        <path d="M208 208h-56v24" />
+      </g>
+      <g fill="currentColor" fontSize="11" opacity="0.72" stroke="none">
+        <text x="304" y="156">
           coss.com
         </text>
-        <text x="288" y="206">
-          coss.com/ui
-        </text>
       </g>
-      <g opacity="0.24" strokeWidth="0.55">
-        <path d="M124 136H148 M136 124V148 M136 136 119.03 119.03 146 92H206" />
-        <path d="M156 134V82 M174 134V82 M156 90H174 M156 85v10 M174 85v10" />
-        <path d="M100 112H76 M100 232H76 M84 112V232 M79 112h10 M79 232h10" />
-        <path d="m80 116 8-8 m-8 128 8-8" />
-        <path d="M136 256h16 M144 248v16" />
-      </g>
-      <g fill="currentColor" fontSize="10" opacity="0.45" stroke="none">
-        <text textAnchor="middle" x="165" y="78">
-          18
-        </text>
-        <text x="211" y="98">
+      <g fill="currentColor" fontSize="10" opacity="0.52" stroke="none">
+        <text textAnchor="end" x="68" y="95">
           R24
         </text>
-        <text textAnchor="end" x="69" y="176">
-          120
+        <text x="468" y="111">
+          R12
         </text>
-        <text x="152" y="278">
-          Viewport
+        <text x="164" y="232">
+          Content inset
         </text>
-        <text x="332" y="384">
-          Browser / detail
+        <text textAnchor="middle" x="140" y="389">
+          24
         </text>
       </g>
     </BlueprintDrawing>
@@ -69,58 +63,75 @@ function PhonePlanStudy() {
   return (
     <BlueprintDrawing>
       <g opacity="0.09" strokeWidth="0.6">
-        <path d="M232 60V380 M248 116V324 M264 116V324 M296 116V324 M312 116V324 M328 60V380" />
-        <path d="M192 124H368 M192 172H368 M192 220H368 M192 268H368 M192 316H368" />
+        <path d="M200 52V68 M360 52V68 M200 372V400 M360 372V400" />
+        <path d="M168 76H192 M168 84H200 M168 108H192" />
       </g>
-      <g opacity="0.26" strokeWidth="0.6">
-        <path d="M208 60V404 M352 60V404 M192 76H408 M192 364H408" />
-        <path d="M280 48V384 M188 220H372" strokeDasharray="5 6" />
-        <rect height="192" width="96" x="232" y="124" strokeDasharray="4 5" />
-        <circle cx="232" cy="100" r="24" />
-        <circle cx="328" cy="340" r="16" />
-        <path d="M200 100H264 M232 68V132 M304 340H352 M328 316V364" />
+      <g opacity="0.28" strokeWidth="0.65">
+        <path d="M200 108V76H232 M208 108V84H232" strokeDasharray="3 5" />
+        <path d="M368 76H432 M368 124H432 M368 316H432 M368 364H432" />
+        <path d="M224 324V380 M336 324V380" strokeDasharray="3 6" />
       </g>
       <g strokeWidth="0.95">
-        <rect height="288" rx="24" width="144" x="208" y="76" />
-        <rect height="272" opacity="0.7" rx="16" width="128" x="216" y="84" />
-        <rect height="6" opacity="0.72" rx="3" width="32" x="264" y="96" />
-        <path d="M264 344H296" opacity="0.7" />
-        <path d="M232 172H328 M232 268H328" opacity="0.5" />
+        <rect height="288" rx="32" width="160" x="200" y="76" />
       </g>
-      <g opacity="0.46" strokeWidth="0.65">
-        <path d="M232 100 196 64H156 M328 340 372 384H404" />
-        <path d="M232 124H168L152 140" />
-        <path d="M208 396H352 M208 388v16 M352 388v16 m-148-4 8-8 m136 8 8-8" />
-        <path d="M392 76V364 M384 76h16 M384 364h16 m-12-284 8-8 m-8 296 8-8" />
-        <path d="M176 172V268 M170 172h12 M170 268h12 m-10-92 8-8 m-8 104 8-8" />
-        <path d="M232 294H328 M232 288v12 M328 288v12" />
+      <g opacity="0.5" strokeWidth="0.65">
+        <rect height="272" rx="24" width="144" x="208" y="84" />
+        <rect height="4" rx="2" width="24" x="268" y="102" />
+        <path d="M264 344H296" />
       </g>
-      <g fill="currentColor" fontSize="10" opacity="0.52" stroke="none">
-        <text textAnchor="end" x="148" y="67">
-          R24
-        </text>
-        <text x="410" y="387">
-          R16
-        </text>
-        <text textAnchor="end" x="154" y="154">
+      <g opacity="0.28" strokeWidth="0.65">
+        <rect height="192" width="112" x="224" y="124" strokeDasharray="4 6" />
+        <path
+          d="M232 76A32 32 0 0 1 264 108 M232 84A24 24 0 0 1 256 108"
+          strokeDasharray="3 5"
+        />
+        <path d="M220 108H268 M232 96V120" />
+      </g>
+      <g opacity="0.5" strokeWidth="0.65">
+        <path d="M232 108 209.37 85.37 184 60H152" />
+        <path d="M200 164H208 M200 158V170 M208 158V170 M200 164H164" />
+        <path d="M200 44H264 M296 44H360 M200 36V52 M360 36V52 m-164-4 8-8 m152 8 8-8" />
+        <path d="M416 76V364 M408 76H424 M408 124H424 M408 316H424 M408 364H424" />
+        <path d="m412 80 8-8 m-8 56 8-8 m-8 200 8-8 m-8 56 8-8" />
+        <path d="M200 388H360 M200 380V396 M224 380V396 M336 380V396 M360 380V396" />
+        <path d="m196 392 8-8 m16 8 8-8 m104 8 8-8 m16 8 8-8" />
+      </g>
+      <g fill="currentColor" fontSize="11" opacity="0.72" stroke="none">
+        <text textAnchor="middle" x="280" y="224">
           Safe area
         </text>
-        <text textAnchor="middle" x="280" y="416">
-          9u
-        </text>
-        <text x="406" y="224">
-          18u
-        </text>
-        <text textAnchor="end" x="164" y="224">
-          6u
-        </text>
-        <text textAnchor="middle" x="280" y="309">
-          6u
-        </text>
       </g>
-      <g opacity="0.4" strokeWidth="0.65">
-        <circle cx="232" cy="100" fill="var(--color-sidebar)" r="2.5" />
-        <circle cx="328" cy="340" fill="var(--color-sidebar)" r="2.5" />
+      <g fill="currentColor" fontSize="10" opacity="0.52" stroke="none">
+        <text textAnchor="end" x="144" y="63">
+          R32
+        </text>
+        <text textAnchor="end" x="156" y="168">
+          Offset / 8
+        </text>
+        <text textAnchor="middle" x="280" y="47">
+          10u
+        </text>
+        <text x="440" y="104">
+          3u
+        </text>
+        <text x="440" y="224">
+          12u
+        </text>
+        <text x="440" y="344">
+          3u
+        </text>
+        <text textAnchor="middle" x="212" y="410">
+          1.5u
+        </text>
+        <text textAnchor="middle" x="280" y="410">
+          7u
+        </text>
+        <text textAnchor="middle" x="348" y="410">
+          1.5u
+        </text>
+        <text textAnchor="middle" x="280" y="434">
+          u = 16
+        </text>
       </g>
     </BlueprintDrawing>
   );
@@ -203,7 +214,7 @@ export const interfaceDetailStudies: IllustrationStudy[] = [
     code: "I04",
     title: "A browser, in detail",
     description:
-      "An enlarged corner of browser chrome. A tab, navigation controls, and an open address field reveal the window’s construction while dashed edges continue beyond the drawing.",
+      "An enlarged browser corner relates the window radius to its tab radius and content inset. Cropped edges leave the rest of the screen outside the drawing.",
     category: "Interfaces",
     illustration: <BrowserPlanStudy />,
   },
@@ -212,7 +223,7 @@ export const interfaceDetailStudies: IllustrationStudy[] = [
     code: "I05",
     title: "The screen within the frame",
     description:
-      "A smartphone in front elevation. Concentric corner radii and a measured safe area explain the relationship between the frame and its content.",
+      "Shared corner centers and an eight-pixel offset construct the frame. Symmetric vertical and horizontal margins locate the safe area within it.",
     category: "Interfaces",
     illustration: <PhonePlanStudy />,
   },

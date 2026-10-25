@@ -14,53 +14,39 @@ function Registration() {
 function TangencyStudy() {
   return (
     <BlueprintDrawing>
-      <g opacity="0.09" strokeWidth="0.6">
-        <path d="M186 94V330 M234 94V330 M282 94V330 M330 94V330 M378 94V330" />
-        <path d="M154 115H420 M154 163H420 M154 211H420 M154 259H420 M154 307H420" />
+      <g opacity="0.1" strokeWidth="0.6">
+        <path d="M124 148V340 M284 148V340 M332 236V340 M412 236V340" />
+        <path d="M108 164H296 M320 244H428 M108 324H444" />
       </g>
-      <g opacity="0.28" strokeWidth="0.6">
-        <path d="M282 78V340 M138 211H430" strokeDasharray="5 6" />
-        <path d="M186 104V324 M378 104V324 M174 115H390" />
-        <path d="M276 69.24 450 243.24 M125 307H449" />
-        <path d="M176 105h10v10 M378 105h10v10 M176 307h10v10" />
+      <g opacity="0.28" strokeDasharray="4 6" strokeWidth="0.6">
+        <path d="M204 148V232 M204 256V340 M112 244H192 M216 244H298" />
+        <path d="M372 232V272 M372 296V340 M320 284H360 M384 284H428" />
       </g>
-      <circle
-        cx="282"
-        cy="211"
-        fill="currentColor"
-        fillOpacity="0.025"
-        r="96"
-        strokeWidth="0.95"
-      />
-      <g strokeWidth="1">
-        <path d="M288 81.24 438 231.24 M138 307H426" />
+      <g strokeWidth="0.95">
+        <circle cx="204" cy="244" r="80" />
+        <circle cx="372" cy="284" r="40" />
+        <path d="M125.79 114.9 440.02 273.53 M108 324H444" />
       </g>
-      <g opacity="0.52" strokeWidth="0.65">
-        <path d="M282 211 349.88 143.12 M282 211V307" />
-        <path d="m341.4 151.6 8.5 8.5 8.5-8.5 M282 295h12v12" />
-        <path d="M186 343H378 M186 337v12 M378 337v12 m-196-2 8-8 m184 8 8-8" />
-        <path d="M349.88 143.12 399 118H430 M282 307 326 332H352" />
-      </g>
-      <g fill="var(--color-sidebar)" strokeWidth="0.8">
-        <circle cx="282" cy="211" r="2.5" />
-        <circle cx="349.88" cy="143.12" r="3" />
-        <circle cx="282" cy="307" r="3" />
+      <g opacity="0.5" strokeWidth="0.65">
+        <path d="M206.25 239.54 240.05 172.58 M374.25 279.54 390.03 248.29" />
+        <path d="m235.55 181.51 8.92 4.51 4.51-8.93" />
+        <path d="M204 312h12v12 M372 314h10v10" />
+        <path d="M198 244h12 M204 238v12 M366 284h12 M372 278v12" />
+        <path d="M204 342V368 M372 342V368 M204 356H268 M308 356H372" />
+        <path d="m200 360 8-8 m160 8 8-8" />
       </g>
       <g fill="currentColor" fontSize="10" opacity="0.52" stroke="none">
-        <text textAnchor="middle" x="282" y="360">
+        <text x="207" y="201">
           2r
         </text>
-        <text x="308" y="169">
+        <text x="360" y="263">
           r
         </text>
-        <text x="436" y="121">
-          T₁
+        <text textAnchor="middle" x="288" y="359">
+          d
         </text>
-        <text x="358" y="335">
-          T₂
-        </text>
-        <text x="301" y="300">
-          90°
+        <text x="314" y="178">
+          Common tangent
         </text>
       </g>
       <Registration />
@@ -399,7 +385,7 @@ export const systemStudies: IllustrationStudy[] = [
     code: "P01",
     title: "Tangency",
     description:
-      "A circle meets two straightedges. The contact points make a simple construction rule the central gesture.",
+      "Two radii share a baseline and an inclined tangent. The contact geometry connects unequal circles through one construction rule.",
     category: "Foundations",
     illustration: <TangencyStudy />,
   },

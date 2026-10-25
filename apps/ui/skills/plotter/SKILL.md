@@ -1,6 +1,6 @@
 ---
 name: plotter
-description: Create, critique, and refine flat monochrome blueprint illustrations in the established coss UI style, using Primitives and Particles as visual anchors. Use for technical hero illustrations, service concepts, interface construction studies, scheduling diagrams, and empty states in this style; not general architectural drafting or generic line art.
+description: Create, critique, and refine flat monochrome blueprint illustrations in the established coss UI style, using the user-approved construction studies as visual references. Use for technical hero illustrations, service concepts, interface construction studies, scheduling diagrams, and empty states in this style; not general architectural drafting or generic line art.
 ---
 
 # Plotter
@@ -9,11 +9,11 @@ Build a precise planar composition that communicates a construction relationship
 
 ## Establish the reference
 
-Before drawing, inspect [Primitives](references/primitives.png) and [Particles](references/particles.png). These are the strongest user-named visual anchors. Match their composition, hierarchy, and restraint; the screenshots include page context, which is not a template to copy wholesale. For service concepts, also inspect [Linear](references/linear.png), which the user explicitly loved.
+Before drawing or judging style, read the [approved reference set](references/approved-references.md). It records the user’s exact 27 selections and supersedes earlier broad endorsements. Choose a reference by its construction relationship, then inspect that drawing. [Primitives/P00](references/primitives.png) is the general geometric anchor and [Linear/B04](references/linear.png) is a strong service example; use the approved subject-specific studies for other compositions.
 
-The current coss selections are P00 for the main page, [C03 for Particles](references/particles-recombination.png), and [E02 for the 404](references/not-found-interrupted-path.png). The Plotter showcase keeps independent snapshots of these drawings. Inspect the host page’s component when refining a production integration; the original Particles drawing remains a style anchor.
+The current production selections are P00 for the main page, C03 for Particles, and E02 for the 404. Production placement is distinct from reference approval: C03 and the original Particles/C00 are outside the current approved reference set. Their prior feedback remains useful history, not a reason to copy them as the default style.
 
-Read [direction and feedback](references/direction.md) for the current evidence, relevant subject guidance, and unresolved choices. User feedback in the current conversation takes precedence. A study’s presence in the gallery does not make it an approved reference.
+Read [direction and feedback](references/direction.md) for implementation choices and earlier review evidence. The current approved reference set takes precedence over historical “unreviewed” labels. A drawing’s presence in the gallery does not establish approval.
 
 ## Compose
 
