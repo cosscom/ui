@@ -4,6 +4,7 @@ import {
   ConstructionMotion,
 } from "./primitives-construction-motion";
 import { secondaryLine } from "./primitives-morph-style";
+import { SliderConstruction } from "./primitives-slider";
 import { SwitchConstruction } from "./primitives-switch";
 
 export const morphDetailIds = [
@@ -12,6 +13,7 @@ export const morphDetailIds = [
   "switch",
   "button",
   "rounded",
+  "slider",
 ] as const;
 
 export function MorphDetails({
@@ -148,6 +150,8 @@ export function MorphDetails({
   if (stage === "switch") return <SwitchConstruction />;
 
   if (stage === "button") return <ButtonConstruction />;
+
+  if (stage === "slider") return <SliderConstruction />;
 
   if (stage === "rounded") {
     return (

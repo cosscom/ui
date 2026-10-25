@@ -12,6 +12,7 @@ import {
 } from "./primitives-morph-timing";
 import { PrimitivesMorphTransitions } from "./primitives-morph-transitions";
 import styles from "./primitives-motion.module.css";
+import { SliderGridMask } from "./primitives-slider";
 import { SwitchThumb } from "./primitives-switch";
 
 type Shape = { width: number; height: number; corner: number };
@@ -36,6 +37,7 @@ function construct({ width, height, corner: r }: Shape) {
   } as const;
   return {
     points,
+    showHeight: height >= 40 ? 1 : 0,
     outline: `M${left + r} ${top} L${right - r} ${top}
       C${right - r + a} ${top} ${right} ${top + r - a} ${right} ${top + r}
       L${right} ${bottom - r}
@@ -49,8 +51,8 @@ function construct({ width, height, corner: r }: Shape) {
       M${left - 24} ${top}H490 M${left - 24} ${bottom}H490
       M164 348V372 M204 348V372`,
     dimensions: `M${left} 46H264 M304 46H${right}
-      M${left - 4} 50l8-8 M${right - 4} 50l8-8
-      M482 ${top}V190 M482 218V${bottom}
+      M${left - 4} 50l8-8 M${right - 4} 50l8-8`,
+    heightDimension: `M482 ${top}V190 M482 218V${bottom}
       M478 ${top + 4}l8-8 M478 ${bottom + 4}l8-8`,
   };
 }
@@ -63,6 +65,7 @@ const stages = [
   pill,
   construct({ width: 320, height: 160, corner: 24 }),
   construct({ width: 240, height: 240, corner: 40 }),
+  construct({ width: 320, height: 12, corner: 6 }),
   circle,
 ];
 
@@ -184,6 +187,7 @@ export function PrimitivesMorph({ paused }: { paused: boolean }) {
           >
             <rect fill="white" height="440" stroke="none" width="560" />
             <use href={`#${guideId}`} stroke="black" strokeWidth="1.3" />
+            <SliderGridMask />
           </mask>
           {/* Origin at the circle center aligns a hatch line with its 45° radius. */}
           <pattern
@@ -211,6 +215,18 @@ export function PrimitivesMorph({ paused }: { paused: boolean }) {
             values={stages.map((stage) => stage.dimensions)}
           />
         </path>
+        <g>
+          <Morph
+            attributeName="opacity"
+            values={stages.map((stage) => stage.showHeight)}
+          />
+          <path {...secondaryLine} d={circle.heightDimension}>
+            <Morph
+              attributeName="d"
+              values={stages.map((stage) => stage.heightDimension)}
+            />
+          </path>
+        </g>
         <path d={circle.outline} strokeWidth="1">
           <Morph
             attributeName="d"
@@ -218,6 +234,10 @@ export function PrimitivesMorph({ paused }: { paused: boolean }) {
           />
         </path>
         <g strokeWidth="0.8">
+          <Morph
+            attributeName="opacity"
+            values={stages.map((stage) => stage.showHeight)}
+          />
           {tangentIds.map((id) => (
             <circle
               data-anchor={id}
@@ -261,9 +281,15 @@ export function PrimitivesMorph({ paused }: { paused: boolean }) {
           <text ref={widthLabel} textAnchor="middle" x="284" y="49">
             6u
           </text>
-          <text ref={heightLabel} textAnchor="middle" x="482" y="207">
-            6u
-          </text>
+          <g>
+            <Morph
+              attributeName="opacity"
+              values={stages.map((stage) => stage.showHeight)}
+            />
+            <text ref={heightLabel} textAnchor="middle" x="482" y="207">
+              6u
+            </text>
+          </g>
           <text textAnchor="middle" x="184" y="384">
             u
           </text>

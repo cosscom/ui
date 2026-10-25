@@ -70,6 +70,12 @@ The user explicitly said “never a solid bg” after seeing the filled switch t
 
 The user asked for consistent continuous secondary lines, using the pill’s diagonal radius as the reference after noticing that the card’s inner square looked different. In M01, use the shared secondary-line style (0.65 SVG units, 50% opacity, butt caps and miter joins) for continuous construction geometry, inset frames, dimensions, and their marks. Keep primary outlines and the faint grid/reference scaffolding in their separate visual roles.
 
+After committing the five-stage version, the user requested a slider at the end of the sequence. The new experiment compresses Card into a thin track, then moves a transparent thumb from 25% to 75%, before returning to Avatar. The six-stage sequence and slider treatment are awaiting review.
+
+The first Slider trial was weak: the user could barely see its dotted line and was not happy with the overall result. The revision makes the displacement the subject: a larger transparent thumb, a dashed starting circle, tangent guides between the start/end positions, a 4u travel dimension, and a measured percentage scale. Dashed guides use 38% opacity; coincident grid segments are excluded along their strokes so the gaps remain visible. This revised treatment is awaiting review.
+
+The user questioned whether the sector animation suited an avatar but said they liked it. After a suggestion to rename the stage Circle, they explicitly chose to leave it as is and commit. Preserve both the Avatar label and its sector construction.
+
 ## Expanded subject brief
 
 The user explicitly requested a keyboard, browser window, table lamp, folder, smartphone, chat, and service concepts for Cloudflare, Vercel, Stripe, and Linear, then asked for more popular-service examples. These are requested exploration areas; only the specific feedback above establishes preference or approval. The expansion does not rehabilitate earlier rejected object drawings. Render familiar objects as flat plans or elevations with meaningful construction relationships. Preserve the established no-perspective rule.
