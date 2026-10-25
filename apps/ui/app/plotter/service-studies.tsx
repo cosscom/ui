@@ -226,7 +226,7 @@ function StripeSettlementStudy() {
           </text>
         ))}
         <text textAnchor="middle" x="280" y="306">
-          $100 · Gross balance
+          $100 · Gross payments
         </text>
         <text x="128" y="117">
           Payments
@@ -403,7 +403,7 @@ function LinearCycleStudy() {
           Week 2
         </text>
         <text x="424" y="124">
-          Release
+          Cycle end
         </text>
       </g>
       <g fill="currentColor" fontSize="10" opacity="0.5" stroke="none">
@@ -443,9 +443,9 @@ export const serviceStudies: IllustrationStudy[] = [
   {
     id: "service-stripe-settlement",
     code: "B03",
-    title: "Stripe · A balance, assembled",
+    title: "Stripe · Payments, combined",
     description:
-      "Four equal payment units combine into one gross balance. Their conserved width makes collection and reconciliation a visible construction rule.",
+      "Four equal payments combine into one gross payment total, before fees, refunds, or availability. Their conserved width makes aggregation a visible construction rule.",
     category: "Services",
     illustration: <StripeSettlementStudy />,
   },
@@ -454,7 +454,7 @@ export const serviceStudies: IllustrationStudy[] = [
     code: "B04",
     title: "Linear · Work aligned to a cycle",
     description:
-      "Issue modules share a two-week construction grid. Their measured spans align the work toward a common release milestone.",
+      "Issue modules share a two-week construction grid. Their measured spans align the work within a common cycle boundary.",
     category: "Services",
     illustration: <LinearCycleStudy />,
   },

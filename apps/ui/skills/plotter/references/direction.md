@@ -135,7 +135,7 @@ The user asked for concepts, states, or objects that fit this style and are in h
 - bookings
 - image
 
-These are S03–S14 under Empty states. Each one adds a 96px version, shown in the coss `Empty` component in its preview dialog. The compact version reuses the hero geometry with non-scaling 1px strokes and no labels. All twelve remain outside the current approved reference set.
+These are S03–S14 under Empty states. Each one originally added a 96px version shown in the coss `Empty` component in its preview dialog; the later native-size gallery feedback removes those application cards from display. The compact version reuses the hero geometry with non-scaling 1px strokes and no labels. All twelve remain outside the current approved reference set.
 
 When the user asked for an honest assessment, the assistant judged most of the set to be annotated pictograms. In those, the state lived in a caption rather than the geometry, and the compact versions read as generic outline icons. The user replied “ok improve them”. The four strongest were reworked using E02’s grammar:
 
@@ -154,6 +154,44 @@ At that point S05, S07–S09, S13, and S14 remained to be reworked; the referenc
 On S11, the user noted that drawings like these often use tiny arrows to show direction. They expected one pointing right along the dashed prong lines. Use small open arrowheads in the secondary-line style on a path or axis that implies movement. Place them within the gap or route, pointing toward the destination. Hero only: they vanish at 96px.
 
 The user then pointed to E02, C00, and P02 as well-executed arrow caps, and to C03 and S11 as inconsistent. Draw every cap the way those three do: an open 90° chevron, each leg about 6 long at 45° to its shaft. Put it in the same group and opacity as the shaft, with the tip exactly on the end of a drawn line. On a 45° shaft the legs are axis-aligned (`m-6 0h6v-6`). On an axis-aligned shaft they offset ±4.24 on both axes. On other angles, rotate the reversed shaft direction by ±45°. On a dashed shaft, start the path at the tip so a dash, not a gap, meets the cap, or place the tip at the end of a dash.
+
+## Technical rigor and the October 25 expansion
+
+The user requested a less projecting female socket in S11, improved gears in S10, a third 404 animation, and GPU, circuit, production-chain, and Newton’s cradle studies. Their review of the first expansion is explicit:
+
+- **W05:** wanted a metaphor for an assembly line, not isolated fabrication steps.
+- **W04:** needs a meaningful underlying grid.
+- **O06:** too much cardboard-like detail, no grid, and weak fit with the established style. The construction relationship needs to carry the subject.
+- **O07:** nice, but not fully convincing; refine without treating this as approval.
+- **S11:** the female connector is a distinct component, not the wall itself. Keep a restrained mounted receptacle, avoiding the earlier oversized protruding housing.
+- **S10:** the tooth shapes look bad and there are too many teeth. Mathematical gear detail alone did not satisfy the visual direction; use fewer, better-shaped teeth and clearer placement.
+- **M03:** replace the disconnected-plug animation with **S01**, the missing destination. This replaces the earlier animation subject; it does not change the production 404.
+
+These revisions are work for review and do not expand the approved reference set.
+
+The user also asked for an exact style definition, standardized line and hatch meanings, and a prompt for technical verification. The resulting [drafting standard](drafting-standard.md) names the style monochrome orthographic construction diagrams. The [verification prompt](verification-prompt.md) separates mathematical, semantic, conventional, and visual evidence. Calculations support bounded claims; conceptual service drawings do not become certified engineering drawings through appearance alone. Preserve the earlier explicit arrow-cap geometry when normalizing line roles.
+
+**coss.com scope:** The user explicitly said not to push anything to coss.com and wants to see illustrations here. Show the proposals in the local Plotter showcase at `#coss-concepts`; do not publish, deploy, or push the website changes. Product research uses the actual `cosscom/coss` source, not this UI repository’s older `apps/www`. The subject is a shared SDK, API key, and operational contract, documented in [coss product concepts](coss-product-concepts.md). This is a brief for proposals, not permission to rewrite product claims or an approved visual anchor.
+
+## Rejected coss concepts and the next O06 revision
+
+The user explicitly rejected the first seven coss.com proposals as poor quality and below the other illustrations. Their presence in a technically checked source audit did not establish visual quality. Those seven compositions are superseded by a smaller, new exploration; neither new alternative is an approved reference.
+
+Our diagnosis: the product icons and shared bus explained the catalog but lacked the central geometric construction of P00, B03, B04, and C01. The response tests a common aperture assembled from different service pieces and a complementary curved interface between two regions. These are metaphors for a common product contract, not representations of infrastructure or manufactured parts. Review the composition before expanding the set again.
+
+The user called the nine-box **O06** “bland”, then rejected the selected-group/5× compute detail too: “still don’t like o06 i want something that reminds me to a cardboard with a cpu”. We interpret “cardboard” here as a circuit board carrying a CPU. The next CPU-board version supplied a recognizable central processor, regular pins, and routed traces, but the user then asked to remove the outer card and mounting holes, add dashed lines, and reduce crowding. The current response keeps the CPU recognition cues in an open construction field: no board enclosure, no lower contact bank, two I/O routes and two memory routes, more space before the memory package, and dashed center axes with a defined alignment role. This supersedes our inference that an abstract compute-group relationship was the right subject. Keep the blueprint hierarchy and meaningful grid, but do not remove the requested physical recognition cues in pursuit of abstraction. This open processor composition is our response, not an approved reference or a functional circuit. Do not reintroduce an enclosing card or dense peripheral detail into O06 without a new request.
+
+## W05 and O07 motion experiments
+
+For W05, the user subsequently requested faster box delivery before the drop, then asked to keep improving it. The feed retains the faster 0.70s travel, but now approaches while the conveyor is still indexing: feed 1.00–1.70s, indexing ends at 1.590269s, and the next drop begins at 1.84s. The 1.8s cycle removes the earlier nearly sequential delivery wait while retaining the fall/contact behavior. Faint fixed feed guides explain the horizontal approach; they clear the core by 4 units and end 8 units before the drop window. These are implementation decisions awaiting user review, not new approved motion references.
+
+The user separately said O07’s easing still did not look realistic. An initial 0.30 m timing calibration shortened the cycle to 1.113268s, but the user then supplied [this cradle video](https://www.youtube.com/watch?v=09vzFodz4SI). Inspection of the opening swings and stepped frames around 15–17.64s showed a slower, broader motion with crisp contact. The 30 cm assumption was superseded: that trial used an approximately reference-matched 2.4s cycle and 30° release, retaining the nonlinear pendulum curve and instantaneous transfer. These are visual estimates from the video, not measured physical specifications. The reference supplies motion direction while the established flat drawing style remains. The user then asked to speed it up just a little without changing the easing: the cycle first shortened to 2.2s, then to 2.0s after a further speed request, with identical normalized key times, spline controls, and 30° swing geometry.
+
+The user requested animations for W05 (assembly line) and O07 (Newton’s cradle), then said both “feel slow and lack physics” and do not feel natural. They remain separate examples in the Animations section, with the static gallery drawings retained. The revised direction is a brisk assembly cycle with an accelerating drop, restrained contact response, and conveyor acceleration/deceleration; the cradle should accelerate into contact, transfer motion immediately, and slow naturally at its turning points. The user liked the faster revisions but said they were still not fully natural and W05 remained a bit slow. The next pass specifically reduced idle handoffs, restrained the insertion rebound, smoothed motor acceleration, and tightened the cradle’s arc and turnarounds. Shortening a loop alone is insufficient if every movement still uses generic easing. Existing direction still applies: transparent forms, stable construction guides, rigid moving parts, and careful shared-edge ownership. These are requested experiments, not approved motion references or full physical simulations.
+
+## Native-size gallery
+
+The user asked that the gallery SVGs not be scaled down and said enlargement dialogs were unnecessary. Main drawings now render at 560×440 CSS pixels in the gallery, with enough room per column and local horizontal scrolling on narrow screens. Descriptions stay visible inline. The user subsequently asked to remove the extra “Page not found”, “No results found”, “No notifications”, and similar application cards, so the compact 96×96 previews are no longer rendered in the gallery. Existing variant URLs locate the appropriate card instead of opening a dialog. This presentation change does not alter the drawing geometry or promote new style references.
 
 ## Working interpretations
 

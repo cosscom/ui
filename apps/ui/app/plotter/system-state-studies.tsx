@@ -1,5 +1,9 @@
 import { BlueprintDrawing, CompactBlueprintDrawing } from "./blueprint-drawing";
 import { HorizontalDimension, VerticalDimension } from "./dimensions";
+import {
+  DisconnectedBlueprint,
+  DisconnectedCompact,
+} from "./disconnected-plug";
 import type { IllustrationStudy } from "./study-types";
 
 // The cloud’s three generating circles share the y = 200 baseline. The route
@@ -254,73 +258,76 @@ function EmailCompact() {
   );
 }
 
-function polar(cx: number, cy: number, radius: number, degrees: number) {
-  const angle = (degrees * Math.PI) / 180;
-  const x = cx + radius * Math.cos(angle);
-  const y = cy + radius * Math.sin(angle);
-  return `${Math.round(x * 100) / 100} ${Math.round(y * 100) / 100}`;
-}
+const gearModule = 14;
+const meshAngle = Math.atan2(78.4, 58.8);
 
-function gearOutline({
-  cx,
-  cy,
-  teeth,
-  root,
-  tip,
-  phase,
-}: {
+type Gear = {
   cx: number;
   cy: number;
   teeth: number;
-  root: number;
-  tip: number;
   phase: number;
-}) {
-  const step = 360 / teeth;
-  const tipHalf = step * 0.14;
-  const rootHalf = step * 0.34;
-  const at = (radius: number, degrees: number) =>
-    polar(cx, cy, radius, degrees);
-  const segments = Array.from({ length: teeth }, (_, index) => {
-    const angle = phase + index * step;
-    return `L${at(tip, angle - tipHalf)}A${tip} ${tip} 0 0 1 ${at(tip, angle + tipHalf)}L${at(root, angle + rootHalf)}A${root} ${root} 0 0 1 ${at(root, angle + step - rootHalf)}`;
+  hub: number;
+};
+
+function gearOutline({ cx, cy, teeth, phase }: Gear) {
+  const pitch = (teeth * gearModule) / 2;
+  const root = pitch - 0.65 * gearModule;
+  const tip = pitch + 0.45 * gearModule;
+  const step = (2 * Math.PI) / teeth;
+  const point = (radius: number, angle: number) => ({
+    x: cx + radius * Math.cos(angle),
+    y: cy + radius * Math.sin(angle),
   });
-  return `M${at(root, phase - rootHalf)}${segments.join("")}Z`;
+  const corners = Array.from({ length: teeth }, (_, index) => {
+    const angle = phase + index * step;
+    return [
+      point(root, angle - 0.27 * step),
+      point(tip, angle - 0.17 * step),
+      point(tip, angle + 0.17 * step),
+      point(root, angle + 0.27 * step),
+    ];
+  }).flat();
+  const serialize = (p: { x: number; y: number }) =>
+    `${p.x.toFixed(3)} ${p.y.toFixed(3)}`;
+  // Short quadratic joins soften the four corners of each broad tooth.
+  // This is a schematic profile, not a generated involute or a cutting plan.
+  const joins = corners.map((corner, index) => {
+    const previous = corners[(index + corners.length - 1) % corners.length];
+    const next = corners[(index + 1) % corners.length];
+    if (!previous || !next) return { before: corner, corner, after: corner };
+    const inset = (neighbor: { x: number; y: number }) => {
+      const length = Math.hypot(neighbor.x - corner.x, neighbor.y - corner.y);
+      return {
+        x: corner.x + ((neighbor.x - corner.x) * 1.4) / length,
+        y: corner.y + ((neighbor.y - corner.y) * 1.4) / length,
+      };
+    };
+    return { before: inset(previous), corner, after: inset(next) };
+  });
+  const first = joins[0];
+  if (!first) return "";
+  return `M${serialize(first.before)}${joins
+    .map(
+      ({ before, corner, after }, index) =>
+        `${index ? `L${serialize(before)}` : ""}Q${serialize(corner)} ${serialize(after)}`,
+    )
+    .join("")}Z`;
 }
 
-// A shared module gives pitch radii 72, 48 and 36 for 12, 8 and 6 teeth.
-// The small pair’s pitch circles are tangent at (372, 172). The drive sits
-// 40 units outside mesh; the schematic teeth have 2 units of tip clearance.
-const gears = [
+// Conceptual maintenance diagram. All pitch radii derive from module 14.
+// The small pair's pitch circles touch at (383.6, 236.8); a tooth faces a
+// valley there. The main drive is separated by 48 between pitch circles.
+// The shallow, rounded profiles indicate engagement in this static pose;
+// they do not assert conjugate motion or manufacturability.
+const gears: Gear[] = [
+  { cx: 176, cy: 192, teeth: 10, phase: 0, hub: 18 },
+  { cx: 350, cy: 192, teeth: 8, phase: meshAngle, hub: 14 },
   {
-    cx: 212,
-    cy: 220,
-    pitch: 72,
-    teeth: 12,
-    root: 64,
-    tip: 78,
-    phase: 0,
-    hub: 18,
-  },
-  {
-    cx: 372,
-    cy: 220,
-    pitch: 48,
-    teeth: 8,
-    root: 40,
-    tip: 54,
-    phase: 22.5,
-    hub: 12,
-  },
-  {
-    cx: 372,
-    cy: 136,
-    pitch: 36,
+    cx: 408.8,
+    cy: 270.4,
     teeth: 6,
-    root: 28,
-    tip: 42,
-    phase: 30,
-    hub: 9,
+    phase: meshAngle + Math.PI - Math.PI / 6,
+    hub: 10.5,
   },
 ];
 
@@ -340,47 +347,40 @@ function GearsForm() {
 function MaintenanceStudy() {
   return (
     <BlueprintDrawing>
-      <g opacity="0.3" strokeWidth="0.65">
+      <g opacity="0.24" strokeWidth="0.6">
         {gears.map((gear) => (
-          <circle
-            cx={gear.cx}
-            cy={gear.cy}
-            key={gear.teeth}
-            r={gear.pitch}
-            strokeDasharray="3 6"
-          />
+          <g key={gear.teeth}>
+            <circle
+              cx={gear.cx}
+              cy={gear.cy}
+              r={(gear.teeth * gearModule) / 2}
+              strokeDasharray="8 3 1 3"
+            />
+            <path
+              d={`M${gear.cx - 5} ${gear.cy}h10 M${gear.cx} ${gear.cy - 5}v10`}
+            />
+          </g>
         ))}
         <path
-          d="M112 220H194 M230 220H360 M384 220H444 M212 124V202 M212 238V316 M372 80V127 M372 145V208 M372 232V292 M320 136H363 M381 136H424"
-          strokeDasharray="4 6"
+          d="M92 192H158 M194 192H336 M364 192H420 M176 108V174 M176 210V276 M350 122V178 M358.4 203.2 402.5 262 M415.1 278.8 444.8 318.4"
+          strokeDasharray="8 3 1 3"
         />
       </g>
       <g strokeWidth="0.95">
         <GearsForm />
       </g>
       <g opacity="0.5" strokeWidth="0.65">
-        <path d="M199.27 207.27 161.09 169.09m6 0h-6v6 M380.49 211.51 405.94 186.06m-6 0h6v6" />
-        <path d="M284 228V330 M324 228V330" opacity="0.6" />
-        <HorizontalDimension label="40" x1={284} x2={324} y={324} />
-        <path d="M284 214v12 M324 214v12 M368 172h8" />
+        <path d="M246 208V308 M294 208V308 M246 186v12 M294 186v12" />
+        <HorizontalDimension label="48" x1={246} x2={294} y={314} />
       </g>
       <g fill="currentColor" fontSize="11" opacity="0.72" stroke="none">
-        <text textAnchor="middle" x="304" y="356">
+        <text textAnchor="middle" x="270" y="346">
           Drive disengaged
         </text>
       </g>
       <g fill="currentColor" fontSize="10" opacity="0.5" stroke="none">
-        <text textAnchor="end" x="152" y="160">
-          R72
-        </text>
-        <text x="416" y="178">
-          R48
-        </text>
-        <text textAnchor="middle" x="372" y="78">
-          6 teeth
-        </text>
-        <text textAnchor="middle" x="304" y="378">
-          One pitch / 12 : 8 : 6
+        <text textAnchor="middle" x="270" y="368">
+          Common pitch · 10 : 8 : 6
         </text>
       </g>
     </BlueprintDrawing>
@@ -389,81 +389,13 @@ function MaintenanceStudy() {
 
 function MaintenanceCompact() {
   return (
-    <CompactBlueprintDrawing center={[280, 200]} scale={0.3}>
+    <CompactBlueprintDrawing center={[280, 218]} scale={0.25}>
       <GearsForm />
-      <path d="M292 220H316" opacity="0.4" strokeDasharray="2 2" />
-    </CompactBlueprintDrawing>
-  );
-}
-
-const wallHatch = Array.from(
-  { length: 11 },
-  (_, index) => `M432 ${144 + index * 16}l16-16`,
-).join(" ");
-
-function PlugForm() {
-  return (
-    <>
-      <rect height="96" rx="12" width="96" x="136" y="172" />
-      <path d="M80 214H136 M80 226H136 M232 188H272V200H232 M232 240H272V252H232" />
-      <path d="M432 172H348A12 12 0 0 0 336 184V188 M336 200V240 M336 252V256A12 12 0 0 0 348 268H432" />
-      <path d="M432 128V312" />
-    </>
-  );
-}
-
-function SocketRecesses({ dash }: { dash: string }) {
-  return (
-    <path
-      d="M336 188H376V200H336 M336 240H376V252H336"
-      opacity="0.38"
-      strokeDasharray={dash}
-    />
-  );
-}
-
-function DisconnectedStudy() {
-  return (
-    <BlueprintDrawing>
-      <g opacity="0.12" strokeWidth="0.6">
-        <path d="M120 172H424 M120 268H424" />
-      </g>
-      <g opacity="0.28" strokeWidth="0.65">
-        <path d="M56 214H80 M56 226H80" strokeDasharray="3 5" />
-        <path d={wallHatch} />
-      </g>
-      <g strokeWidth="0.95">
-        <PlugForm />
-      </g>
-      <g strokeWidth="0.75">
-        <SocketRecesses dash="3 5" />
-      </g>
-      <g opacity="0.5" strokeWidth="0.65">
-        <path d="M320 194H272 M320 246H272" strokeDasharray="4 6" />
-        <path d="M315.76 189.76 320 194 315.76 198.24 M315.76 241.76 320 246 315.76 250.24" />
-        <path d="M272 180V130 M336 164V130" opacity="0.6" />
-        <HorizontalDimension label="64" x1={272} x2={336} y={136} />
-        <path d="M380 194H406 M380 246H406" opacity="0.6" />
-        <VerticalDimension label="52" x={400} y1={194} y2={246} />
-      </g>
-      <g fill="currentColor" fontSize="11" opacity="0.72" stroke="none">
-        <text textAnchor="middle" x="304" y="110">
-          Disconnected
-        </text>
-      </g>
-    </BlueprintDrawing>
-  );
-}
-
-function DisconnectedCompact() {
-  return (
-    <CompactBlueprintDrawing center={[264, 220]} scale={0.24}>
-      <PlugForm />
-      <SocketRecesses dash="2 2" />
-      <path d="M272 194H336 M272 246H336" opacity="0.4" strokeDasharray="2 2" />
       <path
-        d="M432 160l12-12 M432 192l12-12 M432 224l12-12 M432 256l12-12 M432 288l12-12"
-        opacity="0.3"
+        d="M254 192H286"
+        opacity="0.24"
+        strokeDasharray="8 3 1 3"
+        strokeWidth="0.6"
       />
     </CompactBlueprintDrawing>
   );
@@ -610,7 +542,7 @@ export const systemStateStudies: IllustrationStudy[] = [
     code: "S10",
     title: "A gear train, interrupted",
     description:
-      "Three gears share one tooth pitch. The two smaller gears engage, while a 40-unit pitch-circle gap keeps the main drive disconnected.",
+      "Three gears share a common pitch. A separated drive interrupts the mechanism.",
     category: "Empty states",
     illustration: <MaintenanceStudy />,
     emptyState: {
@@ -624,9 +556,9 @@ export const systemStateStudies: IllustrationStudy[] = [
     code: "S11",
     title: "A connection, apart",
     description:
-      "A mobile plug aligns with a fixed socket in a hatched wall section. Two projected contact axes cross the measured gap between them.",
+      "A mobile plug aligns with a separate socket recessed behind a thin mounting flange. The hatched support, matching contact spacing, and open gap describe the interrupted connection.",
     category: "Empty states",
-    illustration: <DisconnectedStudy />,
+    illustration: <DisconnectedBlueprint />,
     emptyState: {
       title: "Integration disconnected",
       description: "Reconnect your account to resume syncing.",

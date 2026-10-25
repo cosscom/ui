@@ -1,12 +1,21 @@
 import { SiteFooter } from "@coss/ui/shared/site-footer";
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { CossConcepts } from "./coss-concepts";
+import { EngineeringMotionPreview } from "./engineering-motion-preview";
+import {
+  NewtonsCradleStudy,
+  ProductionChainStudy,
+} from "./engineering-studies";
 import { IllustrationGallery } from "./illustration-gallery";
 import { illustrations } from "./illustrations";
+import { NewtonsCradleMotionDrawing } from "./newtons-cradle-motion-drawing";
+import { NotFoundMotion } from "./not-found-motion";
 import { ParticlesBlueprint } from "./particles-blueprint";
 import { ParticlesMotion } from "./particles-motion";
 import { PrimitivesBlueprint } from "./primitives-blueprint";
 import { PrimitivesMotionPreview } from "./primitives-motion-preview";
+import { ProductionChainMotionDrawing } from "./production-chain-motion-drawing";
 
 export const metadata: Metadata = {
   title: "Plotter illustrations – coss ui",
@@ -28,6 +37,29 @@ export default function Page() {
             and animations exploring geometry, interfaces, and the systems
             behind familiar things.
           </p>
+          <nav
+            aria-label="Plotter sections"
+            className="flex flex-wrap gap-x-6 gap-y-2 text-sm"
+          >
+            <a
+              className="underline underline-offset-4 hover:text-muted-foreground"
+              href="#animations"
+            >
+              Animations
+            </a>
+            <a
+              className="underline underline-offset-4 hover:text-muted-foreground"
+              href="#coss-concepts"
+            >
+              coss.com concepts
+            </a>
+            <a
+              className="underline underline-offset-4 hover:text-muted-foreground"
+              href="#illustrations"
+            >
+              Illustrations
+            </a>
+          </nav>
         </header>
         <section
           aria-labelledby="animations-heading"
@@ -41,7 +73,7 @@ export default function Page() {
             >
               Animations
             </h2>
-            <p className="text-muted-foreground text-xs">2 examples</p>
+            <p className="text-muted-foreground text-xs">5 examples</p>
           </div>
           <div className="grid overflow-hidden rounded-lg border border-border/64 bg-sidebar lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
             <div className="flex flex-col items-start justify-center gap-4 p-6 sm:p-8">
@@ -86,7 +118,87 @@ export default function Page() {
               </ParticlesMotion>
             </div>
           </article>
+          <article
+            aria-labelledby="not-found-animation-title"
+            className="mt-6 grid scroll-mt-20 overflow-hidden rounded-lg border border-border/64 bg-sidebar lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]"
+            id="not-found-animation"
+          >
+            <div className="flex flex-col items-start justify-center gap-4 p-6 sm:p-8">
+              <p className="text-muted-foreground text-xs">
+                Empty states / M03
+              </p>
+              <h3
+                className="font-heading font-semibold text-2xl [font-variation-settings:'GEOM'_50]"
+                id="not-found-animation-title"
+              >
+                An unreachable destination
+              </h3>
+              <p className="max-w-sm text-pretty text-muted-foreground text-sm">
+                A request follows a curved route, reaches the closed end, and
+                returns. The destination stays absent, one unit beyond its
+                reach.
+              </p>
+            </div>
+            <div className="min-w-0 border-t lg:border-s lg:border-t-0">
+              <NotFoundMotion />
+            </div>
+          </article>
+          <article
+            aria-labelledby="production-chain-animation-title"
+            className="mt-6 grid scroll-mt-20 overflow-hidden rounded-lg border border-border/64 bg-sidebar lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]"
+            id="production-chain-animation"
+          >
+            <div className="flex flex-col items-start justify-center gap-4 p-6 sm:p-8">
+              <p className="text-muted-foreground text-xs">Systems / W05</p>
+              <h3
+                className="font-heading font-semibold text-2xl [font-variation-settings:'GEOM'_50]"
+                id="production-chain-animation-title"
+              >
+                An assembly line in motion
+              </h3>
+              <p className="max-w-sm text-pretty text-muted-foreground text-sm">
+                A core lowers into its carrier. The line advances, the completed
+                part moves on, and the next assembly begins.
+              </p>
+            </div>
+            <div className="min-w-0 border-t lg:border-s lg:border-t-0">
+              <EngineeringMotionPreview
+                animated={<ProductionChainMotionDrawing />}
+                caption="Load · Seat · Advance"
+              >
+                <ProductionChainStudy />
+              </EngineeringMotionPreview>
+            </div>
+          </article>
+          <article
+            aria-labelledby="newtons-cradle-animation-title"
+            className="mt-6 grid scroll-mt-20 overflow-hidden rounded-lg border border-border/64 bg-sidebar lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]"
+            id="newtons-cradle-animation"
+          >
+            <div className="flex flex-col items-start justify-center gap-4 p-6 sm:p-8">
+              <p className="text-muted-foreground text-xs">Objects / O07</p>
+              <h3
+                className="font-heading font-semibold text-2xl [font-variation-settings:'GEOM'_50]"
+                id="newtons-cradle-animation-title"
+              >
+                One swing, passed along
+              </h3>
+              <p className="max-w-sm text-pretty text-muted-foreground text-sm">
+                One end swings in and the other swings out. Equal lengths and
+                fixed pivots carry the motion through a continuous rhythm.
+              </p>
+            </div>
+            <div className="min-w-0 border-t lg:border-s lg:border-t-0">
+              <EngineeringMotionPreview
+                animated={<NewtonsCradleMotionDrawing />}
+                caption="One swing · Alternating ends"
+              >
+                <NewtonsCradleStudy />
+              </EngineeringMotionPreview>
+            </div>
+          </article>
         </section>
+        <CossConcepts />
         <section
           aria-labelledby="illustrations-heading"
           className="scroll-mt-16 border-t pt-12 md:pt-16"

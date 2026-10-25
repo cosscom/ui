@@ -1,6 +1,9 @@
 import { BlueprintDrawing } from "./blueprint-drawing";
 
 const gridCoordinates = [164, 204, 244, 284, 324, 364, 404];
+const radiusDiagonal = 120 / Math.sqrt(2);
+const angleDiagonal = 24 / Math.sqrt(2);
+const radiusEndpoint = { x: 284 + radiusDiagonal, y: 204 - radiusDiagonal };
 
 export function PrimitivesBlueprint() {
   return (
@@ -39,10 +42,14 @@ export function PrimitivesBlueprint() {
       </g>
 
       <g opacity="0.5" strokeWidth="0.65">
-        <path d="M284 204H404 M284 204 369 119" />
-        <path d="M308 204A24 24 0 0 0 301 187" />
+        <path
+          d={`M284 204H404 M284 204 ${radiusEndpoint.x} ${radiusEndpoint.y}`}
+        />
+        <path
+          d={`M308 204A24 24 0 0 0 ${284 + angleDiagonal} ${204 - angleDiagonal}`}
+        />
         <path d="M284 216H296V204" />
-        <path d="m364 119 5 0 0 5" />
+        <path d={`M${radiusEndpoint.x - 5} ${radiusEndpoint.y}h5v5`} />
         <path d="M164 46H264 M304 46H404 M164 38V54 M404 38V54" />
         <path d="m160 50 8-8 m232 8 8-8" />
         <path d="M442 84V190 M442 218V324 M434 84H450 M434 324H450" />

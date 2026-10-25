@@ -40,7 +40,9 @@ function UnopenedDoor() {
       <g opacity="0.5" strokeWidth="0.65">
         <path d="M208 302V322M336 302V322M208 314H252M292 314H336" />
         <path d="m204 318 8-8m120 8 8-8" />
-        <path d="M208 248 296 160m-6 0h6v6" />
+        <path
+          d={`M208 248 ${208 + 128 / Math.SQRT2} ${248 - 128 / Math.SQRT2}m-6 0h6v6`}
+        />
         <path d="M152 248V120M144 120H160M144 248H160" />
         <path d="m148 124 8-8m-8 136 8-8" />
         <path d="M332 218H388L404 202" />

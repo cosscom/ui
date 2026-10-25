@@ -1,5 +1,6 @@
 import { calStudies } from "./cal-studies";
 import { contentStateStudies } from "./content-state-studies";
+import { engineeringStudies } from "./engineering-studies";
 import { flatCalStudies } from "./flat-cal-studies";
 import { flatObjectStudies } from "./flat-object-studies";
 import { flatSystemStudies } from "./flat-system-studies";
@@ -50,6 +51,7 @@ const collection: IllustrationStudy[] = [
   ...stateStudies,
   ...contentStateStudies,
   ...systemStateStudies,
+  ...engineeringStudies,
   ...notFoundArchitectureStudies,
   ...notFoundGeometryStudies,
   {
