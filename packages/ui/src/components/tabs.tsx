@@ -1,5 +1,6 @@
 "use client";
 
+import { useDirection } from "@base-ui/react/direction-provider";
 import { Tabs as TabsPrimitive } from "@base-ui/react/tabs";
 import {
   type SegmentedControlSize,
@@ -42,6 +43,8 @@ export function TabsList({
   size?: TabsSize;
   variant?: TabsVariant;
 }): React.ReactElement {
+  const direction = useDirection();
+
   return (
     <TabsPrimitive.List
       className={cn(
@@ -67,6 +70,7 @@ export function TabsList({
             : cn("-z-1", segmentedControlIndicatorSurfaceClassName),
         )}
         data-slot="tab-indicator"
+        key={direction}
       />
     </TabsPrimitive.List>
   );

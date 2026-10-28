@@ -1,5 +1,6 @@
 "use client";
 
+import { useDirection } from "@base-ui/react/direction-provider";
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import { cn } from "@coss/ui/lib/utils";
@@ -34,11 +35,13 @@ export function SegmentedControl({
 }: useRender.ComponentProps<"div"> & {
   size?: SegmentedControlSize;
 }): React.ReactElement {
+  const direction = useDirection();
+
   const defaultProps = {
     children: (
       <>
         {children}
-        <SegmentedControlIndicator />
+        <SegmentedControlIndicator key={direction} />
       </>
     ),
     className: cn(

@@ -7,11 +7,13 @@ import Link from "next/link";
 export function SiteHeader({
   mobileNav,
   children,
+  actions,
   currentProduct,
   github,
 }: {
   mobileNav?: React.ReactNode;
   children?: React.ReactNode;
+  actions?: React.ReactNode;
   currentProduct?: string;
   /** The product's own repository for the GitHub link and its stars. */
   github?: { repo: string; href: string };
@@ -42,6 +44,7 @@ export function SiteHeader({
         <div className="ms-auto flex items-center gap-2 md:flex-1 md:justify-end">
           {children}
           <GitHubLink {...github} />
+          {actions}
           <ModeSwitcher />
         </div>
       </div>
