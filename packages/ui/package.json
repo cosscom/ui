@@ -41,7 +41,7 @@
     "./chat/hooks/*": "./src/chat/hooks/*.ts",
     "./chat/lib/*": "./src/chat/lib/*.ts"
   },
-  "license": "AGPL-3.0-or-later",
+  "license": "MIT",
   "name": "@coss/ui",
   "peerDependencies": {
     "next": "^16.3.8",

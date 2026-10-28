@@ -123,12 +123,7 @@ Please see our [Contributing Guidelines](apps/ui/CONTRIBUTING.md) for more infor
 
 ## Licensing
 
-This repository uses a mixed licensing approach. The default license for this project is [AGPLv3.0](LICENSE).
-
-- **MIT**: The `apps/origin/` and `apps/ui/` directories are licensed under their original MIT license
-- **AGPLv3**: All other directories are licensed under the GNU Affero General Public License v3.0
-
-For detailed information, see our [Licensing documentation](LICENSING.md).
+This entire repository is licensed under the [MIT License](LICENSE).
 
 ## Acknowledgements
 
