@@ -81,6 +81,15 @@ function InstallCommand({ command }: { command: string }) {
   );
 }
 
+function SectionMarkers() {
+  return (
+    <div
+      aria-hidden="true"
+      className="container pointer-events-none absolute inset-0 z-50 before:absolute before:top-[-4.5px] before:-left-[11.5px] before:z-1 before:-ml-1 before:size-2 before:rounded-[2px] before:border before:border-border before:bg-popover before:bg-clip-padding before:shadow-xs after:absolute after:top-[-4.5px] after:-right-[11.5px] after:z-1 after:-mr-1 after:size-2 after:rounded-[2px] after:border after:border-border after:bg-background after:bg-clip-padding after:shadow-xs dark:after:bg-clip-border dark:before:bg-clip-border"
+    />
+  );
+}
+
 function SectionHeading({
   id,
   title,
@@ -108,8 +117,8 @@ export function ChatShowcase() {
     <ChatDemo
       renderTriggers={(select) => (
         <>
-          <section className="container grid items-center gap-12 py-14 md:grid-cols-2 md:gap-14 md:py-20 lg:gap-24">
-            <div className="flex min-w-0 flex-col items-start">
+          <section className="container grid items-center gap-12 py-14 md:grid-cols-2 md:gap-14 md:py-20 lg:gap-24 lg:py-28">
+            <div className="flex w-full min-w-0 max-w-xl flex-col items-start">
               <Badge
                 variant="outline"
                 className="mb-6 h-7 gap-1.5 rounded-full px-2.5 text-xs shadow-xs/5 sm:h-7"
@@ -117,12 +126,12 @@ export function ChatShowcase() {
                 <MessagesSquareIcon aria-hidden="true" className="size-3.5" />
                 Chat UI
               </Badge>
-              <h1 className="font-bold font-heading text-5xl leading-none tracking-tight lg:text-6xl xl:text-7xl">
+              <h1 className="text-balance font-bold font-heading text-[clamp(2.25rem,1.5rem+2.6vw,4rem)] leading-none [font-optical-sizing:auto] [font-synthesis:none] [font-variation-settings:'GEOM'_50]">
                 Make room
                 <br />
                 for conversation.
               </h1>
-              <p className="mt-6 max-w-md text-pretty text-lg text-muted-foreground">
+              <p className="mt-6 text-pretty text-lg text-muted-foreground">
                 Chat components for React with replies, reactions, mentions, and
                 delivery states built in. Copy the source and make it yours.
               </p>
@@ -149,7 +158,7 @@ export function ChatShowcase() {
                 Built with Base UI, Tailwind CSS, and Motion
               </p>
             </div>
-            <div className="mx-auto w-full max-w-md">
+            <div className="mx-auto w-full max-w-md lg:-my-16">
               <Tabs defaultValue="direct" className="gap-5">
                 <TabsList
                   aria-label="Conversation type"
@@ -170,8 +179,9 @@ export function ChatShowcase() {
 
           <section
             aria-labelledby="chat-features"
-            className="border-t bg-muted/24"
+            className="relative border-t"
           >
+            <SectionMarkers />
             <div className="container py-14 md:py-20">
               <SectionHeading
                 id="chat-features"
@@ -182,7 +192,8 @@ export function ChatShowcase() {
             </div>
           </section>
 
-          <section aria-labelledby="chat-states" className="border-t">
+          <section aria-labelledby="chat-states" className="relative border-t">
+            <SectionMarkers />
             <div className="container py-14 md:py-20">
               <SectionHeading
                 id="chat-states"
@@ -209,10 +220,8 @@ export function ChatShowcase() {
             </div>
           </section>
 
-          <section
-            aria-labelledby="chat-layouts"
-            className="border-t bg-muted/24"
-          >
+          <section aria-labelledby="chat-layouts" className="relative border-t">
+            <SectionMarkers />
             <div className="container py-14 md:py-20">
               <SectionHeading
                 id="chat-layouts"
@@ -223,7 +232,8 @@ export function ChatShowcase() {
             </div>
           </section>
 
-          <section aria-labelledby="chat-build" className="border-t">
+          <section aria-labelledby="chat-build" className="relative border-t">
+            <SectionMarkers />
             <div className="container grid gap-12 py-14 md:grid-cols-[2fr_3fr] md:py-20">
               <div className="flex flex-col items-start">
                 <h2
