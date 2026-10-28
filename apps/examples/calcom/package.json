@@ -25,7 +25,7 @@
     "tailwindcss": "^4.1.17",
     "typescript": "^5.9.3"
   },
-  "license": "AGPL-3.0-or-later",
+  "license": "MIT",
   "name": "@examples/calcom",
   "private": true,
   "scripts": {
