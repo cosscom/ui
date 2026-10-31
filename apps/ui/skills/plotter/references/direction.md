@@ -272,3 +272,7 @@ Use these as starting points, not approved concepts or mandatory motifs:
 - **404/empty states:** an interrupted alignment or unresolved planar route can communicate absence. The revised E02 interrupted path is explicitly selected for the 404 page; E04 was removed. A currently open doorway URL is not approval evidence.
 
 Other categories remain open. Translate their subject into a flat construction relationship, then review the result against the anchors rather than assuming every object works in this style.
+
+## Callout leaders in the visual grammar
+
+The user pointed out that the “Quarter turn” annotation in Movement and transfer arrows still lacked its own grammar entry. The guide now includes **Callout leaders and labels**, reusing that construction and isolating only the bent solid leader and its text. Keep callouts separate from movement arrows, dimension marks, and hidden outlines: the leader connects a named feature to its label. Preserve both marks’ original color, opacity, and weight during isolation.

@@ -33,6 +33,14 @@ export const visualGrammarEntries = [
     caption: "On hover, only the dashed shaft and solid arrowhead remain.",
   },
   {
+    id: "callouts",
+    title: "Callout leaders and labels",
+    description:
+      "A callout connects a short label to the feature it names. Here the bent solid leader anchors “Quarter turn” to the curved movement path. The leader and label form one annotation.",
+    omit: "Omit labels that add no meaning. Keep the leader subordinate and end it on the named feature; use movement arrows for direction and dimensions for measurements.",
+    caption: "On hover, only the leader and “Quarter turn” label remain.",
+  },
+  {
     id: "projections",
     title: "Projection guides",
     description:

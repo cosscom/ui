@@ -2,7 +2,7 @@
 
 Start with the main form. For each supporting mark, name the relationship it explains. If removing the mark leaves that relationship equally clear, omit it. A drawing does not need every element below.
 
-The user liked these eight **560 × 440** teaching constructions. On the Plotter page at `/ui/plotter#visual-grammar`, hovering, keyboard focus, or the touch toggle hides unrelated elements and isolates the marks named by each topic. The SVG’s `data-grammar-focus` attributes identify those marks; the complete drawing stays intact. Counterexamples were removed at the user’s request.
+The guide uses full-size **560 × 440** teaching constructions based on illustrations the user liked. On the Plotter page at `/ui/plotter#visual-grammar`, hovering, keyboard focus, or the touch toggle hides unrelated elements and isolates the marks named by each topic. The SVG’s `data-grammar-focus` attributes identify those marks; the complete drawing stays intact. Counterexamples were removed at the user’s request.
 
 Isolation preserves the element’s original color, opacity, stroke width, and dash pattern. Exclude nearby labels and callout leaders unless they are the topic itself. Dimension values remain part of their dimension. Where a grid shares a stroke with a visible form, hidden supplemental grid segments restore the complete lattice only while that form is hidden.
 
@@ -42,6 +42,15 @@ Geometric content alone is insufficient. Keep a grid when its coordinate or modu
 One rigid part turns around a shared pivot. The curved dashed shaft and solid open arrowhead show its movement from the current position to the proposed one. “Quarter turn” and its callout leader are separate annotations; they disappear during isolation. Use an arrow only when a change or direction matters; alignment and equal size need different marks.
 
 Movement and conceptual transfer use the house **`4 6` shaft with a solid open head**. Alignment and size use projections or dimensions instead. A functional connector needs its own stated connectivity meaning.
+
+
+## Callout leaders and labels
+
+![The bent leader connects “Quarter turn” to the curved movement path.](grammar/callouts.svg)
+
+A callout connects a short label to the feature it names. Here the bent solid leader anchors “Quarter turn” to the curved movement path. The leader and label form one annotation, and only those two elements remain during isolation.
+
+Use a callout when a feature needs a name or explanation that its shape cannot supply. Omit labels that add no meaning. Keep the leader subordinate and end it on the named feature, with a clear gap before the text. Movement arrows convey direction; dimensions and radius leaders measure geometry. A callout supplies descriptive meaning.
 
 
 ## Projection guides

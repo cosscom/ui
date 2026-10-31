@@ -192,6 +192,196 @@ function GrammarArrows() {
   );
 }
 
+function GrammarCallouts() {
+  return (
+    <svg
+      width={"560"}
+      height={"440"}
+      viewBox={"0 0 560 440"}
+      fill={"none"}
+      stroke={"currentColor"}
+      strokeLinecap={"butt"}
+      strokeLinejoin={"round"}
+      style={{
+        fontFamily: "Cal Sans,sans-serif",
+        fontOpticalSizing: "auto",
+        fontSynthesis: "none",
+        fontVariationSettings: "'GEOM' 25",
+        fontWeight: "400",
+      }}
+      aria-hidden={"true"}
+      focusable={"false"}
+    >
+      <path
+        d={"M200 260H392A24 24 0 0 1 392 308H200A24 24 0 0 1 200 260Z"}
+        strokeWidth={"0.95"}
+        opacity={"1"}
+      />
+      <circle
+        cx={"200"}
+        cy={"284"}
+        r={"9"}
+        strokeWidth={"0.95"}
+        opacity={"1"}
+      />
+      <circle
+        cx={"392"}
+        cy={"284"}
+        r={"9"}
+        strokeWidth={"0.95"}
+        opacity={"1"}
+      />
+      <path
+        d={"M176 252V92A24 24 0 0 1 224 92V252"}
+        strokeWidth={"0.65"}
+        opacity={"0.45"}
+        strokeDasharray={"3 5"}
+      />
+      <circle
+        cx={"200"}
+        cy={"92"}
+        r={"9"}
+        strokeWidth={"0.65"}
+        opacity={"0.45"}
+        strokeDasharray={"3 5"}
+      />
+      <path
+        d={
+          "M200 104V244M188 92H196M204 92H236M140 284H164M236 284H380M404 284H428"
+        }
+        strokeWidth={"0.6"}
+        opacity={"0.24"}
+        strokeDasharray={"8 3 1 3"}
+      />
+      <circle
+        cx={"200"}
+        cy={"284"}
+        r={"2"}
+        strokeWidth={"0.65"}
+        opacity={"0.5"}
+      />
+      <path
+        d={"M200 252V220A64 64 0 0 1 264 284"}
+        strokeWidth={"0.65"}
+        opacity={"0.5"}
+      />
+      <text
+        x={"240"}
+        y={"253"}
+        textAnchor={"middle"}
+        fill={"currentColor"}
+        stroke={"none"}
+        fontSize={"10"}
+        opacity={"0.5"}
+      >
+        {"90°"}
+      </text>
+      <path
+        d={"M200 68A216 216 0 0 1 416 284"}
+        strokeWidth={"0.65"}
+        opacity={"0.5"}
+        strokeDasharray={"4 6"}
+      />
+      <path
+        d={"M204.242641 63.757359L200 68L204.242641 72.242641"}
+        strokeWidth={"0.65"}
+        opacity={"0.5"}
+      />
+      <path
+        data-grammar-focus={"true"}
+        d={"M352.735065 131.264935L376 112H400"}
+        strokeWidth={"0.65"}
+        opacity={"0.5"}
+      />
+      <text
+        data-grammar-focus={"true"}
+        x={"408"}
+        y={"116"}
+        textAnchor={"start"}
+        fill={"currentColor"}
+        stroke={"none"}
+        fontSize={"11"}
+        opacity={"0.72"}
+      >
+        {"Quarter turn"}
+      </text>
+      <text
+        x={"156"}
+        y={"166"}
+        textAnchor={"end"}
+        fill={"currentColor"}
+        stroke={"none"}
+        fontSize={"11"}
+        opacity={"0.72"}
+      >
+        {"Proposed"}
+      </text>
+      <path d={"M164 162H172"} strokeWidth={"0.65"} opacity={"0.5"} />
+      <text
+        x={"308"}
+        y={"243"}
+        textAnchor={"middle"}
+        fill={"currentColor"}
+        stroke={"none"}
+        fontSize={"11"}
+        opacity={"0.72"}
+      >
+        {"Current"}
+      </text>
+      <path
+        d={"M200 320V372M392 320V372"}
+        strokeWidth={"0.6"}
+        opacity={"0.24"}
+      />
+      <path
+        d={"M200 364H280.0M312.0 364H392M196 368L204 360M388 368L396 360"}
+        strokeWidth={"0.65"}
+        opacity={"0.5"}
+      />
+      <text
+        x={"296.0"}
+        y={"367"}
+        textAnchor={"middle"}
+        fill={"currentColor"}
+        stroke={"none"}
+        fontSize={"10"}
+        opacity={"0.5"}
+      >
+        {"8u"}
+      </text>
+      <path
+        d={
+          "M176 316V324M224 316V324M176 324H188M212 324H224M172 328L180 320M220 328L228 320"
+        }
+        strokeWidth={"0.65"}
+        opacity={"0.5"}
+      />
+      <text
+        x={"200"}
+        y={"327"}
+        textAnchor={"middle"}
+        fill={"currentColor"}
+        stroke={"none"}
+        fontSize={"10"}
+        opacity={"0.5"}
+      >
+        {"2u"}
+      </text>
+      <text
+        x={"280"}
+        y={"411"}
+        textAnchor={"middle"}
+        fill={"currentColor"}
+        stroke={"none"}
+        fontSize={"11"}
+        opacity={"0.5"}
+      >
+        {"One pivot · one rigid part"}
+      </text>
+    </svg>
+  );
+}
+
 function GrammarCenterlines() {
   const id = useId();
   return (
@@ -1569,6 +1759,7 @@ export const visualGrammarDrawings: Record<
   ReactNode
 > = {
   arrows: <GrammarArrows />,
+  callouts: <GrammarCallouts />,
   centerlines: <GrammarCenterlines />,
   dimensions: <GrammarDimensions />,
   grids: <GrammarGrids />,

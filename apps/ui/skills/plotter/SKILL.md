@@ -17,7 +17,7 @@ The snapshots establish composition and hierarchy. Some retain historical fills 
 
 ## Compose
 
-Read the [illustrated visual grammar](references/visual-grammar.md) before choosing supporting marks. It explains outlines, hatching, grids, arrows, projections, dimensions, axes, and absent forms through full-size construction studies. Choose a mark for the relationship it explains; use the drafting standard for its numerical treatment.
+Read the [illustrated visual grammar](references/visual-grammar.md) before choosing supporting marks. It explains outlines, hatching, grids, arrows, callouts, projections, dimensions, axes, and absent forms through full-size construction studies. Choose a mark for the relationship it explains; use the drafting standard for its numerical treatment.
 
 - Use one flat plane. Exclude perspective, isometric views, skewed or tilted objects, physical depth, glossy 3D, colorful gradients, and science-class atom diagrams. Diagonal radius lines and callout leaders can explain geometry without tilting the form.
 - Keep the palette black, off-white, and soft gray. Adapt those values to the host’s theme while preserving the monochrome hierarchy.
