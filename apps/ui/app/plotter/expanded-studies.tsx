@@ -5,9 +5,20 @@ import type { IllustrationStudy } from "./study-types";
 
 function DrawingAgentRegistration() {
   return (
-    <BlueprintDrawing>
-      <g strokeLinecap={"butt"} strokeLinejoin={"round"} strokeWidth={"0.95"}>
-        <g strokeWidth={"0.6"} opacity={"0.24"}>
+    <BlueprintDrawing roles>
+      <g
+        data-plotter-unit={"24"}
+        fill={"none"}
+        strokeLinecap={"butt"}
+        strokeLinejoin={"round"}
+        style={{
+          fontOpticalSizing: "auto",
+          fontSynthesis: "none",
+          fontVariationSettings: "'GEOM' 25",
+          fontWeight: "400",
+        }}
+      >
+        <g data-plotter-role={"guide"}>
           <path
             d={
               "M136 152V236M184 152V236M208 180V236M328 180V236M352 180V236M424 180V236"
@@ -25,12 +36,12 @@ function DrawingAgentRegistration() {
             }
           />
         </g>
-        <g strokeWidth={"0.95"}>
+        <g data-plotter-role={"primary"}>
           <circle cx={"160"} cy={"144"} r={"24"} />
           <rect x={"352"} y={"116"} width={"72"} height={"24"} rx={"12"} />
           <rect x={"352"} y={"148"} width={"72"} height={"24"} rx={"12"} />
         </g>
-        <g strokeWidth={"0.65"} opacity={"0.5"}>
+        <g data-plotter-role={"secondary"}>
           <circle cx={"160"} cy={"137"} r={"5"} />
           <path d={"M148 156A12 12 0 0 1 172 156"} />
           <path d={"M208 168V176M208 172H328M328 168V176"} />
@@ -68,9 +79,12 @@ function DrawingAgentRegistration() {
             {"Tools"}
           </text>
         </g>
-        <g strokeWidth={"0.65"} opacity={"0.5"}>
-          <path d={"M268 212V186"} strokeDasharray={"4 6"} />
-          <path d={"M263.757359 207.757359L268 212L272.242641 207.757359"} />
+        <g data-plotter-role={"transfer"}>
+          <path d={"M268 212L268 186"} />
+          <path
+            d={"M263.757359 207.757359L268 212L272.242641 207.757359"}
+            strokeDasharray={"none"}
+          />
         </g>
         <text
           x={"280"}
@@ -83,13 +97,20 @@ function DrawingAgentRegistration() {
         >
           {"Registered agent"}
         </text>
-        <g strokeWidth={"0.95"}>
-          <rect x={"112"} y={"244"} width={"336"} height={"96"} rx={"12"} />
+        <g data-plotter-role={"primary"}>
+          <rect
+            data-plotter-part={"registry-record"}
+            x={"112"}
+            y={"244"}
+            width={"336"}
+            height={"96"}
+            rx={"12"}
+          />
           <circle cx={"160"} cy={"292"} r={"24"} />
           <rect x={"352"} y={"264"} width={"72"} height={"24"} rx={"12"} />
           <rect x={"352"} y={"296"} width={"72"} height={"24"} rx={"12"} />
         </g>
-        <g strokeWidth={"0.65"} opacity={"0.5"}>
+        <g data-plotter-role={"secondary"}>
           <circle cx={"160"} cy={"285"} r={"5"} />
           <path d={"M148 304A12 12 0 0 1 172 304"} />
         </g>
@@ -120,10 +141,10 @@ function DrawingAgentRegistration() {
         >
           {"agent_07"}
         </text>
-        <g strokeWidth={"0.65"} opacity={"0.5"}>
+        <g data-plotter-role={"dimension"}>
           <path
             d={
-              "M112 348V398M448 348V398M112 390H264M296 390H448M108 394L116 386M444 394L452 386"
+              "M112 348L112 398 M448 348L448 398 M112 390L264 390 M296 390L448 390 M108 394L116 386 M444 394L452 386"
             }
           />
           <path

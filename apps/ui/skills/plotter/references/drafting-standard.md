@@ -1,6 +1,8 @@
 # Plotter drafting standard
 
-Research and house specification, 2026-10-25. Use for new drawings and deliberate revisions. Read the [approved references](approved-references.md) for composition and the [verification prompt](verification-prompt.md) before review. The [source audit](source-audit.md) records known exceptions in the inspected revisions; approval of an illustration’s appearance does not prove every annotation.
+Use for new drawings and deliberate revisions. Read the [approved references](approved-references.md) for composition. Load the [verification prompt](verification-prompt.md) only for an explicit technical verification request. The [historical source audit](history/source-audit.md) records exceptions in named past revisions; appearance approval does not prove every annotation.
+
+[`standard.json`](../assets/foundation/standard.json) owns shared numeric role defaults, dash patterns, and the implemented helpers' geometry constants. The marked tables below, runtime data, and role CSS are generated from it. The prose defines meaning and conventions for native SVG beyond the helpers. Read [foundation.md](foundation.md) when applying these roles or generating marks.
 
 ## Name and scope
 
@@ -35,6 +37,7 @@ Research used the public ISO catalogue abstracts and the cited IEC/NPS material.
 
 All lengths below are SVG user units in a `560 × 440` viewBox. Width and opacity are independent: width expresses drawing role, opacity establishes visual emphasis. The values intentionally stay close to the approved anchors; they are house choices, not physical pen widths or quotations from ISO.
 
+<!-- BEGIN GENERATED: stroke-palette -->
 | Role | Width | Opacity | Pattern | Use |
 | --- | ---: | ---: | --- | --- |
 | Primary form | 0.95 | 1 | Continuous | Main silhouette or selected functional route |
@@ -44,32 +47,35 @@ All lengths below are SVG user units in a `560 × 440` viewBox. Width and opacit
 | Grid | 0.60 | 0.10 | Continuous | A useful repeated coordinate/module field |
 | Hatch | 0.65 | 0.27 | Continuous | One declared bounded region |
 | Section cut, when needed | 1.30 | 1 | Continuous | Material actually intersected by a stated cut plane |
+<!-- END GENERATED: stroke-palette -->
 
-P00’s existing `1.0` primary width is an accepted anchor variation. Continuous secondary lines share the approved diagonal’s `0.65` width and `0.50` opacity, including dimensions and leaders; do not create per-drawing variants. C02’s switch is the reusable component reference: track `30 × 18`, corner radius `9`, thumb radius `5.5`, edge inset `3.5`, primary width `0.95` at full opacity. Preserve those proportions when scaling the component as a whole.
+P00’s existing `1.0` primary width is an accepted anchor variation. Dimensions and leaders share the secondary role's width and opacity. C02’s switch is the reusable component reference: track `30 × 18`, corner radius `9`, thumb radius `5.5`, edge inset `3.5`, with the primary line role. Preserve those proportions when scaling the component as a whole.
 
 Assign patterned lines by meaning:
 
+<!-- BEGIN GENERATED: line-patterns -->
 | Role | `stroke-dasharray` | Width / opacity | Meaning |
 | --- | --- | --- | --- |
 | Axis / centerline / pitch locus | `8 3 1 3` | 0.60 / 0.24 | A center, symmetry axis, or theoretical generating locus |
 | Hidden or absent outline | `3 5` | 0.65 / 0.45 | Geometry not presently visible or present; explain which in context |
 | Motion or transfer | `4 6` | 0.65 / 0.50 | Proposed movement or conceptual transfer, with solid open arrowhead |
+<!-- END GENERATED: line-patterns -->
 
 These patterns are deliberately different. A continuous construction that directly explains the principal form, such as a generating radius or inset, uses the shared secondary style; the lighter reference-guide role is reserved for subordinate scaffold. Do not choose a dash merely because it looks technical. If a drawing includes both hidden and absent features, distinguish them with labels or remove one ambiguous role. A physical hidden edge and a hypothetical motion path must never be the same unlabeled mark.
 
-Use butt caps on dashed shafts to retain predictable dash lengths; use consistent joins. The user-approved open arrowhead has two 6-unit legs, each at 45° to the shaft: axial offset and half-width are both `6 / √2 ≈ 4.242641`. Its two arms are solid, even when the shaft is dashed, and meet the shaft’s terminal dash at the tip. Set dash phase or start the dashed path at the tip to avoid a detached arrow. Dimension endpoints use the existing 8 × 8 diagonal slash; use a radius arrow/leader for a radius rather than a slash pretending to be a point. This explicit preference in [direction.md](direction.md) takes precedence over inferred house defaults.
+Use butt caps on dashed shafts to retain predictable dash lengths; use consistent joins. The open arrowhead uses the two equal legs and angle in `geometry.arrow` from the shared standard. Its arms stay solid, even when the shaft is dashed, and meet the shaft's terminal dash at the tip. Start the dashed path at the tip, as the helper does, or set a dash phase that preserves contact. Dimension slashes use `geometry.dimension.slashExtent`; a radius instead needs a leader that reaches the measured arc. Preserve authored cap/join exceptions during implementation-only refactors.
 
-Draw a coincident segment once. Do not stack a grid stroke, extension stroke, and object stroke on the same segment. Split subordinate geometry at the required boundary; preserve one owner for each shared segment. Plan label clearance by shortening/splitting lines, with at least 3 units around the actual text bounds. All forms are transparent; remove area tints and background-colored patches that erase guides. Text glyph fills are allowed. A filled junction marker belongs only to a declared symbol convention, never to a background patch.
+Draw a coincident segment once. Split subordinate geometry at the required boundary; preserve one owner for each shared segment. Plan label clearance by shortening/splitting lines, using `geometry.dimension.labelClearance` around the actual text bounds. All forms are transparent; remove area tints and background-colored patches that erase guides. Text glyph fills are allowed. A filled junction marker belongs only to a declared symbol convention, never to a background patch.
 
 ## Hatch grammar
 
 Hatching describes a region, not a lighting effect. For every hatch, record the region’s boundary and its meaning: for example “square minus circle in this quadrant,” “selected interval,” or “unspecified material cut by this section.” Only claim a material such as concrete or steel when its representation is sourced and appropriate to the stated discipline/view.
 
-- **H1:** parallel lines at −45° in SVG screen coordinates, width `0.65`, opacity `0.27`, perpendicular pitch `12 / √2 ≈ 8.485`. This is P00’s 12-unit spacing measured along horizontal/vertical edges.
+- **H1:** parallel lines at −45° in SVG screen coordinates, using the hatch role. Edge intercept pitch is `geometry.hatch.edgePitch`; perpendicular pitch is that value divided by `√2`. This preserves P00's spacing convention measured along horizontal/vertical edges.
 - **H2:** the same pitch and weight at +45°, reserved for distinguishing an adjacent region. Use one angle and one pitch throughout a single region.
 - Clip each line analytically or with a unique SVG clip path to the declared region. Boundaries remain continuous; hatch endpoints terminate at them without extending beyond them. Do not invent a boundary to accommodate a convenient hatch tile.
 - For a cut region, exclude voids and openings. The same object keeps a consistent hatch in the same view. A generic 45° hatch does not identify material or prove a compliant section.
-- **S1, schematic support:** −45° marks with horizontal/vertical extent `16`, hence length `16√2`, at a `16`-unit boundary intercept pitch; width `0.65`, opacity `0.27`. Omit strokes intersecting openings. Compact versions may retain every fourth mark. This one-sided boundary convention identifies a fixed support or schematic wall only when named; it is not a fully specified material section or H1 region.
+- **S1, schematic support:** −45° marks with horizontal/vertical extent `16`, hence length `16√2`, at a `16`-unit boundary intercept pitch, using the hatch role. Omit strokes intersecting openings. Compact versions may retain every fourth mark. This one-sided native-SVG convention identifies a fixed support or schematic wall only when named; it is not a fully specified material section or an H1 region covered by the rectangular helper.
 
 The anchor source may contain older opacity, spacing, or fill choices. Preserve its composition; apply this normalized palette when a revision is authorized. Do not silently reinterpret old graphics as standards-compliant.
 

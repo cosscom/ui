@@ -1,6 +1,10 @@
 "use client";
 
 import { useId } from "react";
+import {
+  arrow,
+  standard,
+} from "../../skills/plotter/assets/foundation/index.mjs";
 import { BlueprintDrawing } from "./blueprint-drawing";
 import { ProductionChainHatching } from "./production-chain-hatching";
 
@@ -9,7 +13,11 @@ const duration = `${cycle}s`;
 const pitch = 136;
 const carrierCenters = [8, 144, 280, 416];
 const stations = [144, 280, 416];
-const arrowOffset = 6 / Math.SQRT2;
+const transferArrow = arrow({
+  kind: "line",
+  from: [256, 288],
+  to: [304, 288],
+});
 
 // Quarter-pitch references sit below every swept part. Station witnesses
 // own their verticals; the field ends above the dimension and its text.
@@ -129,7 +137,7 @@ export function ProductionChainMotionDrawing() {
   const feedClip = `${id}-core-feed`;
 
   return (
-    <BlueprintDrawing>
+    <BlueprintDrawing roles>
       <defs>
         {/* Only moving objects are clipped, at their entry/exit apertures. */}
         <clipPath id={carrierClip}>
@@ -140,17 +148,17 @@ export function ProductionChainMotionDrawing() {
         </clipPath>
       </defs>
 
-      <g opacity="0.1" strokeWidth="0.6">
+      <g data-plotter-role="grid">
         <path d={grid} />
         <path d="M88 312H472 M88 324H472 M88 336H472" />
       </g>
-      <g opacity="0.24" strokeWidth="0.6">
+      <g data-plotter-role="guide">
         {/* Feed guides clear the moving core by 4 units and end before the drop. */}
         <path d="M256 118V124 M304 118V124 M80 124H248 M80 180H248" />
         <path d="M144 312V358 M280 312V358 M416 312V336" />
       </g>
 
-      <g clipPath={`url(#${carrierClip})`} strokeWidth="0.95">
+      <g clipPath={`url(#${carrierClip})`} data-plotter-role="primary">
         <g>
           <animateTransform
             attributeName="transform"
@@ -218,7 +226,7 @@ export function ProductionChainMotionDrawing() {
         </g>
       </g>
 
-      <g clipPath={`url(#${feedClip})`} strokeWidth="0.95">
+      <g clipPath={`url(#${feedClip})`} data-plotter-role="primary">
         <g transform="translate(-272 0)">
           <animateTransform
             attributeName="transform"
@@ -237,15 +245,16 @@ export function ProductionChainMotionDrawing() {
 
       <path
         d="M104 272H456A16 16 0 0 1 456 304H104A16 16 0 0 1 104 272Z"
-        strokeWidth="0.95"
+        data-plotter-role="primary"
       />
-      <g opacity="0.5" strokeWidth="0.65">
+      <g data-plotter-role="secondary">
         <circle cx="104" cy="288" r="8" />
         <circle cx="456" cy="288" r="8" />
-        <path d="M304 288H256" strokeDasharray="4 6" />
         <path
-          d={`M${304 - arrowOffset} ${288 - arrowOffset} 304 288 ${304 - arrowOffset} ${288 + arrowOffset}`}
+          d={transferArrow.shaftD}
+          strokeDasharray={standard.roles.transfer.dash}
         />
+        <path d={transferArrow.headD} strokeDasharray="none" />
         <path d="M256 112H270 M290 112H304 M256 106v12 M304 106v12 m-52-2 8-8 m40 8 8-8" />
         <path d="M144 350H194 M230 350H280 m-140 4 8-8 m128 8 8-8" />
       </g>

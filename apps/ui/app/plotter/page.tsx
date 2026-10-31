@@ -14,6 +14,9 @@ import { NotFoundMotion } from "./not-found-motion";
 import { OrbitsMotionDrawing, OrbitsStudy } from "./orbits-motion-drawing";
 import { ParticlesBlueprint } from "./particles-blueprint";
 import { ParticlesMotion } from "./particles-motion";
+import { PlotterIntro } from "./plotter-intro";
+import { PlotterTokenGuide } from "./plotter-token-guide";
+import { PlotterUsage } from "./plotter-usage";
 import { PrimitivesBlueprint } from "./primitives-blueprint";
 import { PrimitivesMotionPreview } from "./primitives-motion-preview";
 import { ProductionChainMotionDrawing } from "./production-chain-motion-drawing";
@@ -22,7 +25,7 @@ import { VisualGrammar } from "./visual-grammar";
 export const metadata: Metadata = {
   title: "Plotter illustrations – coss ui",
   description:
-    "A collection of monochrome illustrations and animations exploring geometry, interfaces, and the systems behind familiar things.",
+    "Draw and animate editable monochrome illustrations with Plotter. Install the skill, copy a brief, explore the catalogue, and learn the visual grammar.",
   robots: { index: false, follow: false },
 };
 
@@ -30,45 +33,11 @@ export default function Page() {
   return (
     <>
       <main className="container w-full flex-1 [font-optical-sizing:auto] [font-synthesis:none]">
-        <header className="flex flex-col gap-5 py-12 md:py-16 lg:py-20">
-          <h1 className="text-balance font-bold font-heading text-[clamp(2.25rem,5vw,4rem)] leading-none [font-variation-settings:'GEOM'_50]">
-            Plotter illustrations
-          </h1>
-          <p className="max-w-2xl text-pretty text-lg text-muted-foreground">
-            Simple forms. Fine lines. A collection of monochrome illustrations
-            and animations exploring geometry, interfaces, and the systems
-            behind familiar things.
-          </p>
-          <nav
-            aria-label="Plotter sections"
-            className="flex flex-wrap gap-x-6 gap-y-2 text-sm"
-          >
-            <a
-              className="underline underline-offset-4 hover:text-muted-foreground"
-              href="#animations"
-            >
-              Animations
-            </a>
-            <a
-              className="underline underline-offset-4 hover:text-muted-foreground"
-              href="#coss-concepts"
-            >
-              coss.com concepts
-            </a>
-            <a
-              className="underline underline-offset-4 hover:text-muted-foreground"
-              href="#visual-grammar"
-            >
-              Visual grammar
-            </a>
-            <a
-              className="underline underline-offset-4 hover:text-muted-foreground"
-              href="#illustrations"
-            >
-              Illustrations
-            </a>
-          </nav>
-        </header>
+        <PlotterIntro />
+        <PlotterUsage />
+        <PlotterTokenGuide>
+          <ProductionChainStudy />
+        </PlotterTokenGuide>
         <section
           aria-labelledby="animations-heading"
           className="scroll-mt-16 border-t py-12 md:py-16"
@@ -245,8 +214,19 @@ export default function Page() {
             className="mb-6 font-heading font-semibold text-2xl [font-variation-settings:'GEOM'_50]"
             id="illustrations-heading"
           >
-            Illustrations
+            Catalogue
           </h2>
+          <p className="mb-6 max-w-2xl text-pretty text-muted-foreground text-sm">
+            Choose a construction relationship to borrow, then{" "}
+            <a className="underline underline-offset-4" href="#use-plotter">
+              give Plotter your own brief
+            </a>
+            . The{" "}
+            <a className="underline underline-offset-4" href="#visual-grammar">
+              visual grammar
+            </a>{" "}
+            explains the marks behind these drawings.
+          </p>
           <Suspense
             fallback={
               <p className="py-8 text-muted-foreground">
@@ -258,18 +238,18 @@ export default function Page() {
           </Suspense>
         </section>
         <section className="flex flex-col items-start justify-between gap-6 border-t py-12 sm:flex-row sm:items-center md:py-16">
-          <div className="max-w-xl space-y-2">
-            <h2 className="font-medium text-lg">Draw in the same direction.</h2>
+          <div className="flex max-w-xl flex-col gap-2">
+            <h2 className="font-medium text-lg">Make a drawing of your own.</h2>
             <p className="text-pretty text-muted-foreground text-sm">
-              Plotter is also a reusable skill, with visual references and
-              guidance for creating new illustrations in this style.
+              Start with a relationship you found here. The skill includes the
+              references and the workflow to develop it.
             </p>
           </div>
           <a
             className="shrink-0 text-sm underline underline-offset-4 hover:text-muted-foreground"
-            href="https://github.com/cosscom/ui/tree/main/apps/ui/skills/plotter"
+            href="#use-plotter"
           >
-            Explore the Plotter skill
+            Install and use Plotter ↑
           </a>
         </section>
       </main>

@@ -6,7 +6,7 @@ On 2026-10-31 the user rejected a 78-drawing batch as low quality and inconsiste
 
 - [Before](agent-registration-before.svg): preserved from the rejected batch.
 - [Revision 2](agent-registration.svg): explicitly liked by the user on 2026-10-31: “i love it”. Preserve this visual revision.
-- [C01](../drawings/C01.svg): the approved assembly reference used for this revision. [C02](../drawings/C02.svg) supplies allocation and spacing; [I06](../drawings/I06.svg) supplies restrained identity fragments.
+- [C01](../../drawings/C01.svg): the approved assembly reference used for this revision. [C02](../../drawings/C02.svg) supplies allocation and spacing; [I06](../../drawings/I06.svg) supplies restrained identity fragments.
 
 The user’s response is positive evidence for this exact revision. The existing 27-reference selection remains unchanged. Use this case to understand the comparison and refinement process; assembly is not necessarily the right metaphor for every agent concept.
 

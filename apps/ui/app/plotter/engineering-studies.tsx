@@ -1,3 +1,7 @@
+import {
+  arrow,
+  standard,
+} from "../../skills/plotter/assets/foundation/index.mjs";
 import { BlueprintDrawing } from "./blueprint-drawing";
 import { ProductionChainHatching } from "./production-chain-hatching";
 import type { IllustrationStudy } from "./study-types";
@@ -54,7 +58,6 @@ function constructionGrid(
   ].join(" ");
 }
 
-const arrowOffset = 6 / Math.SQRT2;
 const cpu = { x: 220, y: 144, size: 120, pinPitch: 12, pinLength: 12 };
 const cpuPinOffsets = Array.from(
   { length: 8 },
@@ -224,15 +227,26 @@ const assemblyGrid = constructionGrid(
   ],
 );
 
+const assemblyTransferArrow = arrow({
+  kind: "line",
+  from: [256, 288],
+  to: [304, 288],
+});
+const assemblyDropArrow = arrow({
+  kind: "line",
+  from: [280, 182],
+  to: [280, 200],
+});
+
 export function ProductionChainStudy() {
   return (
-    <BlueprintDrawing>
-      <path d={assemblyGrid} opacity="0.1" strokeWidth="0.6" />
-      <g opacity="0.24" strokeWidth="0.6">
+    <BlueprintDrawing roles>
+      <path d={assemblyGrid} data-plotter-role="grid" />
+      <g data-plotter-role="guide">
         <path d="M256 118V124 M304 118V124 M256 176V198 M304 176V198" />
         <path d="M144 312V358 M280 312V358 M416 312V330" />
       </g>
-      <g strokeWidth="0.95">
+      <g data-plotter-role="primary">
         {assemblyStations.map((x) => (
           <g key={x}>
             {/* An open frame. The core shares its eventual side and bottom edges. */}
@@ -246,25 +260,19 @@ export function ProductionChainStudy() {
         <path d="M392 208H440" />
         <path d="M104 272H456A16 16 0 0 1 456 304H104A16 16 0 0 1 104 272Z" />
       </g>
-      <g opacity="0.5" strokeWidth="0.65">
+      <g data-plotter-role="secondary">
         <circle cx="104" cy="288" r="8" />
         <circle cx="456" cy="288" r="8" />
-        <path d="M304 288H256 M280 200V182" strokeDasharray="4 6" />
         <path
-          d={`M${304 - arrowOffset} ${288 - arrowOffset} 304 288 ${304 - arrowOffset} ${288 + arrowOffset}`}
+          d={`${assemblyTransferArrow.shaftD} ${assemblyDropArrow.shaftD}`}
+          strokeDasharray={standard.roles.transfer.dash}
         />
-        <path
-          d={`M${280 - arrowOffset} ${200 - arrowOffset} 280 200 ${280 + arrowOffset} ${200 - arrowOffset}`}
-        />
+        <path d={assemblyTransferArrow.headD} strokeDasharray="none" />
+        <path d={assemblyDropArrow.headD} strokeDasharray="none" />
         <path d="M256 112H270 M290 112H304 M256 106v12 M304 106v12 m-52-2 8-8 m40 8 8-8" />
         <path d="M144 350H194 M230 350H280 m-140 4 8-8 m128 8 8-8" />
       </g>
-      <path
-        d="M256 208H304"
-        opacity="0.45"
-        strokeDasharray="3 5"
-        strokeWidth="0.65"
-      />
+      <path d="M256 208H304" data-plotter-role="hidden" />
       <g fill="currentColor" fontSize="10" opacity="0.58" stroke="none">
         <text textAnchor="middle" x="280" y="92">
           Core

@@ -24,12 +24,31 @@ for item in manifest:
     cap = json.dumps(svg.attrib.get("stroke-linecap", "butt"))
     width = json.dumps(svg.attrib.get("stroke-width", "0.95"))
     declaration = "  const id = useId();\n" if ids else ""
+    wrapper = "BlueprintDrawing"
+    if "data-plotter" in svg.attrib:
+        wrapper += " roles"
+        # Standalone ink and font stacks stay in the source; the gallery inherits both.
+        attributes = {
+            key: value for key, value in svg.attrib.items()
+            if key not in {"width", "height", "viewBox", "role", "aria-labelledby", "data-plotter", "font-family"}
+        }
+        styles = [
+            declaration.strip() for declaration in attributes.get("style", "").split(";")
+            if declaration.strip() and declaration.split(":", 1)[0].strip() not in {"color", "font-family"}
+        ]
+        attributes["style"] = ";".join(styles)
+        if attributes.get("stroke") == "currentColor":
+            attributes.pop("stroke")
+        group = ET.Element("g", attributes)
+        group.extend(node for node in svg if node.attrib.get("data-plotter-styles") != "true")
+        drawing = element(group, ids, 3)
+        body = drawing
+    else:
+        body = f"      <g strokeLinecap={{{cap}}} strokeLinejoin={{{join}}} strokeWidth={{{width}}}>\n{drawing}\n      </g>"
     components.append(f'''function {name}() {{
 {declaration}  return (
-    <BlueprintDrawing>
-      <g strokeLinecap={{{cap}}} strokeLinejoin={{{join}}} strokeWidth={{{width}}}>
-{drawing}
-      </g>
+    <{wrapper}>
+{body}
     </BlueprintDrawing>
   );
 }}

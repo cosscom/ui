@@ -21,6 +21,17 @@ export function VisualGrammar() {
           help, and when to leave them out. Hover over a drawing to isolate the
           marks being explained, then move away to see the whole construction.
         </p>
+        <p className="max-w-2xl text-pretty text-muted-foreground text-sm">
+          Use these meanings in{" "}
+          <a className="underline underline-offset-4" href="#use-plotter">
+            your own brief
+          </a>
+          , or explore{" "}
+          <a className="underline underline-offset-4" href="#plotter-tokens">
+            the shared linework tokens
+          </a>
+          .
+        </p>
         <nav
           aria-label="Visual grammar topics"
           className="flex max-w-3xl flex-wrap gap-x-5 gap-y-2 text-sm"

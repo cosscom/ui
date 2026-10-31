@@ -1,5 +1,7 @@
 # coss.com product concepts
 
+Historical evidence for the named revisions. Use the [current instructions](../../SKILL.md) for new work; these findings and product claims need fresh evidence before being applied to a later revision.
+
 Source review: 25 October 2026. Scope: two replacement local concepts in `/ui/plotter#coss-concepts`. These are proposals for review; do not publish, push, or deploy them to coss.com.
 These are conceptual product diagrams. They do not claim to be infrastructure topology, standardized
 electrical symbols, physical parts, performance charts or implementation availability badges.

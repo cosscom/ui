@@ -1,57 +1,45 @@
 ---
 name: plotter
-description: Create, critique, and refine flat monochrome blueprint illustrations in the established coss UI style, using the user-approved construction studies as visual references. Use for technical hero illustrations, service concepts, interface construction studies, scheduling diagrams, and empty states in this style; not general architectural drafting or generic line art.
+description: Create, critique, refine, or animate editable flat monochrome blueprint illustrations. Use for construction studies, conceptual diagrams, technical heroes, and empty states in this visual language, including requests to animate an existing Plotter drawing. Not general interface animation or engineering certification.
 ---
 
 # Plotter
 
-Build an editable, flat monochrome illustration around one construction relationship: radius, alignment, spacing, assembly, routing, or intersection. The result should have one readable gesture and generous empty space. Establish the static drawing before considering motion.
+Make one construction relationship carry the idea: alignment, proportion, assembly, routing, tangency, or intersection. Deliver editable vectors; animation adds behavior to a readable static composition.
 
-## Establish the reference
+## Choose the workflow
 
-Read the [approved reference index](references/approved-references.md), choose the nearest construction relationship, and inspect its bundled SVG. Seven snapshots cover geometric construction, assembly, allocation, time intervals, service concepts, conversation, and absence. They work without the coss checkout; the wider 27-drawing reference set is available when the repository is present. A familiar subject alone is not a sufficient match.
+Resolve this skill's installed directory first. All links below are relative to it. The complete folder includes the visual references, helper implementation, examples, and export tools; standalone work needs no coss checkout or prior conversation.
 
-Before implementing, identify what the reference contributes: its focal relationship, the size and arrangement of its main forms, and what its guides explain. Preserve those decisions while adapting the subject. Matching stroke values and shape vocabulary alone has produced weak, generic diagrams. For new service or agent concepts, read the [registration failure and revision](references/examples/agent-registration.md) before choosing a composition. It records a rejected version, a user-liked revision, and the reasoning behind the change. The record layout addresses that brief; choose a relevant construction for other subjects.
+| Request | Read and follow |
+| --- | --- |
+| Create or refine a static drawing; critique an illustration | [Drawing workflow](references/drawing.md). For critique, report findings and proposed corrections without editing unless requested. |
+| Animate an illustration; refine timing, transitions, or a loop | [Animation workflow](references/motion.md). If no usable static composition exists, complete the drawing workflow first. |
+| Deliver only a static drawing from an animation | Use the selected static composition and the [foundation's static export](references/foundation.md#standalone-static-export). Time zero is not automatically the right drawing. |
 
-The snapshots establish composition and hierarchy. Some retain historical fills or line treatments; use the [drafting standard](references/drafting-standard.md) for new linework, transparent forms, hatching, and geometric tolerances. Source revisions are recorded in the snapshot manifest. Appearance approval does not certify technical accuracy or every subsequent revision.
+One `$plotter` entrypoint serves both workflows. “Animate this illustration” should reach the animation workflow directly while retaining the same grammar and tokens. Motion does not need a second copy of the skill's visual rules.
 
-## Compose
+## Load the shared references
 
-Read the [illustrated visual grammar](references/visual-grammar.md) before choosing supporting marks. It explains outlines, hatching, grids, arrows, callouts, projections, dimensions, axes, and absent forms through full-size construction studies. Choose a mark for the relationship it explains; use the drafting standard for its numerical treatment.
+For drawing, critique, or animation:
 
-- Use one flat plane. Exclude perspective, isometric views, skewed or tilted objects, physical depth, glossy 3D, colorful gradients, and science-class atom diagrams. Diagonal radius lines and callout leaders can explain geometry without tilting the form.
-- Keep the palette black, off-white, and soft gray. Adapt those values to the host’s theme while preserving the monochrome hierarchy.
-- Make the main form read first, meaningful construction guides second, sparse dimensions and labels third. Hairline outlines must remain visible at the intended display size.
-- Start from circles, rectangles, lines, arcs, slots, or modest UI fragments. Choose the central relationship before adding detail. A complete screen mockup or a large pictogram surrounded by technical marks is a poor starting point.
-- Give every guide a job: tangency, radius, equal intervals, alignment, a shared baseline, or a connection. Consider a background grid when geometric construction is the subject; keep it when it helps reveal that construction. If removing it leaves the relationships equally clear, omit it. Preserve grids that carry the subject itself, such as calendar cells, or were explicitly requested for a particular drawing.
-- Name what geometry alone cannot communicate. A week needs weekday or time cues; overlapping availability needs an association with people or schedules. Prefer short integrated labels over extra icons or a caption that must explain the entire image.
+1. Read [current direction](references/direction.md) and the [approved reference index](references/approved-references.md). Select and inspect the closest **bundled SVG** by its construction relationship; the wider repository catalogue is optional.
+2. Read the [visual grammar](references/visual-grammar.md) to choose meaningful marks. Inspect the linked teaching SVG for each mark you add or revise. Existing unchanged marks do not require loading every teaching example.
+3. Read the [drafting standard](references/drafting-standard.md): scope, stroke palette, and geometry/dimensions; include hatch grammar when hatching is involved and symbols/topology when making connectivity or product-behavior claims.
 
-## Implement and inspect
+Current direction governs composition, the grammar explains marks, and the drafting standard defines their treatment. [`standard.json`](assets/foundation/standard.json) is the editable source for shared numerical role defaults and helper constants; generated runtime data, CSS, and marked reference tables derive from it. Historical snapshots demonstrate composition and may retain documented exceptions. Preserve an existing illustration's appearance during implementation refactors.
 
-Deliver editable SVG or the host’s existing vector components. The references use a `560 × 440` viewBox; fit the requested placement. Use unique IDs for repeated SVG defs, masks, or clips. A meaningful standalone diagram needs an accessible title and description; a decorative illustration can be hidden from accessibility APIs when adjacent copy supplies its meaning.
+Load additional material only for its branch:
 
-Inherit the host font, or use `Cal Sans, sans-serif` with a sans-serif fallback when Cal Sans is unavailable. Keep automatic optical sizing, no added letter-spacing, no synthesized styles, and one GEOM value per text role. Use typeset punctuation. A standalone task does not require the coss checkout or its font files.
+| When | Reference |
+| --- | --- |
+| Writing role-based SVG, using arrow/dimension/hatch helpers, overriding tokens, or exporting | [Portable foundation](references/foundation.md), including its supported cases and examples |
+| Editing the coss gallery or its components | [coss integration](references/implementation.md), then the checkout's applicable instructions |
+| Revisiting a named study's feedback or investigating a past failure | [History index](references/history/index.md); read only the relevant entry/revision |
+| Explicitly asked for technical verification | [Verification prompt](references/verification-prompt.md), supplied with current source and renders |
 
-Place the rendered candidate beside its chosen reference at the same intended size, then inspect both as thumbnails; check narrow layouts when embedding it. Compare the prominence and proportions of the main form, the spatial relationship carrying the idea, and the useful construction detail. A successful render is not a successful composition. Preserve identifying labels before secondary dimensions. Resolve these questions:
+## Finish the requested artifact
 
-1. Does one central gesture survive at a glance?
-2. Can the subject be identified from the form and restrained labels?
-3. Do the guides explain construction, and do their measurements agree with the geometry?
-4. Is there enough quiet space and separation between outlines, guides, and annotations?
-5. Does the subject remain flat, without simulated depth or ornamental clutter?
+Use the selected workflow's completion criteria. Deliver the editable source, the requested preview/export, and a concise account of the relationship, relevant limitations, and what was actually inspected. If rendering or interaction was unavailable, identify that gap instead of claiming visual or motion verification. Honor the requested verification scope; automated checks and tests are not prerequisites when the user excludes them.
 
-If meaning is unclear, improve the structural cue or labeling before adding detail. If the composition is weak, improve its arrangement before adding guides. A passing code check does not answer either design question.
-
-For a collection, establish this comparison with one representative drawing before generating the rest. Work through the remaining subjects in manageable groups, retaining reference comparison and revision. Large uncalibrated batches have repeated the same compositional failure across otherwise different subjects. This is an internal refinement step, not a requirement to seek permission or reduce the user's requested scope; follow an explicit request to review a pilot before expanding.
-
-## Task-specific guidance
-
-- **Integrating into coss or revising its motion examples:** read [SVG and coss integration](references/implementation.md), then the applicable repository instructions. Preserve the host page’s layout unless a change was requested.
-- **Revising a particular existing study:** read its entries in [direction and feedback](references/direction.md). Current explicit user feedback takes precedence; gallery inclusion and production placement are separate from reference approval.
-- **Technical verification:** use the [verification prompt](references/verification-prompt.md) with current source and rendered output. The [source audit](references/source-audit.md) is historical evidence for named revisions, not a requirement for every drawing or a gallery-wide certification.
-
-## Refine from feedback
-
-Preserve a study’s identifier when revising it unless separate alternatives were requested. Record feedback that changes future decisions in `references/direction.md`, naming the study/revision and separating the user’s preference from your interpretation. Keep this history compact.
-
-Broad praise does not promote every example to a permanent reference. Add a visual anchor when the user identifies it as one. Improve instructions narrowly from observed failures; keep unresolved concepts open.
+Keep revision IDs stable unless alternatives are requested. Appearance approval applies to a particular revision; gallery inclusion, production placement, and style-reference selection are separate decisions. When maintaining this skill, put new dated feedback in [history](references/history/index.md#maintaining-the-record) and update current instructions only where the evidence changes a reusable decision.

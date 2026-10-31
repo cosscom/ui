@@ -1,5 +1,7 @@
 # Plotter source audit
 
+Historical evidence for the named revisions. Use the [current instructions](../../SKILL.md) for new work; these findings and product claims need fresh evidence before being applied to a later revision.
+
 Recorded 2026-10-25 against the working tree based on HEAD `f6da7e24`. **Revision status:** O06, W04, W05, O07, S10, S11, and the new S01-based M03 were re-read and recalculated after user feedback. Their older board, bore/insert sequence, involute-gear, wall-socket, and plug-animation findings are superseded. The file hashes below identify the inspected revisions; subsequent edits invalidate affected checks. This bounded source, geometry, and meaning review does not certify the gallery.
 
 ## Evidence and verdict scope

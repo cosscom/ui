@@ -6,7 +6,7 @@ The initial expansion included the three liked revisions unchanged in appearance
 
 ## Subsequent curation
 
-The user found 33 of the additions “not visually interesting”, considered AR01 and GE02 too similar to existing studies, and then explicitly requested OB04’s removal too. The complete code list and reasons are recorded in [direction and feedback](../../../skills/plotter/references/direction.md#catalogue-removals-after-expansion--2026-10-31). Removed SVGs and metadata are preserved in [`removed/`](removed/) as review evidence, outside the active catalogue and its generated components.
+The user found 33 of the additions “not visually interesting”, considered AR01 and GE02 too similar to existing studies, and then explicitly requested OB04’s removal too. The complete code list and reasons are recorded in [direction and feedback](../../../skills/plotter/references/history/direction.md#catalogue-removals-after-expansion--2026-10-31). Removed SVGs and metadata are preserved in [`removed/`](removed/) as review evidence, outside the active catalogue and its generated components.
 
 Repeated mentions of OB03 and AB05 were counted once. Retained codes and IDs have not been renumbered. These decisions apply to the named drawings, not whole subject categories, and retaining a drawing does not establish approval.
 

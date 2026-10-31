@@ -1,16 +1,25 @@
 import type { ReactNode } from "react";
+import { roleCss } from "../../skills/plotter/assets/foundation/index.mjs";
 
-export function BlueprintDrawing({ children }: { children: ReactNode }) {
+export function BlueprintDrawing({
+  children,
+  roles = false,
+}: {
+  children: ReactNode;
+  roles?: boolean;
+}) {
   return (
     <svg
       aria-hidden="true"
       className="h-auto w-full overflow-visible font-sans text-foreground [font-optical-sizing:auto] [font-synthesis:none] [font-variation-settings:'GEOM'_25]"
+      data-plotter={roles ? "" : undefined}
       fill="none"
       focusable="false"
       stroke="currentColor"
       strokeWidth="0.8"
       viewBox="0 0 560 440"
     >
+      {roles && <style data-plotter-styles="true">{roleCss}</style>}
       {children}
     </svg>
   );

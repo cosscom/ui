@@ -1,25 +1,36 @@
 # Plotter
 
-Flat monochrome blueprint illustrations: precise geometry, quiet construction guides, and generous white space.
+Editable flat monochrome construction illustrations, with distinct drawing and animation workflows.
 
-The experimental v0.1 scope is **static, editable illustrations**. The skill supports creation, critique, and refinement; existing coss animation guidance is an optional advanced workflow. It is a house illustration language, not an engineering certification.
+## Install and invoke
 
-## Use
+Copy this **complete `plotter` directory** into the agent's skills directory, keeping its name and relative paths. Invoke `$plotter`; automatic discovery also covers requests to draw, critique, refine, or animate illustrations in this style. Standalone work needs no coss checkout, conversation history, package manager, or external font download.
 
-Copy this complete `plotter` directory into your agent’s skills directory, preserving its name and relative paths. Invoke `$plotter` with the subject and intended placement. No coss checkout is required for standalone work.
+Example briefs:
 
-Example: “Use $plotter to show a 20-minute appointment between two 5-minute buffers, as a standalone 560 × 440 SVG.”
+- “Use $plotter to show a 20-minute appointment between two 5-minute buffers as a standalone 560 × 440 SVG.”
+- “Use $plotter to illustrate agent registration as fragments becoming one record. Keep the forms transparent and use a grid only if it explains the construction.”
+- “Use $plotter to animate this SVG so the selected core seats in the carrier. Preserve its static appearance and include pause/replay and a reduced-motion still.”
+- “Use $plotter to critique this loop's contact and hatch behavior without editing it.”
 
-`SKILL.md` contains the workflow. The [reference index](references/approved-references.md) maps seven bundled SVG snapshots to construction relationships and preserves the wider approved set. The [illustrated visual grammar](references/visual-grammar.md) explains when each kind of mark helps, with full-size SVG studies. The [drafting standard](references/drafting-standard.md) defines current linework; historical visual examples may contain documented exceptions. Outside coss, use the host font or the documented sans-serif fallback.
+Keep one entrypoint: users ask to draw or animate a Plotter illustration, so the same name routes both intentions. The [drawing workflow](references/drawing.md) and [animation workflow](references/motion.md) have separate completion criteria while sharing direction, grammar, tokens, and references. A separate animation skill would only be useful if an independently invoked capability emerged beyond this illustration language.
 
-The [registration case](references/examples/agent-registration.md) preserves a drawing from a rejected batch and a reference-led revision the user explicitly liked. It explains the generation failure and the focused workflow correction; it is not an additional approved style reference or evidence of broader reliability.
+## What is portable
 
-## Source and maintenance
+Seven bundled SVG anchors are sufficient for choosing a construction reference. The [visual grammar](references/visual-grammar.md) includes its teaching SVGs; the [foundation](references/foundation.md) contains dependency-free geometry helpers and generated role styles. Optional coss integration and dated feedback are loaded only for their explicit branches.
 
-The canonical source is `apps/ui/skills/plotter` in the coss repository. Make changes there, then replace installed copies with the complete updated directory. Installed copies are snapshots; do not maintain a second set of Plotter rules under another name.
+| Example | Open or generate it from the copied skill directory |
+| --- | --- |
+| Static registration, using the working arrow/dimension helpers | `node assets/examples/registration.mjs > registration.svg` |
+| Resolved static SVG with editable labels | `python3 scripts/export-svg.py registration.svg registration-export.svg --id-prefix registration` |
+| Animation and static fallback, with shared role CSS | Open `assets/examples/assembly-motion.html` in a modern browser; keep `assets/foundation/roles.css` in place. |
 
-The coss showcase is at `/ui/plotter`. Category filters and stable `?variant=<study-id>` links locate native-size inline drawings. Narrow screens scroll within each drawing. The page is available by direct URL and is not linked from site navigation.
+Node.js is needed for the authoring example; Python 3 is needed for the static exporter; recipients opening a resolved SVG need neither. The motion example uses browser SVG animation and a small player without a build or server. Exact Cal Sans typography depends on that font being available; the fallback is sans-serif.
 
-The three initial fresh-session experiments, prompts, and feedback are preserved in the repository at `apps/ui/plotter-evals/2026-10-31/`. They are evaluation evidence and catalog additions, separate from the 27 approved style references. A later instruction change should identify the observed failure and compare actual outputs on the affected brief and an unrelated one. Clean-install results establish only the tasks and revisions actually tested.
+The examples illustrate implementation and are not additional approved style references. In this instruction revision they were source-reviewed only; they were not executed, rendered, or evaluated in a fresh session. No automated checks or tests were run.
 
-Maintainers can run `bun run plotter:check` from `apps/ui` to check skill metadata and links, bundled snapshot hashes, catalog IDs, and SVG rendering. This checks package integrity and rendering, not visual quality. Review the actual drawings and record a fresh-session exercise before declaring a candidate ready; ordinary installed users do not need the repository check command.
+## Maintain the package
+
+The canonical source is `apps/ui/skills/plotter` in the coss repository. Update installed copies as complete folders. [`standard.json`](assets/foundation/standard.json) owns shared numeric defaults; `scripts/build-standard.py` generates the runtime data, CSS, and marked drafting tables. Generated or example-embedded styles are outputs, not separate palettes to edit. Regenerate an example's SVG before export when the standard changes.
+
+Current instructions live outside [history](references/history/index.md). Preserve the seven reference snapshots and their revision manifest; update general guidance from specific evidence rather than extending every past preference to all drawings. The repository's older evaluation records establish only their original tasks and revisions.

@@ -1,5 +1,7 @@
 # Remaining Plotter source audit
 
+Historical evidence for the named revisions. Use the [current instructions](../../SKILL.md) for new work; these findings and product claims need fresh evidence before being applied to a later revision.
+
 Bounded source pass on 2026-10-25. This supplements [source-audit.md](source-audit.md); it is not rendered acceptance, a mechanical certification, or approval of every inspected drawing. The 43 studies below received a source reading focused on their principal dimensions, circle/arc relationships, interval alignment, and annotation meaning. Together with the separate audit’s 12 studies, this covered the principal static construction of all 55 registered studies at that snapshot. Later revisions require fresh checks of affected claims. The revised shared S01/M03 component has since received fresh source, geometry, marker-clearance, and limited browser checks in [source-audit.md](source-audit.md). Those named checks supersede the earlier S01 source snapshot; the broader static inventory does not verify other animations. Individual successful checks do not certify every path in a drawing.
 
 ## Concrete findings and corrections

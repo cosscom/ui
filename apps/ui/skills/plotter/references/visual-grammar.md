@@ -2,11 +2,7 @@
 
 Start with the main form. For each supporting mark, name the relationship it explains. If removing the mark leaves that relationship equally clear, omit it. A drawing does not need every element below.
 
-The guide uses full-size **560 × 440** teaching constructions based on illustrations the user liked. On the Plotter page at `/ui/plotter#visual-grammar`, hovering, keyboard focus, or the touch toggle hides unrelated elements and isolates the marks named by each topic. The SVG’s `data-grammar-focus` attributes identify those marks; the complete drawing stays intact. Counterexamples were removed at the user’s request.
-
-Isolation preserves the element’s original color, opacity, stroke width, and dash pattern. Exclude nearby labels and callout leaders unless they are the topic itself. Dimension values remain part of their dimension. Where a grid shares a stroke with a visible form, hidden supplemental grid segments restore the complete lattice only while that form is hidden.
-
-Use the [drafting standard](drafting-standard.md#house-stroke-palette) for numerical treatment and the [approved references](approved-references.md) for composition. Registration, delegation, and iris provide additional user-liked evidence for these teaching adaptations; the approved reference selection remains unchanged.
+The linked **560 × 440** teaching SVGs are included in this package. Open the complete study for any mark you add or revise; no gallery or hover interaction is needed to understand it. Use the [drafting standard](drafting-standard.md#house-stroke-palette) and its shared token source for numerical treatment, and the [approved references](approved-references.md) for composition. Teaching examples do not expand that reference selection.
 
 ## Primary and secondary outlines
 
@@ -14,7 +10,7 @@ Use the [drafting standard](drafting-standard.md#house-stroke-palette) for numer
 
 Identity, name, and tools assemble into one record. Primary outlines hold the loose fragments and finished form together; quieter face details and construction lines support them. Keep supporting marks subordinate. Giving every stroke equal weight makes the construction compete with the subject.
 
-An important loose fragment can remain primary even when small. The [registration revision](examples/agent-registration.md) preserves that hierarchy.
+An important loose fragment can remain primary even when small.
 
 
 ## Diagonal hatching
@@ -32,7 +28,7 @@ A hatch describes a selected region or a stated cut, not generic lighting. A dia
 
 A grid makes a shared construction module visible. This letter’s stem, counter, and bowl radii all follow the same 32-unit field. Omit a background grid when local guides already explain the relationship. Geometric subject matter alone is not a reason to add one.
 
-Geometric content alone is insufficient. Keep a grid when its coordinate or module system explains the drawing; calendar cells can also be the subject itself.
+Calendar cells can also be the subject itself, rather than a background construction field.
 
 
 ## Movement and transfer arrows
@@ -41,7 +37,7 @@ Geometric content alone is insufficient. Keep a grid when its coordinate or modu
 
 One rigid part turns around a shared pivot. The curved dashed shaft and solid open arrowhead show its movement from the current position to the proposed one. “Quarter turn” and its callout leader are separate annotations; they disappear during isolation. Use an arrow only when a change or direction matters; alignment and equal size need different marks.
 
-Movement and conceptual transfer use the house **`4 6` shaft with a solid open head**. Alignment and size use projections or dimensions instead. A functional connector needs its own stated connectivity meaning.
+Movement and conceptual transfer use the **transfer** role for the shaft with a solid open head. Alignment and size use projections or dimensions instead. A functional connector needs its own stated connectivity meaning.
 
 
 ## Callout leaders and labels
@@ -77,7 +73,7 @@ Derive the label and its witnesses from the same geometry. A radius leader reach
 
 Centerlines and a pitch circle reveal how repeated features share one center. Six curved slots follow the same circle at equal angular intervals. Omit axes and loci that do not explain symmetry, rotation, or placement. A dashed guide must pass through the geometry it claims to organize.
 
-The house **`8 3 1 3`** pattern identifies axes, centers, and theoretical pitch loci. A direct generating radius can instead use continuous secondary linework.
+The **centerline** role identifies axes, centers, and theoretical pitch loci. A direct generating radius can instead use continuous secondary linework.
 
 
 ## Hidden, absent, and proposed outlines
@@ -88,7 +84,11 @@ The dashed C-shaped boundary represents a channel behind the plate’s visible f
 
 Hidden means present but concealed; absent means missing; proposed means a possible future form. Name the intended state rather than expecting the dash pattern alone to distinguish these meanings.
 
-The house **`3 5`** outline means hidden or absent geometry. A proposed future form uses that absent outline with a state label and, when useful, a separate movement arrow. If hidden and absent features coexist, label their states or separate the views.
+The **hidden**, **absent**, and **proposed** roles share one line pattern. Use a state label and, when useful, a separate movement arrow for a proposed form. If hidden and absent features coexist, label their states or separate the views.
 
 
 The main form should still read without its supporting marks. If it does not, revisit the composition before adding drafting detail.
+
+## Teaching isolation
+
+The SVGs' `data-grammar-focus` attributes identify the marks named by each topic. A host may use them to hide unrelated elements while retaining the complete drawing. Preserve the selected element's original color, opacity, stroke width, and dash pattern. Include labels and leaders only when they belong to the topic; dimension values belong to their dimension. Where a grid shares a stroke with a form, supplemental segments restore the lattice only while that form is hidden. coss's hover, keyboard, and touch controls are a host implementation, not part of the drawing/animation workflows.
