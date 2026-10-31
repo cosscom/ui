@@ -9,6 +9,8 @@ The user expected the grammar on the Plotter page and found the initial small pa
 
 The user then said they “love the new grammar examples”, asked to remove the counterexamples, and proposed hiding unrelated elements on hover. Keep these eight full-size drawings and their original appearance. The page isolates the topic’s marked elements on hover, keyboard focus, or a touch toggle; leaving the interaction restores the full drawing. Counterexample assets and controls were removed. This is positive feedback on the teaching drawings, without changing the earlier 27-reference selection.
 
+The user then clarified that isolation must not change the selected element’s color or original stroke treatment, and that unrelated labels and callout leaders must disappear. The isolated grid also exposed gaps where full-view strokes had shared ownership. Preserve original opacity and widths; isolate only the named marks. Restore the grid’s missing shared segments only during isolation. The page now defines the hidden C-shaped channel and distinguishes its dashed boundary from the separate callout leader.
+
 ## Catalogue removals after expansion — 2026-10-31
 
 The user requested removal of 36 distinct studies:

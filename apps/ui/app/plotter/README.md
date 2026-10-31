@@ -40,6 +40,8 @@ The generated `expanded-studies.tsx` uses the existing drawing wrapper and gives
 
 The visual grammar uses the skill’s editable SVGs as its source. Hover, keyboard focus, or the touch toggle isolates the topic’s marks; `data-grammar-focus` identifies those elements in the source. After editing `skills/plotter/references/grammar/*.svg`, run `python3 apps/ui/scripts/build-plotter-grammar.py` from the repository root and format `visual-grammar-drawings.tsx`. The page explanations live in `visual-grammar-content.ts`.
 
+Isolation preserves the original stroke treatment. The grid’s missing shared segments use `data-grammar-isolation-only` and are hidden in the complete drawing, then revealed at the same grid weight when the surrounding geometry disappears. Callouts are not part of a focused element unless that topic explains callouts.
+
 ## Plotter skill
 
 The visible Visual grammar section precedes the illustrations and is reachable from the top navigation at `/ui/plotter#visual-grammar`.

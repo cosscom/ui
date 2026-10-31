@@ -103,7 +103,6 @@ function GrammarArrows() {
         d={"M352.735065 131.264935L376 112H400"}
         strokeWidth={"0.65"}
         opacity={"0.5"}
-        data-grammar-focus={"true"}
       />
       <text
         x={"408"}
@@ -113,7 +112,6 @@ function GrammarArrows() {
         stroke={"none"}
         fontSize={"11"}
         opacity={"0.72"}
-        data-grammar-focus={"true"}
       >
         {"Quarter turn"}
       </text>
@@ -359,7 +357,6 @@ function GrammarCenterlines() {
         stroke={"currentColor"}
         strokeWidth={"0.65"}
         strokeOpacity={"0.5"}
-        data-grammar-focus={"true"}
       />
       <path
         d={"M376.242641 224.242641L372 220L376.242641 215.757359"}
@@ -367,7 +364,6 @@ function GrammarCenterlines() {
         stroke={"currentColor"}
         strokeWidth={"0.65"}
         strokeOpacity={"0.5"}
-        data-grammar-focus={"true"}
       />
       <text
         x={"462"}
@@ -377,7 +373,6 @@ function GrammarCenterlines() {
         fill={"currentColor"}
         stroke={"none"}
         opacity={"0.66"}
-        data-grammar-focus={"true"}
       >
         {"Pitch"}
       </text>
@@ -626,7 +621,6 @@ function GrammarDimensions() {
         fill={"currentColor"}
         stroke={"none"}
         opacity={"0.5"}
-        data-grammar-focus={"true"}
       >
         {"u = 40"}
       </text>
@@ -854,6 +848,16 @@ function GrammarGrids() {
       />
       <path
         d={
+          "M184 96L184 352M184 360L184 368M216 128L216 256M216 288L216 352M216 360L216 368M280 188L280 196M152 96L176 96M184 96L280 96M216 128L280 128M312 128L336 128M276 192L284 192M216 256L280 256M216 288L280 288M152 352L176 352M184 352L216 352"
+        }
+        strokeWidth={"0.6"}
+        opacity={"0.1"}
+        data-grammar-focus={"true"}
+        data-grammar-isolation-only={"true"}
+        visibility={"hidden"}
+      />
+      <path
+        d={
           "M184 96H280A96 96 0 0 1 280 288H216V352H184Z M216 128H280A64 64 0 0 1 280 256H216Z"
         }
         strokeWidth={"0.95"}
@@ -1042,7 +1046,6 @@ function GrammarHatching() {
 function GrammarOutlines() {
   return (
     <svg
-      data-grammar-preserve-contrast={"true"}
       width={"560"}
       height={"440"}
       viewBox={"0 0 560 440"}
@@ -1464,7 +1467,6 @@ function GrammarStates() {
         d={"M376 220H400L420 200H448"}
         strokeWidth={"0.65"}
         opacity={"0.5"}
-        data-grammar-focus={"true"}
       />
       <text
         x={"456"}
@@ -1474,7 +1476,6 @@ function GrammarStates() {
         stroke={"none"}
         fontSize={"11"}
         opacity={"0.72"}
-        data-grammar-focus={"true"}
       >
         {"Hidden"}
       </text>
@@ -1486,7 +1487,6 @@ function GrammarStates() {
         stroke={"none"}
         fontSize={"11"}
         opacity={"0.72"}
-        data-grammar-focus={"true"}
       >
         {"rear channel"}
       </text>

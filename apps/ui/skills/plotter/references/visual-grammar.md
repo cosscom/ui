@@ -4,6 +4,8 @@ Start with the main form. For each supporting mark, name the relationship it exp
 
 The user liked these eight **560 × 440** teaching constructions. On the Plotter page at `/ui/plotter#visual-grammar`, hovering, keyboard focus, or the touch toggle hides unrelated elements and isolates the marks named by each topic. The SVG’s `data-grammar-focus` attributes identify those marks; the complete drawing stays intact. Counterexamples were removed at the user’s request.
 
+Isolation preserves the element’s original color, opacity, stroke width, and dash pattern. Exclude nearby labels and callout leaders unless they are the topic itself. Dimension values remain part of their dimension. Where a grid shares a stroke with a visible form, hidden supplemental grid segments restore the complete lattice only while that form is hidden.
+
 Use the [drafting standard](drafting-standard.md#house-stroke-palette) for numerical treatment and the [approved references](approved-references.md) for composition. Registration, delegation, and iris provide additional user-liked evidence for these teaching adaptations; the approved reference selection remains unchanged.
 
 ## Primary and secondary outlines
@@ -35,9 +37,9 @@ Geometric content alone is insufficient. Keep a grid when its coordinate or modu
 
 ## Movement and transfer arrows
 
-![The arrow carries the quarter turn toward the proposed position.](grammar/arrows.svg)
+![The curved dashed shaft and solid open arrowhead show a quarter turn.](grammar/arrows.svg)
 
-One rigid part turns around a shared pivot. The movement arrow names the direction from its current position to the proposed one. Use an arrow only when a change or direction matters; alignment and equal size need different marks.
+One rigid part turns around a shared pivot. The curved dashed shaft and solid open arrowhead show its movement from the current position to the proposed one. “Quarter turn” and its callout leader are separate annotations; they disappear during isolation. Use an arrow only when a change or direction matters; alignment and equal size need different marks.
 
 Movement and conceptual transfer use the house **`4 6` shaft with a solid open head**. Alignment and size use projections or dimensions instead. A functional connector needs its own stated connectivity meaning.
 
@@ -69,11 +71,13 @@ Centerlines and a pitch circle reveal how repeated features share one center. Si
 The house **`8 3 1 3`** pattern identifies axes, centers, and theoretical pitch loci. A direct generating radius can instead use continuous secondary linework.
 
 
-## Absent, hidden, and proposed outlines
+## Hidden, absent, and proposed outlines
 
-![The view and callout make the hidden channel unambiguous.](grammar/states.svg)
+![A dashed C-shaped boundary represents a channel concealed behind the plate’s front face.](grammar/states.svg)
 
-The dashed channel lies behind a visible front face. Its label explains why the geometry is not shown as a solid outline. The same dashed outline may mean hidden, absent, or proposed geometry. Name the state when the form alone cannot distinguish it.
+The dashed C-shaped boundary represents a channel behind the plate’s visible front face. The channel exists, but this view cannot see it directly: this is **hidden geometry**. Only its dashed boundary remains during isolation. The solid line pointing to “Hidden rear channel” is a **callout leader** connecting a feature to explanatory text; both that leader and its label disappear on hover.
+
+Hidden means present but concealed; absent means missing; proposed means a possible future form. Name the intended state rather than expecting the dash pattern alone to distinguish these meanings.
 
 The house **`3 5`** outline means hidden or absent geometry. A proposed future form uses that absent outline with a state label and, when useful, a separate movement arrow. If hidden and absent features coexist, label their states or separate the views.
 

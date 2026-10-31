@@ -1,10 +1,4 @@
 .drawing:is([data-isolated], :focus-visible)
-  svg:not([data-grammar-preserve-contrast="true"])
-  g:not(defs *, clipPath *, mask *, pattern *, marker *, symbol *) {
-  opacity: 1;
-}
-
-.drawing:is([data-isolated], :focus-visible)
   svg
   :is(
     path,
@@ -31,26 +25,12 @@
 }
 
 .drawing:is([data-isolated], :focus-visible)
-  svg:not([data-grammar-preserve-contrast="true"])
-  :is([data-grammar-focus="true"], [data-grammar-focus="true"] *):not(
-    defs *,
-    clipPath *,
-    mask *,
-    pattern *,
-    marker *,
-    symbol *
-  ) {
-  opacity: 1;
-  stroke-opacity: 1;
+  svg
+  [data-grammar-isolation-only="true"] {
+  visibility: visible;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .drawing:hover
-    svg:not([data-grammar-preserve-contrast="true"])
-    g:not(defs *, clipPath *, mask *, pattern *, marker *, symbol *) {
-    opacity: 1;
-  }
-
   .drawing:hover
     svg
     :is(
@@ -77,17 +57,7 @@
     opacity: 0;
   }
 
-  .drawing:hover
-    svg:not([data-grammar-preserve-contrast="true"])
-    :is([data-grammar-focus="true"], [data-grammar-focus="true"] *):not(
-      defs *,
-      clipPath *,
-      mask *,
-      pattern *,
-      marker *,
-      symbol *
-    ) {
-    opacity: 1;
-    stroke-opacity: 1;
+  .drawing:hover svg [data-grammar-isolation-only="true"] {
+    visibility: visible;
   }
 }

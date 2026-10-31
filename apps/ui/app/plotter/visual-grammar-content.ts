@@ -28,9 +28,9 @@ export const visualGrammarEntries = [
     id: "arrows",
     title: "Movement and transfer arrows",
     description:
-      "One rigid part turns around a shared pivot. The movement arrow names the direction from its current position to the proposed one.",
+      "The curved dashed line and its solid open arrowhead show a rigid part turning from its current position to the proposed one. The nearby “Quarter turn” text is a callout, not part of the arrow.",
     omit: "Use an arrow only when a change or direction matters; alignment and equal size need different marks.",
-    caption: "The arrow carries the quarter turn toward the proposed position.",
+    caption: "On hover, only the dashed shaft and solid arrowhead remain.",
   },
   {
     id: "projections",
@@ -55,14 +55,16 @@ export const visualGrammarEntries = [
     description:
       "Centerlines and a pitch circle reveal how repeated features share one center. Six curved slots follow the same circle at equal angular intervals.",
     omit: "Omit axes and loci that do not explain symmetry, rotation, or placement. A dashed guide must pass through the geometry it claims to organize.",
-    caption: "One center and one pitch circle locate all six repeated slots.",
+    caption:
+      "On hover, the center mark, radial axes, and pitch circle remain; the slots and callout disappear.",
   },
   {
     id: "states",
-    title: "Absent, hidden, and proposed outlines",
+    title: "Hidden, absent, and proposed outlines",
     description:
-      "The dashed channel lies behind a visible front face. Its label explains why the geometry is not shown as a solid outline.",
-    omit: "The same dashed outline may mean hidden, absent, or proposed geometry. Name the state when the form alone cannot distinguish it.",
-    caption: "The view and callout make the hidden channel unambiguous.",
+      "The dashed C-shaped boundary represents a channel behind the plate’s visible front face. The channel exists, but this view cannot see it directly. Only that hidden boundary remains on hover.",
+    omit: "Hidden means present but concealed; absent means missing; proposed means a possible future form. Label the intended state. The solid line pointing to “Hidden rear channel” is a callout leader, a separate annotation that disappears on hover.",
+    caption:
+      "This example shows hidden geometry: the channel’s boundary behind the face.",
   },
 ] as const;
