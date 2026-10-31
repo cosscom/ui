@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="440" viewBox="0 0 560 440" role="img" aria-labelledby="inscribed-circle-title inscribed-circle-desc" fill="none" color="#171717">
+  <title id="inscribed-circle-title">A circle inscribed in an equilateral triangle</title>
+  <desc id="inscribed-circle-desc">A circle touches the three equal sides of an equilateral triangle at T₁, T₂, and T₃. Three radii extend from the center O to those tangent points. Small squares show that each radius is perpendicular to its side. Solid point markers identify the center and tangencies; matching side ticks indicate equal side lengths.</desc>
+  <!-- Mode: geometric construction. SVG units only; no physical scale.
+       O = (280, 246), r = 90. Triangle altitude = 3r and side = 2√3r.
+       Vertices and tangent points are derived from those same parameters.
+       Convention: solid dots mark geometric points; one tick marks equal sides.
+       All enclosed forms are transparent. -->
+  <style>
+    text { font-family: "Cal Sans", Arial, sans-serif; font-optical-sizing: auto; font-synthesis: none; font-variation-settings: "GEOM" 25; font-size: 11px; }
+  </style>
+  <g stroke="currentColor" stroke-width="0.65" opacity="0.5" stroke-linecap="butt" stroke-linejoin="miter">
+    <path d="M202.057714 201 280 246 357.942286 201 M280 246 280 336"/>
+    <path d="M206.057714 194.071797 212.985917 198.071797 208.985917 205 M353.942286 194.071797 347.014083 198.071797 351.014083 205 M288 336 288 328 280 328"/>
+    <path d="M244.492958 135.5 237.564755 131.5 M322.435245 131.5 315.507042 135.5 M202.057714 332 202.057714 340"/>
+  </g>
+  <g stroke="currentColor" stroke-width="0.95" stroke-linejoin="miter">
+    <path d="M280 66 124.115427 336 435.884573 336Z"/>
+    <circle cx="280" cy="246" r="90"/>
+  </g>
+  <g fill="currentColor">
+    <circle cx="280" cy="246" r="2"/>
+    <circle cx="202.057714" cy="201" r="2"/>
+    <circle cx="357.942286" cy="201" r="2"/>
+    <circle cx="280" cy="336" r="2"/>
+  </g>
+  <g fill="currentColor" opacity="0.65">
+    <text x="181" y="201" text-anchor="end">T₁</text>
+    <text x="379" y="201">T₂</text>
+    <text x="292" y="352">T₃</text>
+    <text x="291" y="249">O</text>
+    <text x="291" y="294">r</text>
+    <text x="280" y="391" text-anchor="middle">OT₁ = OT₂ = OT₃ = r</text>
+  </g>
+</svg>
+

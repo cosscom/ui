@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-31",
+  "skill_commit": "aeebda6ba387149db564dc774c1909eef0e06c9e",
+  "purpose": "Preserved first-pass outputs and prompts. Catalog implementations remove embedded fonts and global styles while retaining the drawings.",
+  "cases": [
+    {
+      "id": "modules",
+      "request": "Create a standalone static blueprint illustration showing two differently sized rounded modules fitting into one shared frame, with a consistent gap. Intended display is 560 × 440.",
+      "output": "modules.svg",
+      "sha256": "ada7356d43edbc252ec895ea330451780a0a68fe55b0da46a7893d27472733f4",
+      "catalog_code": "C04",
+      "catalog_id": "particles-shared-frame",
+      "condition": "Fresh agent session with Plotter; no without-skill control",
+      "user_verdict": "Liked; original version preferred over added background-grid variant"
+    },
+    {
+      "id": "buffers",
+      "request": "Create a standalone static blueprint illustration explaining a 30-minute appointment with a 10-minute buffer before and after. Intended display is 560 × 440.",
+      "output": "buffers.svg",
+      "sha256": "0ab4cc7f653d7ff68dc596f52d37bab8c432233ecd45e88de5084a3fef334733",
+      "catalog_code": "K09",
+      "catalog_id": "cal-appointment-buffers",
+      "condition": "Fresh agent session with Plotter; no without-skill control",
+      "user_verdict": "Liked; original version preferred over added background-grid variant"
+    },
+    {
+      "id": "search",
+      "request": "Create a standalone static blueprint illustration for No matching results: a query has no matching entry in a small indexed collection. Intended display is 560 × 440.",
+      "output": "search.svg",
+      "sha256": "40ce15fc9113808a87be7518e1847c751cdc78f6951f150747af6461a4f1cc05",
+      "catalog_code": "S15",
+      "catalog_id": "state-no-matching-results",
+      "condition": "Fresh agent session with Plotter; no without-skill control",
+      "user_verdict": "Liked; original version preferred over added background-grid variant"
+    }
+  ],
+  "feedback": [
+    {
+      "speaker": "user",
+      "text": "I like them all."
+    },
+    {
+      "speaker": "user",
+      "text": "i honestly prefer these examples to be without grids i'd add them only if necessary"
+    },
+    {
+      "speaker": "user",
+      "text": "i think the rule of thumb should be: if it's pure geometric then a grid would work eg M01 or P00."
+    }
+  ],
+  "interpretation": "Consider a grid when geometric construction is the subject; retain it when it reveals the construction. The three original examples remain preferred.",
+  "limitations": [
+    "Three single runs with the skill; no causal improvement claim or reliability estimate.",
+    "User approval of these examples does not automatically add them to the earlier 27-reference set."
+  ],
+  "original_geometry_checks": [
+    "Shared-frame horizontal clearances are 24 units.",
+    "Appointment intervals 72:216:72 represent 10:30:10 minutes.",
+    "Indexed record centers follow a 60-unit pitch."
+  ]
+}

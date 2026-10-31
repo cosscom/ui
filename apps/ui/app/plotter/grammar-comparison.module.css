@@ -1,0 +1,63 @@
+.drawing:is([data-isolated], :focus-visible)
+  svg
+  :is(
+    path,
+    rect,
+    circle,
+    ellipse,
+    line,
+    polyline,
+    polygon,
+    text,
+    use,
+    image
+  ):not(
+    defs *,
+    clipPath *,
+    mask *,
+    pattern *,
+    marker *,
+    symbol *,
+    [data-grammar-focus="true"],
+    [data-grammar-focus="true"] *
+  ) {
+  opacity: 0;
+}
+
+.drawing:is([data-isolated], :focus-visible)
+  svg
+  [data-grammar-isolation-only="true"] {
+  visibility: visible;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .drawing:hover
+    svg
+    :is(
+      path,
+      rect,
+      circle,
+      ellipse,
+      line,
+      polyline,
+      polygon,
+      text,
+      use,
+      image
+    ):not(
+      defs *,
+      clipPath *,
+      mask *,
+      pattern *,
+      marker *,
+      symbol *,
+      [data-grammar-focus="true"],
+      [data-grammar-focus="true"] *
+    ) {
+    opacity: 0;
+  }
+
+  .drawing:hover svg [data-grammar-isolation-only="true"] {
+    visibility: visible;
+  }
+}

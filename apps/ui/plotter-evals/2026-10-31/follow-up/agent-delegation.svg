@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="440" viewBox="0 0 560 440" fill="none" stroke="currentColor" stroke-linecap="butt" stroke-linejoin="round" style="color:#171717;font-family:Cal Sans,sans-serif;font-optical-sizing:auto;font-synthesis:none;font-variation-settings:'GEOM' 25;font-weight:400" role="img" aria-labelledby="agent-delegation-title agent-delegation-desc">
+  <title id="agent-delegation-title">One task, two agents</title>
+  <desc id="agent-delegation-desc">A task is divided into research and drafting scopes. The two scopes retain their widths and profiles when separated and assigned to Agent 01 and Agent 02.</desc>
+  <metadata>Study: agent-delegation, revision 2, awaiting user review. Conceptual diagram. References: K07 part/whole proportions, C01 preserved fragments, C02 allocation. Unit u = 24 SVG units. The task is 14u wide; research and drafting allocations are 6u and 8u. Widths describe the illustrative partition, not effort, duration, cost, or an execution schedule. The two lower forms retain the source partition geometry, translated by (-12,156) and (12,156). The guide pairs connect the source's lower width witnesses to the assigned forms' upper width witnesses; the arrows indicate conceptual assignment, not measured trajectories. No background grid is needed.</metadata>
+
+  <!-- The source is one boundary with a single shared partition. -->
+  <g stroke-width="0.95">
+    <rect x="112" y="116" width="336" height="64" rx="12"/>
+    <path d="M112 272H244V336H112A12 12 0 0 1 100 324V284A12 12 0 0 1 112 272Z"/>
+    <path d="M268 272H448A12 12 0 0 1 460 284V324A12 12 0 0 1 448 336H268Z"/>
+  </g>
+  <path d="M256 116V180" stroke-width="0.65" opacity="0.5"/>
+
+  <!-- Interrupted witness projections retain each allocated width. -->
+  <g stroke-width="0.6" opacity="0.24">
+    <path d="M110.9565 188L101.0435 264M254.9565 188L245.0435 264M257.0435 188L266.9565 264M449.0435 188L458.9565 264"/>
+    <path d="M92 116H104M456 116H468M92 180H104M456 180H468M80 272H92M468 272H480M80 336H92M468 336H480"/>
+  </g>
+  <g stroke-width="0.65" opacity="0.5">
+    <path d="M172 246V210M364 246V210" stroke-dasharray="4 6"/>
+    <path d="M167.757359 241.757359L172 246L176.242641 241.757359M359.757359 241.757359L364 246L368.242641 241.757359"/>
+  </g>
+
+  <g fill="currentColor" stroke="none" font-size="11" opacity="0.72" text-anchor="middle">
+    <text x="280" y="101">One task</text>
+    <text x="184" y="152">Research</text>
+    <text x="352" y="152">Draft</text>
+    <text x="172" y="308">Research</text>
+    <text x="364" y="308">Draft</text>
+    <text x="172" y="358" style="font-variation-settings:'GEOM' 0">Agent 01</text>
+    <text x="364" y="358" style="font-variation-settings:'GEOM' 0">Agent 02</text>
+  </g>
+
+  <!-- Dimensions describe the same partition before and after assignment. -->
+  <g stroke-width="0.65" opacity="0.5">
+    <path d="M112 108V60M448 108V60M112 68H264M296 68H448M108 72L116 64M444 72L452 64"/>
+    <path d="M100 344V392M244 344V392M268 344V392M460 344V392"/>
+    <path d="M100 384H156M188 384H244M268 384H348M380 384H460"/>
+    <path d="M96 388L104 380M240 388L248 380M264 388L272 380M456 388L464 380"/>
+  </g>
+  <g fill="currentColor" stroke="none" font-size="10" opacity="0.5" text-anchor="middle">
+    <text x="280" y="71">14u</text>
+    <text x="172" y="387">6u</text>
+    <text x="364" y="387">8u</text>
+  </g>
+</svg>

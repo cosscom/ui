@@ -1,0 +1,107 @@
+{
+  "tokens": {
+    "--plotter-stroke-primary": 0.95,
+    "--plotter-stroke-secondary": 0.65,
+    "--plotter-stroke-guide": 0.6,
+    "--plotter-stroke-hatch": 0.65,
+    "--plotter-stroke-section": 1.3,
+    "--plotter-opacity-primary": 1,
+    "--plotter-opacity-secondary": 0.5,
+    "--plotter-opacity-guide": 0.24,
+    "--plotter-opacity-grid": 0.1,
+    "--plotter-opacity-hatch": 0.27,
+    "--plotter-opacity-hidden": 0.45
+  },
+  "roles": {
+    "primary": {
+      "width": "--plotter-stroke-primary",
+      "opacity": "--plotter-opacity-primary",
+      "dash": "none",
+      "label": "Primary form",
+      "use": "Main silhouette or selected functional route"
+    },
+    "secondary": {
+      "width": "--plotter-stroke-secondary",
+      "opacity": "--plotter-opacity-secondary",
+      "dash": "none",
+      "label": "Secondary form",
+      "use": "Subordinate real detail"
+    },
+    "dimension": {
+      "width": "--plotter-stroke-secondary",
+      "opacity": "--plotter-opacity-secondary",
+      "dash": "none",
+      "label": "Dimension / leader",
+      "use": "Measurement, extension, explanatory leader"
+    },
+    "leader": {
+      "width": "--plotter-stroke-secondary",
+      "opacity": "--plotter-opacity-secondary",
+      "dash": "none"
+    },
+    "guide": {
+      "width": "--plotter-stroke-guide",
+      "opacity": "--plotter-opacity-guide",
+      "dash": "none",
+      "label": "Reference guides",
+      "use": "Subordinate alignment projections and reference scaffold"
+    },
+    "grid": {
+      "width": "--plotter-stroke-guide",
+      "opacity": "--plotter-opacity-grid",
+      "dash": "none",
+      "label": "Grid",
+      "use": "A useful repeated coordinate/module field"
+    },
+    "hatch": {
+      "width": "--plotter-stroke-hatch",
+      "opacity": "--plotter-opacity-hatch",
+      "dash": "none",
+      "label": "Hatch",
+      "use": "One declared bounded region"
+    },
+    "section": {
+      "width": "--plotter-stroke-section",
+      "opacity": "--plotter-opacity-primary",
+      "dash": "none",
+      "label": "Section cut, when needed",
+      "use": "Material actually intersected by a stated cut plane"
+    },
+    "centerline": {
+      "width": "--plotter-stroke-guide",
+      "opacity": "--plotter-opacity-guide",
+      "dash": "8 3 1 3",
+      "label": "Axis / centerline / pitch locus",
+      "use": "A center, symmetry axis, or theoretical generating locus"
+    },
+    "hidden": {
+      "width": "--plotter-stroke-secondary",
+      "opacity": "--plotter-opacity-hidden",
+      "dash": "3 5",
+      "label": "Hidden or absent outline",
+      "use": "Geometry not presently visible or present; explain which in context"
+    },
+    "absent": {
+      "width": "--plotter-stroke-secondary",
+      "opacity": "--plotter-opacity-hidden",
+      "dash": "3 5"
+    },
+    "proposed": {
+      "width": "--plotter-stroke-secondary",
+      "opacity": "--plotter-opacity-hidden",
+      "dash": "3 5"
+    },
+    "transfer": {
+      "width": "--plotter-stroke-secondary",
+      "opacity": "--plotter-opacity-secondary",
+      "dash": "4 6",
+      "label": "Motion or transfer",
+      "use": "Proposed movement or conceptual transfer, with solid open arrowhead"
+    }
+  },
+  "geometry": {
+    "arrow": { "legLength": 6, "angle": 45 },
+    "dimension": { "slashExtent": 8, "labelClearance": 3 },
+    "hatch": { "edgePitch": 12 }
+  }
+}

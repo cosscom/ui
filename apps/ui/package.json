@@ -49,6 +49,7 @@
     "format": "biome format --write .",
     "format:all": "biome check --write --unsafe --no-errors-on-unmatched",
     "lint": "biome lint .",
+    "plotter:check": "bun scripts/check-plotter.tsx",
     "postinstall": "fumadocs-mdx",
     "registry:build": "tsx --tsconfig ./tsconfig.scripts.json ./scripts/build-registry.mts",
     "registry:validate-deps": "tsx --tsconfig ./tsconfig.scripts.json ./scripts/validate-registry-deps.mts",

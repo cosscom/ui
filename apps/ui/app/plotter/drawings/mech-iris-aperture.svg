@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="440" viewBox="0 0 560 440" fill="none" stroke="currentColor" stroke-linecap="butt" stroke-linejoin="round" style="color:#171717;font-family:Cal Sans,sans-serif;font-optical-sizing:auto;font-synthesis:none;font-variation-settings:'GEOM' 25;font-weight:400" role="img" aria-labelledby="iris-title iris-desc">
+  <title id="iris-title">Six blades, one aperture</title>
+  <desc id="iris-desc">Six repeated blade edges are tangent to one generating circle, leaving a hexagonal aperture. Hatching identifies the visible region of one blade.</desc>
+  <metadata>Study: mech-iris-aperture, revision 2, explicitly liked by the user on 2026-10-31. Mode: geometric construction inspired by an iris aperture. Reference: P00 circle, tangency, hierarchy, bounded hatch. C=(280,220); R=120; r=40; u=40 SVG units. For normals n at multiples of 60 degrees and tangent t=(-n.y,n.x), blade edges lie on n dot (P-C)=r. Their outer endpoints are C+r*n+sqrt(R*R-r*r)*t. The six opening vertices lie on radius r/cos(30 degrees), at angles 30+60i degrees. Each visible edge runs from the previous opening vertex to its outer endpoint. H1 hatching denotes one visible blade region, bounded by adjacent edges and the outer circle; it is not material or shading. This illustrative layout does not assert pivot positions, blade thickness, hidden overlap geometry, or verified mechanical motion. The axes and generating circle explain the repetition without a background grid.</metadata>
+  <defs><clipPath id="iris-blade-region"><path d="M280.000000 266.188022L202.020410 311.209559A120 120 0 0 1 162.020410 198.072474Z" fill="black" stroke="none"/></clipPath></defs>
+
+  <!-- H1: one visible blade region; the central opening is excluded. -->
+  <path d="M140 100L420 -180M140 112L420 -168M140 124L420 -156M140 136L420 -144M140 148L420 -132M140 160L420 -120M140 172L420 -108M140 184L420 -96M140 196L420 -84M140 208L420 -72M140 220L420 -60M140 232L420 -48M140 244L420 -36M140 256L420 -24M140 268L420 -12M140 280L420 0M140 292L420 12M140 304L420 24M140 316L420 36M140 328L420 48M140 340L420 60M140 352L420 72M140 364L420 84M140 376L420 96M140 388L420 108M140 400L420 120M140 412L420 132M140 424L420 144M140 436L420 156M140 448L420 168M140 460L420 180M140 472L420 192M140 484L420 204M140 496L420 216M140 508L420 228M140 520L420 240M140 532L420 252M140 544L420 264M140 556L420 276M140 568L420 288M140 580L420 300M140 592L420 312M140 604L420 324M140 616L420 336M140 628L420 348" stroke-width="0.65" opacity="0.27" clip-path="url(#iris-blade-region)"/>
+
+  <!-- The generating circle and axes explain tangency, not physical edges. -->
+  <g stroke-width="0.6" opacity="0.24" stroke-dasharray="8 3 1 3">
+    <circle cx="280" cy="220" r="40"/>
+    <path d="M136 220H277M328 220H424M280 84V217M280 223V356"/>
+  </g>
+  <g stroke-width="0.95">
+    <circle cx="280" cy="220" r="120"/>
+    <path d="M320.000000 196.905989L320.000000 333.137085M320.000000 243.094011L202.020410 311.209559M280.000000 266.188022L162.020410 198.072474M240.000000 243.094011L240.000000 106.862915M240.000000 196.905989L357.979590 128.790441M280.000000 173.811978L397.979590 241.927526"/>
+  </g>
+
+  <!-- One radius terminates on its tangent edge; an open center stays legible. -->
+  <g stroke-width="0.65" opacity="0.5">
+    <circle cx="280" cy="220" r="3"/>
+    <path d="M283 220H320M315.757359 215.757359L320 220L315.757359 224.242641M314 220V214H320"/>
+    <path d="M320 196.905989L346 170H388M202 270L146 314H112"/>
+    <path d="M160 92V56M400 92V56M160 64H264M296 64H400M156 68L164 60M396 68L404 60"/>
+  </g>
+  <g fill="currentColor" stroke="none" font-size="10" opacity="0.5">
+    <text x="300" y="207" text-anchor="middle">u</text>
+    <text x="280" y="67" text-anchor="middle">6u</text>
+  </g>
+  <g fill="currentColor" stroke="none" font-size="11" opacity="0.72">
+    <text x="396" y="174">Aperture</text>
+    <text x="104" y="318" text-anchor="end">Blade 01</text>
+  </g>
+</svg>

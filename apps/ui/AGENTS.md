@@ -1,5 +1,7 @@
 # Particle Component Development Guide for @coss/ui
 
+For blueprint illustration work, read [Plotter](skills/plotter/SKILL.md). It records the visual direction, reference images, and review feedback for the production heroes and the unlinked `/ui/plotter` showcase.
+
 This guide provides comprehensive instructions for creating new particle components that match the existing library's patterns and best practices. Use this when creating equivalents of origin components or building new particles from scratch.
 
 ---
@@ -1377,3 +1379,13 @@ const items = [
 ---
 
 This guide should enable autonomous creation of particles that match the existing library's patterns, style, and best practices. Always refer to existing particles in the same category for consistency.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
