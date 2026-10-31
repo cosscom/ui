@@ -11,6 +11,7 @@ import { IllustrationGallery } from "./illustration-gallery";
 import { illustrations } from "./illustrations";
 import { NewtonsCradleMotionDrawing } from "./newtons-cradle-motion-drawing";
 import { NotFoundMotion } from "./not-found-motion";
+import { OrbitsMotionDrawing, OrbitsStudy } from "./orbits-motion-drawing";
 import { ParticlesBlueprint } from "./particles-blueprint";
 import { ParticlesMotion } from "./particles-motion";
 import { PrimitivesBlueprint } from "./primitives-blueprint";
@@ -80,7 +81,7 @@ export default function Page() {
             >
               Animations
             </h2>
-            <p className="text-muted-foreground text-xs">5 examples</p>
+            <p className="text-muted-foreground text-xs">6 examples</p>
           </div>
           <div className="grid overflow-hidden rounded-lg border border-border/64 bg-sidebar lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
             <div className="flex flex-col items-start justify-center gap-4 p-6 sm:p-8">
@@ -201,6 +202,34 @@ export default function Page() {
                 caption="One swing · Alternating ends"
               >
                 <NewtonsCradleStudy />
+              </EngineeringMotionPreview>
+            </div>
+          </article>
+          <article
+            aria-labelledby="orbits-animation-title"
+            className="mt-6 grid scroll-mt-20 overflow-hidden rounded-lg border border-border/64 bg-sidebar lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]"
+            id="orbits-animation"
+          >
+            <div className="flex flex-col items-start justify-center gap-4 p-6 sm:p-8">
+              <p className="text-muted-foreground text-xs">Nature / M04</p>
+              <h3
+                className="font-heading font-semibold text-2xl [font-variation-settings:'GEOM'_50]"
+                id="orbits-animation-title"
+              >
+                Three orbits, three speeds
+              </h3>
+              <p className="max-w-sm text-pretty text-muted-foreground text-sm">
+                Three planets leave one line together. The inner one circles
+                four times for every turn of the outer one, and all three meet
+                again at the start.
+              </p>
+            </div>
+            <div className="min-w-0 border-t lg:border-s lg:border-t-0">
+              <EngineeringMotionPreview
+                animated={<OrbitsMotionDrawing />}
+                caption="Inner · Middle · Outer"
+              >
+                <OrbitsStudy />
               </EngineeringMotionPreview>
             </div>
           </article>
