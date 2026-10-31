@@ -1,5 +1,6 @@
 import { BlueprintDrawing } from "./blueprint-drawing";
 import { ParticlesBlueprint } from "./particles-blueprint";
+import { SharedFrameStudy } from "./shared-frame";
 import type { IllustrationStudy } from "./study-types";
 
 function Registration() {
@@ -433,5 +434,14 @@ export const systemStudies: IllustrationStudy[] = [
       "Identity, visibility, and action combine into one compact panel. Each of the three fragments keeps its role in the assembled result.",
     category: "Interfaces",
     illustration: <ParticlesBlueprint />,
+  },
+  {
+    id: "particles-shared-frame",
+    code: "C04",
+    title: "Shared frame",
+    description:
+      "Two unequal modules fit one frame. A shared unit defines the edge clearances and the space between them.",
+    category: "Interfaces",
+    illustration: <SharedFrameStudy />,
   },
 ];

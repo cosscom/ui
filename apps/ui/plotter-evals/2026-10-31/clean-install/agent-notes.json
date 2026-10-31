@@ -1,0 +1,92 @@
+{
+  "subject": "Circle inscribed in an equilateral triangle",
+  "mode": "geometric construction",
+  "candidate_count": 1,
+  "output": "output/inscribed-circle.svg",
+  "size": {
+    "width": 560,
+    "height": 440,
+    "viewBox": "0 0 560 440"
+  },
+  "references": [
+    {
+      "path": "plotter/references/drawings/P00.svg",
+      "reason": "Closest bundled relationship: circle, straight boundaries, radii, and tangency. Borrowed hierarchy and restrained geometry, not historical background fills.",
+      "inspection": "Source read and rendered on a light surface via html_preview."
+    }
+  ],
+  "decisions": [
+    "Triangle and incircle share the primary 0.95-unit stroke. Radii, perpendicular markers, and equality ticks use the standard 0.65-unit stroke at 0.50 opacity.",
+    "Solid point markers are explicitly declared geometric-point symbols. T₁, T₂, T₃ identify tangencies; O identifies the center. Three right-angle markers and the equal-radius equation explain the relationship.",
+    "Matching side ticks identify the equilateral triangle. No physical dimension or standards-compliance claim is made.",
+    "No grid, hatch, or area fill: the three radii already explain the entire construction. Enclosed forms and canvas remain transparent.",
+    "Cal Sans, Arial, sans-serif fallback stack; automatic optical sizing, no letter-spacing, no synthesized styles, GEOM 25 for the single text role. No font files required.",
+    "Accessible title and description included. No external resources or scripts."
+  ],
+  "construction": {
+    "center": [280.0, 246.0],
+    "radius": 90.0,
+    "vertices": [[280.0, 66.0], [124.115427, 336.0], [435.884573, 336.0]],
+    "tangent_points": [
+      [202.057714, 201.0],
+      [357.942286, 201.0],
+      [280.0, 336.0]
+    ],
+    "equations": [
+      "altitude = 3r",
+      "side = 2√3r",
+      "tangent points are the midpoints of the three sides"
+    ]
+  },
+  "checks": {
+    "xml_parse": "PASS",
+    "geometry_source": "Actual serialized SVG coordinates recovered with Python XML parser.",
+    "side_lengths_svg_units": [
+      311.7691455217984, 311.7691455217984, 311.769146
+    ],
+    "equal_side_max_difference_svg_units": 4.78201570786041e-7,
+    "tangency": [
+      {
+        "circle_incidence_residual_svg_units": 2.949678048480564e-7,
+        "side_incidence_residual_svg_units": 4.3301269656642006e-7,
+        "radius_side_angle_degrees": 90.00000005767743,
+        "right_angle_residual_degrees": 5.767742550233379e-8,
+        "side_parameter": 0.49999999919812466
+      },
+      {
+        "circle_incidence_residual_svg_units": 2.9496777642634697e-7,
+        "side_incidence_residual_svg_units": 4.330126732287751e-7,
+        "radius_side_angle_degrees": 90.00000005767741,
+        "right_angle_residual_degrees": 5.7677411291479075e-8,
+        "side_parameter": 0.4999999991981247
+      },
+      {
+        "circle_incidence_residual_svg_units": 0.0,
+        "side_incidence_residual_svg_units": 0.0,
+        "radius_side_angle_degrees": 90.0,
+        "right_angle_residual_degrees": 0.0,
+        "side_parameter": 0.5
+      }
+    ],
+    "tolerances": {
+      "position_svg_units": 0.05,
+      "angle_degrees": 0.1
+    },
+    "geometry_verdict": "PASS",
+    "visual": {
+      "tool": "html_preview",
+      "sizes": ["560 × 440", "280 × 220 thumbnail"],
+      "surface": "white",
+      "console_messages": [],
+      "result": "The circle-in-triangle gesture remains clear at both sizes. At intended size, labels, radius lines, right-angle markers, and equality ticks are separated and visible; thumbnail preserves the form and contact relationship, while the equation is secondary small text.",
+      "iterations": 1
+    },
+    "html_render_called": false
+  },
+  "missing_dependencies": [],
+  "blockers": [],
+  "limitations": [
+    "Font fallback is allowed and no Cal Sans file was supplied; the exact browser-resolved font was not measured.",
+    "This is a standalone light-surface geometric illustration, not a responsive host integration or a physical engineering drawing."
+  ]
+}

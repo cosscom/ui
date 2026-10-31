@@ -1,0 +1,18 @@
+{
+  "brief": "Create a standalone 560 \u00d7 440 SVG illustration of a circle inscribed in an equilateral triangle. Make the relationship between the circle, the sides, and their tangent points understandable.",
+  "condition": "Fresh agent session, copied skill package only; repository and prior conversation excluded by task instructions. This is a scoped agent exercise, not an OS-enforced isolation boundary.",
+  "package_revision": "Exact packaged files identified by package-hashes.json; based on this change set before its commit.",
+  "result": "Passed one bounded standalone-use smoke test. Agent found bundled P00, produced editable SVG with no external dependencies, inspected native/thumbnail output, and explained its grid decision.",
+  "independent_geometry_residuals_svg_units": {
+    "equal_side_lengths": 4.78201570786041e-7,
+    "center_to_sides_radius": 1.3804489640278916e-7,
+    "tangent_points_on_circle": 2.949678048480564e-7,
+    "tangent_points_on_sides": 4.3301269656642006e-7
+  },
+  "parent_render_review": "Native-size rendering inspected with fallback font. Clear tangencies and labels; no console errors. Aesthetic approval remains with the user.",
+  "limitations": [
+    "One task and one run; no reliability estimate or without-skill comparison.",
+    "Geometric subject does not test service-product research, every subject category, or animation.",
+    "Candidate is evaluation evidence, not an approved reference or catalog addition."
+  ]
+}

@@ -1,5 +1,6 @@
 import { BlueprintDrawing, CompactBlueprintDrawing } from "./blueprint-drawing";
 import { HorizontalDimension, VerticalDimension } from "./dimensions";
+import { NoMatchingResultsStudy } from "./no-matching-results";
 import type { IllustrationStudy } from "./study-types";
 
 const secondaryLine = {
@@ -464,6 +465,15 @@ function ImageCompact() {
 }
 
 export const contentStateStudies: IllustrationStudy[] = [
+  {
+    id: "state-no-matching-results",
+    code: "S15",
+    title: "No matching results",
+    description:
+      "A lookup for key 03 finds no entry among 01, 02, and 04. A missing position interrupts the repeated index.",
+    category: "Empty states",
+    illustration: <NoMatchingResultsStudy />,
+  },
   {
     id: "state-search",
     code: "S03",

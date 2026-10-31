@@ -13,9 +13,11 @@ Inputs
 - Nearest approved references and which relationship each supplies:
 - Claimed units, scale, equations, behavior, and external sources:
 
-Read apps/ui/skills/plotter/SKILL.md and its references/drafting-standard.md,
-approved-references.md, and current direction.md. Treat appearance approval
-as art-direction evidence, not as proof of mathematical or product accuracy.
+Resolve the installed Plotter skill directory, then read its SKILL.md and
+references/drafting-standard.md and references/approved-references.md. For an
+existing study, also read its relevant entries in references/direction.md.
+Treat appearance approval as art-direction evidence, not as proof of
+mathematical or product accuracy.
 
 1. Establish the claim boundary.
    State the one relationship this drawing communicates. List every visible

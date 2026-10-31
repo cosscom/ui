@@ -1,6 +1,20 @@
 # Direction and feedback
 
-Evidence captured from the coss UI illustration reviews on 2026-10-24–25. This is a living art-direction record, not a claim that every study has been approved.
+Evidence captured from the coss UI illustration reviews on 2026-10-24–25 and the fresh-session evaluation on 2026-10-31. This is a living art-direction record, not a claim that every study has been approved.
+
+## Fresh-session experiments and grid comparison — 2026-10-31
+
+The user liked all three fresh-session experiments and later requested their original versions in the catalog:
+
+| Experiment | Catalog code and ID | Subject |
+| --- | --- | --- |
+| A | C04 · `particles-shared-frame` | Two unequal modules in a shared frame |
+| B | K09 · `cal-appointment-buffers` | An appointment with equal buffers |
+| C | S15 · `state-no-matching-results` | An indexed collection with no matching result |
+
+After comparing versions with and without added background grids, the user said: “i honestly prefer these examples to be without grids i'd add them only if necessary”. Keep the originals without added grids. This supersedes the assistant’s recommendation to keep the grid variants; it does not revoke explicit grid requests for existing studies or promote these experiments into the approved reference set. Prompts, originals, and feedback are preserved in the repository at `apps/ui/plotter-evals/2026-10-31/`.
+
+The user then proposed geometric studies such as M01 and P00 as good candidates for grids. They accepted the qualification that geometric content alone is insufficient: A is also geometric and was preferred without the grid. The resulting [Compose](../SKILL.md#compose) rule is to consider a grid when geometric construction is the subject and keep it when it helps reveal that construction. The assistant’s interpretation is that the extra grids were redundant in these three examples, not that grids are incompatible with the style.
 
 ## Current references
 

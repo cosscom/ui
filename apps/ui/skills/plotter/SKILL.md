@@ -5,46 +5,47 @@ description: Create, critique, and refine flat monochrome blueprint illustration
 
 # Plotter
 
-Build a precise planar composition that communicates a construction relationship: radius, alignment, spacing, assembly, routing, or intersection. The result should feel like a refined architectural or electrical drawing, with one readable gesture and generous empty space.
+Build an editable, flat monochrome illustration around one construction relationship: radius, alignment, spacing, assembly, routing, or intersection. The result should have one readable gesture and generous empty space. Establish the static drawing before considering motion.
 
 ## Establish the reference
 
-Before drawing or judging style, read the [approved reference set](references/approved-references.md). It records the user’s exact 27 selections and supersedes earlier broad endorsements. Choose a reference by its construction relationship, then inspect that drawing. [Primitives/P00](references/primitives.png) is the general geometric anchor and [Linear/B04](references/linear.png) is a strong service example; use the approved subject-specific studies for other compositions.
+Read the [approved reference index](references/approved-references.md), choose the nearest construction relationship, and inspect its bundled SVG. Six snapshots cover geometric construction, modular assembly, time intervals, service concepts, conversation, and absence. They work without the coss checkout; the wider 27-drawing reference set is available when the repository is present. A familiar subject alone is not a sufficient match.
 
-The current production selections are P00 for the main page, C03 for Particles, and E02 for the 404. Production placement is distinct from reference approval: C03 and the original Particles/C00 are outside the current approved reference set. Their prior feedback remains useful history, not a reason to copy them as the default style.
-
-Read [direction and feedback](references/direction.md) for implementation choices and earlier review evidence. The current approved reference set takes precedence over historical “unreviewed” labels. A drawing’s presence in the gallery does not establish approval.
+The snapshots establish composition and hierarchy. Some retain historical fills or line treatments; use the [drafting standard](references/drafting-standard.md) for new linework, transparent forms, hatching, and geometric tolerances. Source revisions are recorded in the snapshot manifest. Appearance approval does not certify technical accuracy or every subsequent revision.
 
 ## Compose
 
-- Use one flat plane. The user explicitly excludes perspective, isometric views, skewed or tilted objects, physical depth, glossy 3D, colorful gradients, and science-class atom diagrams. Diagonal radius lines and callout leaders can explain geometry without tilting the represented form.
+- Use one flat plane. Exclude perspective, isometric views, skewed or tilted objects, physical depth, glossy 3D, colorful gradients, and science-class atom diagrams. Diagonal radius lines and callout leaders can explain geometry without tilting the form.
 - Keep the palette black, off-white, and soft gray. Adapt those values to the host’s theme while preserving the monochrome hierarchy.
-- Make the main form read first, meaningful construction guides second, sparse dimensions and labels third. Hairline outlines should remain visible at the intended display size.
-- Start from a small geometric vocabulary: circles, rectangles, lines, arcs, slots, and modest UI fragments. Choose one central relationship before adding detail. A complete screen mockup or a large pictogram with technical marks is a poor starting point for this direction.
-- Give every guide a job. Show actual tangency, radius, equal intervals, alignment, a shared baseline, or a connection. Let grids fade where they stop explaining the form. Avoid filling empty areas with arbitrary drafting marks.
-- Name what geometry alone cannot communicate. A week needs weekday or time cues; overlapping availability needs a clear association with people or schedules. Prefer short integrated labels over extra icons or a caption that must explain the whole image.
-- For the coss main and Particles pages, preserve the split layout: left-aligned headline and description; a single composition on the right. The main page has CTAs beneath its copy; Particles has its search/filter directly beneath the copy, with its original filtering behavior. Treat the 404 separately: illustration above the centered heading, description, and CTA. Keep these layouts in their pages; do not introduce a shared page-hero component. Elsewhere, fit the host layout unless the user asks to restructure it. When revising a standalone illustration, inspect its native-size drawing in the showcase gallery.
+- Make the main form read first, meaningful construction guides second, sparse dimensions and labels third. Hairline outlines must remain visible at the intended display size.
+- Start from circles, rectangles, lines, arcs, slots, or modest UI fragments. Choose the central relationship before adding detail. A complete screen mockup or a large pictogram surrounded by technical marks is a poor starting point.
+- Give every guide a job: tangency, radius, equal intervals, alignment, a shared baseline, or a connection. Consider a background grid when geometric construction is the subject; keep it when it helps reveal that construction. If removing it leaves the relationships equally clear, omit it. Preserve grids that carry the subject itself, such as calendar cells, or were explicitly requested for a particular drawing.
+- Name what geometry alone cannot communicate. A week needs weekday or time cues; overlapping availability needs an association with people or schedules. Prefer short integrated labels over extra icons or a caption that must explain the entire image.
 
 ## Implement and inspect
 
-Use editable SVG or the host’s existing vector components for this geometric work. Read [SVG and coss integration](references/implementation.md) when implementing or checking geometry. Animation is optional future work; first make the static drawing succeed.
+Deliver editable SVG or the host’s existing vector components. The references use a `560 × 440` viewBox; fit the requested placement. Use unique IDs for repeated SVG defs, masks, or clips. A meaningful standalone diagram needs an accessible title and description; a decorative illustration can be hidden from accessibility APIs when adjacent copy supplies its meaning.
 
-Read the [drafting standard](references/drafting-standard.md) when creating or revising linework. It defines this style as **monochrome orthographic construction diagrams**, assigns line and hatch roles, and separates geometric constructions, functional schematics, and service metaphors. Existing approved compositions establish art direction; they do not certify technical accuracy. Preserve explicit user choices when an older reference and a proposed normalization differ.
+Inherit the host font, or use `Cal Sans, sans-serif` with a sans-serif fallback when Cal Sans is unavailable. Keep automatic optical sizing, no added letter-spacing, no synthesized styles, and one GEOM value per text role. Use typeset punctuation. A standalone task does not require the coss checkout or its font files.
 
-For a technical audit, use the [verification prompt](references/verification-prompt.md) with the actual source and rendered revision. Calculate geometric claims and verify product behavior independently. The [source audit](references/source-audit.md) records inspected examples, corrections, and remaining limits; it is evidence for those revisions, not a gallery-wide certification.
-
-Inspect the rendered result at its intended hero size and as a thumbnail, then check the narrow layout when embedding it in a page. At narrow sizes, preserve labels that identify the subject; simplify secondary guides or dimensions before shrinking all annotations into illegibility. Compare it with the relevant anchors. Resolve these questions before delivering:
+Inspect the rendered drawing at its intended size and as a thumbnail; check narrow layouts when embedding it. Preserve identifying labels before secondary dimensions. Resolve these questions:
 
 1. Does one central gesture survive at a glance?
-2. Can the intended subject be identified from the form and restrained labels?
-3. Do the guides explain how the form is constructed, and do their measurements agree with the geometry?
-4. Is there enough quiet space, with clear separation between outlines, guides, and annotations?
-5. Does the requested subject remain a flat construction, with no perspective, simulated depth, or ornamental clutter taking over?
+2. Can the subject be identified from the form and restrained labels?
+3. Do the guides explain construction, and do their measurements agree with the geometry?
+4. Is there enough quiet space and separation between outlines, guides, and annotations?
+5. Does the subject remain flat, without simulated depth or ornamental clutter?
 
-If the subject is unclear, clarify the structural cue or labeling before adding detail. If the drawing feels weak, strengthen the arrangement or relationship before adding more grid lines. A passing code check does not answer either design question.
+If meaning is unclear, improve the structural cue or labeling before adding detail. If the composition is weak, improve its arrangement before adding guides. A passing code check does not answer either design question.
+
+## Task-specific guidance
+
+- **Integrating into coss or revising its motion examples:** read [SVG and coss integration](references/implementation.md), then the applicable repository instructions. Preserve the host page’s layout unless a change was requested.
+- **Revising a particular existing study:** read its entries in [direction and feedback](references/direction.md). Current explicit user feedback takes precedence; gallery inclusion and production placement are separate from reference approval.
+- **Technical verification:** use the [verification prompt](references/verification-prompt.md) with current source and rendered output. The [source audit](references/source-audit.md) is historical evidence for named revisions, not a requirement for every drawing or a gallery-wide certification.
 
 ## Refine from feedback
 
-When the user critiques a study, preserve its identifier and revise it in place unless they want separate alternatives. Record the exact preference, the relevant study/revision, and the response in `references/direction.md` when that feedback changes future decisions. Separate explicit user feedback from your interpretation. Keep the record compact by consolidating superseded guidance.
+Preserve a study’s identifier when revising it unless separate alternatives were requested. Record feedback that changes future decisions in `references/direction.md`, naming the study/revision and separating the user’s preference from your interpretation. Keep this history compact.
 
-Treat broad praise as evidence of improvement, not approval of every example as a permanent rule. Promote a new visual anchor when the user identifies it as a reference. Keep unresolved concepts open. Change this skill narrowly as evidence accumulates; do not add a new skill for each subject unless its workflow genuinely diverges.
+Broad praise does not promote every example to a permanent reference. Add a visual anchor when the user identifies it as one. Improve instructions narrowly from observed failures; keep unresolved concepts open.

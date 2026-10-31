@@ -1,0 +1,55 @@
+{
+  "source_commit": "aeebda6ba387149db564dc774c1909eef0e06c9e",
+  "exported": "2026-10-31",
+  "scope": "Source snapshots of approved compositions. Legacy fill/line choices remain; these are not newly normalized or certified drawings. Use the drafting standard for new work. Font falls back to sans-serif outside a Cal Sans host.",
+  "references": [
+    {
+      "code": "P00",
+      "id": "primitives-reference",
+      "title": "Circle, square, line",
+      "file": "P00.svg",
+      "sha256": "4082ec9a1000107cb1580fcd6826cff15cc15c2c3d919a79291d1d7070cce1d4",
+      "source": "apps/ui/app/plotter/primitives-blueprint.tsx"
+    },
+    {
+      "code": "C02",
+      "id": "particles-slots",
+      "title": "A modular tray",
+      "file": "C02.svg",
+      "sha256": "21763dddf898e52c29f616aa897792307336914d3f034ddd3a18aafc8fe9f89c",
+      "source": "apps/ui/app/plotter/system-studies.tsx"
+    },
+    {
+      "code": "K07",
+      "id": "cal-time-modules",
+      "title": "The shape of a time slot",
+      "file": "K07.svg",
+      "sha256": "4f1c3e771ff163a2de9bfcf44800892dc549fa0a1347c4caac78cf6fbb7fd057",
+      "source": "apps/ui/app/plotter/flat-cal-studies.tsx"
+    },
+    {
+      "code": "B04",
+      "id": "service-linear-cycle",
+      "title": "Linear · Work aligned to a cycle",
+      "file": "B04.svg",
+      "sha256": "3635d28fa90efa36cbb4c9374274df930eafa65bbd50c938508c243ab24ca294",
+      "source": "apps/ui/app/plotter/service-studies.tsx"
+    },
+    {
+      "code": "I06",
+      "id": "interface-chat-plan",
+      "title": "A conversation, constructed",
+      "file": "I06.svg",
+      "sha256": "47118d15b7f0787dcf8c4a88abe3348ce1f5ce3b8cffe47b38694cd6dc710a02",
+      "source": "apps/ui/app/plotter/interface-detail-studies.tsx"
+    },
+    {
+      "code": "E02",
+      "id": "404-interrupted-path",
+      "title": "An interrupted path",
+      "file": "E02.svg",
+      "sha256": "595d5174194ac7cfef182eb86488a8dda7ee53a20b0b0ed0b3197f60b04b0f66",
+      "source": "apps/ui/app/plotter/not-found-blueprint.tsx"
+    }
+  ]
+}

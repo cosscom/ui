@@ -2,7 +2,19 @@
 
 Direct route: `/ui/plotter`. This showcase is intentionally absent from site navigation and the sitemap, and its metadata disables indexing. The former `/ui/illustration-lab` and `/ui/illustration-lab-prototype` URLs redirect here with their query parameters.
 
-The gallery presents 39 flat monochrome illustrations, organized by subject with category filters and enlarged previews. Stable illustration IDs preserve links and feedback history. Discarded drawings have been removed from the collection; their critique remains in the Plotter skill’s feedback ledger. Inclusion in this curated collection does not make every drawing an approved visual anchor.
+The gallery presents flat monochrome illustrations, organized by subject with category filters and native-size inline drawings. Stable illustration IDs preserve links and feedback history; `?variant=<study-id>` selects the category and scrolls to the drawing. Discarded drawings have been removed from the collection; their critique remains in the Plotter skill’s feedback ledger. Inclusion in this curated collection does not make every drawing an approved visual anchor.
+
+## Fresh-session examples
+
+The user selected the original versions without added background grids from the 2026-10-31 evaluation:
+
+| Code | Illustration | Study ID |
+| --- | --- | --- |
+| C04 | Shared frame | `particles-shared-frame` |
+| K09 | Appointment buffers | `cal-appointment-buffers` |
+| S15 | No matching results | `state-no-matching-results` |
+
+The original SVGs, prompts, and feedback are preserved in [`../../plotter-evals/2026-10-31`](../../plotter-evals/2026-10-31). These catalog additions retain their own review history; they do not change the skill’s earlier approved reference set.
 
 ## Production selections
 

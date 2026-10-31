@@ -1,5 +1,7 @@
 # SVG and coss integration
 
+Read this file when integrating into coss, adapting an existing host component, or working on the showcase’s motion examples. Standalone drawing uses the bundled references and drafting standard without a repository checkout.
+
 ## Geometry and rendering
 
 The established examples use a `560 × 440` SVG viewBox. Use the [drafting standard](drafting-standard.md) for current line roles, dash patterns, hatch spacing, and geometry tolerances. Preserve transparent forms and adapt the complete composition to its intended display size; historical fills and per-study stroke variations are not new defaults.
@@ -21,7 +23,7 @@ Find the checkout from the current workspace; the skill does not require a parti
 | Primary geometry reference | `apps/ui/app/plotter/primitives-blueprint.tsx` |
 | Selected Particles composition (C03) | `apps/ui/app/plotter/particles-blueprint.tsx` |
 | Selected 404 composition (E02) | `apps/ui/app/plotter/not-found-blueprint.tsx` |
-| Original Particles style anchor (C00) | `apps/ui/app/plotter/original-particles-blueprint.tsx` |
+| Historical original Particles drawing (C00) | `apps/ui/app/plotter/original-particles-blueprint.tsx` |
 | Main integration target | `apps/ui/app/page.tsx` |
 | Particles integration target | `apps/ui/app/particles/page.tsx` |
 | 404 integration target | `apps/ui/app/not-found.tsx` |
@@ -33,7 +35,9 @@ The showcase owns its drawings and wrapper independently of the production integ
 
 Choose style references from [the approved set](approved-references.md); production placement and bundled historical screenshots are separate from reference approval.
 
-Keep production page layouts local, as explicitly requested by the user. Do not recreate a shared page-hero component. The showcase displays each standalone drawing at its native 560×440 size in the gallery, with no enlargement dialog. Grid columns accommodate the full canvas; narrow screens scroll within the drawing rather than scaling it down. Keep the illustration captions inline. Do not add the extra compact empty-state application cards (such as “Page not found” or “No results found”); the user explicitly removed those from the gallery.
+Keep production page layouts local, as explicitly requested by the user. Main and Particles use left-aligned headline/description with one drawing on the right; main has CTAs and Particles has its search/filter beneath the copy, retaining existing filtering behavior. The 404 uses a centered stack with the illustration above its heading, description, and CTA. Do not recreate a shared page-hero component. The showcase displays each standalone drawing at its native 560×440 size in the gallery, with no enlargement dialog. Grid columns accommodate the full canvas; narrow screens scroll within the drawing rather than scaling it down. Keep the illustration captions inline. Do not add the extra compact empty-state application cards (such as “Page not found” or “No results found”); the user explicitly removed those from the gallery.
+
+The selected production drawings are P00 for Main, C03 for Particles, and E02 for the 404. Placement is separate from style-reference approval; C03 and historical C00 are outside the approved 27.
 
 The selected production integration for Main, Particles, and Chat uses the heading treatment from [PR #895](https://github.com/cosscom/ui/pull/895): `clamp(2.25rem, 1.5rem + 2.6vw, 4rem)`, line-height 1, and GEOM50, with normal letter spacing and automatic optical sizing. These settings are scoped to those pages. Particles keeps C03 on the right and its search/filter directly beneath the left-aligned description, rather than adding hero CTAs.
 

@@ -1,10 +1,25 @@
 # Approved references
 
-On 2026-10-25, the user explicitly identified these 27 drawings as the best illustrations and asked that they be used as references. This list supersedes earlier broad endorsements and pending-review labels. Match the current approved revisions, not an earlier iteration with the same code.
+On 2026-10-25, the user explicitly identified these 27 drawings as the best illustrations and asked that they be used as references. This list supersedes earlier broad endorsements and pending-review labels. Keep reference selection separate from revision identity: a later edit to a drawing does not silently inherit approval.
 
-## Reference set
+## Bundled starting points
 
-Choose the nearest construction relationship from this set before drawing. Inspect it in the Plotter gallery at `/ui/plotter?variant=<study-id>`; locate its editable SVG by searching its code in `apps/ui/app/plotter/`. A familiar subject alone is not a sufficient reference match.
+Choose by construction relationship, then render and inspect the linked SVG. These six snapshots are available in a standalone installation:
+
+| Relationship | Reference | What to borrow |
+| --- | --- | --- |
+| Circle, square, radius, and tangency | [P00](drawings/P00.svg) | A shared geometric construction with one focal relationship |
+| Modules following one allocation rule | [C02](drawings/C02.svg) | Repeated units, spacing, and a coherent component family |
+| Time intervals combining into a whole | [K07](drawings/K07.svg) | Proportional lengths and restrained duration labels |
+| Work aligned to a cycle | [B04](drawings/B04.svg) | A scoped service concept organized by a shared time field |
+| Conversation expressed with a few UI fragments | [I06](drawings/I06.svg) | Recognition through avatars, tail-free messages, and spacing |
+| Absence interrupting a structure | [E02](drawings/E02.svg) | A missing connection that affects the construction itself |
+
+[The manifest](drawings/manifest.json) records source revision and snapshot hashes. These are source snapshots of selected compositions, not newly normalized or technically certified drawings. Historical background fills and line-role variations may remain; use the [drafting standard](drafting-standard.md) for new work. Render the snapshots on a light surface to inspect their original presentation.
+
+## Full reference set
+
+The following selection remains unchanged. When the coss checkout is available, inspect these in `/ui/plotter?variant=<study-id>` and find source by code in `apps/ui/app/plotter/`. Without it, choose the nearest bundled relationship above instead of assuming the gallery or other source files are accessible. A familiar subject alone is not a sufficient reference match.
 
 | Code | Drawing | Study ID |
 | --- | --- | --- |
@@ -40,7 +55,7 @@ Choose the nearest construction relationship from this set before drawing. Inspe
 
 The user said the remaining illustrations do not look perfect or do not fit the style for different reasons, and could not yet identify those reasons. Treat them as revision candidates, not style references. This feedback does not request their deletion or establish a specific diagnosis for each drawing.
 
-The omitted current static drawings are C00, C03, P01, K03, I04, I05, W02, O03, O04, O05, B08, S01, and S03–S14. In particular, original Particles/C00 is now a historical reference; C03’s production placement is a separate implementation decision. Preserve the user’s specific earlier feedback on details without promoting the whole drawing. This static selection does not revoke the separately reviewed animation work.
+At the time of the selection, the omitted static drawings were C00, C03, P01, K03, I04, I05, W02, O03, O04, O05, B08, S01, and S03–S14. In particular, original Particles/C00 is now a historical reference; C03’s production placement is a separate implementation decision. Preserve the user’s specific earlier feedback on details without promoting the whole drawing. This static selection does not revoke the separately reviewed animation work. The later C04, K09, and S15 experiments were liked and requested for the catalog; they are not additions to this 27-reference selection.
 
 ## Working interpretation
 

@@ -1,3 +1,4 @@
+import { AppointmentBuffersStudy } from "./appointment-buffers";
 import { BlueprintDrawing } from "./blueprint-drawing";
 import type { IllustrationStudy } from "./study-types";
 
@@ -253,5 +254,14 @@ export const flatCalStudies: IllustrationStudy[] = [
       "Alex’s and Sam’s availability meet in one shared slot. Named bands and a meeting callout make the overlap explicit.",
     category: "Scheduling",
     illustration: <AvailabilityConstruction />,
+  },
+  {
+    id: "cal-appointment-buffers",
+    code: "K09",
+    title: "Appointment buffers",
+    description:
+      "A 30-minute appointment sits between two 10-minute buffers. The proportional intervals reserve 50 minutes in total.",
+    category: "Scheduling",
+    illustration: <AppointmentBuffersStudy />,
   },
 ];
