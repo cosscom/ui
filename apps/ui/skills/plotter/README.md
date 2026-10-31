@@ -10,7 +10,9 @@ Copy this complete `plotter` directory into your agent’s skills directory, pre
 
 Example: “Use $plotter to show a 20-minute appointment between two 5-minute buffers, as a standalone 560 × 440 SVG.”
 
-`SKILL.md` contains the workflow. The [reference index](references/approved-references.md) maps six bundled SVG snapshots to construction relationships and preserves the wider approved set. The [drafting standard](references/drafting-standard.md) defines current linework; historical visual examples may contain documented exceptions. Outside coss, use the host font or the documented sans-serif fallback.
+`SKILL.md` contains the workflow. The [reference index](references/approved-references.md) maps seven bundled SVG snapshots to construction relationships and preserves the wider approved set. The [illustrated visual grammar](references/visual-grammar.md) explains when each kind of mark helps, with full-size SVG studies. The [drafting standard](references/drafting-standard.md) defines current linework; historical visual examples may contain documented exceptions. Outside coss, use the host font or the documented sans-serif fallback.
+
+The [registration case](references/examples/agent-registration.md) preserves a drawing from a rejected batch and a reference-led revision the user explicitly liked. It explains the generation failure and the focused workflow correction; it is not an additional approved style reference or evidence of broader reliability.
 
 ## Source and maintenance
 

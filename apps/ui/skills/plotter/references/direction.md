@@ -2,6 +2,41 @@
 
 Evidence captured from the coss UI illustration reviews on 2026-10-24–25 and the fresh-session evaluation on 2026-10-31. This is a living art-direction record, not a claim that every study has been approved.
 
+## Visual grammar on the page — 2026-10-31
+
+The user expected the grammar on the Plotter page and found the initial small paired illustrations “poor”. The response adds a visible navigation link and a section at `/ui/plotter#visual-grammar`, then replaces the worksheet-sized pairs with full `560 × 440` studies and a useful/counterexample toggle. Registration, delegation, and iris reuse the liked construction arrangements; the other topics use fuller geometric constructions. Counterexamples change the supporting marks while retaining the main geometry. This is the implementation response to the critique, not new approval of these teaching examples.
+
+
+The user then said they “love the new grammar examples”, asked to remove the counterexamples, and proposed hiding unrelated elements on hover. Keep these eight full-size drawings and their original appearance. The page isolates the topic’s marked elements on hover, keyboard focus, or a touch toggle; leaving the interaction restores the full drawing. Counterexample assets and controls were removed. This is positive feedback on the teaching drawings, without changing the earlier 27-reference selection.
+
+## Catalogue removals after expansion — 2026-10-31
+
+The user requested removal of 36 distinct studies:
+
+- **“Not visually interesting”:** OB01, OB02, OB03, OB05, ME03, AR04, AR05, NA03, NA04, NA05, MU01, MU03, MU04, MU05, MP01, MP02, MP03, UI04, UI05, SW01, SW04, SW05, TM01, TM04, TM05, AB01, AB02, AB03, AB04, AB05, PL01, PL02, PL05.
+- **Too similar to existing catalogue entries:** AR01 and GE02.
+- **Explicit follow-up:** “remove OB04 too”.
+
+OB03 and AB05 were each repeated in the request; each is removed once. The active catalogue now contains 100 illustrations: 58 earlier drawings and 42 expansion entries. Preserve their codes and IDs without closing numbering gaps. Removed SVGs and metadata are retained only as review evidence in `apps/ui/plotter-evals/2026-10-31/catalog-expansion/removed/`.
+
+This feedback rejects these particular drawings, not their entire subject categories. It does not promote the remaining entries to approved references. The stated visual-interest critique should not be replaced with an invented technical diagnosis.
+
+## Liked revisions, catalogue expansion, and mark selection — 2026-10-31
+
+After liking registration revision 2, the user also liked the reference-led delegation and iris revisions: “love them, continue with all the remaining examples, and also want them to be added to the catalogue”. Preserve those three appearances as AG01, AG02, and ME01. The initial implementation added all 78 requested subjects to the existing 58 drawings, with editable SVGs and stable IDs. The subsequent removals are recorded above; the 39 other retained revisions still await individual feedback. Catalogue inclusion does not expand the 27-reference set. The repository’s `apps/ui/plotter-evals/2026-10-31/catalog-expansion/notes.md` records this pass.
+
+The user asked for diagonal lines on W05’s cubes, then clarified: “W05: only cubes should have diagonal lines”. Hatch only the square core faces in both the static drawing and its animation. Leave carrier frames and surrounding machinery unhatched; keep the hatch attached to the moving core. This is a W05-specific preference, not a requirement to hatch every object.
+
+The user also requested a short illustrated explanation of drawing elements. The [visual grammar](visual-grammar.md) pairs useful and unnecessary applications of each mark. It explains selection and meaning while the drafting standard remains authoritative for line values. Do not treat the available marks as a checklist to include in every drawing.
+
+## Rejected broad batch and single-subject revision — 2026-10-31
+
+The user described the subsequent 78-drawing batch as “low quality” and “not consistent with our rules and the other examples.” They authorized the proposed response: pause expansion, rebuild one agent-registration illustration beside approved references, and use the comparison to improve the skill. This is collective rejection of the batch, not individual feedback on every concept.
+
+Our diagnosis is that generating large groups before establishing visual fit reproduced surface ingredients without sufficiently developing the construction relationships. The final inspection caught obvious defects but did not reject weak compositions. This repeats the earlier rejected service concepts below. The user's request to skip test suites did not remove the need for design judgment.
+
+The [registration case](examples/agent-registration.md) preserves the rejected version, the chosen C01/C02/I06 references, and the proposed revision. The main skill now requires a concrete reference mapping and a same-size visual comparison before expanding a collection. After viewing the revision and being asked whether it felt closer to the desired style, the user replied “i love it”. Preserve revision 2’s appearance and record this as positive feedback on that exact drawing. The subsequent catalogue request is recorded above; praise for registration alone is not evidence of reliability across other subjects. The existing 27-reference selection and the three previously liked experiments remain intact.
+
 ## Fresh-session experiments and grid comparison — 2026-10-31
 
 The user liked all three fresh-session experiments and later requested their original versions in the catalog:

@@ -26,6 +26,22 @@ The original SVGs, prompts, and feedback are preserved in [`../../plotter-evals/
 
 The showcase owns these drawing snapshots and its `BlueprintDrawing` wrapper. It can ship independently of the production illustration integration in PR #912. Original C00 and E00 remain separate examples. When a selected production drawing changes, update its showcase snapshot explicitly if that revision should also appear in the gallery.
 
+## Expanded collection
+
+The initial expansion added 78 studies. After the user removed 36 entries during visual review, 42 additions remain alongside the earlier 58: **100 illustrations** in total. The user explicitly liked the revised registration, delegation, and iris drawings. Retaining the other additions does not approve them individually or change the 27 approved visual references. Existing codes and IDs are preserved without renumbering; removed sources remain in the [review archive](../../plotter-evals/2026-10-31/catalog-expansion/removed/).
+
+Editable sources and metadata live in [`drawings/`](drawings/). Preserve the IDs in [`drawings/manifest.json`](drawings/manifest.json); they also drive category filters and `?variant=` links. Construction and reference choices are recorded in the manifest and SVG metadata. Edit the SVG source, then regenerate the React components from the repository root:
+
+```sh
+python3 apps/ui/scripts/build-plotter-drawings.py
+```
+
+The generated `expanded-studies.tsx` uses the existing drawing wrapper and gives every rendered instance unique definition IDs. Format the generated file with the repository formatter. Do not edit it directly. The [expansion notes](../../plotter-evals/2026-10-31/catalog-expansion/notes.md) record the feedback and visual review scope.
+
+The visual grammar uses the skill’s editable SVGs as its source. Hover, keyboard focus, or the touch toggle isolates the topic’s marks; `data-grammar-focus` identifies those elements in the source. After editing `skills/plotter/references/grammar/*.svg`, run `python3 apps/ui/scripts/build-plotter-grammar.py` from the repository root and format `visual-grammar-drawings.tsx`. The page explanations live in `visual-grammar-content.ts`.
+
 ## Plotter skill
+
+The visible Visual grammar section precedes the illustrations and is reachable from the top navigation at `/ui/plotter#visual-grammar`.
 
 The reusable style instructions, visual anchors, and feedback ledger live in [`../../skills/plotter`](../../skills/plotter). Keep specific user feedback separate from interpretations; a new revision is unreviewed until the user responds. Add illustrations to their subject collection and preserve existing IDs when revising them.

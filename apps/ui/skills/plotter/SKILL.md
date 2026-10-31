@@ -9,11 +9,15 @@ Build an editable, flat monochrome illustration around one construction relation
 
 ## Establish the reference
 
-Read the [approved reference index](references/approved-references.md), choose the nearest construction relationship, and inspect its bundled SVG. Six snapshots cover geometric construction, modular assembly, time intervals, service concepts, conversation, and absence. They work without the coss checkout; the wider 27-drawing reference set is available when the repository is present. A familiar subject alone is not a sufficient match.
+Read the [approved reference index](references/approved-references.md), choose the nearest construction relationship, and inspect its bundled SVG. Seven snapshots cover geometric construction, assembly, allocation, time intervals, service concepts, conversation, and absence. They work without the coss checkout; the wider 27-drawing reference set is available when the repository is present. A familiar subject alone is not a sufficient match.
+
+Before implementing, identify what the reference contributes: its focal relationship, the size and arrangement of its main forms, and what its guides explain. Preserve those decisions while adapting the subject. Matching stroke values and shape vocabulary alone has produced weak, generic diagrams. For new service or agent concepts, read the [registration failure and revision](references/examples/agent-registration.md) before choosing a composition. It records a rejected version, a user-liked revision, and the reasoning behind the change. The record layout addresses that brief; choose a relevant construction for other subjects.
 
 The snapshots establish composition and hierarchy. Some retain historical fills or line treatments; use the [drafting standard](references/drafting-standard.md) for new linework, transparent forms, hatching, and geometric tolerances. Source revisions are recorded in the snapshot manifest. Appearance approval does not certify technical accuracy or every subsequent revision.
 
 ## Compose
+
+Read the [illustrated visual grammar](references/visual-grammar.md) before choosing supporting marks. It explains outlines, hatching, grids, arrows, projections, dimensions, axes, and absent forms through full-size construction studies. Choose a mark for the relationship it explains; use the drafting standard for its numerical treatment.
 
 - Use one flat plane. Exclude perspective, isometric views, skewed or tilted objects, physical depth, glossy 3D, colorful gradients, and science-class atom diagrams. Diagonal radius lines and callout leaders can explain geometry without tilting the form.
 - Keep the palette black, off-white, and soft gray. Adapt those values to the host’s theme while preserving the monochrome hierarchy.
@@ -28,7 +32,7 @@ Deliver editable SVG or the host’s existing vector components. The references 
 
 Inherit the host font, or use `Cal Sans, sans-serif` with a sans-serif fallback when Cal Sans is unavailable. Keep automatic optical sizing, no added letter-spacing, no synthesized styles, and one GEOM value per text role. Use typeset punctuation. A standalone task does not require the coss checkout or its font files.
 
-Inspect the rendered drawing at its intended size and as a thumbnail; check narrow layouts when embedding it. Preserve identifying labels before secondary dimensions. Resolve these questions:
+Place the rendered candidate beside its chosen reference at the same intended size, then inspect both as thumbnails; check narrow layouts when embedding it. Compare the prominence and proportions of the main form, the spatial relationship carrying the idea, and the useful construction detail. A successful render is not a successful composition. Preserve identifying labels before secondary dimensions. Resolve these questions:
 
 1. Does one central gesture survive at a glance?
 2. Can the subject be identified from the form and restrained labels?
@@ -37,6 +41,8 @@ Inspect the rendered drawing at its intended size and as a thumbnail; check narr
 5. Does the subject remain flat, without simulated depth or ornamental clutter?
 
 If meaning is unclear, improve the structural cue or labeling before adding detail. If the composition is weak, improve its arrangement before adding guides. A passing code check does not answer either design question.
+
+For a collection, establish this comparison with one representative drawing before generating the rest. Work through the remaining subjects in manageable groups, retaining reference comparison and revision. Large uncalibrated batches have repeated the same compositional failure across otherwise different subjects. This is an internal refinement step, not a requirement to seek permission or reduce the user's requested scope; follow an explicit request to review a pilot before expanding.
 
 ## Task-specific guidance
 

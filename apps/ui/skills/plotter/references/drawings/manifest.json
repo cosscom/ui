@@ -12,6 +12,15 @@
       "source": "apps/ui/app/plotter/primitives-blueprint.tsx"
     },
     {
+      "code": "C01",
+      "id": "particles-assembly",
+      "title": "An assembly of parts",
+      "file": "C01.svg",
+      "sha256": "4b203778a9d05394ca1f436f09962330d712b998f9996fd195e61cdb24cc99f0",
+      "source": "apps/ui/app/plotter/system-studies.tsx",
+      "source_commit": "f9482a320d2afaf502b2646ac3addf8c3cf75abb"
+    },
+    {
       "code": "C02",
       "id": "particles-slots",
       "title": "A modular tray",

@@ -7,7 +7,16 @@ export type StudyCategory =
   | "Services"
   | "Systems"
   | "Objects"
-  | "Empty states";
+  | "Empty states"
+  | "Agents"
+  | "Mechanisms"
+  | "Architecture"
+  | "Nature"
+  | "Music"
+  | "Maps"
+  | "Typography"
+  | "Craft"
+  | "Play";
 
 export type IllustrationStudy = {
   id: string;

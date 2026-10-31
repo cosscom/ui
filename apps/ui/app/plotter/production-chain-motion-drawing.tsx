@@ -2,6 +2,7 @@
 
 import { useId } from "react";
 import { BlueprintDrawing } from "./blueprint-drawing";
+import { ProductionChainHatching } from "./production-chain-hatching";
 
 const cycle = 1.8;
 const duration = `${cycle}s`;
@@ -167,7 +168,20 @@ export function ProductionChainMotionDrawing() {
               <path d={`M${x - 40} 272v-8h8 M${x + 32} 264h8v8`} />
             </g>
           ))}
+          <ProductionChainHatching x={392} y={208} />
           <path d="M392 208H440" />
+
+          <g>
+            <animateTransform
+              attributeName="transform"
+              dur={duration}
+              keyTimes={coreKeyTimes}
+              repeatCount="indefinite"
+              type="translate"
+              values={coreFrames.map((frame) => frame.bottom).join(";")}
+            />
+            <ProductionChainHatching x={256} y={128} />
+          </g>
 
           {/* Core sides transfer to the carrier walls at y=200. Each
               remaining segment stays on the rigid 48×48 core boundary. */}
@@ -205,10 +219,7 @@ export function ProductionChainMotionDrawing() {
       </g>
 
       <g clipPath={`url(#${feedClip})`} strokeWidth="0.95">
-        <path
-          d="M256 128H304 M256 128V176 M304 128V176 M256 176H304"
-          transform="translate(-272 0)"
-        >
+        <g transform="translate(-272 0)">
           <animateTransform
             attributeName="transform"
             calcMode="spline"
@@ -219,7 +230,9 @@ export function ProductionChainMotionDrawing() {
             type="translate"
             values={feed.values}
           />
-        </path>
+          <ProductionChainHatching x={256} y={128} />
+          <path d="M256 128H304 M256 128V176 M304 128V176 M256 176H304" />
+        </g>
       </g>
 
       <path

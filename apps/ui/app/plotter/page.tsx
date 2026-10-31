@@ -16,6 +16,7 @@ import { ParticlesMotion } from "./particles-motion";
 import { PrimitivesBlueprint } from "./primitives-blueprint";
 import { PrimitivesMotionPreview } from "./primitives-motion-preview";
 import { ProductionChainMotionDrawing } from "./production-chain-motion-drawing";
+import { VisualGrammar } from "./visual-grammar";
 
 export const metadata: Metadata = {
   title: "Plotter illustrations – coss ui",
@@ -52,6 +53,12 @@ export default function Page() {
               href="#coss-concepts"
             >
               coss.com concepts
+            </a>
+            <a
+              className="underline underline-offset-4 hover:text-muted-foreground"
+              href="#visual-grammar"
+            >
+              Visual grammar
             </a>
             <a
               className="underline underline-offset-4 hover:text-muted-foreground"
@@ -199,6 +206,7 @@ export default function Page() {
           </article>
         </section>
         <CossConcepts />
+        <VisualGrammar />
         <section
           aria-labelledby="illustrations-heading"
           className="scroll-mt-16 border-t pt-12 md:pt-16"

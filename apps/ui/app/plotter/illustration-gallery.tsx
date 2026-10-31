@@ -13,6 +13,15 @@ const categories: StudyCategory[] = [
   "Systems",
   "Objects",
   "Empty states",
+  "Agents",
+  "Mechanisms",
+  "Architecture",
+  "Nature",
+  "Music",
+  "Maps",
+  "Typography",
+  "Craft",
+  "Play",
 ];
 
 export function IllustrationGallery({

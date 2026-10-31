@@ -4,18 +4,19 @@ On 2026-10-25, the user explicitly identified these 27 drawings as the best illu
 
 ## Bundled starting points
 
-Choose by construction relationship, then render and inspect the linked SVG. These six snapshots are available in a standalone installation:
+Choose by construction relationship, then render and inspect the linked SVG. These seven snapshots are available in a standalone installation:
 
 | Relationship | Reference | What to borrow |
 | --- | --- | --- |
 | Circle, square, radius, and tangency | [P00](drawings/P00.svg) | A shared geometric construction with one focal relationship |
+| Separate fragments becoming one record or control | [C01](drawings/C01.svg) | Preserved dimensions and positions, projection, and one assembled focal form |
 | Modules following one allocation rule | [C02](drawings/C02.svg) | Repeated units, spacing, and a coherent component family |
 | Time intervals combining into a whole | [K07](drawings/K07.svg) | Proportional lengths and restrained duration labels |
 | Work aligned to a cycle | [B04](drawings/B04.svg) | A scoped service concept organized by a shared time field |
 | Conversation expressed with a few UI fragments | [I06](drawings/I06.svg) | Recognition through avatars, tail-free messages, and spacing |
 | Absence interrupting a structure | [E02](drawings/E02.svg) | A missing connection that affects the construction itself |
 
-[The manifest](drawings/manifest.json) records source revision and snapshot hashes. These are source snapshots of selected compositions, not newly normalized or technically certified drawings. Historical background fills and line-role variations may remain; use the [drafting standard](drafting-standard.md) for new work. Render the snapshots on a light surface to inspect their original presentation.
+[The manifest](drawings/manifest.json) records source revision and snapshot hashes; a reference-level `source_commit` overrides the manifest's shared revision. These are source snapshots of selected compositions, not newly normalized or technically certified drawings. Historical background fills and line-role variations may remain; use the [drafting standard](drafting-standard.md) for new work. Render the snapshots on a light surface to inspect their original presentation. Bundling C01 adds access to an already approved composition; the 27-reference selection remains unchanged.
 
 ## Full reference set
 

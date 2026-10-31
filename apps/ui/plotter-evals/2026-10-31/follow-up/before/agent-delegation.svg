@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="440" viewBox="0 0 560 440" fill="none" stroke="currentColor" stroke-linejoin="round" style="font-family:Cal Sans,sans-serif;font-optical-sizing:auto;font-synthesis:none;font-weight:400;font-variation-settings:'GEOM' 25" role="img" aria-labelledby="delegation-title delegation-description">
+  <title id="delegation-title">A task, divided</title>
+  <desc id="delegation-description">One task is partitioned into two complementary pieces assigned to Agent 01 and Agent 02. Their matching stepped edges retain the shape of the whole.</desc>
+  <!-- Mode: conceptual diagram. The two parts make one 216 × 136 rectangle when translated inward by 24 units each. The stepped partition identifies complementary scope; it is not a dependency, sequence, or claim of equal effort. -->
+  <!-- The upper bracket groups both scopes as one task. The two short lower leaders associate each piece with its assigned agent. -->
+  <g stroke-width="0.65" opacity="0.5">
+    <path d="M148 136V124H412V136"/>
+    <path d="M202 300V319 M358 300V319"/>
+  </g>
+  <g stroke-width="0.95">
+    <path d="M148 164H256V208H280V256H256V300H148Z"/>
+    <path d="M304 164H412V300H304V256H328V208H304Z"/>
+  </g>
+  <!-- The light horizontal guides span only the separation between corresponding seam vertices. -->
+  <g stroke-width="0.6" opacity="0.24">
+    <path d="M260 164H300 M284 208H324 M284 256H324 M260 300H300"/>
+  </g>
+  <g fill="currentColor" stroke="none" font-size="12">
+    <text x="280" y="108" text-anchor="middle">Task</text>
+    <text x="202" y="341" text-anchor="middle">Agent 01</text>
+    <text x="358" y="341" text-anchor="middle">Agent 02</text>
+  </g>
+</svg>

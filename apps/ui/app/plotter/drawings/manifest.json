@@ -1,0 +1,416 @@
+[
+  {
+    "id": "agent-registration",
+    "code": "AG01",
+    "title": "An agent, registered",
+    "description": "Identity, name, and tools keep their alignment as they become one registry record.",
+    "category": "Agents",
+    "file": "agent-registration.svg"
+  },
+  {
+    "id": "agent-delegation",
+    "code": "AG02",
+    "title": "One task, two agents",
+    "description": "Research and drafting separate into complementary scopes, assigned to two agents.",
+    "category": "Agents",
+    "file": "agent-delegation.svg"
+  },
+  {
+    "id": "agent-handoff",
+    "code": "AG03",
+    "title": "Context, carried forward",
+    "description": "One continuous context passes between two agents without changing its form.",
+    "category": "Agents",
+    "file": "agent-handoff.svg",
+    "reference": "E02, I06",
+    "construction": "Conceptual handoff. A 40-unit band has paired bend radii 20 and 60. The same 64 × 24 context capsule has 8-unit side clearances in both horizontal portions. Hatching marks the handoff section, not a physical material. No serialization, timing or persistence guarantee is asserted."
+  },
+  {
+    "id": "agent-tools",
+    "code": "AG04",
+    "title": "One matching interface",
+    "description": "A selected tool’s rounded end matches the agent’s common interface.",
+    "category": "Agents",
+    "file": "agent-tools.svg",
+    "reference": "C02, P02",
+    "construction": "Conceptual tool selection. All tools have 144 × 48 footprints with R24 ends. The receiving semicircle has the same radius. The selected end reaches the receiving profile after a horizontal translation of 96 units. The drawing does not describe an actual API connector."
+  },
+  {
+    "id": "agent-permissions",
+    "code": "AG05",
+    "title": "Only the shared scope",
+    "description": "The granted region is the intersection of what is requested and what is allowed.",
+    "category": "Agents",
+    "file": "agent-permissions.svg",
+    "reference": "K08, P00",
+    "construction": "Conceptual permission scope. Two 240 × 144 rounded fields overlap; the selected intersection is bounded by their actual edges, with no duplicate outlines. Unit u = 24; overlap width is 6u. Hatching means granted scope. This is an illustrative set relationship, not a policy engine or numerical permission measure."
+  },
+  {
+    "id": "agent-memory",
+    "code": "AG06",
+    "title": "One context, two readers",
+    "description": "Two agents address the same findings row within one shared memory.",
+    "category": "Agents",
+    "file": "agent-memory.svg",
+    "reference": "B09, C02",
+    "construction": "Conceptual shared access. The 192-unit record is 8u wide with 48-unit, 2u rows. Both connections terminate at the same row, not duplicated stores. Route returns are R24. Hatching identifies the selected row. No concurrent consistency guarantee is depicted."
+  },
+  {
+    "id": "agent-checkpoint",
+    "code": "AG07",
+    "title": "A state worth keeping",
+    "description": "One selected state is preserved as a checkpoint while the wider work continues.",
+    "category": "Agents",
+    "file": "agent-checkpoint.svg",
+    "reference": "C01, K07",
+    "construction": "Conceptual checkpoint. Unit u = 24. A 96-unit, 4u partition of a 336-unit, 14u record is repeated unchanged below. Hatching identifies the same saved state in both positions. This illustrates capture, not a claim of fault tolerance or storage durability."
+  },
+  {
+    "id": "agent-parallel",
+    "code": "AG08",
+    "title": "Separate work, one join",
+    "description": "Three agents finish at different points and wait for the longest task before joining.",
+    "category": "Agents",
+    "file": "agent-parallel.svg",
+    "reference": "B04, K07",
+    "construction": "Conceptual synchronization. One illustrative time unit u = 72 SVG units. Work durations are 3u, 4u and 2u; the shared join is at 4u. Hatching denotes waiting intervals only. The shared join line owns all right-edge segments. This is not a scheduler performance claim."
+  },
+  {
+    "id": "geo-circle-rectangle",
+    "code": "GE01",
+    "title": "A circle, extended",
+    "description": "A circle and its wider rounded-rectangle state share one height while their corner radii change.",
+    "category": "Foundations",
+    "file": "geo-circle-rectangle.svg",
+    "reference": "P00",
+    "construction": "Geometric construction. u=44. Initial circle radius2u=88; final rectangle6u×4u with corner radiusu. Dashed circle means previous form. The two arrows describe horizontal change, not scaling the height."
+  },
+  {
+    "id": "geo-compound-radii",
+    "code": "GE03",
+    "title": "A curve from three radii",
+    "description": "Three circular arcs share tangent directions at their joins, producing one uninterrupted curve.",
+    "category": "Foundations",
+    "file": "geo-compound-radii.svg",
+    "reference": "P00",
+    "construction": "Geometric construction. Arc centers(104,204),(280,204),(280,284); radii112,64,144. First arc90→0°, second180→270°, third270→360°. Only selected generating radii are drawn, avoiding coincident radius segments."
+  },
+  {
+    "id": "geo-negative-space",
+    "code": "GE04",
+    "title": "The shape between circles",
+    "description": "Two equal circular regions reveal an unhatched lens where their boundaries overlap.",
+    "category": "Foundations",
+    "file": "geo-negative-space.svg",
+    "reference": "P00",
+    "construction": "Geometric construction. u=100; two radius-u circles have centers separated byu. H1 occupies the symmetric difference of the two discs; the shared lens is clear. A single even-odd clipping path defines the two bounded regions."
+  },
+  {
+    "id": "geo-interrupted-pattern",
+    "code": "GE05",
+    "title": "One interval left open",
+    "description": "A field of tangent circles keeps its repeated pitch while one missing member interrupts the lower row.",
+    "category": "Foundations",
+    "file": "geo-interrupted-pattern.svg",
+    "reference": "P00",
+    "construction": "Geometric construction. u=48. Circle radiusu; pitch2u=96 on both axes. The absent lower middle circle uses the absent-outline convention. Outer width6u=288. No full background grid; tangent contacts carry the pattern."
+  },
+  {
+    "id": "mech-iris-aperture",
+    "code": "ME01",
+    "title": "Six blades, one aperture",
+    "description": "Six repeated edges shape a single opening. Hatching identifies one visible blade.",
+    "category": "Mechanisms",
+    "file": "mech-iris-aperture.svg"
+  },
+  {
+    "id": "mech-pulley-ratio",
+    "code": "ME02",
+    "title": "One belt, two rotations",
+    "description": "A shared belt joins two pulley radii in a 2:1 relation.",
+    "category": "Mechanisms",
+    "file": "mech-pulley-ratio.svg",
+    "reference": "P00",
+    "construction": "Conceptual mechanism study. Contact radii72 and36, center distance208. Contact normals derive from(R-r)/distance. The belt boundary owns its circular contact arcs; no pulley outline duplicates them. Inner circles are subordinate details. Ideal no-slip ratio only; no hardware or load specification."
+  },
+  {
+    "id": "mech-cam-follower",
+    "code": "ME04",
+    "title": "An offset becomes a lift",
+    "description": "An eccentric circular cam meets a guided roller, relating rotation to a vertical displacement.",
+    "category": "Mechanisms",
+    "file": "mech-cam-follower.svg",
+    "reference": "P00",
+    "construction": "Conceptual mechanism, one pose. Cam center(260,244),radius76; shaft(236,244), eccentricity24. Roller radius12 atx280; y derived from center distance88, so contact is tangent. Rotation is about the shaft, lift is guided vertically. No dynamic, contact-force, or manufacturability claim."
+  },
+  {
+    "id": "mech-latch-receiver",
+    "code": "ME05",
+    "title": "A profile finds its receiver",
+    "description": "A rounded bolt approaches the matching receiver, with its destination and clearance visible.",
+    "category": "Mechanisms",
+    "file": "mech-latch-receiver.svg",
+    "reference": "P00",
+    "construction": "Conceptual fit study. Bolt24-radius nose; receiver28-radius cavity gives4 radial clearance. Source bolt nose center(304,220); proposed destination center(392,220), translation88. Absent lines show destination only. H1 identifies the receiver body, not a material section. No hardware specification."
+  },
+  {
+    "id": "arch-staircase",
+    "code": "AR02",
+    "title": "One rise, one run",
+    "description": "Six equal rise-and-run pairs construct a staircase along one repeated slope.",
+    "category": "Architecture",
+    "file": "arch-staircase.svg",
+    "reference": "C02",
+    "construction": "Geometric staircase study. u=16; every run3u=48, rise2u=32, six runs span18u=288. The diagonal joins the repeated pitch vertices; H1 identifies one triangular unit cell, not a material section. The outline is a construction profile, not a staircase specification."
+  },
+  {
+    "id": "arch-missing-keystone",
+    "code": "AR03",
+    "title": "The last piece of the arch",
+    "description": "A lifted keystone preserves the geometry of the opening it will complete.",
+    "category": "Architecture",
+    "file": "arch-missing-keystone.svg",
+    "reference": "E06",
+    "construction": "Geometric assembly study. Concentric arch radii120 and84; missing20° sector spans-100° to-80°. The keystone is the exact annular sector translated upward52, with H1 identifying that part. Missing arcs show its destination; shared radial seams are not duplicated. No structural-stability assertion."
+  },
+  {
+    "id": "nature-leaf-veins",
+    "code": "NA01",
+    "title": "A branching leaf",
+    "description": "Paired veins follow a repeated pitch within a leaf formed by two intersecting arcs.",
+    "category": "Nature",
+    "file": "nature-leaf-veins.svg",
+    "reference": "P00",
+    "construction": "u=40. Lens centers (330,220) and (230,220), radii130, tips(280,100),(280,340); maximum width160=4u. Vein endpoints have vertical pitch40. The emphasized pair joins the same midrib. Stylized leaf, not a botanical specimen."
+  },
+  {
+    "id": "nature-honeycomb",
+    "code": "NA02",
+    "title": "One edge, two cells",
+    "description": "A selected hexagonal cell shares each of its walls with the surrounding six cells.",
+    "category": "Nature",
+    "file": "nature-honeycomb.svg",
+    "reference": "P00",
+    "construction": "Seven regular hexagons of circumradius48. Neighbor centers lie at sqrt(3)*48. Shared edges are serialized once; central-cell edges own primary role. H1 denotes the selected cell. r=48, total width288=6r."
+  },
+  {
+    "id": "music-chord",
+    "code": "MU02",
+    "title": "Three notes, one onset",
+    "description": "Three separately placed pitches align vertically on one shared onset to form a chord.",
+    "category": "Music",
+    "file": "music-chord.svg",
+    "reference": "C01",
+    "construction": "The source heads at y240,208,176 retain those staff positions in the final chord atx424. Staff spacing16. Every staff segment clears notehead interiors; the chord stem is drawn once. This is a pitch/alignment illustration, not a complete notated score or named harmony."
+  },
+  {
+    "id": "map-summit-contours",
+    "code": "MP04",
+    "title": "The summit in contours",
+    "description": "Nested elevation lines tighten around one marked summit, with a consistent interval between levels.",
+    "category": "Maps",
+    "file": "map-summit-contours.svg",
+    "reference": "P00",
+    "construction": "Five illustrative polar contours carry levels100,125,150,175,200. Radii28,50,74,98,122 with deterministic cosine/sine modulation and small center shifts. A plus marks the summit inside the200 contour. Each path deliberately stops around its text label; no masking patch hides linework. These are invented elevation units, not a surveyed location."
+  },
+  {
+    "id": "map-converging-paths",
+    "code": "MP05",
+    "title": "Different paths, one place",
+    "description": "Three routes join one final stretch before reaching the same destination.",
+    "category": "Maps",
+    "file": "map-converging-paths.svg",
+    "reference": "E02",
+    "construction": "The central route is primary; two secondary approaches use R48 outside bends and R24 merging bends. Shared final segment x288..408 at y220 is drawn once. The destination ring is reached at its left tangent x408. Conceptual map topology, not a surveyed road network."
+  },
+  {
+    "id": "type-letter-strokes",
+    "code": "TY01",
+    "title": "A from three strokes",
+    "description": "Two parallel-sided diagonal strokes and one horizontal stroke make an outlined capital A; the crossbar is identified by hatching.",
+    "category": "Typography",
+    "file": "type-letter-strokes.svg",
+    "reference": "T01",
+    "construction": "Borrow T01’s outlined glyph, counter and named construction. Local u = 40 SVG units; cap height = 6u; each sloping stem has 40 units of horizontal width and constant normal width 40 / sqrt(1 + 0.45²). The crossbar spans y252–280. This is a constructed glyph, not a production font."
+  },
+  {
+    "id": "type-shared-glyphs",
+    "code": "TY02",
+    "title": "One arch, three glyphs",
+    "description": "A shared circular shoulder and a constant stem width generate n, h and m, with the h selected to show the construction.",
+    "category": "Typography",
+    "file": "type-shared-glyphs.svg",
+    "reference": "T01",
+    "construction": "Borrow T01’s circular counter and stem relationship. Local u = 16 SVG units; outer shoulders R40 and inner shoulders R24 differ by u; ascender extension is 4u. The overlapping outer m shoulder arcs meet at their calculated intersection (400,212). The letters are conceptual geometric glyphs."
+  },
+  {
+    "id": "type-ligature",
+    "code": "TY03",
+    "title": "The joining stroke",
+    "description": "The f and i share one continuous crossbar, joining the two glyphs into a single constructed ligature.",
+    "category": "Typography",
+    "file": "type-ligature.svg",
+    "reference": "T01",
+    "construction": "Borrow T01’s outlined letter and circular counter construction. Local u = 28 SVG units; the hook uses concentric R56 and R28 arcs, both vertical stems and the common crossbar are u wide, and the i dot has diameter u. Hatching identifies the bar that unites the forms."
+  },
+  {
+    "id": "type-negative-monogram",
+    "code": "TY04",
+    "title": "A monogram in the void",
+    "description": "An M is defined by the transparent space within a hatched field; its straight stems and surrounding margin follow the same unit.",
+    "category": "Typography",
+    "file": "type-negative-monogram.svg",
+    "reference": "T02",
+    "construction": "Borrow T02’s mark, negative space and local construction unit. Local u = 32 SVG units; the outer field is 8u square; each straight stem and the nearest field inset are u. The parallel diagonal strokes are approximately one unit wide measured normally. Hatching belongs only to the surrounding field, never the letter."
+  },
+  {
+    "id": "type-optical-alignment",
+    "code": "TY05",
+    "title": "The center you see",
+    "description": "A rightward shift brings a triangle’s area centroid to the center of its frame, providing a geometric starting point for optical alignment.",
+    "category": "Typography",
+    "file": "type-optical-alignment.svg",
+    "reference": "T02",
+    "construction": "Borrow T02’s bounded mark and annotated construction. Both frames are 144 units square; triangles are 90 units wide and 108 high. The first uses bounding-box alignment; the second moves right by 90 / 6 = 15 units so its area centroid is centered. Hatching denotes the measured area. Final optical balance remains a visual judgement."
+  },
+  {
+    "id": "interface-corner-rule",
+    "code": "UI01",
+    "title": "One corner rule",
+    "description": "Three differently proportioned components retain a common corner radius.",
+    "category": "Interfaces",
+    "file": "interface-corner-rule.svg",
+    "reference": "P00",
+    "construction": "Geometric construction. u=24; true circular R24 corners. Widths 4u,6u,3u; heights6u,4u,2u. Generating radii meet each top-left arc."
+  },
+  {
+    "id": "interface-reflow",
+    "code": "UI02",
+    "title": "The same modules, reflowed",
+    "description": "Three equal modules preserve their size when the available width wraps the last one onto another row.",
+    "category": "Interfaces",
+    "file": "interface-reflow.svg",
+    "reference": "C02",
+    "construction": "Geometric UI construction. Each module96x56; all gaps and insets12. Outer frames336x80 and228x148. C is emphasized in both arrangements; no resizing of the modules."
+  },
+  {
+    "id": "interface-slider-value",
+    "code": "UI03",
+    "title": "Position becomes value",
+    "description": "The thumb locates sixty percent of a shared travel interval; the track clears its circular outline.",
+    "category": "Interfaces",
+    "file": "interface-slider-value.svg",
+    "reference": "P00",
+    "construction": "Geometric UI construction. Travel from x120 to440 is320; thumb x312 is192/320=60%. Thumb R24. Rail y220/236 intersects it at x312±sqrt(24²−8²), and rail paths stop there."
+  },
+  {
+    "id": "software-cache-route",
+    "code": "SW02",
+    "title": "A shorter return",
+    "description": "A cached response turns back at the near bend while the longer path continues to the origin.",
+    "category": "Systems",
+    "file": "software-cache-route.svg",
+    "reference": "E02",
+    "construction": "Conceptual route, not network architecture. u=84; cache x280 is2u from x112, origin x448 is4u. All corners R24. Shared request/return segments are drawn once. Distances show the analogy only, not latency or network hops."
+  },
+  {
+    "id": "software-branch-history",
+    "code": "SW03",
+    "title": "A history comes together",
+    "description": "One branch departs from a shared history, carries its own revision, and joins the main line again.",
+    "category": "Systems",
+    "file": "software-branch-history.svg",
+    "reference": "B04",
+    "construction": "Conceptual version history. u=24; routing corners R24, fork-to-merge span240. Circles are revision points; paths are ancestry. Main and branch intersect only at declared fork/merge. Spatial distances are illustrative, not time or commit count."
+  },
+  {
+    "id": "time-appointment-buffers",
+    "code": "TM02",
+    "title": "Room around an appointment",
+    "description": "An hour-long appointment reserves fifteen minutes of buffer time on either side.",
+    "category": "Scheduling",
+    "file": "time-appointment-buffers.svg",
+    "reference": "K07",
+    "construction": "Conceptual schedule. Borrowed the user-liked K09/buffers hierarchy: primary appointment, subordinate buffers, boundary witnesses and total reserved interval. Scale4 SVG units/minute; widths60,240,60 correspond15,60,15 minutes. Example10:00–11:00 appointment; reserved09:45–11:15. Hatch means buffer time."
+  },
+  {
+    "id": "time-common-recurrence",
+    "code": "TM03",
+    "title": "The same interval, again",
+    "description": "Four occurrences align to one repeated seven-day interval.",
+    "category": "Scheduling",
+    "file": "time-common-recurrence.svg",
+    "reference": "B04",
+    "construction": "Conceptual recurrence. Event centers136,232,328,424 share a96-unit pitch representing seven days. Tiles64x64. The common baseline is the time axis; stems locate each occurrence. No month or real calendar date is asserted."
+  },
+  {
+    "id": "craft-weave",
+    "code": "CR01",
+    "title": "Over and under",
+    "description": "One warp and one weft reveal the alternating rule that holds a weave together.",
+    "category": "Craft",
+    "file": "craft-weave.svg",
+    "reference": "C02, P00",
+    "construction": "Flat weave construction: 24-unit strands on 64-unit centers. Under-strand outlines stop 4 units before the crossing strand; the interruptions alternate by row and column. Hatching marks one selected crossing. This is an ordering diagram, not a fabric or strength specification."
+  },
+  {
+    "id": "craft-stitch",
+    "code": "CR02",
+    "title": "A seam, joined",
+    "description": "Repeated crossed stitches bridge two edges on one shared hole pitch.",
+    "category": "Craft",
+    "file": "craft-stitch.svg",
+    "reference": "K07, C02",
+    "construction": "Conceptual front view of a stitched seam. Hole centers repeat every 48 units and sit 16 units from the joined edge. Thread segments end on the hole circumferences. One diagonal is interrupted at each crossing to preserve over/under meaning. The construction is illustrative, not a sewing specification."
+  },
+  {
+    "id": "craft-dovetail",
+    "code": "CR03",
+    "title": "A joint that holds",
+    "description": "A wider tail and narrower neck create one complementary boundary between two pieces.",
+    "category": "Craft",
+    "file": "craft-dovetail.svg",
+    "reference": "C01, P00",
+    "construction": "Illustrative dovetail in plan. Shared seam drawn once. Neck width 128, tail width 160, depth 48 SVG units; symmetric flank offset 16. Hatching identifies the projecting tongue region, not a material. No manufacturing tolerance or load claim is implied."
+  },
+  {
+    "id": "craft-paper-fold",
+    "code": "CR04",
+    "title": "Across the crease",
+    "description": "One corner reflects across its diagonal crease and becomes a triangular flap.",
+    "category": "Craft",
+    "file": "craft-paper-fold.svg",
+    "reference": "P00, E00",
+    "construction": "Flat paper-fold study. Square side 240; u=40. Crease x+y=380 joins (160,220) and (280,100); reflection maps the original corner (160,100) to (280,220). The crease is drawn only once as the visible boundary. Hatching identifies the folded flap, and dashed edges mark the original absent corner. Arrow indicates folding direction, not a physical 3D trajectory."
+  },
+  {
+    "id": "craft-tiles",
+    "code": "CR05",
+    "title": "One shared corner",
+    "description": "Four tiles meet around a common circular opening and a constant joint width.",
+    "category": "Craft",
+    "file": "craft-tiles.svg",
+    "reference": "P00, C02",
+    "construction": "Flat tiling construction. Four 128-unit square allocations surround a 32-unit cross joint. A shared R48 circle cuts their inner corners; its remaining arcs appear only within the joint, so no locus segment retraces a tile edge. Overall extent 288 × 288. The four quarter turns place tiles in one plane and do not introduce perspective."
+  },
+  {
+    "id": "play-dominoes",
+    "code": "PL03",
+    "title": "One piece short",
+    "description": "The pip sequence continues across one absent domino, leaving its position unmistakable.",
+    "category": "Play",
+    "file": "play-dominoes.svg",
+    "reference": "E00, K07",
+    "construction": "Flat domino sequence. Each piece is48×96 with72-unit pitch; u=24. Filled circles are the declared domino-pip convention. Visible pairs are1/2,2/3,4/5,5/6; the missing3/4 piece is absent rather than hidden. No falling motion is depicted."
+  },
+  {
+    "id": "play-balance",
+    "code": "PL04",
+    "title": "Unequal arms, equal moments",
+    "description": "Three mass units on the shorter arm balance two on the longer arm.",
+    "category": "Play",
+    "file": "play-balance.svg",
+    "reference": "P03, P00",
+    "construction": "Conceptual ideal lever. Fulcrum x248; weight centersx152 and392 give arms96 and144, withu=48. Identical72×24 blocks represent one mass unitm. Hatching identifies one equal unit on each side. Geometry illustrates equal moments only, not structural capacity or real-world calibration."
+  }
+]

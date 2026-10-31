@@ -1,6 +1,7 @@
 import { calStudies } from "./cal-studies";
 import { contentStateStudies } from "./content-state-studies";
 import { engineeringStudies } from "./engineering-studies";
+import { expandedStudies } from "./expanded-studies";
 import { flatCalStudies } from "./flat-cal-studies";
 import { flatObjectStudies } from "./flat-object-studies";
 import { flatSystemStudies } from "./flat-system-studies";
@@ -54,6 +55,7 @@ const collection: IllustrationStudy[] = [
   ...engineeringStudies,
   ...notFoundArchitectureStudies,
   ...notFoundGeometryStudies,
+  ...expandedStudies,
   {
     id: "404-reference",
     code: "E00",

@@ -1,4 +1,5 @@
 import { BlueprintDrawing } from "./blueprint-drawing";
+import { ProductionChainHatching } from "./production-chain-hatching";
 import type { IllustrationStudy } from "./study-types";
 
 type GridBoundary = {
@@ -239,6 +240,8 @@ export function ProductionChainStudy() {
             <path d={`M${x - 40} 272v-8h8 M${x + 32} 264h8v8`} />
           </g>
         ))}
+        <ProductionChainHatching x={256} y={128} />
+        <ProductionChainHatching x={392} y={208} />
         <rect height="48" width="48" x="256" y="128" />
         <path d="M392 208H440" />
         <path d="M104 272H456A16 16 0 0 1 456 304H104A16 16 0 0 1 104 272Z" />
