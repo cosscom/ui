@@ -1,0 +1,67 @@
+{
+  "version": 2,
+  "source": {
+    "file": "Primitives.json",
+    "include": ["color/brand/*", "color/zinc/*"]
+  },
+  "theme": {
+    "selector": ":root:not(.dark)",
+    "mode": "light"
+  },
+  "coss": {
+    "foreground": {
+      "token": "color/zinc/800"
+    },
+    "card-foreground": {
+      "token": "color/zinc/800"
+    },
+    "popover-foreground": {
+      "token": "color/zinc/800"
+    },
+    "primary": {
+      "token": "color/brand/800-base"
+    },
+    "primary-foreground": {
+      "css": "var(--color-white)",
+      "reason": "COSS white reaches 4.52:1 on brand/800-base; zinc/50 reaches only 4.32:1."
+    },
+    "secondary-foreground": {
+      "token": "color/zinc/800"
+    },
+    "muted-foreground": {
+      "token": "color/zinc/600",
+      "reason": "Zinc/600 remains readable on COSS's low-alpha muted surfaces."
+    },
+    "accent-foreground": {
+      "token": "color/zinc/800"
+    },
+    "ring": {
+      "token": "color/brand/500"
+    },
+    "sidebar": {
+      "token": "color/brand/950-darkshade"
+    },
+    "sidebar-foreground": {
+      "token": "color/zinc/50"
+    },
+    "sidebar-primary": {
+      "token": "color/brand/800-base"
+    },
+    "sidebar-primary-foreground": {
+      "css": "var(--color-white)"
+    },
+    "sidebar-accent": {
+      "token": "color/brand/900"
+    },
+    "sidebar-accent-foreground": {
+      "token": "color/zinc/50"
+    },
+    "sidebar-border": {
+      "css": "--alpha(var(--color-white) / 12%)",
+      "reason": "The COSS light sidebar border uses black alpha, which disappears on the dark brand sidebar."
+    },
+    "sidebar-ring": {
+      "token": "color/brand/500"
+    }
+  }
+}

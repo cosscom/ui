@@ -1,0 +1,23 @@
+/* This file is generated. Do not edit directly. */
+/* Palette-only Accura overrides. Import after the COSS base styles. */
+/* Unlisted COSS roles intentionally retain their native values. */
+
+:root:not(.dark) {
+  --foreground: var(--accura-zinc-800);
+  --card-foreground: var(--accura-zinc-800);
+  --popover-foreground: var(--accura-zinc-800);
+  --primary: var(--accura-brand-800-base);
+  --primary-foreground: var(--color-white);
+  --secondary-foreground: var(--accura-zinc-800);
+  --muted-foreground: var(--accura-zinc-600);
+  --accent-foreground: var(--accura-zinc-800);
+  --ring: var(--accura-brand-500);
+  --sidebar: var(--accura-brand-950-darkshade);
+  --sidebar-foreground: var(--accura-zinc-50);
+  --sidebar-primary: var(--accura-brand-800-base);
+  --sidebar-primary-foreground: var(--color-white);
+  --sidebar-accent: var(--accura-brand-900);
+  --sidebar-accent-foreground: var(--accura-zinc-50);
+  --sidebar-border: --alpha(var(--color-white) / 12%);
+  --sidebar-ring: var(--accura-brand-500);
+}

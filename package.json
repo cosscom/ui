@@ -23,6 +23,8 @@
     "lint": "turbo run lint --",
     "prepare": "husky",
     "test": "bun test --pass-with-no-tests",
+    "tokens:check": "node brand-assets/scripts/generate-tokens.mjs --check",
+    "tokens:generate": "node brand-assets/scripts/generate-tokens.mjs",
     "typecheck": "turbo run typecheck"
   },
   "workspaces": [
