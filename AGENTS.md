@@ -22,8 +22,8 @@ Use only files located inside `/Users/mac/Documents/GitHub/Coss` as project sour
 Before working on Accura, read these files in order:
 
 1. [`ACCURA.md`](ACCURA.md) for the repository map and documentation ownership.
-2. [`docs/product-knowledge/README.md`](docs/product-knowledge/README.md) and the product/module files relevant to the task.
-3. [`docs/rules/README.md`](docs/rules/README.md) and the applicable rule set.
+2. [`docs/product-knowledge/overview.md`](docs/product-knowledge/overview.md) and the relevant module overview under `docs/product-knowledge/modules/`.
+3. The applicable rule files under [`docs/rules/`](docs/rules/).
 4. The latest relevant entries in [`CHANGELOG.md`](CHANGELOG.md).
 5. The relevant rationale in [`docs/change-log/DECISIONS.md`](docs/change-log/DECISIONS.md).
 

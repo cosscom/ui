@@ -4,6 +4,7 @@ This root file is the concise chronological index for notable Accura changes. It
 
 ## 2026-11-03
 
+- Simplified Accura documentation so `ACCURA.md` is the only navigation entry point; removed redundant folder-level READMEs and renamed the Documents module entry to `overview.md`. [Workspace guide](ACCURA.md)
 - Established a non-overlapping documentation ownership model and mandatory Accura startup protocol for AI agents. [Workspace guide](ACCURA.md) · [Decision](docs/change-log/DECISIONS.md#2026-11-03---documentation-ownership-model-established)
 - Refined primary and secondary hierarchy so solid brand green is reserved for principal actions. [Decision](docs/change-log/DECISIONS.md#2026-11-03---primary-and-secondary-hierarchy-refined) · [QA evidence](apps/accura-prototype/design-qa.md#iteration-11--primary-and-secondary-hierarchy)
 - Adopted Iconoir as the prototype-level icon system with a consistent 24 × 24 grid and 1.5 px stroke. [Decision](docs/change-log/DECISIONS.md#2026-11-03---iconoir-adopted-for-the-accura-prototype) · [QA evidence](apps/accura-prototype/design-qa.md#iteration-6--iconoir-system)

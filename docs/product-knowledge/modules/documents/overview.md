@@ -1,6 +1,6 @@
 # Documents Module
 
-This folder owns knowledge and evidence specific to the Accura Documents module.
+This file owns the current knowledge specific to the Accura Documents module.
 
 ## Sources And References
 

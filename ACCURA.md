@@ -6,11 +6,12 @@ This file is the entry point for people and AI agents working on Accura inside t
 
 Read these sources in order:
 
-1. [`docs/product-knowledge/README.md`](docs/product-knowledge/README.md) — where to find current product and module knowledge.
-2. [`docs/rules/README.md`](docs/rules/README.md) — current design and implementation rules.
-3. [`CHANGELOG.md`](CHANGELOG.md) — short chronological index of notable changes.
-4. [`docs/change-log/DECISIONS.md`](docs/change-log/DECISIONS.md) — detailed rationale and superseded decisions.
-5. [`apps/accura-prototype/design-qa.md`](apps/accura-prototype/design-qa.md) — implementation verification and visual evidence.
+1. [`docs/product-knowledge/overview.md`](docs/product-knowledge/overview.md) — current product understanding, users, business logic, shared workflows, and open questions.
+2. Read the relevant module overview, starting with [`docs/product-knowledge/modules/documents/overview.md`](docs/product-knowledge/modules/documents/overview.md) for Documents.
+3. Read the applicable files in [`docs/rules/`](docs/rules/), currently [`ui-hierarchy.md`](docs/rules/ui-hierarchy.md) and [`visual-system.md`](docs/rules/visual-system.md).
+4. [`CHANGELOG.md`](CHANGELOG.md) — short chronological index of notable changes.
+5. [`docs/change-log/DECISIONS.md`](docs/change-log/DECISIONS.md) — detailed rationale and superseded decisions.
+6. [`apps/accura-prototype/design-qa.md`](apps/accura-prototype/design-qa.md) — implementation verification and visual evidence.
 
 ## Repository Map And Ownership
 
