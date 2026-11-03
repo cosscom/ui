@@ -49,8 +49,8 @@ The adapter targets `:root:not(.dark)`. Dark mode continues to use the native CO
 | Focus ring | `color/brand/500` | Branded interaction cue |
 | Main foregrounds | `color/zinc/800` | Replaces COSS neutral without changing hierarchy |
 | Muted foreground | `color/zinc/600` | Remains readable on COSS muted alpha surfaces |
-| Sidebar | `brand/950-darkshade`, `brand/900`, `brand/800-base` | Dark shell, selected state, and primary action |
-| Sidebar foreground | `color/zinc/50` | High contrast on the dark brand shell |
+| Sidebar | `color/zinc/100`, COSS white, `brand/800-base` | Recessed neutral shell, selected surface, and branded primary action |
+| Sidebar foreground | `color/zinc/700` | Readable navigation text without competing with the white workspace |
 
 ## COSS Ownership Boundary
 

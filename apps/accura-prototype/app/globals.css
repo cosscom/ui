@@ -1,0 +1,27 @@
+@import "@coss/ui/globals.css";
+@import "../../../brand-assets/generated/index.css";
+@source "../**/*.{ts,tsx}";
+
+:root {
+  color-scheme: light;
+  font-optical-sizing: auto;
+  font-synthesis: none;
+}
+
+body {
+  margin: 0;
+  font-variation-settings: "GEOM" 25;
+}
+
+:where(h1, h2, h3, [data-typography-role="heading"]) {
+  font-variation-settings: "GEOM" 50;
+}
+
+.identifier {
+  font-variation-settings: "GEOM" 0;
+  font-variant-numeric: tabular-nums;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--primary) 18%, transparent);
+}

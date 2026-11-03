@@ -12,12 +12,12 @@
   --muted-foreground: var(--accura-zinc-600);
   --accent-foreground: var(--accura-zinc-800);
   --ring: var(--accura-brand-500);
-  --sidebar: var(--accura-brand-950-darkshade);
-  --sidebar-foreground: var(--accura-zinc-50);
+  --sidebar: var(--accura-zinc-100);
+  --sidebar-foreground: var(--accura-zinc-700);
   --sidebar-primary: var(--accura-brand-800-base);
   --sidebar-primary-foreground: var(--color-white);
-  --sidebar-accent: var(--accura-brand-900);
-  --sidebar-accent-foreground: var(--accura-zinc-50);
-  --sidebar-border: --alpha(var(--color-white) / 12%);
+  --sidebar-accent: var(--color-white);
+  --sidebar-accent-foreground: var(--accura-zinc-900);
+  --sidebar-border: --alpha(var(--color-black) / 8%);
   --sidebar-ring: var(--accura-brand-500);
 }

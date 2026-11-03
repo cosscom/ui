@@ -2,17 +2,17 @@
 /* Source: brand-assets/Primitives.json (color/brand/* and color/zinc/* only) */
 
 :root {
-  --accura-zinc-50: #f8fafc;
-  --accura-zinc-100: #eef2f6;
-  --accura-zinc-200: #e3e8ef;
-  --accura-zinc-300: #cdd5df;
-  --accura-zinc-400: #9aa4b2;
-  --accura-zinc-500: #697586;
-  --accura-zinc-600: #4b5565;
-  --accura-zinc-700: #364152;
-  --accura-zinc-800: #202939;
-  --accura-zinc-900: #121926;
-  --accura-zinc-950: #0d121c;
+  --accura-zinc-50: #fafafa;
+  --accura-zinc-100: #f4f4f5;
+  --accura-zinc-200: #e4e4e7;
+  --accura-zinc-300: #d4d4d8;
+  --accura-zinc-400: #a1a1aa;
+  --accura-zinc-500: #71717a;
+  --accura-zinc-600: #52525b;
+  --accura-zinc-700: #3f3f46;
+  --accura-zinc-800: #27272a;
+  --accura-zinc-900: #18181b;
+  --accura-zinc-950: #09090b;
   --accura-brand-975: #0f172a;
   --accura-brand-950-darkshade: #00393f;
   --accura-brand-900: #175e41;

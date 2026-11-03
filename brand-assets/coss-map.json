@@ -39,10 +39,10 @@
       "token": "color/brand/500"
     },
     "sidebar": {
-      "token": "color/brand/950-darkshade"
+      "token": "color/zinc/100"
     },
     "sidebar-foreground": {
-      "token": "color/zinc/50"
+      "token": "color/zinc/700"
     },
     "sidebar-primary": {
       "token": "color/brand/800-base"
@@ -51,14 +51,14 @@
       "css": "var(--color-white)"
     },
     "sidebar-accent": {
-      "token": "color/brand/900"
+      "css": "var(--color-white)"
     },
     "sidebar-accent-foreground": {
-      "token": "color/zinc/50"
+      "token": "color/zinc/900"
     },
     "sidebar-border": {
-      "css": "--alpha(var(--color-white) / 12%)",
-      "reason": "The COSS light sidebar border uses black alpha, which disappears on the dark brand sidebar."
+      "css": "--alpha(var(--color-black) / 8%)",
+      "reason": "A quiet neutral divider keeps the light navigation shell behind the white workspace."
     },
     "sidebar-ring": {
       "token": "color/brand/500"
