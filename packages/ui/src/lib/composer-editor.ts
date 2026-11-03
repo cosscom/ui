@@ -4,7 +4,6 @@ import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
 import {
   type ComposerEditorController,
   type ComposerItemValue,
-  type ComposerQuery,
   type ComposerValue,
   type UseComposerEditorOptions,
   useComposerEditor,

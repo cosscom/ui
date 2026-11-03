@@ -19,7 +19,9 @@ validatePrimitiveCollection();
 const palette = primitives.variables.filter(
   (variable) =>
     variable.type === "COLOR" &&
-    cossMap.source.include.some((pattern) => matchesPattern(variable.name, pattern)),
+    cossMap.source.include.some((pattern) =>
+      matchesPattern(variable.name, pattern),
+    ),
 );
 const paletteByName = new Map(
   palette.map((variable) => [variable.name, variable]),
@@ -53,7 +55,9 @@ if (checkOnly) {
   for (const filename of legacyOutputs) {
     if (fs.existsSync(path.join(generatedDirectory, filename))) {
       hasMismatch = true;
-      console.error(`Legacy output must be removed: brand-assets/generated/${filename}`);
+      console.error(
+        `Legacy output must be removed: brand-assets/generated/${filename}`,
+      );
     }
   }
 
@@ -82,7 +86,9 @@ function readJson(filename) {
 
 function validateSourceContract() {
   if (cossMap.version !== 2) {
-    throw new Error("coss-map.json must use the palette-only version 2 contract.");
+    throw new Error(
+      "coss-map.json must use the palette-only version 2 contract.",
+    );
   }
   if (cossMap.source?.file !== "Primitives.json") {
     throw new Error("The palette source must be Primitives.json.");
@@ -98,7 +104,9 @@ function validateSourceContract() {
     );
   }
   if (cossMap.theme?.selector !== ":root:not(.dark)") {
-    throw new Error("The current Accura palette adapter must be light-mode only.");
+    throw new Error(
+      "The current Accura palette adapter must be light-mode only.",
+    );
   }
 }
 
@@ -286,9 +294,7 @@ function contrastRatio(first, second) {
 
 function relativeLuminance(color) {
   const [red, green, blue] = [color.r, color.g, color.b].map((channel) =>
-    channel <= 0.04045
-      ? channel / 12.92
-      : ((channel + 0.055) / 1.055) ** 2.4,
+    channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4,
   );
   return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
 }
