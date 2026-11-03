@@ -2,6 +2,8 @@
 
 This folder contains the repository-local Accura color input and its small adapter for COSS.
 
+This folder owns token inputs and generation mechanics. Current UI usage rules live in [`../docs/rules/ui-hierarchy.md`](../docs/rules/ui-hierarchy.md); decision history lives in [`../docs/change-log/DECISIONS.md`](../docs/change-log/DECISIONS.md).
+
 ## Active Sources
 
 - `Primitives.json`: source export; only `color/brand/*` and `color/zinc/*` are active.
