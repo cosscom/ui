@@ -24,6 +24,7 @@ import {
 import {
   type ComposerEditorController,
   type ComposerItemValue,
+  type ComposerQuery,
   type ComposerValue,
   type UseComposerEditorOptions,
   useComposerEditor,

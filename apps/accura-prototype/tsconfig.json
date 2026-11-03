@@ -6,7 +6,11 @@
     "incremental": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "module": "esnext",
     "moduleResolution": "bundler",
     "noEmit": true,
@@ -21,10 +25,14 @@
     "strict": true,
     "target": "ES2017",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     }
   },
-  "exclude": ["node_modules"],
+  "exclude": [
+    "node_modules"
+  ],
   "include": [
     "**/*.ts",
     "**/*.tsx",

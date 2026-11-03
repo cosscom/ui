@@ -11,7 +11,7 @@
   "files": [
     {
       "path": "registry/default/particles/p-button-19.tsx",
-      "content": "\"use client\";\n\nimport { ChevronDownIcon, ChevronUpIcon } from \"lucide-react\";\nimport { useState } from \"react\";\nimport { Button } from \"@/registry/default/ui/button\";\n\nexport default function Particle() {\n  const [isExpanded, setIsExpanded] = useState<boolean>(false);\n\n  const toggleExpand = () => {\n    setIsExpanded((prevState) => !prevState);\n  };\n\n  return (\n    <Button className=\"gap-1\" onClick={toggleExpand} variant=\"ghost\">\n      {isExpanded ? \"Show less\" : \"Show more\"}\n      {isExpanded ? (\n        <ChevronUpIcon aria-hidden=\"true\" className=\"-me-1\" />\n      ) : (\n        <ChevronDownIcon aria-hidden=\"true\" className=\"-me-1\" />\n      )}\n    </Button>\n  );\n}\n",
+      "content": "\"use client\";\n\nimport { ChevronDownIcon, ChevronUpIcon } from \"lucide-react\";\nimport { useState } from \"react\";\nimport { Button } from \"@/registry/default/ui/button\";\n\nexport default function Particle() {\n  const [isExpanded, setIsExpanded] = useState<boolean>(false);\n\n  const toggleExpand = () => {\n    setIsExpanded((prevState) => !prevState);\n  };\n\n  return (\n    <Button\n      aria-controls=\"expandable-content\"\n      aria-expanded={isExpanded}\n      className=\"gap-1\"\n      onClick={toggleExpand}\n      variant=\"ghost\" // Use this ID on the element that this button controls\n    >\n      {isExpanded ? \"Show less\" : \"Show more\"}\n      {isExpanded ? (\n        <ChevronUpIcon aria-hidden=\"true\" className=\"-me-1\" />\n      ) : (\n        <ChevronDownIcon aria-hidden=\"true\" className=\"-me-1\" />\n      )}\n    </Button>\n  );\n}\n",
       "type": "registry:block"
     }
   ],

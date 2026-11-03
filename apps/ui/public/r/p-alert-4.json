@@ -11,7 +11,7 @@
   "files": [
     {
       "path": "registry/default/particles/p-alert-4.tsx",
-      "content": "import { InfoIcon } from \"lucide-react\";\nimport {\n  Alert,\n  AlertDescription,\n  AlertTitle,\n} from \"@/registry/default/ui/alert\";\n\nexport default function Particle() {\n  return (\n    <Alert variant=\"info\">\n      <InfoIcon aria-label=\"Information\" role=\"img\" />\n      <AlertTitle>Heads up!</AlertTitle>\n      <AlertDescription>\n        Describe what can be done about it here.\n      </AlertDescription>\n    </Alert>\n  );\n}\n",
+      "content": "import { InfoIcon } from \"lucide-react\";\nimport {\n  Alert,\n  AlertDescription,\n  AlertTitle,\n} from \"@/registry/default/ui/alert\";\n\nexport default function Particle() {\n  return (\n    <Alert variant=\"info\">\n      <InfoIcon />\n      <AlertTitle>Heads up!</AlertTitle>\n      <AlertDescription>\n        Describe what can be done about it here.\n      </AlertDescription>\n    </Alert>\n  );\n}\n",
       "type": "registry:block"
     }
   ],
