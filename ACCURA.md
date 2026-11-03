@@ -1,0 +1,53 @@
+# Accura Workspace Guide
+
+This file is the entry point for people and AI agents working on Accura inside the COSS monorepo. The upstream COSS introduction remains in [`README.md`](README.md).
+
+## Start Here
+
+Read these sources in order:
+
+1. [`docs/product-knowledge/README.md`](docs/product-knowledge/README.md) — where to find current product and module knowledge.
+2. [`docs/rules/README.md`](docs/rules/README.md) — current design and implementation rules.
+3. [`CHANGELOG.md`](CHANGELOG.md) — short chronological index of notable changes.
+4. [`docs/change-log/DECISIONS.md`](docs/change-log/DECISIONS.md) — detailed rationale and superseded decisions.
+5. [`apps/accura-prototype/design-qa.md`](apps/accura-prototype/design-qa.md) — implementation verification and visual evidence.
+
+## Repository Map And Ownership
+
+| Location | Owns | Must not own |
+|---|---|---|
+| `docs/product-knowledge/` | Current product facts, business logic, users, workflows, module specifications, source evidence | Design-system rules, implementation history, session history |
+| `docs/rules/` | Current approved UI, UX, accessibility, content, and component usage rules | Historical rationale or implementation evidence |
+| `docs/change-log/DECISIONS.md` | Why a decision was made, alternatives, consequences, and superseded directions | Current product requirements or duplicated implementation logs |
+| `CHANGELOG.md` | Short chronological index of notable repository and prototype changes | Detailed rationale; entries link to the canonical detail |
+| `brand-assets/` | Accura token inputs, mapping contract, generator, and generated CSS | General UI rules or product requirements |
+| `apps/accura-prototype/` | Executable Accura prototype and its implementation QA evidence | Product knowledge or cross-project design rules |
+| `packages/ui/` | Reusable COSS component implementation consumed by apps | Accura-specific product behavior |
+| `apps/ui/` | COSS documentation, registry, particles, and component development environment | Accura prototype decisions |
+| `apps/origin/` | Legacy Origin UI reference | New Accura foundation |
+| `apps/www/` | Main COSS website | Accura product documentation |
+| `apps/examples/` | Example applications showing COSS usage | Accura source of truth |
+
+## Accura Working Flow
+
+```text
+Product sources and evidence
+  → docs/product-knowledge/
+  → docs/rules/
+  → brand-assets/
+  → apps/accura-prototype/
+  → apps/accura-prototype/design-qa.md
+  → CHANGELOG.md + docs/change-log/DECISIONS.md
+```
+
+## Where To Put New Information
+
+- New or corrected product fact → `docs/product-knowledge/`.
+- New module requirement or flow → the relevant folder under `docs/product-knowledge/modules/`.
+- New reusable UI rule → `docs/rules/`.
+- New decision or a change to an existing decision → `docs/change-log/DECISIONS.md`.
+- Notable implemented change → one short entry in `CHANGELOG.md` linking to its decision or QA evidence.
+- Visual or technical verification → the owning app’s `design-qa.md`.
+- Brand primitive or COSS theme mapping → `brand-assets/` and its README.
+
+Do not copy the same rule or decision into multiple files. Link to its owning source instead.

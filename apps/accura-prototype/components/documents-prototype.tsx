@@ -44,52 +44,59 @@ import {
   TableRow,
 } from "@coss/ui/components/table";
 import {
-  BarChart3Icon,
-  BellIcon,
-  BookOpenIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  CircleHelpIcon,
-  ClipboardCheckIcon,
-  FileClockIcon,
-  FilePlus2Icon,
-  FilesIcon,
-  FileSearchIcon,
-  FileTextIcon,
-  GraduationCapIcon,
-  LayoutDashboardIcon,
-  LogOutIcon,
-  MoreHorizontalIcon,
-  PanelLeftCloseIcon,
-  PanelLeftOpenIcon,
-  PlusIcon,
-  RefreshCwIcon,
-  SearchIcon,
-  SettingsIcon,
-  SlidersHorizontalIcon,
-  TruckIcon,
-  TriangleAlertIcon,
-  UserRoundIcon,
-  WrenchIcon,
-  XIcon,
-} from "lucide-react";
+  Reports as BarChart3Icon,
+  BellNotification as BellIcon,
+  OpenBook as BookOpenIcon,
+  NavArrowLeft as ChevronLeftIcon,
+  NavArrowRight as ChevronRightIcon,
+  HelpCircle as CircleHelpIcon,
+  ClipboardCheck as ClipboardCheckIcon,
+  ClockRotateRight as FileClockIcon,
+  PagePlus as FilePlus2Icon,
+  PageSearch as FileSearchIcon,
+  MultiplePages as FilesIcon,
+  Page as FileTextIcon,
+  GraduationCap as GraduationCapIcon,
+  DashboardDots as LayoutDashboardIcon,
+  LogOut as LogOutIcon,
+  MoreHoriz as MoreHorizontalIcon,
+  SidebarCollapse as PanelLeftCloseIcon,
+  SidebarExpand as PanelLeftOpenIcon,
+  Plus as PlusIcon,
+  RefreshDouble as RefreshCwIcon,
+  Search as SearchIcon,
+  Settings as SettingsIcon,
+  FilterList as SlidersHorizontalIcon,
+  WarningTriangle as TriangleAlertIcon,
+  DeliveryTruck as TruckIcon,
+  User as UserRoundIcon,
+  Tools as WrenchIcon,
+  Xmark as XIcon,
+} from "iconoir-react";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-type DocumentStatus =
-  | "Approved"
-  | "Draft"
-  | "In QA Approval"
-  | "In Review";
+type DocumentStatus = "Approved" | "Draft" | "In QA Approval" | "In Review";
 
 type DocumentRecord = {
   author: string;
-  department: "Engineering" | "Manufacturing" | "Quality Assurance" | "Quality Control";
+  department:
+    | "Engineering"
+    | "Manufacturing"
+    | "Quality Assurance"
+    | "Quality Control";
   effectiveDate: string | null;
   id: string;
   name: string;
   status: DocumentStatus;
-  type: "Batch Record" | "Form" | "Policy" | "Procedure" | "Specification" | "SOP" | "Work Instruction";
+  type:
+    | "Batch Record"
+    | "Form"
+    | "Policy"
+    | "Procedure"
+    | "Specification"
+    | "SOP"
+    | "Work Instruction";
   version: string;
 };
 
@@ -347,9 +354,11 @@ function AppSidebar({
 }) {
   return (
     <aside
-      className={`sticky top-2 flex h-[calc(100svh-1rem)] shrink-0 flex-col overflow-hidden rounded-xl bg-sidebar text-sidebar-foreground transition-[width] duration-200 ${collapsed ? "w-16" : "w-[248px]"}`}
+      className={`sticky top-2 flex h-[calc(100svh-1rem)] shrink-0 flex-col overflow-hidden rounded-xl border border-sidebar-border bg-sidebar text-sidebar-foreground shadow-sm transition-[width] duration-200 ${collapsed ? "w-16" : "w-[248px]"}`}
     >
-      <div className={`flex h-16 shrink-0 items-center ${collapsed ? "justify-center px-2" : "px-3"}`}>
+      <div
+        className={`flex h-16 shrink-0 items-center ${collapsed ? "justify-center px-2" : "px-3"}`}
+      >
         {collapsed ? (
           <button
             aria-label="Expand navigation"
@@ -399,19 +408,18 @@ function AppSidebar({
           <button
             key={label}
             aria-current={active ? "page" : undefined}
+            aria-label={collapsed ? label : undefined}
             className={`flex h-9 w-full items-center rounded-lg text-left text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-sidebar-ring ${
               collapsed ? "justify-center px-0" : "gap-3 px-2.5"
             } ${
               active
                 ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground shadow-xs"
-                : "hover:bg-sidebar-accent/72 hover:text-sidebar-accent-foreground"
+                : "hover:bg-[var(--accura-zinc-100)] hover:text-[var(--accura-zinc-900)]"
             }`}
             type="button"
           >
             <Icon aria-hidden="true" className="size-4 shrink-0" />
-            <span
-              className={`truncate ${collapsed ? "hidden" : "block"}`}
-            >
+            <span className={`truncate ${collapsed ? "hidden" : "block"}`}>
               {label}
             </span>
           </button>
@@ -420,18 +428,17 @@ function AppSidebar({
 
       <nav
         aria-label="Support navigation"
-        className="mt-auto flex flex-col gap-1 border-t border-sidebar-border p-2"
+        className="mt-auto flex flex-col gap-1 border-sidebar-border border-t p-2"
       >
         {secondaryNavItems.map(({ icon: Icon, label }) => (
           <button
             key={label}
-            className={`flex h-9 w-full items-center rounded-lg text-left text-sm outline-none transition-colors hover:bg-sidebar-accent/72 hover:text-sidebar-accent-foreground focus-visible:ring-2 focus-visible:ring-sidebar-ring ${collapsed ? "justify-center px-0" : "gap-3 px-2.5"}`}
+            aria-label={collapsed ? label : undefined}
+            className={`flex h-9 w-full items-center rounded-lg text-left text-sm outline-none transition-colors hover:bg-[var(--accura-zinc-100)] hover:text-[var(--accura-zinc-900)] focus-visible:ring-2 focus-visible:ring-sidebar-ring ${collapsed ? "justify-center px-0" : "gap-3 px-2.5"}`}
             type="button"
           >
             <Icon aria-hidden="true" className="size-4 shrink-0" />
-            <span
-              className={`truncate ${collapsed ? "hidden" : "block"}`}
-            >
+            <span className={`truncate ${collapsed ? "hidden" : "block"}`}>
               {label}
             </span>
           </button>
@@ -508,14 +515,14 @@ export function DocumentsPrototype() {
   };
 
   return (
-    <div className="flex min-h-svh gap-2 bg-[var(--accura-zinc-100)] p-2">
+    <div className="flex min-h-svh gap-2 bg-[var(--accura-canvas)] p-2">
       <AppSidebar
         collapsed={sidebarCollapsed}
         onToggle={() => setSidebarCollapsed((value) => !value)}
       />
 
       <div className="min-w-0 flex-1">
-        <header className="sticky top-0 z-20 flex h-16 items-center bg-[var(--accura-zinc-100)] px-4 sm:px-5">
+        <header className="sticky top-2 z-20 flex h-16 items-center rounded-2xl border bg-background p-3 shadow-sm">
           <InputGroup className="h-10 max-w-2xl bg-background shadow-xs">
             <InputGroupAddon>
               <SearchIcon aria-hidden="true" />
@@ -527,7 +534,9 @@ export function DocumentsPrototype() {
                 if (event.key === "Enter" && globalQuery.trim()) {
                   setQuery(globalQuery.trim());
                   setPage(1);
-                  setNotice(`Showing document matches for “${globalQuery.trim()}”.`);
+                  setNotice(
+                    `Showing document matches for “${globalQuery.trim()}”.`,
+                  );
                 }
                 if (event.key === "Escape") {
                   setGlobalQuery("");
@@ -540,7 +549,9 @@ export function DocumentsPrototype() {
               value={globalQuery}
             />
             <InputGroupAddon align="inline-end" className="max-sm:hidden">
-              <Kbd className="whitespace-nowrap bg-[var(--accura-zinc-100)]">⌘ K</Kbd>
+              <Kbd className="whitespace-nowrap bg-[var(--accura-pop-soft)] text-[var(--accura-brand-950-darkshade)]">
+                ⌘ K
+              </Kbd>
             </InputGroupAddon>
           </InputGroup>
           <div className="ms-auto flex items-center gap-2">
@@ -551,13 +562,15 @@ export function DocumentsPrototype() {
               variant="ghost"
             >
               <BellIcon aria-hidden="true" />
-              <span className="absolute end-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 font-medium text-[10px] text-white ring-2 ring-[var(--accura-zinc-100)]">
+              <span className="absolute end-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--accura-coral)] px-1 font-medium text-[10px] text-[var(--accura-brand-950-darkshade)] ring-2 ring-background">
                 3
               </span>
             </Button>
             <div className="mx-1 h-7 w-px bg-border" />
             <Avatar className="[--avatar-size:--spacing(8)]">
-              <AvatarFallback className="bg-primary text-primary-foreground">AK</AvatarFallback>
+              <AvatarFallback className="bg-[var(--accura-pop)] text-[var(--accura-brand-950-darkshade)]">
+                AK
+              </AvatarFallback>
             </Avatar>
             <div className="min-w-0 max-sm:hidden">
               <p className="truncate font-medium text-sm">Amit Kothari</p>
@@ -566,7 +579,7 @@ export function DocumentsPrototype() {
           </div>
         </header>
 
-        <main className="min-h-[calc(100svh-5rem)] rounded-2xl border bg-background p-5 shadow-sm sm:p-6 xl:p-8">
+        <main className="min-h-[calc(100svh-5rem)] p-5 sm:p-6 xl:p-8">
           <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-5">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div className="flex flex-col gap-1">
@@ -585,7 +598,8 @@ export function DocumentsPrototype() {
                   <DialogHeader>
                     <DialogTitle>Create a document</DialogTitle>
                     <DialogDescription>
-                      Choose the lifecycle that applies. You can complete metadata and routing in the next step.
+                      Choose the lifecycle that applies. You can complete
+                      metadata and routing in the next step.
                     </DialogDescription>
                   </DialogHeader>
                   <DialogPanel>
@@ -594,28 +608,36 @@ export function DocumentsPrototype() {
                       onValueChange={(value) => setDocumentKind(String(value))}
                       value={documentKind}
                     >
-                      <label className="flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition-colors hover:bg-accent/50 has-[[data-checked]]:border-primary has-[[data-checked]]:bg-primary/4">
+                      <label className="flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition-colors hover:bg-secondary/72 has-[[data-checked]]:border-primary/32 has-[[data-checked]]:bg-secondary">
                         <Radio value="controlled" />
                         <span className="flex flex-col gap-1">
-                          <span className="font-medium text-sm">Controlled document</span>
+                          <span className="font-medium text-sm">
+                            Controlled document
+                          </span>
                           <span className="text-muted-foreground text-sm">
-                            Formal review, QA approval, version control, and effective-date management.
+                            Formal review, QA approval, version control, and
+                            effective-date management.
                           </span>
                         </span>
                       </label>
-                      <label className="flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition-colors hover:bg-accent/50 has-[[data-checked]]:border-primary has-[[data-checked]]:bg-primary/4">
+                      <label className="flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition-colors hover:bg-secondary/72 has-[[data-checked]]:border-primary/32 has-[[data-checked]]:bg-secondary">
                         <Radio value="external" />
                         <span className="flex flex-col gap-1">
-                          <span className="font-medium text-sm">External document</span>
+                          <span className="font-medium text-sm">
+                            External document
+                          </span>
                           <span className="text-muted-foreground text-sm">
-                            Reference material originating outside the organization.
+                            Reference material originating outside the
+                            organization.
                           </span>
                         </span>
                       </label>
                     </RadioGroup>
                   </DialogPanel>
                   <DialogFooter>
-                    <DialogClose render={<Button variant="ghost" />}>Cancel</DialogClose>
+                    <DialogClose render={<Button variant="ghost" />}>
+                      Cancel
+                    </DialogClose>
                     <Button
                       onClick={() => {
                         setCreateOpen(false);
@@ -634,18 +656,29 @@ export function DocumentsPrototype() {
 
             {notice && (
               <div
-                className="flex items-center gap-3 rounded-xl border border-primary/24 bg-primary/4 px-4 py-3 text-sm"
+                className="flex items-center gap-3 rounded-xl border bg-secondary/72 px-4 py-3 text-sm"
                 role="status"
               >
-                <FilePlus2Icon aria-hidden="true" className="size-4 shrink-0 text-primary" />
+                <FilePlus2Icon
+                  aria-hidden="true"
+                  className="size-4 shrink-0 text-primary"
+                />
                 <span className="flex-1">{notice}</span>
-                <Button aria-label="Dismiss message" onClick={() => setNotice(null)} size="icon-xs" variant="ghost">
+                <Button
+                  aria-label="Dismiss message"
+                  onClick={() => setNotice(null)}
+                  size="icon-xs"
+                  variant="ghost"
+                >
                   <XIcon aria-hidden="true" />
                 </Button>
               </div>
             )}
 
-            <section aria-label="Document filters" className="flex flex-col gap-3">
+            <section
+              aria-label="Document filters"
+              className="flex flex-col gap-3"
+            >
               <div className="grid gap-3 lg:grid-cols-[minmax(280px,1fr)_180px_180px_220px]">
                 <InputGroup>
                   <InputGroupInput
@@ -725,9 +758,13 @@ export function DocumentsPrototype() {
               </div>
 
               <div className="flex min-h-7 flex-wrap items-center gap-2 text-sm">
-                <SlidersHorizontalIcon aria-hidden="true" className="size-4 text-muted-foreground" />
+                <SlidersHorizontalIcon
+                  aria-hidden="true"
+                  className="size-4 text-muted-foreground"
+                />
                 <span className="text-muted-foreground">
-                  {filteredDocuments.length} {filteredDocuments.length === 1 ? "document" : "documents"}
+                  {filteredDocuments.length}{" "}
+                  {filteredDocuments.length === 1 ? "document" : "documents"}
                 </span>
                 {hasActiveFilters && (
                   <Button onClick={clearFilters} size="xs" variant="ghost">
@@ -737,17 +774,32 @@ export function DocumentsPrototype() {
               </div>
             </section>
 
-            <section aria-label="Documents table" className="overflow-hidden rounded-xl border bg-card">
+            <section
+              aria-label="Documents table"
+              className="overflow-hidden rounded-xl border bg-card shadow-xs"
+            >
               <Table>
-                <TableHeader className="bg-muted/64">
+                <TableHeader className="bg-secondary/72">
                   <TableRow className="hover:bg-transparent">
-                    <TableHead className="w-[220px] ps-4 text-xs">Document ID</TableHead>
-                    <TableHead className="min-w-[300px] text-xs">Name</TableHead>
+                    <TableHead className="w-[220px] ps-4 text-xs">
+                      Document ID
+                    </TableHead>
+                    <TableHead className="min-w-[300px] text-xs">
+                      Name
+                    </TableHead>
                     <TableHead className="w-[148px] text-xs">Status</TableHead>
-                    <TableHead className="w-[112px] text-xs max-[1180px]:hidden">Version</TableHead>
-                    <TableHead className="w-[180px] text-xs max-[1320px]:hidden">Department</TableHead>
-                    <TableHead className="w-[150px] text-xs max-[1460px]:hidden">Author</TableHead>
-                    <TableHead className="w-[140px] text-xs max-[1180px]:hidden">Effective date</TableHead>
+                    <TableHead className="w-[112px] text-xs max-[1180px]:hidden">
+                      Version
+                    </TableHead>
+                    <TableHead className="w-[180px] text-xs max-[1320px]:hidden">
+                      Department
+                    </TableHead>
+                    <TableHead className="w-[150px] text-xs max-[1460px]:hidden">
+                      Author
+                    </TableHead>
+                    <TableHead className="w-[140px] text-xs max-[1180px]:hidden">
+                      Effective date
+                    </TableHead>
                     <TableHead className="w-12 pe-3 text-right text-xs">
                       <span className="sr-only">Actions</span>
                     </TableHead>
@@ -756,7 +808,10 @@ export function DocumentsPrototype() {
                 <TableBody>
                   {visibleDocuments.length > 0 ? (
                     visibleDocuments.map((document) => (
-                      <TableRow key={`${document.id}-${document.version}`}>
+                      <TableRow
+                        key={`${document.id}-${document.version}`}
+                        className="hover:bg-secondary/48"
+                      >
                         <TableCell className="ps-4">
                           <span className="identifier text-muted-foreground text-xs">
                             {document.id}
@@ -764,7 +819,7 @@ export function DocumentsPrototype() {
                         </TableCell>
                         <TableCell>
                           <button
-                            className="max-w-[420px] truncate text-left font-medium text-primary outline-none hover:underline focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-ring"
+                            className="max-w-[420px] truncate text-left font-medium text-foreground outline-none transition-colors hover:text-primary hover:underline focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-ring"
                             onClick={() => setSelectedDocument(document)}
                             type="button"
                           >
@@ -779,10 +834,16 @@ export function DocumentsPrototype() {
                         </TableCell>
                         <TableCell className="max-[1180px]:hidden">
                           <span className="identifier">{document.version}</span>
-                          <p className="mt-1 text-muted-foreground text-xs">Current version</p>
+                          <p className="mt-1 text-muted-foreground text-xs">
+                            Current version
+                          </p>
                         </TableCell>
-                        <TableCell className="max-[1320px]:hidden">{document.department}</TableCell>
-                        <TableCell className="max-[1460px]:hidden">{document.author}</TableCell>
+                        <TableCell className="max-[1320px]:hidden">
+                          {document.department}
+                        </TableCell>
+                        <TableCell className="max-[1460px]:hidden">
+                          {document.author}
+                        </TableCell>
                         <TableCell className="max-[1180px]:hidden">
                           {document.effectiveDate ?? "—"}
                         </TableCell>
@@ -800,7 +861,9 @@ export function DocumentsPrototype() {
                               <MoreHorizontalIcon aria-hidden="true" />
                             </MenuTrigger>
                             <MenuPopup align="end">
-                              <MenuItem onClick={() => setSelectedDocument(document)}>
+                              <MenuItem
+                                onClick={() => setSelectedDocument(document)}
+                              >
                                 <FileTextIcon aria-hidden="true" />
                                 View details
                               </MenuItem>
@@ -823,13 +886,21 @@ export function DocumentsPrototype() {
                       <TableCell className="h-64 text-center" colSpan={8}>
                         <div className="mx-auto flex max-w-sm flex-col items-center gap-2">
                           <div className="flex size-10 items-center justify-center rounded-full bg-muted">
-                            <FileSearchIcon aria-hidden="true" className="size-5 text-muted-foreground" />
+                            <FileSearchIcon
+                              aria-hidden="true"
+                              className="size-5 text-muted-foreground"
+                            />
                           </div>
                           <p className="font-medium">No documents found</p>
                           <p className="text-muted-foreground text-sm">
                             Adjust your search or clear the current filters.
                           </p>
-                          <Button className="mt-2" onClick={clearFilters} size="sm" variant="outline">
+                          <Button
+                            className="mt-2"
+                            onClick={clearFilters}
+                            size="sm"
+                            variant="outline"
+                          >
                             Clear filters
                           </Button>
                         </div>
@@ -851,7 +922,11 @@ export function DocumentsPrototype() {
                   }}
                   value={String(pageSize)}
                 >
-                  <SelectTrigger aria-label="Rows per page" className="min-w-20" size="sm">
+                  <SelectTrigger
+                    aria-label="Rows per page"
+                    className="min-w-20"
+                    size="sm"
+                  >
                     <SelectValue />
                   </SelectTrigger>
                   <SelectPopup>
@@ -865,7 +940,10 @@ export function DocumentsPrototype() {
                 <span>{filteredDocuments.length} total</span>
               </div>
 
-              <nav aria-label="Document pages" className="flex items-center gap-1">
+              <nav
+                aria-label="Document pages"
+                className="flex items-center gap-1"
+              >
                 <Button
                   aria-label="Previous page"
                   disabled={safePage === 1}
@@ -875,22 +953,30 @@ export function DocumentsPrototype() {
                 >
                   <ChevronLeftIcon aria-hidden="true" />
                 </Button>
-                {Array.from({ length: pageCount }, (_, index) => index + 1).map((pageNumber) => (
-                  <Button
-                    key={pageNumber}
-                    aria-current={safePage === pageNumber ? "page" : undefined}
-                    aria-label={`Page ${pageNumber}`}
-                    onClick={() => setPage(pageNumber)}
-                    size="icon"
-                    variant={safePage === pageNumber ? "default" : "outline"}
-                  >
-                    {pageNumber}
-                  </Button>
-                ))}
+                {Array.from({ length: pageCount }, (_, index) => index + 1).map(
+                  (pageNumber) => (
+                    <Button
+                      key={pageNumber}
+                      aria-current={
+                        safePage === pageNumber ? "page" : undefined
+                      }
+                      aria-label={`Page ${pageNumber}`}
+                      onClick={() => setPage(pageNumber)}
+                      size="icon"
+                      variant={
+                        safePage === pageNumber ? "secondary" : "outline"
+                      }
+                    >
+                      {pageNumber}
+                    </Button>
+                  ),
+                )}
                 <Button
                   aria-label="Next page"
                   disabled={safePage === pageCount}
-                  onClick={() => setPage((value) => Math.min(pageCount, value + 1))}
+                  onClick={() =>
+                    setPage((value) => Math.min(pageCount, value + 1))
+                  }
                   size="icon"
                   variant="outline"
                 >
@@ -918,7 +1004,9 @@ export function DocumentsPrototype() {
                     {selectedDocument.version}
                   </span>
                 </div>
-                <DialogTitle className="leading-tight">{selectedDocument.name}</DialogTitle>
+                <DialogTitle className="leading-tight">
+                  {selectedDocument.name}
+                </DialogTitle>
                 <DialogDescription className="identifier">
                   {selectedDocument.id}
                 </DialogDescription>
@@ -931,7 +1019,9 @@ export function DocumentsPrototype() {
                   </div>
                   <div className="flex flex-col gap-1">
                     <dt className="text-muted-foreground">Department</dt>
-                    <dd className="font-medium">{selectedDocument.department}</dd>
+                    <dd className="font-medium">
+                      {selectedDocument.department}
+                    </dd>
                   </div>
                   <div className="flex flex-col gap-1">
                     <dt className="text-muted-foreground">Author</dt>
@@ -939,12 +1029,16 @@ export function DocumentsPrototype() {
                   </div>
                   <div className="flex flex-col gap-1">
                     <dt className="text-muted-foreground">Effective date</dt>
-                    <dd className="font-medium">{selectedDocument.effectiveDate ?? "Not effective"}</dd>
+                    <dd className="font-medium">
+                      {selectedDocument.effectiveDate ?? "Not effective"}
+                    </dd>
                   </div>
                 </dl>
               </DialogPanel>
               <DialogFooter>
-                <DialogClose render={<Button variant="ghost" />}>Close</DialogClose>
+                <DialogClose render={<Button variant="ghost" />}>
+                  Close
+                </DialogClose>
                 <Button>
                   Open document
                   <ChevronRightIcon aria-hidden="true" />

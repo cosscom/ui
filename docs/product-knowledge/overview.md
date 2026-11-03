@@ -1,7 +1,7 @@
 # Accura Product Knowledge Base
 
 Created: 2026-11-02  
-Last updated: 2026-11-02  
+Last updated: 2026-11-03  
 Product: Accura  
 Domain: Electronic Quality Management System (eQMS) for life-science laboratories and manufacturing organizations
 
@@ -89,16 +89,9 @@ Accura is a B2B SaaS product for life-science organizations moving away from pap
 4. Deliver a usable Documents vertical slice before expanding patterns to other modules.
 5. Favor fast, validated workflow prototypes over premature coverage of every edge case.
 
-### Decisions And Reasoning
+### Decision History
 
-| Decision | Why it was made | Evidence | Confidence |
-|---|---|---|---|
-| Use Documents as the first full prototype slice | Six current screens already cover list, form, review, approval, lifecycle, and audit patterns | User-provided screenshots and specification | High |
-| Preserve explicit e-signature friction | Non-repudiation and regulated accountability require re-authentication | Kickoff transcript | High, legal details still need validation |
-| Treat the COSS library as an implementation/design reference | It provides executable primitives and composition patterns while allowing Frontend to use another library later | User direction and COSS repository | High |
-| Treat the Accura catalog as reference, not final truth | Only Spinner, Sidebar, and Stepper are marked Stable; most templates and components are In review | Live catalog inspected 2026-11-02 | High |
-| Build a palette-only Accura adapter before choosing a visual direction | Brand and Zinc colors should skin the existing COSS semantic contract without replacing its typography, spacing, radius, status, chart, or component behavior | User direction confirmed 2026-11-02 | High |
-| Avoid redesigning around color alone | Status and signed state must remain understandable without color and in exported/printed contexts | Regulated context and screenshot audit | High |
+Decision rationale and superseded directions are owned by [`../change-log/DECISIONS.md`](../change-log/DECISIONS.md). This file retains only the current product and business understanding.
 
 ## 5. Features - Detailed Notes
 

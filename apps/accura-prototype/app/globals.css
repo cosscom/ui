@@ -2,10 +2,22 @@
 @import "../../../brand-assets/generated/index.css";
 @source "../**/*.{ts,tsx}";
 
-:root {
+:root:not(.dark) {
   color-scheme: light;
   font-optical-sizing: auto;
   font-synthesis: none;
+  --accura-canvas: var(--accura-zinc-100);
+  --accura-pop: #d9f25f;
+  --accura-pop-soft: #f1f8cf;
+  --accura-coral: #ff7a66;
+  --sidebar: var(--accura-zinc-50);
+  --sidebar-foreground: var(--accura-zinc-700);
+  --sidebar-primary: var(--accura-brand-800-base);
+  --sidebar-primary-foreground: var(--color-white);
+  --sidebar-accent: var(--accura-brand-800-base);
+  --sidebar-accent-foreground: var(--color-white);
+  --sidebar-border: --alpha(var(--color-black) / 8%);
+  --sidebar-ring: var(--accura-brand-500);
 }
 
 body {

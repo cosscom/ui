@@ -2,6 +2,8 @@
 
 <h3 align="center">coss.com/ui (formerly Origin UI)</h3>
 
+> Working on the Accura prototype in this monorepo? Start with [`ACCURA.md`](ACCURA.md). This README continues to describe the upstream COSS project.
+
 ## About the Project
 
 coss.com/ui is the official Cal.com Design System.
