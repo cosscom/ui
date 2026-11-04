@@ -30,6 +30,7 @@
       "!**/dist",
       "!**/build",
       "!**/coverage",
+      "!**/.vercel",
       "!**/*.log",
       "!**/.turbo",
       "!**/.next",
@@ -43,7 +44,8 @@
       "!**/packages/ui/src/components",
       "!**/packages/ui/src/lib",
       "!**/packages/ui/src/hooks",
-      "!**/packages/ui/src/chat"
+      "!**/packages/ui/src/chat",
+      "!docs/requirements"
     ]
   },
   "formatter": {

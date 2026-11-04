@@ -8,7 +8,7 @@
   "files": [
     {
       "path": "registry/default/particles/p-switch-6.tsx",
-      "content": "import { Switch } from \"@/registry/default/ui/switch\";\n\nexport default function Particle() {\n  return (\n    <Switch className=\"[--thumb-size:--spacing(4)] sm:[--thumb-size:--spacing(3)]\" />\n  );\n}\n",
+      "content": "import { Switch } from \"@/registry/default/ui/switch\";\n\nexport default function Particle() {\n  return (\n    <Switch\n      aria-label=\"Notifications\"\n      className=\"[--thumb-size:--spacing(4)] sm:[--thumb-size:--spacing(3)]\"\n    />\n  );\n}\n",
       "type": "registry:block"
     }
   ],

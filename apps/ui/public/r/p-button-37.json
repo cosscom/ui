@@ -11,7 +11,7 @@
   "files": [
     {
       "path": "registry/default/particles/p-button-37.tsx",
-      "content": "\"use client\";\n\nimport { PlusIcon } from \"lucide-react\";\nimport { useState } from \"react\";\nimport { Button } from \"@/registry/default/ui/button\";\n\nexport default function Particle() {\n  const [open, setOpen] = useState(false);\n\n  return (\n    <Button\n      aria-expanded={open}\n      aria-label={open ? \"Close menu\" : \"Open menu\"}\n      className=\"rounded-full before:rounded-full\"\n      onClick={() => setOpen((prevState) => !prevState)}\n      size=\"icon\"\n      variant=\"outline\"\n    >\n      <PlusIcon\n        aria-hidden=\"true\"\n        className=\"in-[[aria-expanded=true]]:rotate-[135deg] transition-transform duration-500 ease-[cubic-bezier(0.68,-0.6,0.32,1.6)]\"\n      />\n    </Button>\n  );\n}\n",
+      "content": "\"use client\";\n\nimport { PlusIcon } from \"lucide-react\";\nimport { useState } from \"react\";\nimport { Button } from \"@/registry/default/ui/button\";\n\nexport default function Particle() {\n  const [open, setOpen] = useState(false);\n\n  return (\n    <Button\n      aria-label=\"Toggle plus icon animation\"\n      aria-pressed={open}\n      className=\"rounded-full before:rounded-full\"\n      onClick={() => setOpen((prevState) => !prevState)}\n      size=\"icon\"\n      variant=\"outline\"\n    >\n      <PlusIcon\n        aria-hidden=\"true\"\n        className=\"in-[[aria-pressed=true]]:rotate-[135deg] transition-transform duration-500 ease-[cubic-bezier(0.68,-0.6,0.32,1.6)]\"\n      />\n    </Button>\n  );\n}\n",
       "type": "registry:block"
     }
   ],

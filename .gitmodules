@@ -1,0 +1,4 @@
+[submodule "docs/requirements"]
+	path = docs/requirements
+	url = https://github.com/Accura-One/requirements.git
+	branch = development
