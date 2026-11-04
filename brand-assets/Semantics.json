@@ -1,1 +1,2724 @@
-{"id":"VariableCollectionId:1:129","name":"Semantics","modes":{"1:1":"Light"},"variableIds":["VariableID:1:130","VariableID:1:132","VariableID:1:133","VariableID:1:134","VariableID:1:135","VariableID:1:136","VariableID:1:153","VariableID:1:155","VariableID:1:157","VariableID:261:5059","VariableID:264:6344","VariableID:1:154","VariableID:1:156","VariableID:1:158","VariableID:264:6345","VariableID:267:1679","VariableID:1:138","VariableID:2023:3794","VariableID:1:139","VariableID:1:140","VariableID:1:141","VariableID:1:142","VariableID:17:6501","VariableID:1:143","VariableID:1:144","VariableID:1:145","VariableID:1:146","VariableID:2035:4089","VariableID:1:147","VariableID:1:148","VariableID:1:149","VariableID:1:150","VariableID:1:151","VariableID:17:5523","VariableID:17:5524","VariableID:1:152","VariableID:1:159","VariableID:1:160","VariableID:1:161","VariableID:1:162","VariableID:1:163","VariableID:1:164","VariableID:1:165","VariableID:1:166","VariableID:1:167","VariableID:1:168","VariableID:1:169","VariableID:1:170","VariableID:1:171","VariableID:1:172","VariableID:1:173","VariableID:1:174","VariableID:1:178","VariableID:1:179","VariableID:110:4613","VariableID:261:2238","VariableID:1:180","VariableID:1:181","VariableID:310:2119","VariableID:310:2120","VariableID:1:182","VariableID:1:183","VariableID:1:184","VariableID:1:185","VariableID:1:186","VariableID:1:187","VariableID:1:188","VariableID:1:224","VariableID:1:225","VariableID:1:226","VariableID:1:227","VariableID:1:228","VariableID:1:229","VariableID:1:230","VariableID:1:231","VariableID:1:232","VariableID:1:233","VariableID:1:234","VariableID:1:235","VariableID:1:236","VariableID:1:237","VariableID:2004:3587","VariableID:3:142","VariableID:3:143","VariableID:3:144","VariableID:3:145","VariableID:1:176","VariableID:3:146","VariableID:3:167","VariableID:3:162","VariableID:3:163","VariableID:3:164","VariableID:3:165","VariableID:3:166","VariableID:3:168","VariableID:3:169","VariableID:3:170","VariableID:3:171","VariableID:95:32042","VariableID:3:172","VariableID:3:173","VariableID:3:174","VariableID:10:9","VariableID:10:10","VariableID:10:11","VariableID:10:12","VariableID:17:4516","VariableID:28:4074","VariableID:28:4075","VariableID:95:32043","VariableID:96:33490","VariableID:270:3792","VariableID:296:1554","VariableID:609:3926","VariableID:2044:4390"],"variables":[{"id":"VariableID:1:130","name":"color/background/default","description":"Intent:      The main page canvas — the base surface everything sits on\nUse when:    Page background, main content area, any full-page layout surface\nDo not use:  Cards, panels, modals, or elevated containers — use color/surface/* instead\nUse instead: color/surface/default for cards and flat content containers\nForeground:  color/background/default/foreground\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:3"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:1:3","aliasName":"color/white"}},"scopes":["FRAME_FILL","SHAPE_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:132","name":"color/background/subtle","description":"Intent:      A near-white tint for low-emphasis background sections\nUse when:    Alternating section backgrounds, sidebar backgrounds, hover states on rows\nDo not use:  Cards or elevated UI — subtle is a flat tint, not a raised surface\nUse instead: color/surface/raised for slightly elevated containers\nNote:        No /foreground pair — text on subtle uses color/background/default/foreground\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:5"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.9725490212440491,"g":0.9803921580314636,"b":0.9882352948188782,"a":1},"alias":"VariableID:1:5","aliasName":"color/zinc/50"}},"scopes":["FRAME_FILL","SHAPE_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:133","name":"color/background/muted","description":"Intent:      A visible muted surface for de-emphasized sections or inactive areas\nUse when:    Disabled input backgrounds, skeleton loaders, code blocks, tag backgrounds\nDo not use:  Primary content areas or interactive surfaces\nUse instead: color/background/default for the main page, color/background/subtle for softer tints\nForeground:  color/background/muted/foreground\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:2002:218"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.9019607901573181,"g":0.9686274528503418,"b":0.9333333373069763,"a":1},"alias":"VariableID:2002:218","aliasName":"color/brand/50"}},"scopes":["FRAME_FILL","SHAPE_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:134","name":"color/background/muted/foreground","description":"Intent:      Text and icon color on muted background surfaces\nUse when:    Placeholder text, captions inside muted containers, secondary labels on muted bg\nDo not use:  Primary body text on the page canvas — contrast is intentionally reduced\nUse instead: color/background/default/foreground for full-strength text\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:10"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.4117647111415863,"g":0.4588235318660736,"b":0.5254902243614197,"a":1},"alias":"VariableID:1:10","aliasName":"color/zinc/500"}},"scopes":["SHAPE_FILL","TEXT_FILL","STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:135","name":"color/background/inverted","description":"Intent:      A dark surface for high-contrast inverted sections\nUse when:    Dark hero sections, inverted banners, dark tooltips, dark notification bars\nDo not use:  Full dark-mode — this is a single inverted section within a light-mode layout\nUse instead: color/surface/overlay for floating dark elements like dropdowns\nForeground:  color/background/inverted/foreground\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:14"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.07058823853731155,"g":0.09803921729326248,"b":0.14901961386203766,"a":1},"alias":"VariableID:1:14","aliasName":"color/zinc/900"}},"scopes":["FRAME_FILL","SHAPE_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:136","name":"color/background/inverted/foreground","description":"Intent:      Text and icon color on the inverted dark background\nUse when:    All text and icons placed on color/background/inverted\nDo not use:  On any light surface — white on white is invisible\nUse instead: color/background/default/foreground on light surfaces\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:3"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:1:3","aliasName":"color/white"}},"scopes":["SHAPE_FILL","TEXT_FILL","STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:138","name":"color/text/secondary","description":"Intent:      Subdued text for supporting information\nUse when:    Captions, metadata, timestamps, helper text, secondary labels beneath a heading\nDo not use:  Body text or headings — contrast is intentionally reduced for supporting roles\nUse instead: color/background/default/foreground for primary body text and headings\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:11"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.29411765933036804,"g":0.3333333432674408,"b":0.3960784375667572,"a":1},"alias":"VariableID:1:11","aliasName":"color/zinc/600"}},"scopes":["TEXT_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:139","name":"color/text/disabled","description":"Intent:      Text color for inactive or unavailable elements\nUse when:    Disabled input labels, disabled button text, unavailable menu items\nDo not use:  Any text that is interactive or readable — fails WCAG contrast at small sizes\nUse instead: color/text/secondary for readable but de-emphasized text\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:9"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.6039215922355652,"g":0.6431372761726379,"b":0.6980392336845398,"a":1},"alias":"VariableID:1:9","aliasName":"color/zinc/400"}},"scopes":["TEXT_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:140","name":"color/text/inverse","description":"Intent:      Text on dark surfaces where the default dark text would be invisible\nUse when:    Text on color/background/inverted, dark banners, dark tooltips\nDo not use:  Text on any light or white surface\nUse instead: color/background/default/foreground on light surfaces\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:3"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:1:3","aliasName":"color/white"}},"scopes":["TEXT_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:141","name":"color/text/link","description":"Intent:      Inline text link color on light surfaces\nUse when:    Hyperlinks in body copy, navigation links, breadcrumbs\nDo not use:  Buttons — links are inline text, buttons are interactive containers\nUse instead: color/brand/primary for button fills, color/text/link-hover for the hovered state\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:2002:211"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0,"g":0.5333333611488342,"b":0.32156863808631897,"a":1},"alias":"VariableID:2002:211","aliasName":"color/brand/800-base"}},"scopes":["TEXT_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:142","name":"color/text/link-hover","description":"Intent:      Inline text link color on hover\nUse when:    The :hover state of color/text/link — always used as a pair, never standalone\nDo not use:  Default/resting link state — contrast is slightly higher than needed at rest\nUse instead: color/text/link for the resting state\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:2002:210"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.09038367122411728,"g":0.3696163296699524,"b":0.25326937437057495,"a":1},"alias":"VariableID:2002:210","aliasName":"color/brand/900"}},"scopes":["TEXT_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:143","name":"color/border/default","description":"Intent:      Standard border for input fields, radio buttons, and component frames\nUse when:    Input borders at rest, checkbox outlines, card borders, component frame dividers\nDo not use:  Focus states, hover states, or error states — use the dedicated state tokens\nUse instead: color/border/hover on hover, color/border/focus on focus, color/border/error on error\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:7"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.8901960849761963,"g":0.9098039269447327,"b":0.9372549057006836,"a":1},"alias":"VariableID:1:7","aliasName":"color/zinc/200"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:144","name":"color/border/subtle","description":"Intent:      Low-contrast border for structural, non-interactive elements\nUse when:    Internal card dividers, hairline row separators, layout structure on white bg\nDo not use:  Input fields, interactive components, or any element requiring clear boundary definition\nUse instead: color/border/default for input and component borders\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:6"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.9333333373069763,"g":0.9490196108818054,"b":0.9647058844566345,"a":1},"alias":"VariableID:1:6","aliasName":"color/zinc/100"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:145","name":"color/border/strong","description":"Intent:      High-emphasis border for selected or active states\nUse when:    Selected option chips, active tabs, emphasized separators, drag handles\nDo not use:  Default resting borders or focus rings\nUse instead: color/border/default for standard borders, color/border/focus for focus\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:9"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.6039215922355652,"g":0.6431372761726379,"b":0.6980392336845398,"a":1},"alias":"VariableID:1:9","aliasName":"color/zinc/400"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:146","name":"color/border/focus","description":"Intent:      High-contrast focus ring for keyboard navigation and accessibility\nUse when:    :focus-visible on buttons, inputs, links, and any interactive element\nDo not use:  Decorative borders, hover states, or error indication\nUse instead: color/border/error for validation errors, color/border/strong for emphasis\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:178"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.09019608050584793,"g":0.7333333492279053,"b":0.46666666865348816,"a":1},"alias":"VariableID:1:178","aliasName":"color/ring"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:147","name":"color/brand/primary","description":"Intent:      The main brand fill color for primary interactive elements\nUse when:    Primary button fill, active toggle fill, selected chip fill, key CTAs\nDo not use:  Text color on light backgrounds — use color/text/link for inline brand-colored text\nUse instead: color/text/link for inline links, color/brand/secondary for lower-emphasis brand surfaces\nForeground:  color/brand/primary/foreground\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:2002:211"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0,"g":0.5333333611488342,"b":0.32156863808631897,"a":1},"alias":"VariableID:2002:211","aliasName":"color/brand/800-base"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:148","name":"color/brand/primary/foreground","description":"Intent:      Text and icon color placed directly on a color/brand/primary fill\nUse when:    Label inside a primary button, icon inside a filled brand badge\nDo not use:  On any surface other than color/brand/primary — white on white is invisible\nUse instead: color/background/default/foreground for text on neutral surfaces\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:3"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:1:3","aliasName":"color/white"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:149","name":"color/brand/primary-hover","description":"Intent:      Darker brand fill for the hover state of a primary element\nUse when:    Primary button :hover fill — always paired with color/brand/primary, never used standalone\nDo not use:  Resting state or active/pressed state\nUse instead: color/brand/primary for resting, color/brand/primary-active for pressed\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:2002:210"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.09038367122411728,"g":0.3696163296699524,"b":0.25326937437057495,"a":1},"alias":"VariableID:2002:210","aliasName":"color/brand/900"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:150","name":"color/brand/primary-active","description":"Intent:      Darkest brand fill for the pressed/active state of a primary element\nUse when:    Primary button :active fill — the moment of click or tap\nDo not use:  Hover or resting states\nUse instead: color/brand/primary-hover for hover, color/brand/primary for resting\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:2002:209"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0,"g":0.2235294133424759,"b":0.24705882370471954,"a":1},"alias":"VariableID:2002:209","aliasName":"color/brand/950-darkshade"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:151","name":"color/brand/secondary","description":"Intent:      Light brand-tinted surface for lower-emphasis brand presence\nUse when:    Secondary button fill, selected row highlight, brand-tinted badge background, active nav item background\nDo not use:  High-emphasis CTAs — too light to read as a primary action\nUse instead: color/brand/primary for high-emphasis filled actions\nForeground:  color/brand/secondary/foreground\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:2002:217"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.939393937587738,"g":0.9806060791015625,"b":0.9587878584861755,"a":1},"alias":"VariableID:2002:217","aliasName":"color/brand/25"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:152","name":"color/brand/secondary/foreground","description":"Intent:      Text and icon color on a color/brand/secondary fill\nUse when:    Label inside a secondary brand button, text inside a brand-tinted badge\nDo not use:  On white or neutral surfaces — too dark-blue for general body text\nUse instead: color/text/link for inline brand-colored text on neutral backgrounds\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:2002:209"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0,"g":0.2235294133424759,"b":0.24705882370471954,"a":1},"alias":"VariableID:2002:209","aliasName":"color/brand/950-darkshade"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:153","name":"color/surface/default","description":"Intent:      Background for cards and flat inline content containers\nUse when:    Card backgrounds, list item backgrounds, form section backgrounds, any container sitting on top of the page canvas\nDo not use:  The page canvas itself — use color/background/default for the page\n             Floating or elevated UI — use color/surface/overlay for dropdowns and modals\nUse instead: color/background/default for the page, color/surface/overlay for floating UI\nForeground:  color/surface/default/foreground\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:3"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:1:3","aliasName":"color/white"}},"scopes":["FRAME_FILL","SHAPE_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:154","name":"color/surface/default/foreground","description":"Intent:      Text and icon color inside a color/surface/default container\nUse when:    Text and icons inside cards, list items, and flat content containers\nDo not use:  Text directly on the page canvas — use color/background/default/foreground\nUse instead: color/text/secondary for subdued text inside surface containers\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:14"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.07058823853731155,"g":0.09803921729326248,"b":0.14901961386203766,"a":1},"alias":"VariableID:1:14","aliasName":"color/zinc/900"}},"scopes":["SHAPE_FILL","TEXT_FILL","STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:155","name":"color/surface/raised","description":"Intent:      Slightly elevated surface for elements that sit above the page but below overlays\nUse when:    Navigation bars, sticky headers, section headers, sidebar backgrounds, inline panels that feel lifted without floating\nDo not use:  Cards on a white page — the tint provides no contrast against white canvas\n             Modals, dropdowns, or tooltips — use color/surface/overlay for floating UI\nUse instead: color/surface/default for cards, color/surface/overlay for floating elements\nForeground:  color/surface/raised/foreground\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:5"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.9725490212440491,"g":0.9803921580314636,"b":0.9882352948188782,"a":1},"alias":"VariableID:1:5","aliasName":"color/zinc/50"}},"scopes":["FRAME_FILL","SHAPE_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:156","name":"color/surface/raised/foreground","description":"Intent:      Text and icon color on a color/surface/raised background\nUse when:    Nav labels, sidebar text, sticky header text on the raised surface\nDo not use:  Text on the page canvas or inside floating overlays\nUse instead: color/surface/overlay/foreground for text inside dropdowns and modals\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:14"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.07058823853731155,"g":0.09803921729326248,"b":0.14901961386203766,"a":1},"alias":"VariableID:1:14","aliasName":"color/zinc/900"}},"scopes":["SHAPE_FILL","TEXT_FILL","STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:157","name":"color/surface/overlay","description":"Intent:      Background for floating UI elements that layer above page content\nUse when:    Dropdowns, tooltips, popovers, modals, command palettes, context menus\nDo not use:  Cards or flat inline content — use color/surface/default for non-floating containers\nUse instead: color/surface/default for flat containers, color/surface/raised for sticky bars\nForeground:  color/surface/overlay/foreground\nNote:        Resolves to the same primitive as color/surface/default in light mode. The distinction matters for dark mode — overlays get a lighter surface than the page.\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:3"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:1:3","aliasName":"color/white"}},"scopes":["FRAME_FILL","SHAPE_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:158","name":"color/surface/overlay/foreground","description":"Intent:      Text and icon color inside floating overlay surfaces\nUse when:    Dropdown options, tooltip text, modal body text, popover content\nDo not use:  Text on flat cards or the page canvas\nUse instead: color/surface/default/foreground for text inside flat cards\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:14"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.07058823853731155,"g":0.09803921729326248,"b":0.14901961386203766,"a":1},"alias":"VariableID:1:14","aliasName":"color/zinc/900"}},"scopes":["SHAPE_FILL","TEXT_FILL","STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:159","name":"color/status/success","description":"Intent:      Filled success surface for high-emphasis positive feedback\nUse when:    Success badge fill, success toast fill, confirmed state indicator\nDo not use:  Success messages on a white page — use color/status/success-subtle for inline alerts\nUse instead: color/status/success-subtle for low-emphasis success backgrounds\nForeground:  color/status/success/foreground\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:43"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.13333334028720856,"g":0.772549033164978,"b":0.3686274588108063,"a":1},"alias":"VariableID:1:43","aliasName":"color/green/500"}},"scopes":["FRAME_FILL","SHAPE_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:160","name":"color/status/success/foreground","description":"Intent:      Text and icon on a filled success surface\nUse when:    Label inside a filled success badge or toast\nDo not use:  Text on color/status/success-subtle — contrast fails on the light tint\nUse instead: color/status/success-subtle/foreground for text on the subtle tint\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:14"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.07058823853731155,"g":0.09803921729326248,"b":0.14901961386203766,"a":1},"alias":"VariableID:1:14","aliasName":"color/zinc/900"}},"scopes":["TEXT_FILL","STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:161","name":"color/status/success-subtle","description":"Intent:      Light success tint for low-emphasis inline alerts and banners\nUse when:    Success alert banner background, valid input highlight, confirmation section bg\nDo not use:  Filled badges or toasts that need strong visual weight\nUse instead: color/status/success for high-emphasis filled surfaces\nForeground:  color/status/success-subtle/foreground\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:38"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.9411764740943909,"g":0.9921568632125854,"b":0.95686274766922,"a":1},"alias":"VariableID:1:38","aliasName":"color/green/50"}},"scopes":["FRAME_FILL","SHAPE_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:162","name":"color/status/success-subtle/foreground","description":"Intent:      Text and icon on the success subtle tint\nUse when:    Message text and icons inside a success alert banner\nDo not use:  Text on the filled green surface — use color/status/success/foreground instead\nUse instead: color/status/success/foreground for text on filled success surfaces\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:45"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.08235294371843338,"g":0.501960813999176,"b":0.239215686917305,"a":1},"alias":"VariableID:1:45","aliasName":"color/green/700"}},"scopes":["TEXT_FILL","STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:163","name":"color/status/warning","description":"Intent:      Filled warning surface for high-emphasis cautionary feedback\nUse when:    Warning badge fill, caution toast fill, approaching-limit indicator\nDo not use:  Error or failure states — warning signals caution, not failure\nUse instead: color/status/danger for errors, color/status/warning-subtle for inline alerts\nForeground:  color/status/warning/foreground\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:54"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.9176470637321472,"g":0.7019608020782471,"b":0.0313725508749485,"a":1},"alias":"VariableID:1:54","aliasName":"color/yellow/500"}},"scopes":["FRAME_FILL","SHAPE_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:164","name":"color/status/warning/foreground","description":"Intent:      Text and icon on a filled warning surface\nUse when:    Label inside a filled warning badge or toast\nDo not use:  On any surface other than color/status/warning — dark text on light bg loses meaning\nNote:        Uses zinc/900 not white — yellow/500 does not pass WCAG contrast with white text\nUse instead: color/status/warning-subtle/foreground for text on the subtle tint\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:14"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.07058823853731155,"g":0.09803921729326248,"b":0.14901961386203766,"a":1},"alias":"VariableID:1:14","aliasName":"color/zinc/900"}},"scopes":["TEXT_FILL","STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:165","name":"color/status/warning-subtle","description":"Intent:      Light warning tint for low-emphasis cautionary alerts and banners\nUse when:    Warning alert banner background, non-critical notice section bg\nDo not use:  Error states — cautionary tint is not strong enough to signal failure\nUse instead: color/status/danger-subtle for error banners, color/status/warning for filled badges\nForeground:  color/status/warning-subtle/foreground\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:49"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.9960784316062927,"g":0.9882352948188782,"b":0.9098039269447327,"a":1},"alias":"VariableID:1:49","aliasName":"color/yellow/50"}},"scopes":["FRAME_FILL","SHAPE_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:166","name":"color/status/warning-subtle/foreground","description":"Intent:      Text and icon on the warning subtle tint\nUse when:    Message text and icons inside a warning alert banner\nDo not use:  Text on the filled yellow surface — use color/status/warning/foreground instead\nUse instead: color/status/warning/foreground for text on filled warning surfaces\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:56"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.6313725709915161,"g":0.3843137323856354,"b":0.027450980618596077,"a":1},"alias":"VariableID:1:56","aliasName":"color/yellow/700"}},"scopes":["TEXT_FILL","STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:167","name":"color/status/danger","description":"Intent:      Filled danger surface for high-emphasis error or destructive feedback\nUse when:    Error badge fill, destructive action toast, delete confirmation indicator\nDo not use:  Cautionary or non-failure states — danger signals failure, not caution\nUse instead: color/status/warning for cautionary states, color/status/danger-subtle for inline alerts\nForeground:  color/status/danger/foreground\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:32"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.9372549057006836,"g":0.2666666805744171,"b":0.2666666805744171,"a":1},"alias":"VariableID:1:32","aliasName":"color/red/500"}},"scopes":["FRAME_FILL","SHAPE_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:168","name":"color/status/danger/foreground","description":"Intent:      Text and icon on a filled danger surface\nUse when:    Label inside a filled error badge, icon inside a destructive toast\nDo not use:  Text on color/status/danger-subtle — contrast fails on the light tint\nUse instead: color/status/danger-subtle/foreground for text on the subtle tint\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:3"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:1:3","aliasName":"color/white"}},"scopes":["TEXT_FILL","STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:169","name":"color/status/danger-subtle","description":"Intent:      Light danger tint for low-emphasis error alerts and invalid field highlights\nUse when:    Error alert banner background, invalid input field background, form error section\nDo not use:  Filled badges or toasts that need strong visual weight\nUse instead: color/status/danger for high-emphasis filled surfaces\nForeground:  color/status/danger-subtle/foreground\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:27"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.9960784316062927,"g":0.9490196108818054,"b":0.9490196108818054,"a":1},"alias":"VariableID:1:27","aliasName":"color/red/50"}},"scopes":["FRAME_FILL","SHAPE_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:170","name":"color/status/danger-subtle/foreground","description":"Intent:      Text and icon on the danger subtle tint\nUse when:    Error message text and icons inside an alert banner or invalid input\nDo not use:  Text on the filled red surface — use color/status/danger/foreground instead\nUse instead: color/status/danger/foreground for text on filled danger surfaces\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:34"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.7254902124404907,"g":0.10980392247438431,"b":0.10980392247438431,"a":1},"alias":"VariableID:1:34","aliasName":"color/red/700"}},"scopes":["TEXT_FILL","STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:171","name":"color/status/info","description":"Intent:      Filled info surface for high-emphasis informational feedback\nUse when:    Info badge fill, informational toast fill, neutral announcement indicator\nDo not use:  Brand interactive elements — info is for communication, not action\nUse instead: color/brand/primary for interactive CTAs, color/status/info-subtle for inline notices\nForeground:  color/status/info/foreground\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:21"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.16862745583057404,"g":0.49803921580314636,"b":1,"a":1},"alias":"VariableID:1:21","aliasName":"color/blue/500"}},"scopes":["FRAME_FILL","SHAPE_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:172","name":"color/status/info/foreground","description":"Intent:      Text and icon on a filled info surface\nUse when:    Label inside a filled info badge or toast\nDo not use:  Text on color/status/info-subtle — contrast fails on the light tint\nUse instead: color/status/info-subtle/foreground for text on the subtle tint\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:3"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:1:3","aliasName":"color/white"}},"scopes":["TEXT_FILL","STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:173","name":"color/status/info-subtle","description":"Intent:      Light info tint for low-emphasis informational alerts and banners\nUse when:    Info alert banner background, announcement section bg, tip highlight\nDo not use:  Brand interactive elements or filled badges needing strong weight\nUse instead: color/status/info for high-emphasis filled surfaces\nForeground:  color/status/info-subtle/foreground\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:16"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.9333333373069763,"g":0.9647058844566345,"b":1,"a":1},"alias":"VariableID:1:16","aliasName":"color/blue/50"}},"scopes":["FRAME_FILL","SHAPE_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:174","name":"color/status/info-subtle/foreground","description":"Intent:      Text and icon on the info subtle tint\nUse when:    Message text and icons inside an informational alert banner\nDo not use:  Text on the filled blue info surface — use color/status/info/foreground instead\nUse instead: color/status/info/foreground for text on filled info surfaces\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:23"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.0784313753247261,"g":0.27843138575553894,"b":0.9019607901573181,"a":1},"alias":"VariableID:1:23","aliasName":"color/blue/700"}},"scopes":["TEXT_FILL","STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:176","name":"color/input/border","description":"Intent:      Resting border color for input fields, select field, combobox field and form controls\nUse when:    Text input border, textarea border, select border, checkbox outline at rest\nDo not use:  Card or container borders — inputs use zinc/300, one step darker than card borders (zinc/200), to clearly define the field boundary\nUse instead: color/border/focus on :focus-visible, color/border/error on invalid, color/border/disabled on disabled\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:8"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.8039215803146362,"g":0.8352941274642944,"b":0.8745098114013672,"a":1},"alias":"VariableID:1:8","aliasName":"color/zinc/300"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:178","name":"color/ring","description":"Intent:      Outer focus ring halo applied to interactive elements on keyboard focus\nUse when:    box-shadow focus ring on buttons, inputs, links — the visible glow outside the element border\nDo not use:  As a border replacement — ring is additive, always layered on top of the element border\nNote:        shadcn core token (maps to --ring). Used alongside color/border/focus on inputs, and standalone on buttons and links that have no explicit border\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:2002:216"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.09019608050584793,"g":0.7333333492279053,"b":0.46666666865348816,"a":1},"alias":"VariableID:2002:216","aliasName":"color/brand/500"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:179","name":"spacing/component/xxs","description":"Intent:      Tightest internal spacing for compact component elements\nUse when:    Icon-to-label gap inside a badge or chip, gap between a checkbox and its label, padding inside a tag or small pill\nDo not use:  Padding inside buttons or cards — too tight for comfortable interaction targets\nUse instead: spacing/component/sm for button padding, spacing/component/md for card padding\nStatus:      active","type":"FLOAT","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:80"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":2,"alias":"VariableID:1:80","aliasName":"spacing/0-5"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:180","name":"spacing/component/sm","description":"Intent:      Standard tight spacing for small component internals\nUse when:    Button vertical padding, input field vertical padding, icon button padding, gap between stacked labels inside a list item\nDo not use:  Layout gaps between components or sections\nUse instead: spacing/layout/xs for gaps between components\nStatus:      active","type":"FLOAT","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:62"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":8,"alias":"VariableID:1:62","aliasName":"spacing/2"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:181","name":"spacing/component/lg","description":"Intent:      Default internal padding for most components\nUse when:    Card padding, modal padding, input horizontal padding, dropdown item padding, the go-to internal spacing when unsure\nDo not use:  Gaps between layout sections — use spacing/layout/* for structural spacing\nUse instead: spacing/component/sm for tight components, spacing/component/lg for spacious ones\nStatus:      active","type":"FLOAT","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:64"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":16,"alias":"VariableID:1:64","aliasName":"spacing/4"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:182","name":"spacing/component/xl","description":"Intent:      Generous internal padding for large or prominent components\nUse when:    Large card padding, hero section inner padding, empty state padding, dialog/modal body padding\nDo not use:  Small components like buttons or chips — too much breathing room\nUse instead: spacing/component/md for standard components\nStatus:      active","type":"FLOAT","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:66"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":24,"alias":"VariableID:1:66","aliasName":"spacing/6"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:183","name":"spacing/component/2xl","description":"Intent:      Maximum internal spacing for very large containers\nUse when:    Full-page panel padding, wide modal padding, feature card inner padding\nDo not use:  Regular components — reserve for large-format containers only\nUse instead: spacing/component/lg for standard large components\nStatus:      active","type":"FLOAT","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:68"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":32,"alias":"VariableID:1:68","aliasName":"spacing/8"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:184","name":"spacing/layout/xs","description":"Intent:      Minimum gap between adjacent components in a layout\nUse when:    Gap between a label and an input, gap between inline buttons, tight grid gutters in a dense UI\nDo not use:  Internal component padding — use spacing/component/* for inside components\nUse instead: spacing/layout/sm for standard component gaps\nStatus:      active","type":"FLOAT","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:64"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":16,"alias":"VariableID:1:64","aliasName":"spacing/4"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:185","name":"spacing/layout/sm","description":"Intent:      Standard gap between components and groups\nUse when:    Gap between form fields, gap between cards in a grid, gap between nav items, space between a heading and its content block\nDo not use:  Internal component padding or full section spacing\nUse instead: spacing/layout/xs for tighter groups, spacing/layout/md for looser groups\nStatus:      active","type":"FLOAT","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:66"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":24,"alias":"VariableID:1:66","aliasName":"spacing/6"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:186","name":"spacing/layout/md","description":"Intent:      Default spacing between distinct content groups\nUse when:    Gap between form sections, space between a page title and its content, vertical rhythm between content blocks on a page\nDo not use:  Internal component padding or micro-spacing within a component\nUse instead: spacing/layout/sm for tighter groups, spacing/layout/lg for major sections\nStatus:      active","type":"FLOAT","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:68"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":32,"alias":"VariableID:1:68","aliasName":"spacing/8"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:187","name":"spacing/layout/lg","description":"Intent:      Major section spacing for clear visual breaks between page areas\nUse when:    Vertical gap between page sections, top padding of a content section, space between a hero and the next content block\nDo not use:  Component-level spacing — this scale is for page structure only\nUse instead: spacing/layout/md for content group gaps, spacing/layout/xl for hero-level spacing\nStatus:      active","type":"FLOAT","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:72"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":48,"alias":"VariableID:1:72","aliasName":"spacing/12"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:188","name":"spacing/layout/xl","description":"Intent:      Maximum section spacing for the largest structural breaks\nUse when:    Hero section vertical padding, top-of-page breathing room, space between major landmark sections (hero → features → pricing)\nDo not use:  Anything inside or between regular components\nUse instead: spacing/layout/lg for standard section gaps\nStatus:      active","type":"FLOAT","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:74"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":64,"alias":"VariableID:1:74","aliasName":"spacing/16"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:224","name":"color/background/default/foreground","description":"Intent:      Primary text and icon color on the default page background\nUse when:    Headings, body text, labels, any text sitting directly on the page canvas\nDo not use:  Text inside cards, modals, or colored containers — use that container's /foreground\nUse instead: color/text/secondary for subdued text, color/text/disabled for inactive text\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:14"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.07058823853731155,"g":0.09803921729326248,"b":0.14901961386203766,"a":1},"alias":"VariableID:1:14","aliasName":"color/zinc/900"}},"scopes":["SHAPE_FILL","TEXT_FILL","STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:225","name":"color/icon/default","description":"Intent:      Default color for standalone icons on light/white surfaces\nUse when:    Icons beside body text, nav icons, toolbar icons, any icon on a neutral background\nDo not use:  Icons inside filled buttons, badges, or colored containers\nUse instead: The container's /foreground token — e.g. color/brand/primary/foreground for an icon inside a filled blue button\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:224"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.07058823853731155,"g":0.09803921729326248,"b":0.14901961386203766,"a":1},"alias":"VariableID:1:224","aliasName":"color/background/default/foreground"}},"scopes":["STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:226","name":"color/icon/muted","description":"Intent:      Subdued icon for secondary or decorative use\nUse when:    Supporting icons, placeholder hints, inactive nav items, decorative flourishes\nDo not use:  Icons that carry meaning or need high visibility\nUse instead: color/icon/default for primary icons\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:138"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.29411765933036804,"g":0.3333333432674408,"b":0.3960784375667572,"a":1},"alias":"VariableID:1:138","aliasName":"color/text/secondary"}},"scopes":["STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:227","name":"color/icon/disabled","description":"Intent:      Icon color in disabled or unavailable states\nUse when:    Icons inside disabled buttons, inactive tabs, unavailable menu items\nDo not use:  Any interactive or active icon state\nUse instead: color/icon/default for the active equivalent\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:139"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.6039215922355652,"g":0.6431372761726379,"b":0.6980392336845398,"a":1},"alias":"VariableID:1:139","aliasName":"color/text/disabled"}},"scopes":["STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:228","name":"color/icon/inverse","description":"Intent:      Icon color on dark or inverted surfaces\nUse when:    Icons on color/background/inverted, dark hero sections, dark nav bars\nDo not use:  Icons on any light surface — will be invisible against white\nUse instead: color/icon/default on light surfaces\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:140"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:1:140","aliasName":"color/text/inverse"}},"scopes":["STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:229","name":"color/icon/brand","description":"Intent:      Brand-colored icon sitting on a neutral or white surface\nUse when:    Feature highlight icons, logo marks, icons that signal brand identity on light bg\nDo not use:  Icons inside a filled primary button or any filled brand container — blue icon on blue fill is invisible\nUse instead: color/brand/primary/foreground for icons inside filled brand containers\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:147"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0,"g":0.5333333611488342,"b":0.32156863808631897,"a":1},"alias":"VariableID:1:147","aliasName":"color/brand/primary"}},"scopes":["STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:230","name":"color/icon/danger","description":"Intent:      Danger or error icon on a light surface\nUse when:    Error icon beside a validation message, destructive action icon on white bg\nDo not use:  Icons inside a filled danger badge or filled danger button\nUse instead: color/status/danger/foreground for icons inside filled danger containers\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:167"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.9372549057006836,"g":0.2666666805744171,"b":0.2666666805744171,"a":1},"alias":"VariableID:1:167","aliasName":"color/status/danger"}},"scopes":["STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:231","name":"color/icon/success","description":"Intent:      Success or confirmation icon on a light surface\nUse when:    Checkmark beside a success message, completion icon on white bg\nDo not use:  Icons inside a filled success badge or toast\nUse instead: color/status/success/foreground for icons inside filled success containers\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:45"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.08235294371843338,"g":0.501960813999176,"b":0.239215686917305,"a":1},"alias":"VariableID:1:45","aliasName":"color/green/700"}},"scopes":["STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:232","name":"color/icon/warning","description":"Intent:      Warning or caution icon on a light surface\nUse when:    Warning icon beside a non-critical alert message on white bg\nDo not use:  Icons inside a filled warning container\nUse instead: color/status/warning/foreground for icons inside filled warning containers\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:56"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.6313725709915161,"g":0.3843137323856354,"b":0.027450980618596077,"a":1},"alias":"VariableID:1:56","aliasName":"color/yellow/700"}},"scopes":["STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:233","name":"color/border/hover","description":"Intent:      Slightly more prominent border when a user hovers an interactive element\nUse when:    Input border on :hover, selectable card on :hover, interactive list item on :hover\nDo not use:  Resting state or focus state\nUse instead: color/border/default for resting state, color/border/focus for keyboard focus\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:8"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.8039215803146362,"g":0.8352941274642944,"b":0.8745098114013672,"a":1},"alias":"VariableID:1:8","aliasName":"color/zinc/300"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:234","name":"color/border/disabled","description":"Intent:      Low-contrast border indicating an interaction is unavailable\nUse when:    Disabled input fields, disabled checkboxes, disabled select elements\nDo not use:  Any interactive or enabled element\nUse instead: color/border/default for the enabled equivalent\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:6"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.9333333373069763,"g":0.9490196108818054,"b":0.9647058844566345,"a":1},"alias":"VariableID:1:6","aliasName":"color/zinc/100"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:235","name":"color/border/error","description":"Intent:      Strong border to highlight form validation errors\nUse when:    Input border in invalid/error state, failed form fields, required field alerts\nDo not use:  Warning states — error signals failure, warning signals caution\nUse instead: color/border/warning for cautionary non-failure states\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:30"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.9882352948188782,"g":0.6470588445663452,"b":0.6470588445663452,"a":1},"alias":"VariableID:1:30","aliasName":"color/red/300"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:236","name":"color/border/success","description":"Intent:      Border indicating a successful or valid state\nUse when:    Input border after successful validation, confirmed selection borders\nDo not use:  Neutral or warning states\nUse instead: color/border/error for failed validation, color/border/warning for caution\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:42"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.29019609093666077,"g":0.8705882430076599,"b":0.501960813999176,"a":1},"alias":"VariableID:1:42","aliasName":"color/green/400"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:1:237","name":"color/border/warning","description":"Intent:      Border indicating a cautionary or attention-required state\nUse when:    Input border with a non-critical warning, fields approaching a limit\nDo not use:  Actual errors or failed validation — warning is not failure\nUse instead: color/border/error for validation failures\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:52"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.9921568632125854,"g":0.8784313797950745,"b":0.27843138575553894,"a":1},"alias":"VariableID:1:52","aliasName":"color/yellow/300"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:3:142","name":"color/background/accent","description":"Intent: Subtle background for hover states on ghost and text-style interactive elements.\nUse when: Ghost button hover, sidebar item hover, command menu row hover, dropdown item hover. Maps to shadcn --accent.\nDo not use: As a primary action fill — this is a hover tint, not a CTA color.\nUse instead: color/brand/primary for primary action fills.\nForeground: color/brand/accent/foreground\nStatus: Stable","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:6"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.9333333373069763,"g":0.9490196108818054,"b":0.9647058844566345,"a":1},"alias":"VariableID:1:6","aliasName":"color/zinc/100"}},"scopes":["FRAME_FILL","SHAPE_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:3:143","name":"color/background/accent/foreground","description":"Intent: Text and icon color on top of color/brand/accent fill.\nUse when: Labels and icons inside ghost button hover states, hovered sidebar items, hovered menu rows. Maps to shadcn --accent-foreground.\nDo not use: On any surface other than color/brand/accent.\nUse instead: color/background/default/foreground for text on default backgrounds.\nStatus: Stable","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:14"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.07058823853731155,"g":0.09803921729326248,"b":0.14901961386203766,"a":1},"alias":"VariableID:1:14","aliasName":"color/zinc/900"}},"scopes":["SHAPE_FILL","TEXT_FILL","STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:3:144","name":"color/brand/destructive","description":"Intent: Fill color for destructive CTA elements — buttons that delete, remove, or permanently alter data.\nUse when: Delete buttons, Remove confirmations, destructive dialog primary actions. Maps to shadcn --destructive.\nDo not use: For status indicators, error messages, or form validation — use color/status/danger for those.\nUse instead: color/status/danger for inline error states and validation feedback.\nForeground: color/brand/destructive/foreground\nStatus: Stable","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:32"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.9372549057006836,"g":0.2666666805744171,"b":0.2666666805744171,"a":1},"alias":"VariableID:1:32","aliasName":"color/red/500"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:3:145","name":"color/brand/destructive/foreground","description":"Intent: Text and icon color on top of color/brand/destructive fill.\nUse when: Labels and icons inside destructive buttons and confirmation CTAs. Maps to shadcn --destructive-foreground.\nDo not use: On any surface other than color/brand/destructive.\nUse instead: color/status/danger/foreground for text on danger status backgrounds.\nStatus: Stable","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:3"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:1:3","aliasName":"color/white"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:3:146","name":"color/input/placeholder","description":"Intent: Text color for placeholder content inside color for input fields, select field, combobox field\nUse when: The placeholder attribute text in text inputs, textareas, and select fields before a value is entered.\nDo not use: For actual input value text — use color/background/default/foreground for typed content.\nUse instead: color/text/disabled if the entire input is disabled, not just empty.\nStatus: Stable","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:10"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.4117647111415863,"g":0.4588235318660736,"b":0.5254902243614197,"a":1},"alias":"VariableID:1:10","aliasName":"color/zinc/500"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:3:162","name":"color/chart/1","description":"Intent: First data series color in charts and data visualizations.\nUse when: The primary or first dataset in any chart (bar, line, pie). Maps to shadcn --chart-1.\nDo not use: For UI status or brand — chart colors are for data only.\nStatus: Stable","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:3:157"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.9058823585510254,"g":0.4313725531101227,"b":0.3137255012989044,"a":1},"alias":"VariableID:3:157","aliasName":"color/chart/1"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:3:163","name":"color/chart/2","description":"Intent: Second data series color in charts and data visualizations.\nUse when: The second dataset in a multi-series chart. Maps to shadcn --chart-2.\nDo not use: For UI status or brand — chart colors are for data only.\nStatus: Stable","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:3:158"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.16470588743686676,"g":0.615686297416687,"b":0.5647059082984924,"a":1},"alias":"VariableID:3:158","aliasName":"color/chart/2"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:3:164","name":"color/chart/3","description":"Intent: Third data series color in charts and data visualizations.\nUse when: The third dataset in a multi-series chart. Maps to shadcn --chart-3.\nDo not use: For UI status or brand — chart colors are for data only.\nStatus: Stable","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:3:159"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.15294118225574493,"g":0.27843138575553894,"b":0.3294117748737335,"a":1},"alias":"VariableID:3:159","aliasName":"color/chart/3"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:3:165","name":"color/chart/4","description":"Intent: Fourth data series color in charts and data visualizations.\nUse when: The fourth dataset in a multi-series chart. Maps to shadcn --chart-4.\nDo not use: For UI status or brand — chart colors are for data only.\nStatus: Stable","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:3:160"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.9098039269447327,"g":0.7686274647712708,"b":0.40784314274787903,"a":1},"alias":"VariableID:3:160","aliasName":"color/chart/4"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:3:166","name":"color/chart/5","description":"Intent: Fifth data series color in charts and data visualizations.\nUse when: The fifth dataset in a multi-series chart. Maps to shadcn --chart-5.\nDo not use: For UI status or brand — chart colors are for data only.\nStatus: Stable","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:3:161"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.95686274766922,"g":0.6392157077789307,"b":0.3843137323856354,"a":1},"alias":"VariableID:3:161","aliasName":"color/chart/5"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:3:167","name":"color/sidebar/background","description":"Intent: Background fill for the sidebar panel.\nUse when: Sidebar container background. Maps to shadcn --sidebar-background.\nDo not use: For page backgrounds — use color/background/default instead.\nStatus: Stable","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:2002:209"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0,"g":0.2235294133424759,"b":0.24705882370471954,"a":1},"alias":"VariableID:2002:209","aliasName":"color/brand/950-darkshade"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:3:168","name":"color/sidebar/foreground","description":"Intent: Default text and icon color inside the sidebar.\nUse when: Sidebar nav labels, section headings, icon color. Maps to shadcn --sidebar-foreground.\nDo not use: On non-sidebar surfaces.\nStatus: Stable","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:5"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.9725490212440491,"g":0.9803921580314636,"b":0.9882352948188782,"a":1},"alias":"VariableID:1:5","aliasName":"color/zinc/50"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:3:169","name":"color/sidebar/primary","description":"Intent: Fill for the active or primary nav item in the sidebar.\nUse when: Active sidebar nav item background. Maps to shadcn --sidebar-primary.\nDo not use: For brand CTAs — use color/brand/primary instead.\nStatus: Stable","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:14"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.07058823853731155,"g":0.09803921729326248,"b":0.14901961386203766,"a":1},"alias":"VariableID:1:14","aliasName":"color/zinc/900"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:3:170","name":"color/sidebar/primary/foreground","description":"Intent: Text and icon color on top of color/sidebar/primary fill.\nUse when: Labels inside the active sidebar nav item. Maps to shadcn --sidebar-primary-foreground.\nDo not use: On any surface other than color/sidebar/primary.\nStatus: Stable","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:3"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:1:3","aliasName":"color/white"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:3:171","name":"color/sidebar/accent","description":"Intent: Hover background for inactive sidebar nav items.\nUse when: Hover state on sidebar nav rows. Maps to shadcn --sidebar-accent.\nDo not use: As a fill for active items — use color/sidebar/primary instead.\nStatus: Stable","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:2002:210"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.09038367122411728,"g":0.3696163296699524,"b":0.25326937437057495,"a":1},"alias":"VariableID:2002:210","aliasName":"color/brand/900"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:3:172","name":"color/sidebar/accent/foreground","description":"Intent: Text and icon color on top of color/sidebar/accent fill.\nUse when: Labels inside hovered sidebar nav items. Maps to shadcn --sidebar-accent-foreground.\nDo not use: On any surface other than color/sidebar/accent.\nStatus: Stable","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:3"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:1:3","aliasName":"color/white"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:3:173","name":"color/sidebar/border","description":"Intent: Divider and border color within the sidebar.\nUse when: Sidebar edge border, section dividers inside the sidebar. Maps to shadcn --sidebar-border.\nDo not use: For page-level borders — use color/border/default instead.\nStatus: Stable","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:2002:210"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.09038367122411728,"g":0.3696163296699524,"b":0.25326937437057495,"a":1},"alias":"VariableID:2002:210","aliasName":"color/brand/900"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:3:174","name":"color/sidebar/ring","description":"Intent: Focus ring color for keyboard-focused sidebar items.\nUse when: Focus outline on sidebar nav links and buttons. Maps to shadcn --sidebar-ring.\nDo not use: Outside the sidebar — use color/input/ring for global focus rings.\nStatus: Stable","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:21"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.16862745583057404,"g":0.49803921580314636,"b":1,"a":1},"alias":"VariableID:1:21","aliasName":"color/blue/500"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:10:9","name":"opacity/disabled","description":"Intent: Reduces visual prominence of disabled UI elements to signal non-interactivity.\nUse when: Any element in a disabled state — buttons, inputs, selects, checkboxes, form controls.\nDo not use: For loading states — use opacity/loading instead. Do not use for placeholder content.\nUse instead: opacity/loading for in-progress states, opacity/ghost for subtle but interactive elements.\nStatus: Stable","type":"FLOAT","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:11:27"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":60,"alias":"VariableID:11:27","aliasName":"opacity/60"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:10:10","name":"opacity/loading","description":"Intent: Signals that an element is in a loading or processing state.\nUse when: Skeleton loaders, buttons with loading spinners, content areas awaiting data.\nDo not use: For disabled elements — use opacity/disabled instead. Loading implies the element will become active; disabled implies it cannot be used.\nUse instead: opacity/disabled for permanently non-interactive elements.\nStatus: Stable","type":"FLOAT","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:11:26"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":50,"alias":"VariableID:11:26","aliasName":"opacity/50"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:10:11","name":"opacity/overlay","description":"Intent: Semi-transparent scrim behind modal dialogs, drawers, and full-screen overlays.\nUse when: The backdrop blanket behind a modal, dialog, or drawer — darkens the page to focus attention on the foreground layer.\nDo not use: On the modal content itself — only on the backdrop element behind it.\nStatus: Stable","type":"FLOAT","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:11:26"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":50,"alias":"VariableID:11:26","aliasName":"opacity/50"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:10:12","name":"opacity/ghost","description":"Intent: Slightly reduced opacity for ghost or subtle interactive elements that are still active.\nUse when: Ghost buttons in their default state, secondary actions that should recede visually, watermark-style decorative elements.\nDo not use: For disabled elements — ghost elements are still interactive. Use opacity/disabled for non-interactive states.\nStatus: Stable","type":"FLOAT","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:11:29"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":80,"alias":"VariableID:11:29","aliasName":"opacity/80"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:17:4516","name":"opacity/active","description":"Intent: Slightly reduced opacity for ghost or subtle interactive elements that are still active.\nUse when: Ghost buttons in their default state, secondary actions that should recede visually, watermark-style decorative elements.\nDo not use: For disabled elements — ghost elements are still interactive. Use opacity/disabled for non-interactive states.\nStatus: Stable","type":"FLOAT","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:11:29"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":80,"alias":"VariableID:11:29","aliasName":"opacity/80"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:17:5523","name":"color/brand/secondary-hover","description":"Intent:      Light brand-tinted surface for lower-emphasis brand presence\nUse when:    Secondary button fill, selected row highlight, brand-tinted badge background, active nav item background\nDo not use:  High-emphasis CTAs — too light to read as a primary action\nUse instead: color/brand/primary for high-emphasis filled actions\nForeground:  color/brand/secondary/foreground\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:2002:220"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.7098039388656616,"g":0.8980392217636108,"b":0.8196078538894653,"a":1},"alias":"VariableID:2002:220","aliasName":"color/brand/150-lightshade"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:17:5524","name":"color/brand/secondary-active","description":"Intent:      Light brand-tinted surface for lower-emphasis brand presence\nUse when:    Secondary button fill, selected row highlight, brand-tinted badge background, active nav item background\nDo not use:  High-emphasis CTAs — too light to read as a primary action\nUse instead: color/brand/primary for high-emphasis filled actions\nForeground:  color/brand/secondary/foreground\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:2002:214"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.43921568989753723,"g":0.8196078538894653,"b":0.6274510025978088,"a":1},"alias":"VariableID:2002:214","aliasName":"color/brand/300"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:17:6501","name":"color/text/link-active","description":"Intent:      Inline text link color on hover\nUse when:    The :hover state of color/text/link — always used as a pair, never standalone\nDo not use:  Default/resting link state — contrast is slightly higher than needed at rest\nUse instead: color/text/link for the resting state\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:2002:209"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0,"g":0.2235294133424759,"b":0.24705882370471954,"a":1},"alias":"VariableID:2002:209","aliasName":"color/brand/950-darkshade"}},"scopes":["TEXT_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:28:4074","name":"color/brand/destructive-hover","description":"Destructive button background on hover. Aliases color/red/600.","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:33"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.8627451062202454,"g":0.14901961386203766,"b":0.14901961386203766,"a":1},"alias":"VariableID:1:33","aliasName":"color/red/600"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:28:4075","name":"color/brand/destructive-active","description":"Destructive button background on active/pressed. Aliases color/red/700.","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:34"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.7254902124404907,"g":0.10980392247438431,"b":0.10980392247438431,"a":1},"alias":"VariableID:1:34","aliasName":"color/red/700"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:95:32042","name":"color/sidebar/active","description":"Intent: Hover background for inactive sidebar nav items.\nUse when: Hover state on sidebar nav rows. Maps to shadcn --sidebar-accent.\nDo not use: As a fill for active items — use color/sidebar/primary instead.\nStatus: Stable","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:3:171"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.09038367122411728,"g":0.3696163296699524,"b":0.25326937437057495,"a":1},"alias":"VariableID:3:171","aliasName":"color/sidebar/accent"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:95:32043","name":"color/sidebar/active/foreground","description":"Intent: Text and icon color on top of color/sidebar/accent fill.\nUse when: Labels inside hovered sidebar nav items. Maps to shadcn --sidebar-accent-foreground.\nDo not use: On any surface other than color/sidebar/accent.\nStatus: Stable","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:3:172"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:3:172","aliasName":"color/sidebar/accent/foreground"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:96:33490","name":"spacing/component/md","description":"","type":"FLOAT","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:63"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":12,"alias":"VariableID:1:63","aliasName":"spacing/3"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:110:4613","name":"spacing/component/xs","description":"Intent:      Tightest internal spacing for compact component elements\nUse when:    Icon-to-label gap inside a badge or chip, gap between a checkbox and its label, padding inside a tag or small pill\nDo not use:  Padding inside buttons or cards — too tight for comfortable interaction targets\nUse instead: spacing/component/sm for button padding, spacing/component/md for card padding\nStatus:      active","type":"FLOAT","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:61"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":4,"alias":"VariableID:1:61","aliasName":"spacing/1"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:261:2238","name":"spacing/component/xs-plus","description":"","type":"FLOAT","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:81"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":6,"alias":"VariableID:1:81","aliasName":"spacing/1-5"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:261:5059","name":"color/surface/accent","description":"","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:6"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.9333333373069763,"g":0.9490196108818054,"b":0.9647058844566345,"a":1},"alias":"VariableID:1:6","aliasName":"color/zinc/100"}},"scopes":["FRAME_FILL","SHAPE_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:264:6344","name":"color/surface/muted","description":"Muted component surface — avatar fallback, chips, subtle UI elements","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:6"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.9333333373069763,"g":0.9490196108818054,"b":0.9647058844566345,"a":1},"alias":"VariableID:1:6","aliasName":"color/zinc/100"}},"scopes":["FRAME_FILL","SHAPE_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:264:6345","name":"color/surface/muted/foreground","description":"Foreground on muted surface — text and icons on color/surface/muted","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:10"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.4117647111415863,"g":0.4588235318660736,"b":0.5254902243614197,"a":1},"alias":"VariableID:1:10","aliasName":"color/zinc/500"}},"scopes":["SHAPE_FILL","TEXT_FILL","STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:267:1679","name":"color/surface/accent/foreground","description":"","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:14"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.07058823853731155,"g":0.09803921729326248,"b":0.14901961386203766,"a":1},"alias":"VariableID:1:14","aliasName":"color/zinc/900"}},"scopes":["SHAPE_FILL","TEXT_FILL","STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:270:3792","name":"color/text/invalid","description":"Error/invalid text on default backgrounds. Use for form field labels, descriptions, and alert text in invalid or destructive states. NOT the same as status/danger-subtle/foreground (which requires a danger-subtle background).","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:32"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.9372549057006836,"g":0.2666666805744171,"b":0.2666666805744171,"a":1},"alias":"VariableID:1:32","aliasName":"color/red/500"}},"scopes":["TEXT_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:296:1554","name":"color/text/success","description":"","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:45"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.08235294371843338,"g":0.501960813999176,"b":0.239215686917305,"a":1},"alias":"VariableID:1:45","aliasName":"color/green/700"}},"scopes":["TEXT_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:310:2119","name":"color/status/offline","description":"","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:7"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.8901960849761963,"g":0.9098039269447327,"b":0.9372549057006836,"a":1},"alias":"VariableID:1:7","aliasName":"color/zinc/200"}},"scopes":["FRAME_FILL","SHAPE_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:310:2120","name":"color/status/offline/foreground","description":"","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:14"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.07058823853731155,"g":0.09803921729326248,"b":0.14901961386203766,"a":1},"alias":"VariableID:1:14","aliasName":"color/zinc/900"}},"scopes":["TEXT_FILL","STROKE_COLOR"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:609:3926","name":"color/input/bg","description":"","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:3"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":1,"g":1,"b":1,"a":1},"alias":"VariableID:1:3","aliasName":"color/white"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:2004:3587","name":"color/border/info","description":"Intent:      Border indicating a cautionary or attention-required state\nUse when:    Input border with a non-critical warning, fields approaching a limit\nDo not use:  Actual errors or failed validation — warning is not failure\nUse instead: color/border/error for validation failures\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:19"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.5568627715110779,"g":0.772549033164978,"b":1,"a":1},"alias":"VariableID:1:19","aliasName":"color/blue/300"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:2023:3794","name":"color/text/tertiary","description":"Intent:      Subdued text for supporting information\nUse when:    Captions, metadata, timestamps, helper text, secondary labels beneath a heading\nDo not use:  Body text or headings — contrast is intentionally reduced for supporting roles\nUse instead: color/background/default/foreground for primary body text and headings\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:10"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.4117647111415863,"g":0.4588235318660736,"b":0.5254902243614197,"a":1},"alias":"VariableID:1:10","aliasName":"color/zinc/500"}},"scopes":["TEXT_FILL"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:2035:4089","name":"color/border/brand","description":"Intent:      High-contrast focus ring for keyboard navigation and accessibility\nUse when:    :focus-visible on buttons, inputs, links, and any interactive element\nDo not use:  Decorative borders, hover states, or error indication\nUse instead: color/border/error for validation errors, color/border/strong for emphasis\nStatus:      active","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:2002:211"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0,"g":0.5333333611488342,"b":0.32156863808631897,"a":1},"alias":"VariableID:2002:211","aliasName":"color/brand/800-base"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}},{"id":"VariableID:2044:4390","name":"color/input/bg-read-only","description":"","type":"COLOR","valuesByMode":{"1:1":{"type":"VARIABLE_ALIAS","id":"VariableID:1:6"}},"resolvedValuesByMode":{"1:1":{"resolvedValue":{"r":0.9333333373069763,"g":0.9490196108818054,"b":0.9647058844566345,"a":1},"alias":"VariableID:1:6","aliasName":"color/zinc/100"}},"scopes":["ALL_SCOPES"],"hiddenFromPublishing":false,"codeSyntax":{}}]}
+{
+  "id": "VariableCollectionId:1:129",
+  "name": "Semantics",
+  "modes": { "1:1": "Light" },
+  "variableIds": [
+    "VariableID:1:130",
+    "VariableID:1:132",
+    "VariableID:1:133",
+    "VariableID:1:134",
+    "VariableID:1:135",
+    "VariableID:1:136",
+    "VariableID:1:153",
+    "VariableID:1:155",
+    "VariableID:1:157",
+    "VariableID:261:5059",
+    "VariableID:264:6344",
+    "VariableID:1:154",
+    "VariableID:1:156",
+    "VariableID:1:158",
+    "VariableID:264:6345",
+    "VariableID:267:1679",
+    "VariableID:1:138",
+    "VariableID:2023:3794",
+    "VariableID:1:139",
+    "VariableID:1:140",
+    "VariableID:1:141",
+    "VariableID:1:142",
+    "VariableID:17:6501",
+    "VariableID:1:143",
+    "VariableID:1:144",
+    "VariableID:1:145",
+    "VariableID:1:146",
+    "VariableID:2035:4089",
+    "VariableID:1:147",
+    "VariableID:1:148",
+    "VariableID:1:149",
+    "VariableID:1:150",
+    "VariableID:1:151",
+    "VariableID:17:5523",
+    "VariableID:17:5524",
+    "VariableID:1:152",
+    "VariableID:1:159",
+    "VariableID:1:160",
+    "VariableID:1:161",
+    "VariableID:1:162",
+    "VariableID:1:163",
+    "VariableID:1:164",
+    "VariableID:1:165",
+    "VariableID:1:166",
+    "VariableID:1:167",
+    "VariableID:1:168",
+    "VariableID:1:169",
+    "VariableID:1:170",
+    "VariableID:1:171",
+    "VariableID:1:172",
+    "VariableID:1:173",
+    "VariableID:1:174",
+    "VariableID:1:178",
+    "VariableID:1:179",
+    "VariableID:110:4613",
+    "VariableID:261:2238",
+    "VariableID:1:180",
+    "VariableID:1:181",
+    "VariableID:310:2119",
+    "VariableID:310:2120",
+    "VariableID:1:182",
+    "VariableID:1:183",
+    "VariableID:1:184",
+    "VariableID:1:185",
+    "VariableID:1:186",
+    "VariableID:1:187",
+    "VariableID:1:188",
+    "VariableID:1:224",
+    "VariableID:1:225",
+    "VariableID:1:226",
+    "VariableID:1:227",
+    "VariableID:1:228",
+    "VariableID:1:229",
+    "VariableID:1:230",
+    "VariableID:1:231",
+    "VariableID:1:232",
+    "VariableID:1:233",
+    "VariableID:1:234",
+    "VariableID:1:235",
+    "VariableID:1:236",
+    "VariableID:1:237",
+    "VariableID:2004:3587",
+    "VariableID:3:142",
+    "VariableID:3:143",
+    "VariableID:3:144",
+    "VariableID:3:145",
+    "VariableID:1:176",
+    "VariableID:3:146",
+    "VariableID:3:167",
+    "VariableID:3:162",
+    "VariableID:3:163",
+    "VariableID:3:164",
+    "VariableID:3:165",
+    "VariableID:3:166",
+    "VariableID:3:168",
+    "VariableID:3:169",
+    "VariableID:3:170",
+    "VariableID:3:171",
+    "VariableID:95:32042",
+    "VariableID:3:172",
+    "VariableID:3:173",
+    "VariableID:3:174",
+    "VariableID:10:9",
+    "VariableID:10:10",
+    "VariableID:10:11",
+    "VariableID:10:12",
+    "VariableID:17:4516",
+    "VariableID:28:4074",
+    "VariableID:28:4075",
+    "VariableID:95:32043",
+    "VariableID:96:33490",
+    "VariableID:270:3792",
+    "VariableID:296:1554",
+    "VariableID:609:3926",
+    "VariableID:2044:4390"
+  ],
+  "variables": [
+    {
+      "id": "VariableID:1:130",
+      "name": "color/background/default",
+      "description": "Intent:      The main page canvas — the base surface everything sits on\nUse when:    Page background, main content area, any full-page layout surface\nDo not use:  Cards, panels, modals, or elevated containers — use color/surface/* instead\nUse instead: color/surface/default for cards and flat content containers\nForeground:  color/background/default/foreground\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:3" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": { "r": 1, "g": 1, "b": 1, "a": 1 },
+          "alias": "VariableID:1:3",
+          "aliasName": "color/white"
+        }
+      },
+      "scopes": ["FRAME_FILL", "SHAPE_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:132",
+      "name": "color/background/subtle",
+      "description": "Intent:      A near-white tint for low-emphasis background sections\nUse when:    Alternating section backgrounds, sidebar backgrounds, hover states on rows\nDo not use:  Cards or elevated UI — subtle is a flat tint, not a raised surface\nUse instead: color/surface/raised for slightly elevated containers\nNote:        No /foreground pair — text on subtle uses color/background/default/foreground\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:5" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.9725490212440491,
+            "g": 0.9803921580314636,
+            "b": 0.9882352948188782,
+            "a": 1
+          },
+          "alias": "VariableID:1:5",
+          "aliasName": "color/zinc/50"
+        }
+      },
+      "scopes": ["FRAME_FILL", "SHAPE_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:133",
+      "name": "color/background/muted",
+      "description": "Intent:      A visible muted surface for de-emphasized sections or inactive areas\nUse when:    Disabled input backgrounds, skeleton loaders, code blocks, tag backgrounds\nDo not use:  Primary content areas or interactive surfaces\nUse instead: color/background/default for the main page, color/background/subtle for softer tints\nForeground:  color/background/muted/foreground\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:2002:218" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.9019607901573181,
+            "g": 0.9686274528503418,
+            "b": 0.9333333373069763,
+            "a": 1
+          },
+          "alias": "VariableID:2002:218",
+          "aliasName": "color/brand/50"
+        }
+      },
+      "scopes": ["FRAME_FILL", "SHAPE_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:134",
+      "name": "color/background/muted/foreground",
+      "description": "Intent:      Text and icon color on muted background surfaces\nUse when:    Placeholder text, captions inside muted containers, secondary labels on muted bg\nDo not use:  Primary body text on the page canvas — contrast is intentionally reduced\nUse instead: color/background/default/foreground for full-strength text\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:10" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.4117647111415863,
+            "g": 0.4588235318660736,
+            "b": 0.5254902243614197,
+            "a": 1
+          },
+          "alias": "VariableID:1:10",
+          "aliasName": "color/zinc/500"
+        }
+      },
+      "scopes": ["SHAPE_FILL", "TEXT_FILL", "STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:135",
+      "name": "color/background/inverted",
+      "description": "Intent:      A dark surface for high-contrast inverted sections\nUse when:    Dark hero sections, inverted banners, dark tooltips, dark notification bars\nDo not use:  Full dark-mode — this is a single inverted section within a light-mode layout\nUse instead: color/surface/overlay for floating dark elements like dropdowns\nForeground:  color/background/inverted/foreground\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:14" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.07058823853731155,
+            "g": 0.09803921729326248,
+            "b": 0.14901961386203766,
+            "a": 1
+          },
+          "alias": "VariableID:1:14",
+          "aliasName": "color/zinc/900"
+        }
+      },
+      "scopes": ["FRAME_FILL", "SHAPE_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:136",
+      "name": "color/background/inverted/foreground",
+      "description": "Intent:      Text and icon color on the inverted dark background\nUse when:    All text and icons placed on color/background/inverted\nDo not use:  On any light surface — white on white is invisible\nUse instead: color/background/default/foreground on light surfaces\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:3" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": { "r": 1, "g": 1, "b": 1, "a": 1 },
+          "alias": "VariableID:1:3",
+          "aliasName": "color/white"
+        }
+      },
+      "scopes": ["SHAPE_FILL", "TEXT_FILL", "STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:138",
+      "name": "color/text/secondary",
+      "description": "Intent:      Subdued text for supporting information\nUse when:    Captions, metadata, timestamps, helper text, secondary labels beneath a heading\nDo not use:  Body text or headings — contrast is intentionally reduced for supporting roles\nUse instead: color/background/default/foreground for primary body text and headings\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:11" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.29411765933036804,
+            "g": 0.3333333432674408,
+            "b": 0.3960784375667572,
+            "a": 1
+          },
+          "alias": "VariableID:1:11",
+          "aliasName": "color/zinc/600"
+        }
+      },
+      "scopes": ["TEXT_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:139",
+      "name": "color/text/disabled",
+      "description": "Intent:      Text color for inactive or unavailable elements\nUse when:    Disabled input labels, disabled button text, unavailable menu items\nDo not use:  Any text that is interactive or readable — fails WCAG contrast at small sizes\nUse instead: color/text/secondary for readable but de-emphasized text\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:9" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.6039215922355652,
+            "g": 0.6431372761726379,
+            "b": 0.6980392336845398,
+            "a": 1
+          },
+          "alias": "VariableID:1:9",
+          "aliasName": "color/zinc/400"
+        }
+      },
+      "scopes": ["TEXT_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:140",
+      "name": "color/text/inverse",
+      "description": "Intent:      Text on dark surfaces where the default dark text would be invisible\nUse when:    Text on color/background/inverted, dark banners, dark tooltips\nDo not use:  Text on any light or white surface\nUse instead: color/background/default/foreground on light surfaces\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:3" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": { "r": 1, "g": 1, "b": 1, "a": 1 },
+          "alias": "VariableID:1:3",
+          "aliasName": "color/white"
+        }
+      },
+      "scopes": ["TEXT_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:141",
+      "name": "color/text/link",
+      "description": "Intent:      Inline text link color on light surfaces\nUse when:    Hyperlinks in body copy, navigation links, breadcrumbs\nDo not use:  Buttons — links are inline text, buttons are interactive containers\nUse instead: color/brand/primary for button fills, color/text/link-hover for the hovered state\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:2002:211" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0,
+            "g": 0.5333333611488342,
+            "b": 0.32156863808631897,
+            "a": 1
+          },
+          "alias": "VariableID:2002:211",
+          "aliasName": "color/brand/800-base"
+        }
+      },
+      "scopes": ["TEXT_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:142",
+      "name": "color/text/link-hover",
+      "description": "Intent:      Inline text link color on hover\nUse when:    The :hover state of color/text/link — always used as a pair, never standalone\nDo not use:  Default/resting link state — contrast is slightly higher than needed at rest\nUse instead: color/text/link for the resting state\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:2002:210" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.09038367122411728,
+            "g": 0.3696163296699524,
+            "b": 0.25326937437057495,
+            "a": 1
+          },
+          "alias": "VariableID:2002:210",
+          "aliasName": "color/brand/900"
+        }
+      },
+      "scopes": ["TEXT_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:143",
+      "name": "color/border/default",
+      "description": "Intent:      Standard border for input fields, radio buttons, and component frames\nUse when:    Input borders at rest, checkbox outlines, card borders, component frame dividers\nDo not use:  Focus states, hover states, or error states — use the dedicated state tokens\nUse instead: color/border/hover on hover, color/border/focus on focus, color/border/error on error\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:7" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.8901960849761963,
+            "g": 0.9098039269447327,
+            "b": 0.9372549057006836,
+            "a": 1
+          },
+          "alias": "VariableID:1:7",
+          "aliasName": "color/zinc/200"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:144",
+      "name": "color/border/subtle",
+      "description": "Intent:      Low-contrast border for structural, non-interactive elements\nUse when:    Internal card dividers, hairline row separators, layout structure on white bg\nDo not use:  Input fields, interactive components, or any element requiring clear boundary definition\nUse instead: color/border/default for input and component borders\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:6" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.9333333373069763,
+            "g": 0.9490196108818054,
+            "b": 0.9647058844566345,
+            "a": 1
+          },
+          "alias": "VariableID:1:6",
+          "aliasName": "color/zinc/100"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:145",
+      "name": "color/border/strong",
+      "description": "Intent:      High-emphasis border for selected or active states\nUse when:    Selected option chips, active tabs, emphasized separators, drag handles\nDo not use:  Default resting borders or focus rings\nUse instead: color/border/default for standard borders, color/border/focus for focus\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:9" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.6039215922355652,
+            "g": 0.6431372761726379,
+            "b": 0.6980392336845398,
+            "a": 1
+          },
+          "alias": "VariableID:1:9",
+          "aliasName": "color/zinc/400"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:146",
+      "name": "color/border/focus",
+      "description": "Intent:      High-contrast focus ring for keyboard navigation and accessibility\nUse when:    :focus-visible on buttons, inputs, links, and any interactive element\nDo not use:  Decorative borders, hover states, or error indication\nUse instead: color/border/error for validation errors, color/border/strong for emphasis\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:178" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.09019608050584793,
+            "g": 0.7333333492279053,
+            "b": 0.46666666865348816,
+            "a": 1
+          },
+          "alias": "VariableID:1:178",
+          "aliasName": "color/ring"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:147",
+      "name": "color/brand/primary",
+      "description": "Intent:      The main brand fill color for primary interactive elements\nUse when:    Primary button fill, active toggle fill, selected chip fill, key CTAs\nDo not use:  Text color on light backgrounds — use color/text/link for inline brand-colored text\nUse instead: color/text/link for inline links, color/brand/secondary for lower-emphasis brand surfaces\nForeground:  color/brand/primary/foreground\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:2002:211" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0,
+            "g": 0.5333333611488342,
+            "b": 0.32156863808631897,
+            "a": 1
+          },
+          "alias": "VariableID:2002:211",
+          "aliasName": "color/brand/800-base"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:148",
+      "name": "color/brand/primary/foreground",
+      "description": "Intent:      Text and icon color placed directly on a color/brand/primary fill\nUse when:    Label inside a primary button, icon inside a filled brand badge\nDo not use:  On any surface other than color/brand/primary — white on white is invisible\nUse instead: color/background/default/foreground for text on neutral surfaces\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:3" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": { "r": 1, "g": 1, "b": 1, "a": 1 },
+          "alias": "VariableID:1:3",
+          "aliasName": "color/white"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:149",
+      "name": "color/brand/primary-hover",
+      "description": "Intent:      Darker brand fill for the hover state of a primary element\nUse when:    Primary button :hover fill — always paired with color/brand/primary, never used standalone\nDo not use:  Resting state or active/pressed state\nUse instead: color/brand/primary for resting, color/brand/primary-active for pressed\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:2002:210" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.09038367122411728,
+            "g": 0.3696163296699524,
+            "b": 0.25326937437057495,
+            "a": 1
+          },
+          "alias": "VariableID:2002:210",
+          "aliasName": "color/brand/900"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:150",
+      "name": "color/brand/primary-active",
+      "description": "Intent:      Darkest brand fill for the pressed/active state of a primary element\nUse when:    Primary button :active fill — the moment of click or tap\nDo not use:  Hover or resting states\nUse instead: color/brand/primary-hover for hover, color/brand/primary for resting\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:2002:209" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0,
+            "g": 0.2235294133424759,
+            "b": 0.24705882370471954,
+            "a": 1
+          },
+          "alias": "VariableID:2002:209",
+          "aliasName": "color/brand/950-darkshade"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:151",
+      "name": "color/brand/secondary",
+      "description": "Intent:      Light brand-tinted surface for lower-emphasis brand presence\nUse when:    Secondary button fill, selected row highlight, brand-tinted badge background, active nav item background\nDo not use:  High-emphasis CTAs — too light to read as a primary action\nUse instead: color/brand/primary for high-emphasis filled actions\nForeground:  color/brand/secondary/foreground\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:2002:217" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.939393937587738,
+            "g": 0.9806060791015625,
+            "b": 0.9587878584861755,
+            "a": 1
+          },
+          "alias": "VariableID:2002:217",
+          "aliasName": "color/brand/25"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:152",
+      "name": "color/brand/secondary/foreground",
+      "description": "Intent:      Text and icon color on a color/brand/secondary fill\nUse when:    Label inside a secondary brand button, text inside a brand-tinted badge\nDo not use:  On white or neutral surfaces — too dark-blue for general body text\nUse instead: color/text/link for inline brand-colored text on neutral backgrounds\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:2002:209" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0,
+            "g": 0.2235294133424759,
+            "b": 0.24705882370471954,
+            "a": 1
+          },
+          "alias": "VariableID:2002:209",
+          "aliasName": "color/brand/950-darkshade"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:153",
+      "name": "color/surface/default",
+      "description": "Intent:      Background for cards and flat inline content containers\nUse when:    Card backgrounds, list item backgrounds, form section backgrounds, any container sitting on top of the page canvas\nDo not use:  The page canvas itself — use color/background/default for the page\n             Floating or elevated UI — use color/surface/overlay for dropdowns and modals\nUse instead: color/background/default for the page, color/surface/overlay for floating UI\nForeground:  color/surface/default/foreground\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:3" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": { "r": 1, "g": 1, "b": 1, "a": 1 },
+          "alias": "VariableID:1:3",
+          "aliasName": "color/white"
+        }
+      },
+      "scopes": ["FRAME_FILL", "SHAPE_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:154",
+      "name": "color/surface/default/foreground",
+      "description": "Intent:      Text and icon color inside a color/surface/default container\nUse when:    Text and icons inside cards, list items, and flat content containers\nDo not use:  Text directly on the page canvas — use color/background/default/foreground\nUse instead: color/text/secondary for subdued text inside surface containers\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:14" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.07058823853731155,
+            "g": 0.09803921729326248,
+            "b": 0.14901961386203766,
+            "a": 1
+          },
+          "alias": "VariableID:1:14",
+          "aliasName": "color/zinc/900"
+        }
+      },
+      "scopes": ["SHAPE_FILL", "TEXT_FILL", "STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:155",
+      "name": "color/surface/raised",
+      "description": "Intent:      Slightly elevated surface for elements that sit above the page but below overlays\nUse when:    Navigation bars, sticky headers, section headers, sidebar backgrounds, inline panels that feel lifted without floating\nDo not use:  Cards on a white page — the tint provides no contrast against white canvas\n             Modals, dropdowns, or tooltips — use color/surface/overlay for floating UI\nUse instead: color/surface/default for cards, color/surface/overlay for floating elements\nForeground:  color/surface/raised/foreground\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:5" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.9725490212440491,
+            "g": 0.9803921580314636,
+            "b": 0.9882352948188782,
+            "a": 1
+          },
+          "alias": "VariableID:1:5",
+          "aliasName": "color/zinc/50"
+        }
+      },
+      "scopes": ["FRAME_FILL", "SHAPE_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:156",
+      "name": "color/surface/raised/foreground",
+      "description": "Intent:      Text and icon color on a color/surface/raised background\nUse when:    Nav labels, sidebar text, sticky header text on the raised surface\nDo not use:  Text on the page canvas or inside floating overlays\nUse instead: color/surface/overlay/foreground for text inside dropdowns and modals\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:14" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.07058823853731155,
+            "g": 0.09803921729326248,
+            "b": 0.14901961386203766,
+            "a": 1
+          },
+          "alias": "VariableID:1:14",
+          "aliasName": "color/zinc/900"
+        }
+      },
+      "scopes": ["SHAPE_FILL", "TEXT_FILL", "STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:157",
+      "name": "color/surface/overlay",
+      "description": "Intent:      Background for floating UI elements that layer above page content\nUse when:    Dropdowns, tooltips, popovers, modals, command palettes, context menus\nDo not use:  Cards or flat inline content — use color/surface/default for non-floating containers\nUse instead: color/surface/default for flat containers, color/surface/raised for sticky bars\nForeground:  color/surface/overlay/foreground\nNote:        Resolves to the same primitive as color/surface/default in light mode. The distinction matters for dark mode — overlays get a lighter surface than the page.\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:3" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": { "r": 1, "g": 1, "b": 1, "a": 1 },
+          "alias": "VariableID:1:3",
+          "aliasName": "color/white"
+        }
+      },
+      "scopes": ["FRAME_FILL", "SHAPE_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:158",
+      "name": "color/surface/overlay/foreground",
+      "description": "Intent:      Text and icon color inside floating overlay surfaces\nUse when:    Dropdown options, tooltip text, modal body text, popover content\nDo not use:  Text on flat cards or the page canvas\nUse instead: color/surface/default/foreground for text inside flat cards\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:14" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.07058823853731155,
+            "g": 0.09803921729326248,
+            "b": 0.14901961386203766,
+            "a": 1
+          },
+          "alias": "VariableID:1:14",
+          "aliasName": "color/zinc/900"
+        }
+      },
+      "scopes": ["SHAPE_FILL", "TEXT_FILL", "STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:159",
+      "name": "color/status/success",
+      "description": "Intent:      Filled success surface for high-emphasis positive feedback\nUse when:    Success badge fill, success toast fill, confirmed state indicator\nDo not use:  Success messages on a white page — use color/status/success-subtle for inline alerts\nUse instead: color/status/success-subtle for low-emphasis success backgrounds\nForeground:  color/status/success/foreground\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:43" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.13333334028720856,
+            "g": 0.772549033164978,
+            "b": 0.3686274588108063,
+            "a": 1
+          },
+          "alias": "VariableID:1:43",
+          "aliasName": "color/green/500"
+        }
+      },
+      "scopes": ["FRAME_FILL", "SHAPE_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:160",
+      "name": "color/status/success/foreground",
+      "description": "Intent:      Text and icon on a filled success surface\nUse when:    Label inside a filled success badge or toast\nDo not use:  Text on color/status/success-subtle — contrast fails on the light tint\nUse instead: color/status/success-subtle/foreground for text on the subtle tint\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:14" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.07058823853731155,
+            "g": 0.09803921729326248,
+            "b": 0.14901961386203766,
+            "a": 1
+          },
+          "alias": "VariableID:1:14",
+          "aliasName": "color/zinc/900"
+        }
+      },
+      "scopes": ["TEXT_FILL", "STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:161",
+      "name": "color/status/success-subtle",
+      "description": "Intent:      Light success tint for low-emphasis inline alerts and banners\nUse when:    Success alert banner background, valid input highlight, confirmation section bg\nDo not use:  Filled badges or toasts that need strong visual weight\nUse instead: color/status/success for high-emphasis filled surfaces\nForeground:  color/status/success-subtle/foreground\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:38" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.9411764740943909,
+            "g": 0.9921568632125854,
+            "b": 0.95686274766922,
+            "a": 1
+          },
+          "alias": "VariableID:1:38",
+          "aliasName": "color/green/50"
+        }
+      },
+      "scopes": ["FRAME_FILL", "SHAPE_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:162",
+      "name": "color/status/success-subtle/foreground",
+      "description": "Intent:      Text and icon on the success subtle tint\nUse when:    Message text and icons inside a success alert banner\nDo not use:  Text on the filled green surface — use color/status/success/foreground instead\nUse instead: color/status/success/foreground for text on filled success surfaces\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:45" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.08235294371843338,
+            "g": 0.501960813999176,
+            "b": 0.239215686917305,
+            "a": 1
+          },
+          "alias": "VariableID:1:45",
+          "aliasName": "color/green/700"
+        }
+      },
+      "scopes": ["TEXT_FILL", "STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:163",
+      "name": "color/status/warning",
+      "description": "Intent:      Filled warning surface for high-emphasis cautionary feedback\nUse when:    Warning badge fill, caution toast fill, approaching-limit indicator\nDo not use:  Error or failure states — warning signals caution, not failure\nUse instead: color/status/danger for errors, color/status/warning-subtle for inline alerts\nForeground:  color/status/warning/foreground\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:54" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.9176470637321472,
+            "g": 0.7019608020782471,
+            "b": 0.0313725508749485,
+            "a": 1
+          },
+          "alias": "VariableID:1:54",
+          "aliasName": "color/yellow/500"
+        }
+      },
+      "scopes": ["FRAME_FILL", "SHAPE_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:164",
+      "name": "color/status/warning/foreground",
+      "description": "Intent:      Text and icon on a filled warning surface\nUse when:    Label inside a filled warning badge or toast\nDo not use:  On any surface other than color/status/warning — dark text on light bg loses meaning\nNote:        Uses zinc/900 not white — yellow/500 does not pass WCAG contrast with white text\nUse instead: color/status/warning-subtle/foreground for text on the subtle tint\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:14" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.07058823853731155,
+            "g": 0.09803921729326248,
+            "b": 0.14901961386203766,
+            "a": 1
+          },
+          "alias": "VariableID:1:14",
+          "aliasName": "color/zinc/900"
+        }
+      },
+      "scopes": ["TEXT_FILL", "STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:165",
+      "name": "color/status/warning-subtle",
+      "description": "Intent:      Light warning tint for low-emphasis cautionary alerts and banners\nUse when:    Warning alert banner background, non-critical notice section bg\nDo not use:  Error states — cautionary tint is not strong enough to signal failure\nUse instead: color/status/danger-subtle for error banners, color/status/warning for filled badges\nForeground:  color/status/warning-subtle/foreground\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:49" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.9960784316062927,
+            "g": 0.9882352948188782,
+            "b": 0.9098039269447327,
+            "a": 1
+          },
+          "alias": "VariableID:1:49",
+          "aliasName": "color/yellow/50"
+        }
+      },
+      "scopes": ["FRAME_FILL", "SHAPE_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:166",
+      "name": "color/status/warning-subtle/foreground",
+      "description": "Intent:      Text and icon on the warning subtle tint\nUse when:    Message text and icons inside a warning alert banner\nDo not use:  Text on the filled yellow surface — use color/status/warning/foreground instead\nUse instead: color/status/warning/foreground for text on filled warning surfaces\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:56" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.6313725709915161,
+            "g": 0.3843137323856354,
+            "b": 0.027450980618596077,
+            "a": 1
+          },
+          "alias": "VariableID:1:56",
+          "aliasName": "color/yellow/700"
+        }
+      },
+      "scopes": ["TEXT_FILL", "STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:167",
+      "name": "color/status/danger",
+      "description": "Intent:      Filled danger surface for high-emphasis error or destructive feedback\nUse when:    Error badge fill, destructive action toast, delete confirmation indicator\nDo not use:  Cautionary or non-failure states — danger signals failure, not caution\nUse instead: color/status/warning for cautionary states, color/status/danger-subtle for inline alerts\nForeground:  color/status/danger/foreground\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:32" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.9372549057006836,
+            "g": 0.2666666805744171,
+            "b": 0.2666666805744171,
+            "a": 1
+          },
+          "alias": "VariableID:1:32",
+          "aliasName": "color/red/500"
+        }
+      },
+      "scopes": ["FRAME_FILL", "SHAPE_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:168",
+      "name": "color/status/danger/foreground",
+      "description": "Intent:      Text and icon on a filled danger surface\nUse when:    Label inside a filled error badge, icon inside a destructive toast\nDo not use:  Text on color/status/danger-subtle — contrast fails on the light tint\nUse instead: color/status/danger-subtle/foreground for text on the subtle tint\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:3" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": { "r": 1, "g": 1, "b": 1, "a": 1 },
+          "alias": "VariableID:1:3",
+          "aliasName": "color/white"
+        }
+      },
+      "scopes": ["TEXT_FILL", "STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:169",
+      "name": "color/status/danger-subtle",
+      "description": "Intent:      Light danger tint for low-emphasis error alerts and invalid field highlights\nUse when:    Error alert banner background, invalid input field background, form error section\nDo not use:  Filled badges or toasts that need strong visual weight\nUse instead: color/status/danger for high-emphasis filled surfaces\nForeground:  color/status/danger-subtle/foreground\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:27" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.9960784316062927,
+            "g": 0.9490196108818054,
+            "b": 0.9490196108818054,
+            "a": 1
+          },
+          "alias": "VariableID:1:27",
+          "aliasName": "color/red/50"
+        }
+      },
+      "scopes": ["FRAME_FILL", "SHAPE_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:170",
+      "name": "color/status/danger-subtle/foreground",
+      "description": "Intent:      Text and icon on the danger subtle tint\nUse when:    Error message text and icons inside an alert banner or invalid input\nDo not use:  Text on the filled red surface — use color/status/danger/foreground instead\nUse instead: color/status/danger/foreground for text on filled danger surfaces\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:34" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.7254902124404907,
+            "g": 0.10980392247438431,
+            "b": 0.10980392247438431,
+            "a": 1
+          },
+          "alias": "VariableID:1:34",
+          "aliasName": "color/red/700"
+        }
+      },
+      "scopes": ["TEXT_FILL", "STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:171",
+      "name": "color/status/info",
+      "description": "Intent:      Filled info surface for high-emphasis informational feedback\nUse when:    Info badge fill, informational toast fill, neutral announcement indicator\nDo not use:  Brand interactive elements — info is for communication, not action\nUse instead: color/brand/primary for interactive CTAs, color/status/info-subtle for inline notices\nForeground:  color/status/info/foreground\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:21" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.16862745583057404,
+            "g": 0.49803921580314636,
+            "b": 1,
+            "a": 1
+          },
+          "alias": "VariableID:1:21",
+          "aliasName": "color/blue/500"
+        }
+      },
+      "scopes": ["FRAME_FILL", "SHAPE_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:172",
+      "name": "color/status/info/foreground",
+      "description": "Intent:      Text and icon on a filled info surface\nUse when:    Label inside a filled info badge or toast\nDo not use:  Text on color/status/info-subtle — contrast fails on the light tint\nUse instead: color/status/info-subtle/foreground for text on the subtle tint\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:3" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": { "r": 1, "g": 1, "b": 1, "a": 1 },
+          "alias": "VariableID:1:3",
+          "aliasName": "color/white"
+        }
+      },
+      "scopes": ["TEXT_FILL", "STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:173",
+      "name": "color/status/info-subtle",
+      "description": "Intent:      Light info tint for low-emphasis informational alerts and banners\nUse when:    Info alert banner background, announcement section bg, tip highlight\nDo not use:  Brand interactive elements or filled badges needing strong weight\nUse instead: color/status/info for high-emphasis filled surfaces\nForeground:  color/status/info-subtle/foreground\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:16" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.9333333373069763,
+            "g": 0.9647058844566345,
+            "b": 1,
+            "a": 1
+          },
+          "alias": "VariableID:1:16",
+          "aliasName": "color/blue/50"
+        }
+      },
+      "scopes": ["FRAME_FILL", "SHAPE_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:174",
+      "name": "color/status/info-subtle/foreground",
+      "description": "Intent:      Text and icon on the info subtle tint\nUse when:    Message text and icons inside an informational alert banner\nDo not use:  Text on the filled blue info surface — use color/status/info/foreground instead\nUse instead: color/status/info/foreground for text on filled info surfaces\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:23" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.0784313753247261,
+            "g": 0.27843138575553894,
+            "b": 0.9019607901573181,
+            "a": 1
+          },
+          "alias": "VariableID:1:23",
+          "aliasName": "color/blue/700"
+        }
+      },
+      "scopes": ["TEXT_FILL", "STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:176",
+      "name": "color/input/border",
+      "description": "Intent:      Resting border color for input fields, select field, combobox field and form controls\nUse when:    Text input border, textarea border, select border, checkbox outline at rest\nDo not use:  Card or container borders — inputs use zinc/300, one step darker than card borders (zinc/200), to clearly define the field boundary\nUse instead: color/border/focus on :focus-visible, color/border/error on invalid, color/border/disabled on disabled\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:8" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.8039215803146362,
+            "g": 0.8352941274642944,
+            "b": 0.8745098114013672,
+            "a": 1
+          },
+          "alias": "VariableID:1:8",
+          "aliasName": "color/zinc/300"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:178",
+      "name": "color/ring",
+      "description": "Intent:      Outer focus ring halo applied to interactive elements on keyboard focus\nUse when:    box-shadow focus ring on buttons, inputs, links — the visible glow outside the element border\nDo not use:  As a border replacement — ring is additive, always layered on top of the element border\nNote:        shadcn core token (maps to --ring). Used alongside color/border/focus on inputs, and standalone on buttons and links that have no explicit border\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:2002:216" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.09019608050584793,
+            "g": 0.7333333492279053,
+            "b": 0.46666666865348816,
+            "a": 1
+          },
+          "alias": "VariableID:2002:216",
+          "aliasName": "color/brand/500"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:179",
+      "name": "spacing/component/xxs",
+      "description": "Intent:      Tightest internal spacing for compact component elements\nUse when:    Icon-to-label gap inside a badge or chip, gap between a checkbox and its label, padding inside a tag or small pill\nDo not use:  Padding inside buttons or cards — too tight for comfortable interaction targets\nUse instead: spacing/component/sm for button padding, spacing/component/md for card padding\nStatus:      active",
+      "type": "FLOAT",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:80" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": 2,
+          "alias": "VariableID:1:80",
+          "aliasName": "spacing/0-5"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:180",
+      "name": "spacing/component/sm",
+      "description": "Intent:      Standard tight spacing for small component internals\nUse when:    Button vertical padding, input field vertical padding, icon button padding, gap between stacked labels inside a list item\nDo not use:  Layout gaps between components or sections\nUse instead: spacing/layout/xs for gaps between components\nStatus:      active",
+      "type": "FLOAT",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:62" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": 8,
+          "alias": "VariableID:1:62",
+          "aliasName": "spacing/2"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:181",
+      "name": "spacing/component/lg",
+      "description": "Intent:      Default internal padding for most components\nUse when:    Card padding, modal padding, input horizontal padding, dropdown item padding, the go-to internal spacing when unsure\nDo not use:  Gaps between layout sections — use spacing/layout/* for structural spacing\nUse instead: spacing/component/sm for tight components, spacing/component/lg for spacious ones\nStatus:      active",
+      "type": "FLOAT",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:64" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": 16,
+          "alias": "VariableID:1:64",
+          "aliasName": "spacing/4"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:182",
+      "name": "spacing/component/xl",
+      "description": "Intent:      Generous internal padding for large or prominent components\nUse when:    Large card padding, hero section inner padding, empty state padding, dialog/modal body padding\nDo not use:  Small components like buttons or chips — too much breathing room\nUse instead: spacing/component/md for standard components\nStatus:      active",
+      "type": "FLOAT",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:66" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": 24,
+          "alias": "VariableID:1:66",
+          "aliasName": "spacing/6"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:183",
+      "name": "spacing/component/2xl",
+      "description": "Intent:      Maximum internal spacing for very large containers\nUse when:    Full-page panel padding, wide modal padding, feature card inner padding\nDo not use:  Regular components — reserve for large-format containers only\nUse instead: spacing/component/lg for standard large components\nStatus:      active",
+      "type": "FLOAT",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:68" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": 32,
+          "alias": "VariableID:1:68",
+          "aliasName": "spacing/8"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:184",
+      "name": "spacing/layout/xs",
+      "description": "Intent:      Minimum gap between adjacent components in a layout\nUse when:    Gap between a label and an input, gap between inline buttons, tight grid gutters in a dense UI\nDo not use:  Internal component padding — use spacing/component/* for inside components\nUse instead: spacing/layout/sm for standard component gaps\nStatus:      active",
+      "type": "FLOAT",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:64" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": 16,
+          "alias": "VariableID:1:64",
+          "aliasName": "spacing/4"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:185",
+      "name": "spacing/layout/sm",
+      "description": "Intent:      Standard gap between components and groups\nUse when:    Gap between form fields, gap between cards in a grid, gap between nav items, space between a heading and its content block\nDo not use:  Internal component padding or full section spacing\nUse instead: spacing/layout/xs for tighter groups, spacing/layout/md for looser groups\nStatus:      active",
+      "type": "FLOAT",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:66" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": 24,
+          "alias": "VariableID:1:66",
+          "aliasName": "spacing/6"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:186",
+      "name": "spacing/layout/md",
+      "description": "Intent:      Default spacing between distinct content groups\nUse when:    Gap between form sections, space between a page title and its content, vertical rhythm between content blocks on a page\nDo not use:  Internal component padding or micro-spacing within a component\nUse instead: spacing/layout/sm for tighter groups, spacing/layout/lg for major sections\nStatus:      active",
+      "type": "FLOAT",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:68" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": 32,
+          "alias": "VariableID:1:68",
+          "aliasName": "spacing/8"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:187",
+      "name": "spacing/layout/lg",
+      "description": "Intent:      Major section spacing for clear visual breaks between page areas\nUse when:    Vertical gap between page sections, top padding of a content section, space between a hero and the next content block\nDo not use:  Component-level spacing — this scale is for page structure only\nUse instead: spacing/layout/md for content group gaps, spacing/layout/xl for hero-level spacing\nStatus:      active",
+      "type": "FLOAT",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:72" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": 48,
+          "alias": "VariableID:1:72",
+          "aliasName": "spacing/12"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:188",
+      "name": "spacing/layout/xl",
+      "description": "Intent:      Maximum section spacing for the largest structural breaks\nUse when:    Hero section vertical padding, top-of-page breathing room, space between major landmark sections (hero → features → pricing)\nDo not use:  Anything inside or between regular components\nUse instead: spacing/layout/lg for standard section gaps\nStatus:      active",
+      "type": "FLOAT",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:74" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": 64,
+          "alias": "VariableID:1:74",
+          "aliasName": "spacing/16"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:224",
+      "name": "color/background/default/foreground",
+      "description": "Intent:      Primary text and icon color on the default page background\nUse when:    Headings, body text, labels, any text sitting directly on the page canvas\nDo not use:  Text inside cards, modals, or colored containers — use that container's /foreground\nUse instead: color/text/secondary for subdued text, color/text/disabled for inactive text\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:14" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.07058823853731155,
+            "g": 0.09803921729326248,
+            "b": 0.14901961386203766,
+            "a": 1
+          },
+          "alias": "VariableID:1:14",
+          "aliasName": "color/zinc/900"
+        }
+      },
+      "scopes": ["SHAPE_FILL", "TEXT_FILL", "STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:225",
+      "name": "color/icon/default",
+      "description": "Intent:      Default color for standalone icons on light/white surfaces\nUse when:    Icons beside body text, nav icons, toolbar icons, any icon on a neutral background\nDo not use:  Icons inside filled buttons, badges, or colored containers\nUse instead: The container's /foreground token — e.g. color/brand/primary/foreground for an icon inside a filled blue button\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:224" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.07058823853731155,
+            "g": 0.09803921729326248,
+            "b": 0.14901961386203766,
+            "a": 1
+          },
+          "alias": "VariableID:1:224",
+          "aliasName": "color/background/default/foreground"
+        }
+      },
+      "scopes": ["STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:226",
+      "name": "color/icon/muted",
+      "description": "Intent:      Subdued icon for secondary or decorative use\nUse when:    Supporting icons, placeholder hints, inactive nav items, decorative flourishes\nDo not use:  Icons that carry meaning or need high visibility\nUse instead: color/icon/default for primary icons\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:138" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.29411765933036804,
+            "g": 0.3333333432674408,
+            "b": 0.3960784375667572,
+            "a": 1
+          },
+          "alias": "VariableID:1:138",
+          "aliasName": "color/text/secondary"
+        }
+      },
+      "scopes": ["STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:227",
+      "name": "color/icon/disabled",
+      "description": "Intent:      Icon color in disabled or unavailable states\nUse when:    Icons inside disabled buttons, inactive tabs, unavailable menu items\nDo not use:  Any interactive or active icon state\nUse instead: color/icon/default for the active equivalent\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:139" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.6039215922355652,
+            "g": 0.6431372761726379,
+            "b": 0.6980392336845398,
+            "a": 1
+          },
+          "alias": "VariableID:1:139",
+          "aliasName": "color/text/disabled"
+        }
+      },
+      "scopes": ["STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:228",
+      "name": "color/icon/inverse",
+      "description": "Intent:      Icon color on dark or inverted surfaces\nUse when:    Icons on color/background/inverted, dark hero sections, dark nav bars\nDo not use:  Icons on any light surface — will be invisible against white\nUse instead: color/icon/default on light surfaces\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:140" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": { "r": 1, "g": 1, "b": 1, "a": 1 },
+          "alias": "VariableID:1:140",
+          "aliasName": "color/text/inverse"
+        }
+      },
+      "scopes": ["STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:229",
+      "name": "color/icon/brand",
+      "description": "Intent:      Brand-colored icon sitting on a neutral or white surface\nUse when:    Feature highlight icons, logo marks, icons that signal brand identity on light bg\nDo not use:  Icons inside a filled primary button or any filled brand container — blue icon on blue fill is invisible\nUse instead: color/brand/primary/foreground for icons inside filled brand containers\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:147" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0,
+            "g": 0.5333333611488342,
+            "b": 0.32156863808631897,
+            "a": 1
+          },
+          "alias": "VariableID:1:147",
+          "aliasName": "color/brand/primary"
+        }
+      },
+      "scopes": ["STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:230",
+      "name": "color/icon/danger",
+      "description": "Intent:      Danger or error icon on a light surface\nUse when:    Error icon beside a validation message, destructive action icon on white bg\nDo not use:  Icons inside a filled danger badge or filled danger button\nUse instead: color/status/danger/foreground for icons inside filled danger containers\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:167" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.9372549057006836,
+            "g": 0.2666666805744171,
+            "b": 0.2666666805744171,
+            "a": 1
+          },
+          "alias": "VariableID:1:167",
+          "aliasName": "color/status/danger"
+        }
+      },
+      "scopes": ["STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:231",
+      "name": "color/icon/success",
+      "description": "Intent:      Success or confirmation icon on a light surface\nUse when:    Checkmark beside a success message, completion icon on white bg\nDo not use:  Icons inside a filled success badge or toast\nUse instead: color/status/success/foreground for icons inside filled success containers\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:45" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.08235294371843338,
+            "g": 0.501960813999176,
+            "b": 0.239215686917305,
+            "a": 1
+          },
+          "alias": "VariableID:1:45",
+          "aliasName": "color/green/700"
+        }
+      },
+      "scopes": ["STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:232",
+      "name": "color/icon/warning",
+      "description": "Intent:      Warning or caution icon on a light surface\nUse when:    Warning icon beside a non-critical alert message on white bg\nDo not use:  Icons inside a filled warning container\nUse instead: color/status/warning/foreground for icons inside filled warning containers\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:56" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.6313725709915161,
+            "g": 0.3843137323856354,
+            "b": 0.027450980618596077,
+            "a": 1
+          },
+          "alias": "VariableID:1:56",
+          "aliasName": "color/yellow/700"
+        }
+      },
+      "scopes": ["STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:233",
+      "name": "color/border/hover",
+      "description": "Intent:      Slightly more prominent border when a user hovers an interactive element\nUse when:    Input border on :hover, selectable card on :hover, interactive list item on :hover\nDo not use:  Resting state or focus state\nUse instead: color/border/default for resting state, color/border/focus for keyboard focus\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:8" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.8039215803146362,
+            "g": 0.8352941274642944,
+            "b": 0.8745098114013672,
+            "a": 1
+          },
+          "alias": "VariableID:1:8",
+          "aliasName": "color/zinc/300"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:234",
+      "name": "color/border/disabled",
+      "description": "Intent:      Low-contrast border indicating an interaction is unavailable\nUse when:    Disabled input fields, disabled checkboxes, disabled select elements\nDo not use:  Any interactive or enabled element\nUse instead: color/border/default for the enabled equivalent\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:6" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.9333333373069763,
+            "g": 0.9490196108818054,
+            "b": 0.9647058844566345,
+            "a": 1
+          },
+          "alias": "VariableID:1:6",
+          "aliasName": "color/zinc/100"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:235",
+      "name": "color/border/error",
+      "description": "Intent:      Strong border to highlight form validation errors\nUse when:    Input border in invalid/error state, failed form fields, required field alerts\nDo not use:  Warning states — error signals failure, warning signals caution\nUse instead: color/border/warning for cautionary non-failure states\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:30" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.9882352948188782,
+            "g": 0.6470588445663452,
+            "b": 0.6470588445663452,
+            "a": 1
+          },
+          "alias": "VariableID:1:30",
+          "aliasName": "color/red/300"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:236",
+      "name": "color/border/success",
+      "description": "Intent:      Border indicating a successful or valid state\nUse when:    Input border after successful validation, confirmed selection borders\nDo not use:  Neutral or warning states\nUse instead: color/border/error for failed validation, color/border/warning for caution\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:42" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.29019609093666077,
+            "g": 0.8705882430076599,
+            "b": 0.501960813999176,
+            "a": 1
+          },
+          "alias": "VariableID:1:42",
+          "aliasName": "color/green/400"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:1:237",
+      "name": "color/border/warning",
+      "description": "Intent:      Border indicating a cautionary or attention-required state\nUse when:    Input border with a non-critical warning, fields approaching a limit\nDo not use:  Actual errors or failed validation — warning is not failure\nUse instead: color/border/error for validation failures\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:52" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.9921568632125854,
+            "g": 0.8784313797950745,
+            "b": 0.27843138575553894,
+            "a": 1
+          },
+          "alias": "VariableID:1:52",
+          "aliasName": "color/yellow/300"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:3:142",
+      "name": "color/background/accent",
+      "description": "Intent: Subtle background for hover states on ghost and text-style interactive elements.\nUse when: Ghost button hover, sidebar item hover, command menu row hover, dropdown item hover. Maps to shadcn --accent.\nDo not use: As a primary action fill — this is a hover tint, not a CTA color.\nUse instead: color/brand/primary for primary action fills.\nForeground: color/brand/accent/foreground\nStatus: Stable",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:6" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.9333333373069763,
+            "g": 0.9490196108818054,
+            "b": 0.9647058844566345,
+            "a": 1
+          },
+          "alias": "VariableID:1:6",
+          "aliasName": "color/zinc/100"
+        }
+      },
+      "scopes": ["FRAME_FILL", "SHAPE_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:3:143",
+      "name": "color/background/accent/foreground",
+      "description": "Intent: Text and icon color on top of color/brand/accent fill.\nUse when: Labels and icons inside ghost button hover states, hovered sidebar items, hovered menu rows. Maps to shadcn --accent-foreground.\nDo not use: On any surface other than color/brand/accent.\nUse instead: color/background/default/foreground for text on default backgrounds.\nStatus: Stable",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:14" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.07058823853731155,
+            "g": 0.09803921729326248,
+            "b": 0.14901961386203766,
+            "a": 1
+          },
+          "alias": "VariableID:1:14",
+          "aliasName": "color/zinc/900"
+        }
+      },
+      "scopes": ["SHAPE_FILL", "TEXT_FILL", "STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:3:144",
+      "name": "color/brand/destructive",
+      "description": "Intent: Fill color for destructive CTA elements — buttons that delete, remove, or permanently alter data.\nUse when: Delete buttons, Remove confirmations, destructive dialog primary actions. Maps to shadcn --destructive.\nDo not use: For status indicators, error messages, or form validation — use color/status/danger for those.\nUse instead: color/status/danger for inline error states and validation feedback.\nForeground: color/brand/destructive/foreground\nStatus: Stable",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:32" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.9372549057006836,
+            "g": 0.2666666805744171,
+            "b": 0.2666666805744171,
+            "a": 1
+          },
+          "alias": "VariableID:1:32",
+          "aliasName": "color/red/500"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:3:145",
+      "name": "color/brand/destructive/foreground",
+      "description": "Intent: Text and icon color on top of color/brand/destructive fill.\nUse when: Labels and icons inside destructive buttons and confirmation CTAs. Maps to shadcn --destructive-foreground.\nDo not use: On any surface other than color/brand/destructive.\nUse instead: color/status/danger/foreground for text on danger status backgrounds.\nStatus: Stable",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:3" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": { "r": 1, "g": 1, "b": 1, "a": 1 },
+          "alias": "VariableID:1:3",
+          "aliasName": "color/white"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:3:146",
+      "name": "color/input/placeholder",
+      "description": "Intent: Text color for placeholder content inside color for input fields, select field, combobox field\nUse when: The placeholder attribute text in text inputs, textareas, and select fields before a value is entered.\nDo not use: For actual input value text — use color/background/default/foreground for typed content.\nUse instead: color/text/disabled if the entire input is disabled, not just empty.\nStatus: Stable",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:10" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.4117647111415863,
+            "g": 0.4588235318660736,
+            "b": 0.5254902243614197,
+            "a": 1
+          },
+          "alias": "VariableID:1:10",
+          "aliasName": "color/zinc/500"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:3:162",
+      "name": "color/chart/1",
+      "description": "Intent: First data series color in charts and data visualizations.\nUse when: The primary or first dataset in any chart (bar, line, pie). Maps to shadcn --chart-1.\nDo not use: For UI status or brand — chart colors are for data only.\nStatus: Stable",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:3:157" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.9058823585510254,
+            "g": 0.4313725531101227,
+            "b": 0.3137255012989044,
+            "a": 1
+          },
+          "alias": "VariableID:3:157",
+          "aliasName": "color/chart/1"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:3:163",
+      "name": "color/chart/2",
+      "description": "Intent: Second data series color in charts and data visualizations.\nUse when: The second dataset in a multi-series chart. Maps to shadcn --chart-2.\nDo not use: For UI status or brand — chart colors are for data only.\nStatus: Stable",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:3:158" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.16470588743686676,
+            "g": 0.615686297416687,
+            "b": 0.5647059082984924,
+            "a": 1
+          },
+          "alias": "VariableID:3:158",
+          "aliasName": "color/chart/2"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:3:164",
+      "name": "color/chart/3",
+      "description": "Intent: Third data series color in charts and data visualizations.\nUse when: The third dataset in a multi-series chart. Maps to shadcn --chart-3.\nDo not use: For UI status or brand — chart colors are for data only.\nStatus: Stable",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:3:159" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.15294118225574493,
+            "g": 0.27843138575553894,
+            "b": 0.3294117748737335,
+            "a": 1
+          },
+          "alias": "VariableID:3:159",
+          "aliasName": "color/chart/3"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:3:165",
+      "name": "color/chart/4",
+      "description": "Intent: Fourth data series color in charts and data visualizations.\nUse when: The fourth dataset in a multi-series chart. Maps to shadcn --chart-4.\nDo not use: For UI status or brand — chart colors are for data only.\nStatus: Stable",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:3:160" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.9098039269447327,
+            "g": 0.7686274647712708,
+            "b": 0.40784314274787903,
+            "a": 1
+          },
+          "alias": "VariableID:3:160",
+          "aliasName": "color/chart/4"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:3:166",
+      "name": "color/chart/5",
+      "description": "Intent: Fifth data series color in charts and data visualizations.\nUse when: The fifth dataset in a multi-series chart. Maps to shadcn --chart-5.\nDo not use: For UI status or brand — chart colors are for data only.\nStatus: Stable",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:3:161" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.95686274766922,
+            "g": 0.6392157077789307,
+            "b": 0.3843137323856354,
+            "a": 1
+          },
+          "alias": "VariableID:3:161",
+          "aliasName": "color/chart/5"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:3:167",
+      "name": "color/sidebar/background",
+      "description": "Intent: Background fill for the sidebar panel.\nUse when: Sidebar container background. Maps to shadcn --sidebar-background.\nDo not use: For page backgrounds — use color/background/default instead.\nStatus: Stable",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:2002:209" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0,
+            "g": 0.2235294133424759,
+            "b": 0.24705882370471954,
+            "a": 1
+          },
+          "alias": "VariableID:2002:209",
+          "aliasName": "color/brand/950-darkshade"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:3:168",
+      "name": "color/sidebar/foreground",
+      "description": "Intent: Default text and icon color inside the sidebar.\nUse when: Sidebar nav labels, section headings, icon color. Maps to shadcn --sidebar-foreground.\nDo not use: On non-sidebar surfaces.\nStatus: Stable",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:5" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.9725490212440491,
+            "g": 0.9803921580314636,
+            "b": 0.9882352948188782,
+            "a": 1
+          },
+          "alias": "VariableID:1:5",
+          "aliasName": "color/zinc/50"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:3:169",
+      "name": "color/sidebar/primary",
+      "description": "Intent: Fill for the active or primary nav item in the sidebar.\nUse when: Active sidebar nav item background. Maps to shadcn --sidebar-primary.\nDo not use: For brand CTAs — use color/brand/primary instead.\nStatus: Stable",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:14" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.07058823853731155,
+            "g": 0.09803921729326248,
+            "b": 0.14901961386203766,
+            "a": 1
+          },
+          "alias": "VariableID:1:14",
+          "aliasName": "color/zinc/900"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:3:170",
+      "name": "color/sidebar/primary/foreground",
+      "description": "Intent: Text and icon color on top of color/sidebar/primary fill.\nUse when: Labels inside the active sidebar nav item. Maps to shadcn --sidebar-primary-foreground.\nDo not use: On any surface other than color/sidebar/primary.\nStatus: Stable",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:3" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": { "r": 1, "g": 1, "b": 1, "a": 1 },
+          "alias": "VariableID:1:3",
+          "aliasName": "color/white"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:3:171",
+      "name": "color/sidebar/accent",
+      "description": "Intent: Hover background for inactive sidebar nav items.\nUse when: Hover state on sidebar nav rows. Maps to shadcn --sidebar-accent.\nDo not use: As a fill for active items — use color/sidebar/primary instead.\nStatus: Stable",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:2002:210" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.09038367122411728,
+            "g": 0.3696163296699524,
+            "b": 0.25326937437057495,
+            "a": 1
+          },
+          "alias": "VariableID:2002:210",
+          "aliasName": "color/brand/900"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:3:172",
+      "name": "color/sidebar/accent/foreground",
+      "description": "Intent: Text and icon color on top of color/sidebar/accent fill.\nUse when: Labels inside hovered sidebar nav items. Maps to shadcn --sidebar-accent-foreground.\nDo not use: On any surface other than color/sidebar/accent.\nStatus: Stable",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:3" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": { "r": 1, "g": 1, "b": 1, "a": 1 },
+          "alias": "VariableID:1:3",
+          "aliasName": "color/white"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:3:173",
+      "name": "color/sidebar/border",
+      "description": "Intent: Divider and border color within the sidebar.\nUse when: Sidebar edge border, section dividers inside the sidebar. Maps to shadcn --sidebar-border.\nDo not use: For page-level borders — use color/border/default instead.\nStatus: Stable",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:2002:210" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.09038367122411728,
+            "g": 0.3696163296699524,
+            "b": 0.25326937437057495,
+            "a": 1
+          },
+          "alias": "VariableID:2002:210",
+          "aliasName": "color/brand/900"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:3:174",
+      "name": "color/sidebar/ring",
+      "description": "Intent: Focus ring color for keyboard-focused sidebar items.\nUse when: Focus outline on sidebar nav links and buttons. Maps to shadcn --sidebar-ring.\nDo not use: Outside the sidebar — use color/input/ring for global focus rings.\nStatus: Stable",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:21" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.16862745583057404,
+            "g": 0.49803921580314636,
+            "b": 1,
+            "a": 1
+          },
+          "alias": "VariableID:1:21",
+          "aliasName": "color/blue/500"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:10:9",
+      "name": "opacity/disabled",
+      "description": "Intent: Reduces visual prominence of disabled UI elements to signal non-interactivity.\nUse when: Any element in a disabled state — buttons, inputs, selects, checkboxes, form controls.\nDo not use: For loading states — use opacity/loading instead. Do not use for placeholder content.\nUse instead: opacity/loading for in-progress states, opacity/ghost for subtle but interactive elements.\nStatus: Stable",
+      "type": "FLOAT",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:11:27" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": 60,
+          "alias": "VariableID:11:27",
+          "aliasName": "opacity/60"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:10:10",
+      "name": "opacity/loading",
+      "description": "Intent: Signals that an element is in a loading or processing state.\nUse when: Skeleton loaders, buttons with loading spinners, content areas awaiting data.\nDo not use: For disabled elements — use opacity/disabled instead. Loading implies the element will become active; disabled implies it cannot be used.\nUse instead: opacity/disabled for permanently non-interactive elements.\nStatus: Stable",
+      "type": "FLOAT",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:11:26" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": 50,
+          "alias": "VariableID:11:26",
+          "aliasName": "opacity/50"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:10:11",
+      "name": "opacity/overlay",
+      "description": "Intent: Semi-transparent scrim behind modal dialogs, drawers, and full-screen overlays.\nUse when: The backdrop blanket behind a modal, dialog, or drawer — darkens the page to focus attention on the foreground layer.\nDo not use: On the modal content itself — only on the backdrop element behind it.\nStatus: Stable",
+      "type": "FLOAT",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:11:26" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": 50,
+          "alias": "VariableID:11:26",
+          "aliasName": "opacity/50"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:10:12",
+      "name": "opacity/ghost",
+      "description": "Intent: Slightly reduced opacity for ghost or subtle interactive elements that are still active.\nUse when: Ghost buttons in their default state, secondary actions that should recede visually, watermark-style decorative elements.\nDo not use: For disabled elements — ghost elements are still interactive. Use opacity/disabled for non-interactive states.\nStatus: Stable",
+      "type": "FLOAT",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:11:29" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": 80,
+          "alias": "VariableID:11:29",
+          "aliasName": "opacity/80"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:17:4516",
+      "name": "opacity/active",
+      "description": "Intent: Slightly reduced opacity for ghost or subtle interactive elements that are still active.\nUse when: Ghost buttons in their default state, secondary actions that should recede visually, watermark-style decorative elements.\nDo not use: For disabled elements — ghost elements are still interactive. Use opacity/disabled for non-interactive states.\nStatus: Stable",
+      "type": "FLOAT",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:11:29" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": 80,
+          "alias": "VariableID:11:29",
+          "aliasName": "opacity/80"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:17:5523",
+      "name": "color/brand/secondary-hover",
+      "description": "Intent:      Light brand-tinted surface for lower-emphasis brand presence\nUse when:    Secondary button fill, selected row highlight, brand-tinted badge background, active nav item background\nDo not use:  High-emphasis CTAs — too light to read as a primary action\nUse instead: color/brand/primary for high-emphasis filled actions\nForeground:  color/brand/secondary/foreground\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:2002:220" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.7098039388656616,
+            "g": 0.8980392217636108,
+            "b": 0.8196078538894653,
+            "a": 1
+          },
+          "alias": "VariableID:2002:220",
+          "aliasName": "color/brand/150-lightshade"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:17:5524",
+      "name": "color/brand/secondary-active",
+      "description": "Intent:      Light brand-tinted surface for lower-emphasis brand presence\nUse when:    Secondary button fill, selected row highlight, brand-tinted badge background, active nav item background\nDo not use:  High-emphasis CTAs — too light to read as a primary action\nUse instead: color/brand/primary for high-emphasis filled actions\nForeground:  color/brand/secondary/foreground\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:2002:214" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.43921568989753723,
+            "g": 0.8196078538894653,
+            "b": 0.6274510025978088,
+            "a": 1
+          },
+          "alias": "VariableID:2002:214",
+          "aliasName": "color/brand/300"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:17:6501",
+      "name": "color/text/link-active",
+      "description": "Intent:      Inline text link color on hover\nUse when:    The :hover state of color/text/link — always used as a pair, never standalone\nDo not use:  Default/resting link state — contrast is slightly higher than needed at rest\nUse instead: color/text/link for the resting state\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:2002:209" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0,
+            "g": 0.2235294133424759,
+            "b": 0.24705882370471954,
+            "a": 1
+          },
+          "alias": "VariableID:2002:209",
+          "aliasName": "color/brand/950-darkshade"
+        }
+      },
+      "scopes": ["TEXT_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:28:4074",
+      "name": "color/brand/destructive-hover",
+      "description": "Destructive button background on hover. Aliases color/red/600.",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:33" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.8627451062202454,
+            "g": 0.14901961386203766,
+            "b": 0.14901961386203766,
+            "a": 1
+          },
+          "alias": "VariableID:1:33",
+          "aliasName": "color/red/600"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:28:4075",
+      "name": "color/brand/destructive-active",
+      "description": "Destructive button background on active/pressed. Aliases color/red/700.",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:34" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.7254902124404907,
+            "g": 0.10980392247438431,
+            "b": 0.10980392247438431,
+            "a": 1
+          },
+          "alias": "VariableID:1:34",
+          "aliasName": "color/red/700"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:95:32042",
+      "name": "color/sidebar/active",
+      "description": "Intent: Hover background for inactive sidebar nav items.\nUse when: Hover state on sidebar nav rows. Maps to shadcn --sidebar-accent.\nDo not use: As a fill for active items — use color/sidebar/primary instead.\nStatus: Stable",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:3:171" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.09038367122411728,
+            "g": 0.3696163296699524,
+            "b": 0.25326937437057495,
+            "a": 1
+          },
+          "alias": "VariableID:3:171",
+          "aliasName": "color/sidebar/accent"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:95:32043",
+      "name": "color/sidebar/active/foreground",
+      "description": "Intent: Text and icon color on top of color/sidebar/accent fill.\nUse when: Labels inside hovered sidebar nav items. Maps to shadcn --sidebar-accent-foreground.\nDo not use: On any surface other than color/sidebar/accent.\nStatus: Stable",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:3:172" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": { "r": 1, "g": 1, "b": 1, "a": 1 },
+          "alias": "VariableID:3:172",
+          "aliasName": "color/sidebar/accent/foreground"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:96:33490",
+      "name": "spacing/component/md",
+      "description": "",
+      "type": "FLOAT",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:63" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": 12,
+          "alias": "VariableID:1:63",
+          "aliasName": "spacing/3"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:110:4613",
+      "name": "spacing/component/xs",
+      "description": "Intent:      Tightest internal spacing for compact component elements\nUse when:    Icon-to-label gap inside a badge or chip, gap between a checkbox and its label, padding inside a tag or small pill\nDo not use:  Padding inside buttons or cards — too tight for comfortable interaction targets\nUse instead: spacing/component/sm for button padding, spacing/component/md for card padding\nStatus:      active",
+      "type": "FLOAT",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:61" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": 4,
+          "alias": "VariableID:1:61",
+          "aliasName": "spacing/1"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:261:2238",
+      "name": "spacing/component/xs-plus",
+      "description": "",
+      "type": "FLOAT",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:81" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": 6,
+          "alias": "VariableID:1:81",
+          "aliasName": "spacing/1-5"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:261:5059",
+      "name": "color/surface/accent",
+      "description": "",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:6" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.9333333373069763,
+            "g": 0.9490196108818054,
+            "b": 0.9647058844566345,
+            "a": 1
+          },
+          "alias": "VariableID:1:6",
+          "aliasName": "color/zinc/100"
+        }
+      },
+      "scopes": ["FRAME_FILL", "SHAPE_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:264:6344",
+      "name": "color/surface/muted",
+      "description": "Muted component surface — avatar fallback, chips, subtle UI elements",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:6" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.9333333373069763,
+            "g": 0.9490196108818054,
+            "b": 0.9647058844566345,
+            "a": 1
+          },
+          "alias": "VariableID:1:6",
+          "aliasName": "color/zinc/100"
+        }
+      },
+      "scopes": ["FRAME_FILL", "SHAPE_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:264:6345",
+      "name": "color/surface/muted/foreground",
+      "description": "Foreground on muted surface — text and icons on color/surface/muted",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:10" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.4117647111415863,
+            "g": 0.4588235318660736,
+            "b": 0.5254902243614197,
+            "a": 1
+          },
+          "alias": "VariableID:1:10",
+          "aliasName": "color/zinc/500"
+        }
+      },
+      "scopes": ["SHAPE_FILL", "TEXT_FILL", "STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:267:1679",
+      "name": "color/surface/accent/foreground",
+      "description": "",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:14" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.07058823853731155,
+            "g": 0.09803921729326248,
+            "b": 0.14901961386203766,
+            "a": 1
+          },
+          "alias": "VariableID:1:14",
+          "aliasName": "color/zinc/900"
+        }
+      },
+      "scopes": ["SHAPE_FILL", "TEXT_FILL", "STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:270:3792",
+      "name": "color/text/invalid",
+      "description": "Error/invalid text on default backgrounds. Use for form field labels, descriptions, and alert text in invalid or destructive states. NOT the same as status/danger-subtle/foreground (which requires a danger-subtle background).",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:32" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.9372549057006836,
+            "g": 0.2666666805744171,
+            "b": 0.2666666805744171,
+            "a": 1
+          },
+          "alias": "VariableID:1:32",
+          "aliasName": "color/red/500"
+        }
+      },
+      "scopes": ["TEXT_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:296:1554",
+      "name": "color/text/success",
+      "description": "",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:45" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.08235294371843338,
+            "g": 0.501960813999176,
+            "b": 0.239215686917305,
+            "a": 1
+          },
+          "alias": "VariableID:1:45",
+          "aliasName": "color/green/700"
+        }
+      },
+      "scopes": ["TEXT_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:310:2119",
+      "name": "color/status/offline",
+      "description": "",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:7" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.8901960849761963,
+            "g": 0.9098039269447327,
+            "b": 0.9372549057006836,
+            "a": 1
+          },
+          "alias": "VariableID:1:7",
+          "aliasName": "color/zinc/200"
+        }
+      },
+      "scopes": ["FRAME_FILL", "SHAPE_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:310:2120",
+      "name": "color/status/offline/foreground",
+      "description": "",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:14" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.07058823853731155,
+            "g": 0.09803921729326248,
+            "b": 0.14901961386203766,
+            "a": 1
+          },
+          "alias": "VariableID:1:14",
+          "aliasName": "color/zinc/900"
+        }
+      },
+      "scopes": ["TEXT_FILL", "STROKE_COLOR"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:609:3926",
+      "name": "color/input/bg",
+      "description": "",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:3" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": { "r": 1, "g": 1, "b": 1, "a": 1 },
+          "alias": "VariableID:1:3",
+          "aliasName": "color/white"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:2004:3587",
+      "name": "color/border/info",
+      "description": "Intent:      Border indicating a cautionary or attention-required state\nUse when:    Input border with a non-critical warning, fields approaching a limit\nDo not use:  Actual errors or failed validation — warning is not failure\nUse instead: color/border/error for validation failures\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:19" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.5568627715110779,
+            "g": 0.772549033164978,
+            "b": 1,
+            "a": 1
+          },
+          "alias": "VariableID:1:19",
+          "aliasName": "color/blue/300"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:2023:3794",
+      "name": "color/text/tertiary",
+      "description": "Intent:      Subdued text for supporting information\nUse when:    Captions, metadata, timestamps, helper text, secondary labels beneath a heading\nDo not use:  Body text or headings — contrast is intentionally reduced for supporting roles\nUse instead: color/background/default/foreground for primary body text and headings\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:10" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.4117647111415863,
+            "g": 0.4588235318660736,
+            "b": 0.5254902243614197,
+            "a": 1
+          },
+          "alias": "VariableID:1:10",
+          "aliasName": "color/zinc/500"
+        }
+      },
+      "scopes": ["TEXT_FILL"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:2035:4089",
+      "name": "color/border/brand",
+      "description": "Intent:      High-contrast focus ring for keyboard navigation and accessibility\nUse when:    :focus-visible on buttons, inputs, links, and any interactive element\nDo not use:  Decorative borders, hover states, or error indication\nUse instead: color/border/error for validation errors, color/border/strong for emphasis\nStatus:      active",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:2002:211" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0,
+            "g": 0.5333333611488342,
+            "b": 0.32156863808631897,
+            "a": 1
+          },
+          "alias": "VariableID:2002:211",
+          "aliasName": "color/brand/800-base"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    },
+    {
+      "id": "VariableID:2044:4390",
+      "name": "color/input/bg-read-only",
+      "description": "",
+      "type": "COLOR",
+      "valuesByMode": {
+        "1:1": { "type": "VARIABLE_ALIAS", "id": "VariableID:1:6" }
+      },
+      "resolvedValuesByMode": {
+        "1:1": {
+          "resolvedValue": {
+            "r": 0.9333333373069763,
+            "g": 0.9490196108818054,
+            "b": 0.9647058844566345,
+            "a": 1
+          },
+          "alias": "VariableID:1:6",
+          "aliasName": "color/zinc/100"
+        }
+      },
+      "scopes": ["ALL_SCOPES"],
+      "hiddenFromPublishing": false,
+      "codeSyntax": {}
+    }
+  ]
+}
