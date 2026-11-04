@@ -215,6 +215,27 @@ The default filter ignores case and accents. Set a trigger's `filter` to customi
 
 <ComponentPreview name="p-composer-5" />
 
+### Emoji
+
+Give an item `type: "text"` to replace the query with its `text` as ordinary characters, instead of inserting a token. This demo uses it for Slack-style emoji: typing `:thu` suggests 👍, and selecting it replaces `:thu` with the emoji and a space. The emoji is plain draft text, so backspace, copy, undo, and `getComposerText` treat it like any typed character.
+
+<ComponentPreview name="p-composer-12" />
+
+The Composer doesn’t ship emoji data. The demo passes a curated list of about 140 common emoji, each with an `emoji`, a `shortcode`, and `keywords`, and ranks matches in `onQueryChange`: shortcode prefixes first, then keyword prefixes, then substrings, up to eight results. Queries shorter than two characters return no items, so the popup stays closed. Because `:` opens only after a space or at the start of the draft, times such as `10:30` and URLs such as `https://` never open it.
+
+```tsx
+const [emoji, setEmoji] = useState<ComposerItemValue[]>([])
+
+<Composer
+  onQueryChange={(query) =>
+    setEmoji(query?.character === ":" ? searchEmoji(query.text) : [])
+  }
+  triggers={[{ character: ":", items: emoji, filter: null }]}
+>
+```
+
+Each `searchEmoji` result is `{ id: "thumbsup", label: "thumbsup", text: "👍", type: "text" }`. In the list, a blurred, enlarged, `aria-hidden` copy of the emoji sits behind the glyph as a glow in the emoji’s own colors; it’s absolutely positioned, so it doesn’t affect layout or scrolling.
+
 ### Async results
 
 Fetch results in response to `onQueryChange`. Use `filter: null` for prefiltered results and `itemsFor` to identify their query text. For caret-sensitive results, return the opaque `ComposerQuery.key` as the trigger’s `queryKey`; results from a different query position cannot be selected even when the text matches. Do not persist or parse the key.
@@ -431,7 +452,7 @@ type ComposerItemValue = {
   disabled?: boolean
   description?: string
   icon?: ReactNode
-  type?: "mention" | "action"
+  type?: "mention" | "action" | "text"
   kind?: string
   data?: string
   text?: string
@@ -440,7 +461,7 @@ type ComposerItemValue = {
 type ComposerQuery = { character: string; text: string; key: string }
 ```
 
-Item IDs must be unique within each trigger. Set `disabled: true` on an item to skip it during keyboard navigation and prevent selection. `type` defaults to `"mention"`; set `"action"` for slash actions. Use `kind` for your own categories, such as `"person"` and `"team"`, even when both come from `@`. The selected part retains `kind`. `getComposerText(value)` uses a token’s optional `text` field, or falls back to its trigger and label. Optional `data` is an opaque string preserved through editing, undo/redo, and supported structured copy/paste; the editor never interprets it as HTML. Keep domain validation and authorization in your application.
+Item IDs must be unique within each trigger. Set `disabled: true` on an item to skip it during keyboard navigation and prevent selection. `type` defaults to `"mention"`; set `"action"` for slash actions, or `"text"` to insert the item’s `text` (or its `label`) as plain characters instead of a token. Use `kind` for your own categories, such as `"person"` and `"team"`, even when both come from `@`. The selected part retains `kind`. `getComposerText(value)` uses a token’s optional `text` field, or falls back to its trigger and label. Optional `data` is an opaque string preserved through editing, undo/redo, and supported structured copy/paste; the editor never interprets it as HTML. Keep domain validation and authorization in your application.
 
 `ComposerTrigger` configures one source:
 

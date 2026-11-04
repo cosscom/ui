@@ -1131,6 +1131,10 @@ export const Index: Record<string, any> = {
       type: "registry:component",
       target: "@components/chat-demo/chat-demo-composer.tsx"
     },{
+      path: "registry/default/chat-demo/chat-demo-emoji.ts",
+      type: "registry:component",
+      target: "@components/chat-demo/chat-demo-emoji.ts"
+    },{
       path: "registry/default/chat-demo/chat-demo-message-info.tsx",
       type: "registry:component",
       target: "@components/chat-demo/chat-demo-message-info.tsx"
@@ -4833,6 +4837,28 @@ export const Index: Record<string, any> = {
     }],
     component: React.lazy(async () => {
       const mod = await import("@/registry/default/particles/p-composer-11.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["composer","text editor"],
+    meta: {"className":"**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"},
+  },
+  "p-composer-12": {
+    name: "p-composer-12",
+    description: "Composer with colon emoji suggestions that insert plain text",
+    type: "registry:block",
+    registryDependencies: ["@coss/button","@coss/composer"],
+    files: [{
+      path: "registry/default/particles/p-composer-12.tsx",
+      type: "registry:block",
+      target: ""
+    },{
+      path: "registry/default/chat-demo/chat-demo-emoji.ts",
+      type: "registry:component",
+      target: "@components/chat-demo/chat-demo-emoji.ts"
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-composer-12.tsx")
       const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
       return { default: mod.default || mod[exportName] }
     }),
