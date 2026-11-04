@@ -39,3 +39,20 @@ body {
 ::selection {
   background: color-mix(in srgb, var(--primary) 18%, transparent);
 }
+
+/*
+ * Icon-only controls keep full-strength icons.
+ *
+ * COSS dims icons inside buttons to 80% so they do not compete with the
+ * label beside them. An icon-only button has no label, so the icon is the
+ * whole affordance and dimming it weakens the only thing the user can see.
+ * In this prototype an aria-label with no visible text marks those buttons.
+ *
+ * Paired with the stroke-width override in app/layout.tsx. Both are
+ * deliberate departures from the generated defaults - see
+ * docs/rules/ui-hierarchy.md.
+ */
+button[aria-label] svg,
+[data-slot="menu-trigger"][aria-label] svg {
+  opacity: 1;
+}

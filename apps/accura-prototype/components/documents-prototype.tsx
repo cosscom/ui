@@ -57,7 +57,7 @@ import {
   MultiplePages as FilesIcon,
   Page as FileTextIcon,
   GraduationCap as GraduationCapIcon,
-  DashboardDots as LayoutDashboardIcon,
+  ViewGrid as LayoutDashboardIcon,
   LogOut as LogOutIcon,
   MoreHoriz as MoreHorizontalIcon,
   SidebarCollapse as PanelLeftCloseIcon,
@@ -938,7 +938,7 @@ export function DocumentsPrototype() {
                                 render={
                                   <Button
                                     aria-label={`Actions for ${document.name}`}
-                                    size="icon-xs"
+                                    size="icon-sm"
                                     variant="ghost"
                                   />
                                 }

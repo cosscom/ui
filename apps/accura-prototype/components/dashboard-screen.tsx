@@ -30,6 +30,7 @@ import {
 } from "iconoir-react";
 import Image from "next/image";
 import { useMemo, useRef, useState } from "react";
+import { Tabs, TabsList, TabsTab } from "./accura-tabs";
 
 type DashboardScreenProps = {
   onOpenDocuments: () => void;
@@ -363,27 +364,17 @@ export function DashboardScreen({ onOpenDocuments }: DashboardScreenProps) {
           </Select>
         </div>
 
-        <div className="flex border-b" role="tablist">
-          {[
-            ["actions", "My actions", "30"],
-            ["upcoming", "Upcoming", "2"],
-          ].map(([value, label, count]) => (
-            <button
-              aria-selected={activeTab === value}
-              className={`relative px-4 py-2.5 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring ${
-                activeTab === value
-                  ? "font-medium text-primary after:absolute after:inset-x-0 after:bottom-[-1px] after:h-0.5 after:bg-primary"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-              key={value}
-              onClick={() => setActiveTab(value as "actions" | "upcoming")}
-              role="tab"
-              type="button"
-            >
-              {label} ({count})
-            </button>
-          ))}
-        </div>
+        <Tabs
+          onValueChange={(value) =>
+            setActiveTab(value as "actions" | "upcoming")
+          }
+          value={activeTab}
+        >
+          <TabsList aria-label="Record views" className="px-0">
+            <TabsTab value="actions">My actions (30)</TabsTab>
+            <TabsTab value="upcoming">Upcoming (2)</TabsTab>
+          </TabsList>
+        </Tabs>
 
         <div className="overflow-hidden rounded-xl border bg-card shadow-xs">
           <Table>
@@ -459,7 +450,7 @@ export function DashboardScreen({ onOpenDocuments }: DashboardScreenProps) {
                             ? onOpenDocuments
                             : undefined
                         }
-                        size="icon-xs"
+                        size="icon-sm"
                         variant="ghost"
                       >
                         <EyeIcon aria-hidden="true" />

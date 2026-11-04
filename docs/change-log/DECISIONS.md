@@ -2,6 +2,72 @@
 
 This is the canonical history of Accura product, design-system, and prototype decisions. It records why a direction was chosen and preserves superseded directions. Current product facts live in `docs/product-knowledge/`; current rules live in `docs/rules/`; implemented changes are indexed in root `CHANGELOG.md`.
 
+## 2026-11-04 - Icon weight and an index of deliberate overrides
+
+### Decision
+
+Render Iconoir icons at stroke width 2, keep icons in icon-only buttons at full strength while icons beside a label stay at the inherited 80%, and use the 28 px icon button for table row actions. Record every deliberate departure from COSS and library defaults in [`../rules/prototype-overrides.md`](../rules/prototype-overrides.md), indexed from the Accura start-here list.
+
+### Reasoning
+
+Three separate things made table row actions look faint: Iconoir's 1.5 stroke, the 80% opacity COSS applies to any icon inside a button, and a 14 px glyph in a 24 px target. Only the first had been addressed, and it had been addressed invisibly — the stroke override lived in an inline style block in `layout.tsx` with no record anywhere in the documentation. Any agent rewriting that file would have dropped it and produced a result that looked like the library default while appearing correct in isolation. The override index exists so that failure mode is caught by reading, not by noticing a regression later.
+
+## 2026-11-04 - ComboboxChips gains an optional endAddon
+
+### Decision
+
+Add an optional `endAddon` slot to the shared `ComboboxChips` primitive in `packages/ui`, mirroring the existing `startAddon`. The slot is positioned at the inline end, stays interactive so it can host a `ComboboxTrigger`, and the container reserves its space automatically through `has-[[data-slot=combobox-end-addon]]:pe-8`. Passing nothing keeps the previous appearance.
+
+### Reasoning
+
+`ComboboxInput` renders a chevron trigger by default through `showTrigger`, but `ComboboxChipsInput` renders none and `ComboboxChips` only exposed `startAddon`, so every multi-select combobox looked like a plain text field with no sign it opens a list. That gap affects any application using the primitive, not only Accura, so it was fixed in the shared component rather than wrapped at the Accura level the way `AccuraTabs` is. The prop is additive and opt-in, so existing usages are unchanged.
+
+## 2026-11-04 - Form fields state required and optional explicitly
+
+### Decision
+
+Mark required fields with a red asterisk after the label and optional fields with a muted "(Optional)" beside the label, and remove helper text that repeats the label or control. Give disabled inputs the Zinc 100 recessed surface with muted text at full opacity. The enforceable rule is owned by [`../rules/ui-hierarchy.md`](../rules/ui-hierarchy.md).
+
+### Reasoning
+
+Previously only required fields were marked, so an unmarked field could mean optional or could mean the marker was forgotten. Sentences such as "Optional. Choose one or more departments." restated the label and the control instead of adding a rule the user could not infer. The COSS `Input` wrapper signals disabled with `has-disabled:opacity-64` alone, which on a white dialog is indistinguishable from an empty editable field; a changed surface states the condition instead of implying it.
+
+## 2026-11-04 - Role detail shows an access matrix instead of a locked form
+
+### Decision
+
+Present built-in role details as a read-only Module/Access level table. Drop the role description from the dialog and explain only the access levels the role actually grants. The user confirmed all three changes.
+
+These diverge from [`US-005 - View Role Details`](../requirements/05%20User%20Story/PRD-001%20-%20User%20Roles%20&%20Permissions/US-005%20-%20View%20Role%20Details.md), which specifies disabled radio controls (AC-02), a displayed description (AC-02), and all three access-level definitions (AC-03). The requirements repository is a separate submodule and was deliberately left unchanged, so this log is the record of the divergence.
+
+### Reasoning
+
+Every built-in role grants one uniform level across its modules, so module tabs with disabled radios never changed on interaction and read as broken. A table shows all modules at once and still prevents editing. The description restated the access level and the module list that the table already shows, and defining levels the role does not use added noise. Anyone validating the prototype against US-005 should expect these three differences.
+
+## 2026-11-04 - User accounts carry an explicit three-state status
+
+### Decision
+
+Give the Settings user list a Status column with Active, Inactive, and Invitation pending, rendered as filled semantic badges. Keep the identity cluster free of status so no row grows a third text line.
+
+[`PRD-001`](../requirements/04%20Epics%20-%20PRD/PRD-001%20-%20User%20Roles%20&%20Permissions.md) defines only Invitation pending and places user activation and deactivation out of scope; [`US-003`](../requirements/05%20User%20Story/PRD-001%20-%20User%20Roles%20&%20Permissions/US-003%20-%20View%20List%20Users.md) AC-01 lists four columns and excludes account status management. The user approved the wider model for the prototype; the requirements repository was left unchanged.
+
+### Reasoning
+
+A single pending marker forced an exception into the identity cell and made that row taller than its peers. A dedicated column gives every account the same shape, keeps row height uniform, and leaves room for the activation states the product will need. Filled badges are correct here because status is genuine lifecycle meaning, which [`../rules/ui-hierarchy.md`](../rules/ui-hierarchy.md) separates from outline metadata.
+
+## 2026-11-04 - Departments are a controlled list and email is fixed after invitation
+
+### Decision
+
+Select departments from a multi-select dropdown drawn from a defined list rather than typing them as comma-separated text. Make the email address read-only in Edit user while keeping it editable in Invite user.
+
+This settles open question 3 in PRD-001 in favour of a controlled directory for prototype purposes.
+
+### Reasoning
+
+Free text let the same team be entered as "Quality" and "Quality Assurance", which silently fragments any later filtering or approver-eligibility rule that depends on department. The email address identifies the account and drives the invitation, so changing it after an invitation has been sent would detach the person from the invitation already issued; US-004 still requires unique-email validation, which now only applies when inviting.
+
 ## 2026-11-04 - Metadata badges use outline hierarchy
 
 ### Decision
@@ -29,6 +95,39 @@ The darker brand anchor gives the expanding Accura prototype a stable navigation
 ### Supersedes
 
 This replaces the light Zinc navigation portion of the 2026-11-03 application-shell decision. The Zinc canvas and white content-surface portions remain current.
+
+## 2026-11-04 - Settings section headers separate context from content
+
+### Decision
+
+Use Zinc 50 for the header band of structured Settings and detail containers when it groups a title, description, and section-level action. Keep tabs, filters, tables, forms, and other working content on the white body beneath a single divider.
+
+### Reasoning
+
+The subtle header plane makes context and actions easier to scan without introducing another brand-colored surface. Zinc 50 remains distinct from both the Zinc 100 application canvas and the white content body, preserving the existing Accura hierarchy.
+
+## 2026-11-04 - Card-table visual treatment deferred
+
+### Decision
+
+Keep the existing table treatment in Settings. Store the supplied sectioned and standalone table examples as non-binding visual references in [`../visual-references/table-compositions.md`](../visual-references/table-compositions.md). Do not apply either direction automatically or promote it into `docs/rules/` until the user confirms the scope of a coordinated table migration.
+
+### Reasoning
+
+Applying the inset card-table treatment only to Settings would make it inconsistent with Documents, Records, and module tables. The references remain useful for future exploration, but consistency across comparable data surfaces takes precedence over a partial restyle.
+
+## 2026-11-04 - Settings tabs and user identity made explicit
+
+### Decision
+
+- Keep Settings navigation as tabs rather than changing it into a row of solid action buttons.
+- Increase tab-row spacing and use Brand 950 for the selected underline and text without adding a selected background.
+- Own this treatment in the Accura-level `AccuraTabs` wrapper and use it for both Settings and Dashboard tabs. Keep the shared COSS primitive visually unchanged so other applications are not affected.
+- When a user’s name and email appear together, use the reusable avatar, name, and email identity cluster defined in [`../rules/user-identity.md`](../rules/user-identity.md).
+
+### Reasoning
+
+The previous compact neutral underline looked like static labels and made the alternate Users view easy to miss. Strong solid buttons or a filled selected tab would compete with the section action, so a more spacious branded underline preserves the correct navigation hierarchy. Pairing an avatar with the existing name and email makes people easier to scan and establishes one repeatable user pattern across Accura.
 
 ## 2026-11-02 - Documents selected as the first vertical slice
 

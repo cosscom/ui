@@ -1,8 +1,21 @@
 "use client";
 
+import { Avatar, AvatarFallback } from "@coss/ui/components/avatar";
 import { Badge } from "@coss/ui/components/badge";
 import { Button } from "@coss/ui/components/button";
 import { Checkbox } from "@coss/ui/components/checkbox";
+import {
+  Combobox,
+  ComboboxChip,
+  ComboboxChips,
+  ComboboxChipsInput,
+  ComboboxEmpty,
+  ComboboxItem,
+  ComboboxList,
+  ComboboxPopup,
+  ComboboxTrigger,
+  ComboboxValue,
+} from "@coss/ui/components/combobox";
 import {
   Dialog,
   DialogClose,
@@ -20,7 +33,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@coss/ui/components/empty";
-import { Field, FieldDescription, FieldLabel } from "@coss/ui/components/field";
+import { Field, FieldLabel } from "@coss/ui/components/field";
 import { Input } from "@coss/ui/components/input";
 import {
   InputGroup,
@@ -48,9 +61,9 @@ import {
   TableHeader,
   TableRow,
 } from "@coss/ui/components/table";
-import { Tabs, TabsList, TabsPanel, TabsTab } from "@coss/ui/components/tabs";
 import {
   Building as BuildingIcon,
+  ArrowSeparateVertical as ChevronsUpDownIcon,
   ClipboardCheck as ClipboardCheckIcon,
   MultiplePages as FilesIcon,
   GraduationCap as GraduationCapIcon,
@@ -65,6 +78,7 @@ import {
   Tools as WrenchIcon,
 } from "iconoir-react";
 import { useMemo, useState } from "react";
+import { Tabs, TabsList, TabsPanel, TabsTab } from "./accura-tabs";
 
 type SettingsSection =
   | "asset-management"
@@ -86,17 +100,19 @@ type Role = {
   origin: "System";
 };
 
+type UserStatus = "Active" | "Inactive" | "Invitation pending";
+
 type EditableUser = {
   departments: string[];
   email: string;
   id: string;
   name: string;
   roles: string[];
-  status: "Active" | "Invitation pending";
+  status: UserStatus;
 };
 
 type UserFormState = {
-  departments: string;
+  departments: string[];
   email: string;
   name: string;
   roles: string[];
@@ -255,15 +271,22 @@ const initialUsers: EditableUser[] = [
     roles: ["Admin"],
     status: "Active",
   },
-  // Seeded so US-003 AC-02 (invitation indicator) and the departments column
-  // are both visible on first load.
+  // Seeded so every status and the departments column are visible on load.
   {
-    departments: ["Manufacturing", "Quality"],
+    departments: ["Manufacturing", "Quality Assurance"],
     email: "priya.menon@example.com",
     id: "u-4",
     name: "Priya Menon",
     roles: ["Normal User"],
     status: "Invitation pending",
+  },
+  {
+    departments: ["Engineering"],
+    email: "daniel.ferreira@example.com",
+    id: "u-5",
+    name: "Daniel Ferreira",
+    roles: ["Read-only User"],
+    status: "Inactive",
   },
 ];
 
@@ -339,8 +362,26 @@ const moduleFilterOptions = [
   ...modules.map((module) => ({ label: module, value: module })),
 ];
 
+// A controlled list, not free text: typing departments by hand produced
+// variants such as "Quality" and "Quality Assurance" for the same team.
+const departmentOptions = [
+  "Engineering",
+  "Manufacturing",
+  "Quality Assurance",
+  "Quality Control",
+].map((name) => ({ label: name, value: name }));
+
+const statusBadgeVariant: Record<
+  UserStatus,
+  "secondary" | "success" | "warning"
+> = {
+  Active: "success",
+  Inactive: "secondary",
+  "Invitation pending": "warning",
+};
+
 const emptyForm: UserFormState = {
-  departments: "",
+  departments: [],
   email: "",
   name: "",
   roles: [],
@@ -350,15 +391,73 @@ function countLabel(count: number, noun: string) {
   return `${count} ${noun}${count === 1 ? "" : "s"}`;
 }
 
-function parseDepartments(value: string) {
-  return value
-    .split(",")
-    .map((part) => part.trim())
-    .filter(Boolean);
-}
-
 function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+// One label convention for the whole form: a red asterisk marks required,
+// "(Optional)" marks the rest. Both sit in a single child so FieldLabel's
+// gap-2 does not push the marker away from the word it qualifies.
+function FormLabel({
+  children,
+  optional,
+}: {
+  children: React.ReactNode;
+  optional?: boolean;
+}) {
+  return (
+    <FieldLabel>
+      <span>
+        {children}
+        {optional ? (
+          <span className="ms-1 font-normal text-muted-foreground">
+            (Optional)
+          </span>
+        ) : (
+          <span aria-hidden="true" className="ms-0.5 text-destructive">
+            *
+          </span>
+        )}
+      </span>
+    </FieldLabel>
+  );
+}
+
+function getUserInitials(name: string) {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
+}
+
+function UserIdentity({ user }: { user: EditableUser }) {
+  return (
+    <div className="flex min-w-0 items-center gap-3">
+      <Avatar
+        aria-hidden="true"
+        className="shrink-0 [--avatar-size:--spacing(8)]"
+      >
+        <AvatarFallback className="bg-[var(--accura-brand-150-lightshade)] text-[var(--accura-brand-950-darkshade)]">
+          {getUserInitials(user.name)}
+        </AvatarFallback>
+      </Avatar>
+      <div className="min-w-0">
+        {/* No status badge here: the Status column now carries it, and
+            user-identity.md only asks for it beside the name when the row has
+            nowhere else to show it. */}
+        <p className="truncate font-medium">{user.name}</p>
+        <p
+          className="truncate text-muted-foreground text-xs"
+          title={user.email}
+        >
+          {user.email}
+        </p>
+      </div>
+    </div>
+  );
 }
 
 function SectionHeading({
@@ -371,7 +470,7 @@ function SectionHeading({
   title: string;
 }) {
   return (
-    <div className="flex flex-wrap items-start justify-between gap-3 border-b px-5 py-4">
+    <div className="flex flex-wrap items-start justify-between gap-3 border-b bg-[var(--accura-zinc-50)] px-5 py-4">
       <div className="flex flex-col gap-0.5">
         <h2 className="font-bold text-base leading-tight">{title}</h2>
         <p className="text-muted-foreground text-sm">{description}</p>
@@ -533,7 +632,7 @@ function UserFormDialog({
         </DialogHeader>
         <DialogPanel className="flex flex-col gap-4">
           <Field>
-            <FieldLabel>Full name *</FieldLabel>
+            <FormLabel>Full name</FormLabel>
             <Input
               onChange={(event) =>
                 setForm({ ...form, name: event.target.value })
@@ -545,37 +644,87 @@ function UserFormDialog({
           </Field>
 
           <Field>
-            <FieldLabel>Email address *</FieldLabel>
+            <FormLabel>Email address</FormLabel>
             <Input
+              // Input puts className on its wrapper span, which styles the
+              // disabled state with has-disabled:, not disabled:. COSS only
+              // dims it (opacity-64), so it reads as an empty enabled field;
+              // Zinc 100 is the app's recessed plane, and full opacity keeps
+              // the border crisp.
+              className="has-disabled:bg-[var(--accura-canvas)] has-disabled:opacity-100 has-disabled:*:text-muted-foreground"
+              disabled={editing}
               onChange={(event) =>
                 setForm({ ...form, email: event.target.value })
               }
               placeholder="name@company.com"
+              readOnly={editing}
               type="email"
               value={form.email}
             />
           </Field>
 
           <Field>
-            <FieldLabel>Departments</FieldLabel>
-            <Input
-              onChange={(event) =>
-                setForm({ ...form, departments: event.target.value })
+            <FormLabel optional>Departments</FormLabel>
+            <Combobox
+              items={departmentOptions}
+              multiple
+              onValueChange={(value: { label: string; value: string }[]) =>
+                setForm({
+                  ...form,
+                  departments: value.map((item) => item.value),
+                })
               }
-              placeholder="e.g. Manufacturing, Quality"
-              type="text"
-              value={form.departments}
-            />
-            <FieldDescription>
-              Optional. Separate several departments with commas.
-            </FieldDescription>
+              value={departmentOptions.filter((option) =>
+                form.departments.includes(option.value),
+              )}
+            >
+              <ComboboxChips
+                endAddon={
+                  <ComboboxTrigger
+                    aria-label="Show departments"
+                    className="inline-flex size-7 cursor-pointer items-center justify-center rounded-md opacity-80 outline-none transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <ChevronsUpDownIcon aria-hidden="true" />
+                  </ComboboxTrigger>
+                }
+              >
+                <ComboboxValue>
+                  {(value: { label: string; value: string }[]) => (
+                    <>
+                      {value.map((item) => (
+                        <ComboboxChip aria-label={item.label} key={item.value}>
+                          {item.label}
+                        </ComboboxChip>
+                      ))}
+                      <ComboboxChipsInput
+                        aria-label="Departments"
+                        placeholder={
+                          value.length > 0 ? undefined : "Select departments…"
+                        }
+                      />
+                    </>
+                  )}
+                </ComboboxValue>
+              </ComboboxChips>
+              <ComboboxPopup>
+                <ComboboxEmpty>No departments found.</ComboboxEmpty>
+                <ComboboxList>
+                  {(item: { label: string; value: string }) => (
+                    <ComboboxItem key={item.value} value={item}>
+                      {item.label}
+                    </ComboboxItem>
+                  )}
+                </ComboboxList>
+              </ComboboxPopup>
+            </Combobox>
           </Field>
 
           <div className="flex flex-col gap-2">
-            <p className="font-medium text-sm">Roles *</p>
-            <p className="text-muted-foreground text-sm">
-              Select one or more roles. A role applies to its configured
-              modules.
+            <p className="font-medium text-base/4.5 sm:text-sm/4">
+              Roles
+              <span aria-hidden="true" className="ms-0.5 text-destructive">
+                *
+              </span>
             </p>
             <div className="flex flex-col gap-2">
               {roles.map((role) => {
@@ -703,7 +852,7 @@ export function SettingsScreen() {
   const openEdit = (user: EditableUser) => {
     setEditingId(user.id);
     setForm({
-      departments: user.departments.join(", "),
+      departments: [...user.departments],
       email: user.email,
       name: user.name,
       roles: [...user.roles],
@@ -740,7 +889,7 @@ export function SettingsScreen() {
       return;
     }
 
-    const departments = parseDepartments(form.departments);
+    const departments = [...form.departments];
 
     if (editingId) {
       setUsers((current) =>
@@ -845,23 +994,14 @@ export function SettingsScreen() {
               />
 
               <Tabs
-                className="gap-0"
                 onValueChange={(value) =>
                   setUsersTab(value as "roles" | "users")
                 }
                 value={usersTab}
               >
-                <TabsList
-                  aria-label="User settings"
-                  className="w-full justify-start border-b px-3"
-                  variant="underline"
-                >
-                  <TabsTab className="grow-0" value="users">
-                    Users
-                  </TabsTab>
-                  <TabsTab className="grow-0" value="roles">
-                    Roles &amp; Permissions
-                  </TabsTab>
+                <TabsList aria-label="User settings">
+                  <TabsTab value="users">Users</TabsTab>
+                  <TabsTab value="roles">Roles &amp; Permissions</TabsTab>
                 </TabsList>
 
                 <TabsPanel value="users">
@@ -890,6 +1030,9 @@ export function SettingsScreen() {
                           <TableHead className="min-w-[240px] ps-5 text-xs">
                             User
                           </TableHead>
+                          <TableHead className="w-[170px] text-xs">
+                            Status
+                          </TableHead>
                           <TableHead className="min-w-[200px] text-xs">
                             Roles
                           </TableHead>
@@ -909,30 +1052,15 @@ export function SettingsScreen() {
                               key={user.id}
                             >
                               <TableCell className="max-w-[360px] ps-5">
-                                {/* Beside the name, not under it: a third line
-                                    made this row 79px against 51px for the
-                                    others. min-h keeps every row equal whether
-                                    or not the badge is there. */}
-                                <div className="flex min-h-5.5 items-center gap-2">
-                                  <span className="min-w-0 truncate font-medium">
-                                    {user.name}
-                                  </span>
-                                  {user.status === "Invitation pending" && (
-                                    <Badge
-                                      className="shrink-0"
-                                      size="lg"
-                                      variant="warning"
-                                    >
-                                      Invitation pending
-                                    </Badge>
-                                  )}
-                                </div>
-                                <p
-                                  className="truncate text-muted-foreground text-xs"
-                                  title={user.email}
+                                <UserIdentity user={user} />
+                              </TableCell>
+                              <TableCell>
+                                <Badge
+                                  size="lg"
+                                  variant={statusBadgeVariant[user.status]}
                                 >
-                                  {user.email}
-                                </p>
+                                  {user.status}
+                                </Badge>
                               </TableCell>
                               <TableCell className="whitespace-normal">
                                 <div className="flex flex-wrap gap-1.5">
@@ -947,10 +1075,20 @@ export function SettingsScreen() {
                                   ))}
                                 </div>
                               </TableCell>
-                              <TableCell className="whitespace-normal text-sm leading-snug">
-                                {user.departments.length > 0
-                                  ? user.departments.join(", ")
-                                  : "—"}
+                              <TableCell className="max-w-[220px] text-sm">
+                                {/* Truncated rather than wrapped: a second
+                                    line here made rows 60px against 53px. The
+                                    full list stays available on hover. */}
+                                <span
+                                  className="block truncate"
+                                  title={
+                                    user.departments.join(", ") || undefined
+                                  }
+                                >
+                                  {user.departments.length > 0
+                                    ? user.departments.join(", ")
+                                    : "—"}
+                                </span>
                               </TableCell>
                               <TableCell className="pe-5 text-right">
                                 <Menu>
@@ -958,7 +1096,7 @@ export function SettingsScreen() {
                                     render={
                                       <Button
                                         aria-label={`More actions for ${user.name}`}
-                                        size="icon-xs"
+                                        size="icon-sm"
                                         variant="ghost"
                                       />
                                     }
@@ -977,7 +1115,7 @@ export function SettingsScreen() {
                           ))
                         ) : (
                           <TableRow>
-                            <TableCell colSpan={4}>
+                            <TableCell colSpan={5}>
                               <Empty>
                                 <EmptyHeader>
                                   <EmptyMedia variant="icon">

@@ -44,6 +44,15 @@ This file owns implementation verification and visual evidence for the executabl
 - Divider top-bar comparison: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/qa-comparison-divider-topbar.png`
 - Outline role-badge evidence: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-outline-role-badges.jpg`
 - Outline module-badge evidence: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-outline-module-badges.jpg`
+- Settings section-layout reference: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/reference-settings-section-layout.png`
+- Settings section-header implementation: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-settings-section-header.jpg`
+- Settings section-header comparison: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/qa-comparison-settings-section-header.jpg`
+- Settings tab and user-identity implementation: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-settings-tabs-user-identity.png`
+- Settings underline-tab reference: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/reference-settings-tabs-underline.png`
+- Bright tab-selection issue reference: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/reference-tabs-bright-selection.png`
+- Settings underline-tab comparison: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/qa-comparison-settings-tabs-underline.png`
+- Shared Accura tab implementation: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-accura-tabs-synced.png`
+- Dashboard grid-icon implementation: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-dashboard-grid-icon.png`
 - State: light theme, expanded sidebar, default filters, page 1, 10 rows.
 - Latest captured viewport: 1265 × 712 CSS px in the in-app browser.
 - Desktop implementation remains the primary target; the narrow capture was also used to verify that the shell does not introduce horizontal page overflow.
@@ -117,6 +126,43 @@ The implementation now intentionally differs from the older Accura demo and the 
 - Changed-file Biome lint (`components/dashboard-screen.tsx`): passed. The current app-wide lint command also scans existing generated `.vercel/output` files and fails there; no diagnostic points to the changed dashboard component.
 
 ## Comparison History
+
+### Iteration 23 – Dashboard navigation icon
+
+- User feedback: the previous `DashboardDots` icon read like a speedometer rather than an overview destination.
+- Fix: replaced it with Iconoir’s `ViewGrid`, which communicates a collection of dashboard regions while preserving the established 24 × 24 geometry, native 1.5 px stroke, selected-navigation color, and accessible “Dashboard” button label.
+- Browser evidence: `implementation-dashboard-grid-icon.png` shows the selected Dashboard navigation item with the new four-cell grid icon in the existing sidebar context.
+- Findings: no actionable P0, P1, or P2 differences remain. The icon is visually distinct from Reports, module, and utility icons and no longer resembles a gauge.
+- Validation: changed-file Biome, TypeScript, browser rendering, navigation behavior, and console error inspection passed.
+
+### Iteration 22 – Settings tabs and user identity
+
+- User feedback: the compact neutral tabs looked like passive labels, and user rows that showed a name plus email were missing a recognizable person marker.
+- Initial fix: retained the underline tab pattern, increased the tab row’s vertical padding, added a Brand 25 selected surface, changed the selected underline to Brand 600, and used Brand 900 for selected text contrast.
+- Earlier P2: the selected Brand 25 fill made the tab read like a segmented button and drifted from the supplied flat underline reference.
+- Post-fix: removed the selected background completely and suppressed the base component’s subtle hover fill. The tabs now stay transparent on the white body and communicate selection through Brand 900 text plus a Brand 600 underline, matching the approved reference while remaining distinct from the solid “Invite user” action.
+- Component consolidation: moved the approved treatment into the shared Accura-level `AccuraTabs` wrapper. Settings and Dashboard Records now consume the same component; the underlying COSS primitive remains unchanged for other monorepo applications.
+- Latest refinement: `reference-tabs-bright-selection.png` showed that the Brand 600 underline was too bright in context. Replaced the Brand 600/900 selection pair with Brand 950 for the underline, selected label, and hover label. The transparent tab surface and spacing remain unchanged.
+- User identity pattern: added a reusable 32 px initials avatar with name and email as one cluster. Invitation status remains beside the name so all rows keep the same two-line information structure.
+- Source visual truth: `reference-settings-tabs-underline.png` (702 × 70 px), showing transparent tabs with selection communicated only by text and underline.
+- Browser evidence: `implementation-settings-tabs-user-identity.png`, captured at 1280 × 720 CSS px. The complete Settings card, both tab choices, selected state, four identity clusters, role metadata, status, and section action are visible in one frame.
+- Focused comparison: `qa-comparison-settings-tabs-underline.png` places the 702 × 70 reference above a 702 × 63 normalized implementation crop. Both show a flat white tab row, quiet unselected text, selected text, and a 2 px underline without a filled tab surface.
+- Cross-screen evidence: `implementation-accura-tabs-synced.png` shows the Dashboard Records tabs using the same transparent surface, Brand 950 selected label and underline, height, and padding as Settings.
+- Accessibility: the adjacent visible name remains the accessible identity, the decorative fallback avatar is hidden from assistive technology, email retains its full value through the title attribute, and status remains explicit text rather than color alone.
+- Findings: no actionable P0, P1, or P2 differences remain for the approved direction. The selected tab is clear without introducing a filled surface, while the unselected tab remains legible and available.
+- Validation: TypeScript, changed-file Biome checks, repository diff checks, Settings and Dashboard tab interactions, Dashboard record filtering after tab changes, browser rendering, console error inspection, and desktop overflow inspection passed.
+
+### Iteration 21 – Settings section header plane
+
+- Source visual truth: `reference-settings-section-layout.png` (3024 × 2018 px) demonstrates a quiet gray context region above a white working surface.
+- Fix: applied Zinc 50 to the reusable Settings `SectionHeading`, grouping each section’s title, description, and action while keeping tabs, filters, tables, and empty states on the white card body.
+- Browser evidence: `implementation-settings-section-header.jpg`, captured at a 1280 × 720 CSS viewport with device-pixel ratio 2 and normalized to a 1280 × 720 screenshot. Runtime inspection reports header `rgb(250, 250, 250)`, card body `rgb(255, 255, 255)`, a visible divider, 14 px card radius, and no horizontal overflow.
+- Full-view comparison: `qa-comparison-settings-section-header.jpg` places the reference and implementation side by side. The 3024 × 2018 reference was scaled to 1280 px wide and top-cropped to 1280 × 720 so the context-header/content-body relationship is readable beside the equal-size implementation.
+- Focused-region comparison: not needed because the complete Settings card, header action, tabs, filters, and table remain legible in the normalized full-view comparison.
+- Required fidelity surfaces: Cal Sans typography and existing copy are unchanged; spacing, radius, icons, and imagery are unchanged; the new surface uses the approved Zinc 50 token rather than a new color.
+- Interaction and accessibility: Users/Roles tabs, search, actions, and semantic structure remain intact. Browser logs contain only Next.js Fast Refresh messages and no errors.
+- Findings: no actionable P0, P1, or P2 differences for the selected section-header pattern.
+- Validation: TypeScript, changed-file Biome checks, browser rendering, DOM structure, and console verification passed.
 
 ### Iteration 20 – outline metadata badges
 
@@ -311,5 +357,6 @@ The implementation now intentionally differs from the older Accura demo and the 
 - [x] Responsive 64 px sidebar initialization below 960 px.
 - [x] Border-only Zinc top bar with no card container styling.
 - [x] Outline treatment for categorical metadata badges; filled semantic treatment retained for status.
+- [x] Zinc 50 context headers above white Settings content bodies.
 
 final result: passed
