@@ -2,6 +2,34 @@
 
 This is the canonical history of Accura product, design-system, and prototype decisions. It records why a direction was chosen and preserves superseded directions. Current product facts live in `docs/product-knowledge/`; current rules live in `docs/rules/`; implemented changes are indexed in root `CHANGELOG.md`.
 
+## 2026-11-04 - Metadata badges use outline hierarchy
+
+### Decision
+
+Use outline badges for categorical metadata, including roles, modules, and document-type abbreviations. Keep filled semantic variants for actual status, severity, and lifecycle meaning. The current enforceable rule is owned by [`../rules/ui-hierarchy.md`](../rules/ui-hierarchy.md).
+
+### Reasoning
+
+Roles and modules describe classification or access scope rather than state. Giving them the same filled treatment as status made neutral metadata appear actionable or semantic; an outline preserves scanability while keeping status visually distinct.
+
+## 2026-11-04 - Brand 950 navigation and primary treatment
+
+### Decision
+
+- Keep Zinc 100 as the recessed application canvas and white as the principal content surface.
+- Use Brand 950 for the prototype navigation surface, principal action, and main-content focus ring.
+- Use Zinc 200 for default navigation content and Zinc 100 with Zinc 900 foreground for selected or hovered navigation.
+- Use Brand 150 for focus indication against the dark navigation surface.
+- Apply these product-specific roles in `apps/accura-prototype/app/globals.css` after the reusable generated adapter.
+
+### Reasoning
+
+The darker brand anchor gives the expanding Accura prototype a stable navigation frame and stronger product identity while retaining the neutral Zinc content canvas. Keeping the override at the application layer preserves the reusable COSS adapter boundary.
+
+### Supersedes
+
+This replaces the light Zinc navigation portion of the 2026-11-03 application-shell decision. The Zinc canvas and white content-surface portions remain current.
+
 ## 2026-11-02 - Documents selected as the first vertical slice
 
 ### Decision
@@ -74,6 +102,8 @@ Adopt a quieter primary/secondary hierarchy for the prototype. The current enfor
 Repeating primary green across navigation, links, table chrome, pagination, and calls to action flattened the hierarchy and made the Documents workspace feel visually heavy. A neutral secondary layer keeps the interface calm while allowing the primary action to remain obvious.
 
 ## 2026-11-03 - Light Zinc application shell
+
+**Status:** Partially superseded by [Brand 950 navigation and primary treatment](#2026-11-04---brand-950-navigation-and-primary-treatment). Zinc remains the application canvas, but the navigation surface is no longer light Zinc.
 
 ### Decision
 

@@ -17,10 +17,11 @@
 
 ## Color And Theme
 
-- Use the generated Accura palette adapter after the COSS base theme.
+- Use the generated Accura palette adapter after the COSS base theme, then apply the Accura prototype overrides in `apps/accura-prototype/app/globals.css`.
 - Accura brand and Zinc primitives are the only active Accura token inputs.
 - Preserve COSS semantic status colors, spacing, radius, density, motion, and component behavior unless a separate approved rule changes them.
-- Use the light Zinc shell for application chrome and white for principal content surfaces.
+- Use Zinc 100 for the recessed application canvas, Brand 950 for the navigation surface and principal action, Zinc 100 with Zinc 900 foreground for selected or hovered navigation, and white for principal content surfaces.
+- Use Brand 950 for the main-content focus ring and Brand 150 for focus against the dark navigation surface.
 - Follow [`ui-hierarchy.md`](ui-hierarchy.md) when assigning primary, secondary, neutral, status, and destructive emphasis.
 
 Token generation and mapping mechanics are owned by [`../../brand-assets/README.md`](../../brand-assets/README.md).

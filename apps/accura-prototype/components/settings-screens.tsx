@@ -940,7 +940,7 @@ export function SettingsScreen() {
                                     <Badge
                                       key={role}
                                       size="lg"
-                                      variant="secondary"
+                                      variant="outline"
                                     >
                                       {role}
                                     </Badge>
@@ -1076,7 +1076,7 @@ export function SettingsScreen() {
                                     // Listing all eight when the role covers
                                     // every module is noise; the single badge
                                     // says the same thing in one line.
-                                    <Badge size="lg" variant="secondary">
+                                    <Badge size="lg" variant="outline">
                                       All modules
                                     </Badge>
                                   ) : (
@@ -1084,7 +1084,7 @@ export function SettingsScreen() {
                                       <Badge
                                         key={module}
                                         size="lg"
-                                        variant="secondary"
+                                        variant="outline"
                                       >
                                         {module}
                                       </Badge>
@@ -1187,7 +1187,7 @@ export function SettingsScreen() {
                               {type.name}
                             </TableCell>
                             <TableCell className="align-top">
-                              <Badge size="lg" variant="success">
+                              <Badge size="lg" variant="outline">
                                 {type.abbreviation}
                               </Badge>
                             </TableCell>

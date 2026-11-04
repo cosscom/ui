@@ -40,19 +40,40 @@ The generated files are:
 - `coss-theme.css`: the intentionally small set of COSS role overrides.
 - `index.css`: the stable entry point.
 
-The adapter targets `:root:not(.dark)`. Dark mode continues to use the native COSS theme until a dark Accura palette is designed and reviewed.
+The adapter targets `:root:not(.dark)`. Dark mode continues to use the native COSS theme until a dark Accura palette is designed and reviewed. The generated adapter is the reusable baseline; the Accura prototype applies the product-specific overrides documented below after importing it.
 
-## Mapping Decisions
+## Active Accura Prototype Mapping
+
+The executable prototype overrides selected generated roles in [`../apps/accura-prototype/app/globals.css`](../apps/accura-prototype/app/globals.css). These values describe the UI currently rendered at `http://localhost:4173/`.
+
+| Role | Active source | Current use |
+|---|---|---|
+| Canvas | `color/zinc/100` | Recessed application background |
+| Primary | `color/brand/950-darkshade` | Principal action and strong brand emphasis |
+| Primary foreground | COSS white | 12.67:1 contrast on Brand 950 |
+| Focus ring | `color/brand/950-darkshade` | Main-content interaction cue |
+| Main foregrounds | Generated `color/zinc/800` | Default content text |
+| Muted foreground | Generated `color/zinc/600` | Supporting content text |
+| Sidebar surface | `color/brand/950-darkshade` | Persistent dark brand navigation |
+| Sidebar foreground | `color/zinc/200` | Default navigation text and icons |
+| Sidebar selected and hover surface | `color/zinc/100` | High-contrast navigation state |
+| Sidebar selected and hover foreground | `color/zinc/900` | Text and icons on the light navigation state |
+| Sidebar border | COSS white at 16% | Divider on the dark navigation surface |
+| Sidebar focus ring | `color/brand/150-lightshade` | Visible focus against Brand 950 |
+
+## Generated Base Adapter Mapping
+
+This table describes `coss-map.json` and the generated COSS baseline before the prototype overrides above are applied.
 
 | COSS role | Source | Decision |
 |---|---|---|
-| Primary | `color/brand/800-base` | Main Accura action color |
+| Primary | `color/brand/800-base` | Reusable Accura baseline action color |
 | Primary foreground | COSS white | 4.52:1 contrast; `zinc/50` would reach only 4.32:1 |
 | Focus ring | `color/brand/500` | Branded interaction cue |
 | Main foregrounds | `color/zinc/800` | Replaces COSS neutral without changing hierarchy |
 | Muted foreground | `color/zinc/600` | Remains readable on COSS muted alpha surfaces |
-| Sidebar | `color/zinc/100`, COSS white, `brand/800-base` | Recessed neutral shell, selected surface, and branded primary action |
-| Sidebar foreground | `color/zinc/700` | Readable navigation text without competing with the white workspace |
+| Sidebar | `color/zinc/100`, COSS white, `brand/800-base` | Neutral reusable baseline before product-specific overrides |
+| Sidebar foreground | `color/zinc/700` | Readable baseline navigation text |
 
 ## COSS Ownership Boundary
 

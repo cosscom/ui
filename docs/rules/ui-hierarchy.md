@@ -29,6 +29,7 @@ Use at most one solid primary action in the same task context. A page and an ope
 ## Semantic Actions And Status
 
 - Status colors communicate lifecycle meaning and must not be replaced by primary or secondary styling.
+- Use outline badges for categorical metadata such as roles, modules, and document-type abbreviations. Reserve filled semantic badges for actual status, severity, or lifecycle meaning.
 - Reject and other negative actions must not look like ordinary primary progression.
 - Approve or Reject requires the regulated confirmation and electronic-signature behavior defined in product knowledge; button styling does not remove that friction.
 

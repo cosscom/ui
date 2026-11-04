@@ -5,7 +5,7 @@ This file owns implementation verification and visual evidence for the executabl
 ## Comparison Target
 
 - Product baseline: `/Users/mac/Documents/GitHub/Coss/docs/product-knowledge/modules/documents/evidence/01-document-list.png`
-- Structural direction: use Zinc 100 across the application canvas and open filter region; use Zinc 50 in the sidebar, with distinct white surfaces for the sticky top bar and table. Reserve solid Brand 800 for the selected navigation state and high-value actions.
+- Structural direction: use Zinc 100 across the application canvas and open filter region; use Brand 950 for the sidebar, with distinct white surfaces for the sticky top bar and table. Use Zinc 100 with Zinc 900 foreground for selected navigation and Brand 950 for high-value actions.
 - Palette target: Accura’s existing brand green system, a warm canvas, and a small set of high-energy accents rather than saturation across every surface.
 - Implementation: `http://localhost:4173/`
 - Current redesign evidence: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-neutral-search-632.png`
@@ -42,6 +42,8 @@ This file owns implementation verification and visual evidence for the executabl
 - Divider top-bar reference: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/reference-vercel-divider-topbar.png`
 - Divider top-bar implementation: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-divider-topbar.png`
 - Divider top-bar comparison: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/qa-comparison-divider-topbar.png`
+- Outline role-badge evidence: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-outline-role-badges.jpg`
+- Outline module-badge evidence: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-outline-module-badges.jpg`
 - State: light theme, expanded sidebar, default filters, page 1, 10 rows.
 - Latest captured viewport: 1265 × 712 CSS px in the in-app browser.
 - Desktop implementation remains the primary target; the narrow capture was also used to verify that the shell does not introduce horizontal page overflow.
@@ -53,7 +55,7 @@ No actionable P0, P1, or P2 differences remain in the redesigned Documents flow.
 The implementation now intentionally differs from the older Accura demo and the preceding neutral pass in these ways:
 
 - Zinc 100 (`#F4F4F5`) forms a continuous true-neutral application shell and document canvas. The former full-page white workspace has been removed.
-- The sidebar uses Zinc 50 (`#FAFAFA`) as its surface. Only the selected item receives solid Brand 800 (`#008852`) with white icon and label; hover states use Zinc 100.
+- The sidebar uses Brand 950 (`#00393F`) as its surface with Zinc 200 content. Selected and hovered navigation use Zinc 100 with Zinc 900 icon and label.
 - Filter controls, result count, title, description, primary action, and pagination sit directly on Zinc. The sticky top bar and table are the two white, rounded, bordered surfaces.
 - Mint is limited to the table header and subtle table hover states; coral remains limited to the unread badge.
 - The official Accura SVG lockup and mark replace the generated raster placeholder.
@@ -72,7 +74,7 @@ The implementation now intentionally differs from the older Accura demo and the 
 
 - Fonts and typography: passed. Cal Sans is loaded through COSS; UI uses `GEOM 25`, headings use `GEOM 50`, identifiers use `GEOM 0`, optical sizing is automatic, and no letter-spacing was introduced.
 - Spacing and layout rhythm: passed. The 64 px sidebar state, 248 px expanded state, 64 px white top bar with 12 px padding on every side, open filter region, and white table surface form one consistent frame.
-- Colors and visual tokens: passed. Zinc 100 defines the application background, Zinc 50 defines the sidebar, and Brand 800 with white foreground defines the selected state and primary action. Native COSS status colors remain unchanged.
+- Colors and visual tokens: passed. Zinc 100 defines the application background, Brand 950 defines the sidebar and primary action, and Zinc 100 with Zinc 900 foreground defines selected navigation. Native COSS status colors remain unchanged.
 - Image quality and asset fidelity: passed. `accura-logo.svg` and `accura-mark.svg` come from the user-authorized official asset folder. `quality-workspace-banner.png` is the exact 2578 × 432 px image supplied by the user in this session; Next Image preserves it as a decorative raster background without redrawing the illustration.
 - Copy and content: passed. App-specific labels use Documents terminology and typeset punctuation.
 - Lifecycle coverage: passed for prototype scope. Draft, In Review, In QA Approval, Approved, signed rejection back to Draft, New Version, and Audit Trail are represented with realistic mock data.
@@ -115,6 +117,13 @@ The implementation now intentionally differs from the older Accura demo and the 
 - Changed-file Biome lint (`components/dashboard-screen.tsx`): passed. The current app-wide lint command also scans existing generated `.vercel/output` files and fails there; no diagnostic points to the changed dashboard component.
 
 ## Comparison History
+
+### Iteration 20 – outline metadata badges
+
+- User feedback: roles and modules are descriptive metadata, not statuses, so filled badge surfaces gave them too much semantic weight.
+- Fix: changed role, module, and document-type abbreviation badges to the outline variant. “Invitation pending” remains a warning badge because it communicates an actual account state.
+- Browser evidence: `implementation-outline-role-badges.jpg` and `implementation-outline-module-badges.jpg` show the Users and Roles & Permissions tables with the updated hierarchy.
+- Validation: TypeScript, changed-file Biome checks, and browser-console verification passed.
 
 ### Iteration 19 – Brand 300 banner border
 
@@ -269,7 +278,7 @@ The implementation now intentionally differs from the older Accura demo and the 
 ## Implementation Checklist
 
 - [x] Official SVG logo and mark.
-- [x] Neutral sidebar and recessed shell.
+- [x] Brand 950 sidebar and recessed Zinc shell.
 - [x] Continuous Zinc application and content canvas.
 - [x] 248 px → 64 px collapse behavior.
 - [x] Hover/focus mark → expand icon behavior.
@@ -281,7 +290,7 @@ The implementation now intentionally differs from the older Accura demo and the 
 - [x] Iconoir across all prototype-level UI surfaces.
 - [x] Light navigation rail with a green selected-item state.
 - [x] Zinc 100 neutral application background.
-- [x] Zinc 50 sidebar with solid Brand 800 selected item.
+- [x] Brand 950 sidebar with a Zinc 100 selected item and Zinc 900 foreground.
 - [x] Filter controls directly on Zinc; table retained as the white content container.
 - [x] White sticky top bar containing global search, notifications, and profile.
 - [x] Uniform 12 px top-bar padding verified from computed browser styles.
@@ -301,5 +310,6 @@ The implementation now intentionally differs from the older Accura demo and the 
 - [x] Branded active states with semantic status colors.
 - [x] Responsive 64 px sidebar initialization below 960 px.
 - [x] Border-only Zinc top bar with no card container styling.
+- [x] Outline treatment for categorical metadata badges; filled semantic treatment retained for status.
 
 final result: passed

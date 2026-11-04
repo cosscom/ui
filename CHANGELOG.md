@@ -2,6 +2,11 @@
 
 This root file is the concise chronological index for notable Accura changes. It does not duplicate rationale. Follow each link to the owning decision or QA record.
 
+## 2026-11-04
+
+- Separated categorical metadata from status by rendering role, module, and document-type badges as outlines while preserving filled semantic status badges. [Decision](docs/change-log/DECISIONS.md#2026-11-04---metadata-badges-use-outline-hierarchy) · [QA evidence](apps/accura-prototype/design-qa.md#iteration-20--outline-metadata-badges)
+- Documented the active Brand 950 navigation, primary, and focus treatment separately from the reusable generated adapter baseline. [Decision](docs/change-log/DECISIONS.md#2026-11-04---brand-950-navigation-and-primary-treatment) · [Mapping contract](brand-assets/README.md#active-accura-prototype-mapping)
+
 ## 2026-11-03
 
 - Simplified Accura documentation so `ACCURA.md` is the only navigation entry point; removed redundant folder-level READMEs and renamed the Documents module entry to `overview.md`. [Workspace guide](ACCURA.md)
