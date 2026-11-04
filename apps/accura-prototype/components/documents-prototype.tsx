@@ -75,6 +75,14 @@ import {
 } from "iconoir-react";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { DashboardScreen } from "./dashboard-screen";
+import {
+  DocumentFlowScreen,
+  type DocumentFlowView,
+} from "./document-flow-screens";
+import { SettingsScreen } from "./settings-screens";
+
+type AppModule = "dashboard" | "documents" | "settings";
 
 type DocumentStatus = "Approved" | "Draft" | "In QA Approval" | "In Review";
 
@@ -99,6 +107,8 @@ type DocumentRecord = {
     | "Work Instruction";
   version: string;
 };
+
+const documentsOnly = process.env.NEXT_PUBLIC_ACCURA_DOCUMENTS_ONLY === "true";
 
 const documents: DocumentRecord[] = [
   {
@@ -284,21 +294,25 @@ const documents: DocumentRecord[] = [
 ];
 
 const navItems = [
-  { icon: LayoutDashboardIcon, label: "Dashboard" },
-  { active: true, icon: FilesIcon, label: "Documents" },
+  { icon: LayoutDashboardIcon, label: "Dashboard", module: "dashboard" },
+  { icon: FilesIcon, label: "Documents", module: "documents" },
   { icon: GraduationCapIcon, label: "Training" },
   { icon: TriangleAlertIcon, label: "Deviations" },
   { icon: WrenchIcon, label: "Asset Management" },
   { icon: ClipboardCheckIcon, label: "CAPA" },
-  { icon: RefreshCwIcon, label: "Change Management" },
+  { icon: RefreshCwIcon, label: "Change Control" },
   { icon: TruckIcon, label: "Supplier Management" },
   { icon: BarChart3Icon, label: "Reports" },
-];
+].filter((item) => !(documentsOnly && item.module === "dashboard"));
 
-const secondaryNavItems = [
+const secondaryNavItems: {
+  icon: typeof BookOpenIcon;
+  label: string;
+  module?: AppModule;
+}[] = [
   { icon: BookOpenIcon, label: "Knowledge Hub" },
   { icon: CircleHelpIcon, label: "Help Center" },
-  { icon: SettingsIcon, label: "Settings" },
+  { icon: SettingsIcon, label: "Settings", module: "settings" },
   { icon: LogOutIcon, label: "Log out" },
 ];
 
@@ -346,10 +360,14 @@ function StatusBadge({ status }: { status: DocumentStatus }) {
 }
 
 function AppSidebar({
+  activeModule,
   collapsed,
+  onNavigate,
   onToggle,
 }: {
+  activeModule: AppModule;
   collapsed: boolean;
+  onNavigate: (module: AppModule) => void;
   onToggle: () => void;
 }) {
   return (
@@ -362,14 +380,14 @@ function AppSidebar({
         {collapsed ? (
           <button
             aria-label="Expand navigation"
-            className="group relative flex size-10 items-center justify-center rounded-lg outline-none transition-colors hover:bg-sidebar-accent focus-visible:ring-2 focus-visible:ring-sidebar-ring"
+            className="group relative flex size-10 items-center justify-center rounded-lg outline-none transition-colors hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-sidebar-ring"
             onClick={onToggle}
             type="button"
           >
             <Image
               alt=""
               aria-hidden="true"
-              className="size-8 object-contain transition-opacity group-hover:opacity-0 group-focus-visible:opacity-0"
+              className="size-8 object-contain brightness-0 invert transition-opacity group-hover:opacity-0 group-focus-visible:opacity-0"
               height={32}
               priority
               src="/brand/accura-mark.svg"
@@ -377,14 +395,14 @@ function AppSidebar({
             />
             <PanelLeftOpenIcon
               aria-hidden="true"
-              className="absolute size-5 text-sidebar-accent-foreground opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+              className="absolute size-5 text-sidebar-foreground opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
             />
           </button>
         ) : (
           <>
             <Image
               alt="Accura"
-              className="h-9 w-auto object-contain object-left"
+              className="h-9 w-auto object-contain object-left brightness-0 invert"
               height={59}
               priority
               src="/brand/accura-logo.svg"
@@ -392,7 +410,7 @@ function AppSidebar({
             />
             <Button
               aria-label="Collapse navigation"
-              className="ms-auto text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+              className="ms-auto text-sidebar-foreground hover:bg-white/10 hover:text-white"
               onClick={onToggle}
               size="icon-sm"
               variant="ghost"
@@ -404,37 +422,55 @@ function AppSidebar({
       </div>
 
       <nav aria-label="Primary navigation" className="flex flex-col gap-1 p-2">
-        {navItems.map(({ active, icon: Icon, label }) => (
-          <button
-            key={label}
-            aria-current={active ? "page" : undefined}
-            aria-label={collapsed ? label : undefined}
-            className={`flex h-9 w-full items-center rounded-lg text-left text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-sidebar-ring ${
-              collapsed ? "justify-center px-0" : "gap-3 px-2.5"
-            } ${
-              active
-                ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground shadow-xs"
-                : "hover:bg-[var(--accura-zinc-100)] hover:text-[var(--accura-zinc-900)]"
-            }`}
-            type="button"
-          >
-            <Icon aria-hidden="true" className="size-4 shrink-0" />
-            <span className={`truncate ${collapsed ? "hidden" : "block"}`}>
-              {label}
-            </span>
-          </button>
-        ))}
+        {navItems.map(({ icon: Icon, label, module }) => {
+          const active = module === activeModule;
+          return (
+            <button
+              key={label}
+              aria-current={active ? "page" : undefined}
+              aria-label={collapsed ? label : undefined}
+              className={`flex h-9 w-full items-center rounded-lg text-left text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-sidebar-ring ${
+                collapsed ? "justify-center px-0" : "gap-3 px-2.5"
+              } ${
+                active
+                  ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground shadow-xs"
+                  : "hover:bg-white/10 hover:text-white"
+              }`}
+              onClick={() => {
+                if (module === "dashboard" || module === "documents") {
+                  onNavigate(module);
+                }
+              }}
+              type="button"
+            >
+              <Icon aria-hidden="true" className="size-4 shrink-0" />
+              <span className={`truncate ${collapsed ? "hidden" : "block"}`}>
+                {label}
+              </span>
+            </button>
+          );
+        })}
       </nav>
 
       <nav
         aria-label="Support navigation"
         className="mt-auto flex flex-col gap-1 border-sidebar-border border-t p-2"
       >
-        {secondaryNavItems.map(({ icon: Icon, label }) => (
+        {secondaryNavItems.map(({ icon: Icon, label, module }) => (
           <button
             key={label}
+            aria-current={module === activeModule ? "page" : undefined}
             aria-label={collapsed ? label : undefined}
-            className={`flex h-9 w-full items-center rounded-lg text-left text-sm outline-none transition-colors hover:bg-[var(--accura-zinc-100)] hover:text-[var(--accura-zinc-900)] focus-visible:ring-2 focus-visible:ring-sidebar-ring ${collapsed ? "justify-center px-0" : "gap-3 px-2.5"}`}
+            className={`flex h-9 w-full items-center rounded-lg text-left text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-sidebar-ring ${
+              collapsed ? "justify-center px-0" : "gap-3 px-2.5"
+            } ${
+              module === activeModule
+                ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground shadow-xs"
+                : "hover:bg-white/10 hover:text-white"
+            }`}
+            onClick={() => {
+              if (module) onNavigate(module);
+            }}
             type="button"
           >
             <Icon aria-hidden="true" className="size-4 shrink-0" />
@@ -450,6 +486,9 @@ function AppSidebar({
 
 export function DocumentsPrototype() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [activeModule, setActiveModule] = useState<AppModule>(
+    documentsOnly ? "documents" : "dashboard",
+  );
   const [globalQuery, setGlobalQuery] = useState("");
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("all");
@@ -462,6 +501,9 @@ export function DocumentsPrototype() {
   const [selectedDocument, setSelectedDocument] =
     useState<DocumentRecord | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [activeView, setActiveView] = useState<"list" | DocumentFlowView>(
+    "list",
+  );
   const globalSearchRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -474,6 +516,10 @@ export function DocumentsPrototype() {
 
     window.addEventListener("keydown", focusGlobalSearch);
     return () => window.removeEventListener("keydown", focusGlobalSearch);
+  }, []);
+
+  useEffect(() => {
+    if (window.innerWidth < 960) setSidebarCollapsed(true);
   }, []);
 
   const filteredDocuments = useMemo(() => {
@@ -514,15 +560,34 @@ export function DocumentsPrototype() {
     setPage(1);
   };
 
+  const navigateToView = (view: "list" | DocumentFlowView) => {
+    setActiveView(view);
+    window.scrollTo({ top: 0 });
+  };
+
+  const openDocument = (document: DocumentRecord) => {
+    setActiveModule("documents");
+    if (document.status === "Draft") navigateToView("draft");
+    if (document.status === "In Review") navigateToView("review");
+    if (document.status === "In QA Approval") navigateToView("qa");
+    if (document.status === "Approved") navigateToView("approved");
+    setSelectedDocument(null);
+  };
+
   return (
     <div className="flex min-h-svh gap-2 bg-[var(--accura-canvas)] p-2">
       <AppSidebar
+        activeModule={activeModule}
         collapsed={sidebarCollapsed}
+        onNavigate={(module) => {
+          setActiveModule(module);
+          if (module === "documents") navigateToView("list");
+        }}
         onToggle={() => setSidebarCollapsed((value) => !value)}
       />
 
       <div className="min-w-0 flex-1">
-        <header className="sticky top-2 z-20 flex h-16 items-center rounded-2xl border bg-background p-3 shadow-sm">
+        <header className="sticky top-0 z-20 flex h-16 items-center border-border border-b bg-[var(--accura-canvas)] p-3">
           <InputGroup className="h-10 max-w-2xl bg-background shadow-xs">
             <InputGroupAddon>
               <SearchIcon aria-hidden="true" />
@@ -532,6 +597,7 @@ export function DocumentsPrototype() {
               onChange={(event) => setGlobalQuery(event.target.value)}
               onKeyDown={(event) => {
                 if (event.key === "Enter" && globalQuery.trim()) {
+                  setActiveModule("documents");
                   setQuery(globalQuery.trim());
                   setPage(1);
                   setNotice(
@@ -549,7 +615,7 @@ export function DocumentsPrototype() {
               value={globalQuery}
             />
             <InputGroupAddon align="inline-end" className="max-sm:hidden">
-              <Kbd className="whitespace-nowrap bg-[var(--accura-pop-soft)] text-[var(--accura-brand-950-darkshade)]">
+              <Kbd className="whitespace-nowrap bg-[var(--accura-brand-150-lightshade)] text-[var(--accura-brand-950-darkshade)]">
                 ⌘ K
               </Kbd>
             </InputGroupAddon>
@@ -568,7 +634,7 @@ export function DocumentsPrototype() {
             </Button>
             <div className="mx-1 h-7 w-px bg-border" />
             <Avatar className="[--avatar-size:--spacing(8)]">
-              <AvatarFallback className="bg-[var(--accura-pop)] text-[var(--accura-brand-950-darkshade)]">
+              <AvatarFallback className="bg-[var(--accura-brand-150-lightshade)] text-[var(--accura-brand-950-darkshade)]">
                 AK
               </AvatarFallback>
             </Avatar>
@@ -580,381 +646,402 @@ export function DocumentsPrototype() {
         </header>
 
         <main className="min-h-[calc(100svh-5rem)] p-5 sm:p-6 xl:p-8">
-          <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-5">
-            <div className="flex flex-wrap items-start justify-between gap-4">
-              <div className="flex flex-col gap-1">
-                <h1 className="font-bold text-2xl leading-tight">Documents</h1>
-                <p className="text-muted-foreground text-sm">
-                  Find, review, and manage controlled quality documents.
-                </p>
+          {activeModule === "settings" ? (
+            <SettingsScreen />
+          ) : activeModule === "dashboard" ? (
+            <DashboardScreen
+              onOpenDocuments={() => {
+                setActiveModule("documents");
+                navigateToView("list");
+              }}
+            />
+          ) : activeView === "list" ? (
+            <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-5">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div className="flex flex-col gap-1">
+                  <h1 className="font-bold text-2xl leading-tight">
+                    Documents
+                  </h1>
+                  <p className="text-muted-foreground text-sm">
+                    Find, review, and manage controlled quality documents.
+                  </p>
+                </div>
+
+                <Dialog onOpenChange={setCreateOpen} open={createOpen}>
+                  <DialogTrigger
+                    onClick={() => setCreateOpen(true)}
+                    render={<Button size="lg" />}
+                  >
+                    <PlusIcon aria-hidden="true" />
+                    Create document
+                  </DialogTrigger>
+                  <DialogPopup className="sm:max-w-xl">
+                    <DialogHeader>
+                      <DialogTitle>Create a document</DialogTitle>
+                      <DialogDescription>
+                        Choose the lifecycle that applies. You can complete
+                        metadata and routing in the next step.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogPanel>
+                      <RadioGroup
+                        aria-label="Document category"
+                        onValueChange={(value) =>
+                          setDocumentKind(String(value))
+                        }
+                        value={documentKind}
+                      >
+                        <label className="flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition-colors hover:bg-secondary/72 has-[[data-checked]]:border-primary/32 has-[[data-checked]]:bg-secondary">
+                          <Radio value="controlled" />
+                          <span className="flex flex-col gap-1">
+                            <span className="font-medium text-sm">
+                              Controlled document
+                            </span>
+                            <span className="text-muted-foreground text-sm">
+                              Formal review, QA approval, version control, and
+                              effective-date management.
+                            </span>
+                          </span>
+                        </label>
+                        <label className="flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition-colors hover:bg-secondary/72 has-[[data-checked]]:border-primary/32 has-[[data-checked]]:bg-secondary">
+                          <Radio value="external" />
+                          <span className="flex flex-col gap-1">
+                            <span className="font-medium text-sm">
+                              External document
+                            </span>
+                            <span className="text-muted-foreground text-sm">
+                              Reference material originating outside the
+                              organization.
+                            </span>
+                          </span>
+                        </label>
+                      </RadioGroup>
+                    </DialogPanel>
+                    <DialogFooter>
+                      <DialogClose render={<Button variant="ghost" />}>
+                        Cancel
+                      </DialogClose>
+                      <Button
+                        onClick={() => {
+                          setCreateOpen(false);
+                          navigateToView("create");
+                        }}
+                      >
+                        Continue
+                        <ChevronRightIcon aria-hidden="true" />
+                      </Button>
+                    </DialogFooter>
+                  </DialogPopup>
+                </Dialog>
               </div>
 
-              <Dialog onOpenChange={setCreateOpen} open={createOpen}>
-                <DialogTrigger render={<Button size="lg" />}>
-                  <PlusIcon aria-hidden="true" />
-                  Create document
-                </DialogTrigger>
-                <DialogPopup className="sm:max-w-xl">
-                  <DialogHeader>
-                    <DialogTitle>Create a document</DialogTitle>
-                    <DialogDescription>
-                      Choose the lifecycle that applies. You can complete
-                      metadata and routing in the next step.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <DialogPanel>
-                    <RadioGroup
-                      aria-label="Document category"
-                      onValueChange={(value) => setDocumentKind(String(value))}
-                      value={documentKind}
-                    >
-                      <label className="flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition-colors hover:bg-secondary/72 has-[[data-checked]]:border-primary/32 has-[[data-checked]]:bg-secondary">
-                        <Radio value="controlled" />
-                        <span className="flex flex-col gap-1">
-                          <span className="font-medium text-sm">
-                            Controlled document
-                          </span>
-                          <span className="text-muted-foreground text-sm">
-                            Formal review, QA approval, version control, and
-                            effective-date management.
-                          </span>
-                        </span>
-                      </label>
-                      <label className="flex cursor-pointer items-start gap-3 rounded-xl border p-4 transition-colors hover:bg-secondary/72 has-[[data-checked]]:border-primary/32 has-[[data-checked]]:bg-secondary">
-                        <Radio value="external" />
-                        <span className="flex flex-col gap-1">
-                          <span className="font-medium text-sm">
-                            External document
-                          </span>
-                          <span className="text-muted-foreground text-sm">
-                            Reference material originating outside the
-                            organization.
-                          </span>
-                        </span>
-                      </label>
-                    </RadioGroup>
-                  </DialogPanel>
-                  <DialogFooter>
-                    <DialogClose render={<Button variant="ghost" />}>
-                      Cancel
-                    </DialogClose>
-                    <Button
-                      onClick={() => {
-                        setCreateOpen(false);
-                        setNotice(
-                          `${documentKind === "controlled" ? "Controlled" : "External"} document selected. The creation workspace is the next prototype slice.`,
-                        );
-                      }}
-                    >
-                      Continue
-                      <ChevronRightIcon aria-hidden="true" />
-                    </Button>
-                  </DialogFooter>
-                </DialogPopup>
-              </Dialog>
-            </div>
-
-            {notice && (
-              <div
-                className="flex items-center gap-3 rounded-xl border bg-secondary/72 px-4 py-3 text-sm"
-                role="status"
-              >
-                <FilePlus2Icon
-                  aria-hidden="true"
-                  className="size-4 shrink-0 text-primary"
-                />
-                <span className="flex-1">{notice}</span>
-                <Button
-                  aria-label="Dismiss message"
-                  onClick={() => setNotice(null)}
-                  size="icon-xs"
-                  variant="ghost"
+              {notice && (
+                <div
+                  className="flex items-center gap-3 rounded-xl border bg-secondary/72 px-4 py-3 text-sm"
+                  role="status"
                 >
-                  <XIcon aria-hidden="true" />
-                </Button>
-              </div>
-            )}
+                  <FilePlus2Icon
+                    aria-hidden="true"
+                    className="size-4 shrink-0 text-primary"
+                  />
+                  <span className="flex-1">{notice}</span>
+                  <Button
+                    aria-label="Dismiss message"
+                    onClick={() => setNotice(null)}
+                    size="icon-xs"
+                    variant="ghost"
+                  >
+                    <XIcon aria-hidden="true" />
+                  </Button>
+                </div>
+              )}
 
-            <section
-              aria-label="Document filters"
-              className="flex flex-col gap-3"
-            >
-              <div className="grid gap-3 lg:grid-cols-[minmax(280px,1fr)_180px_180px_220px]">
-                <InputGroup>
-                  <InputGroupInput
-                    aria-label="Search documents"
-                    onChange={(event) => {
-                      setQuery(event.target.value);
+              <section
+                aria-label="Document filters"
+                className="flex flex-col gap-3"
+              >
+                <div className="grid gap-3 lg:grid-cols-[minmax(280px,1fr)_180px_180px_220px]">
+                  <InputGroup>
+                    <InputGroupInput
+                      aria-label="Search documents"
+                      onChange={(event) => {
+                        setQuery(event.target.value);
+                        resetPage();
+                      }}
+                      placeholder="Search by name, ID, or author…"
+                      type="search"
+                      value={query}
+                    />
+                    <InputGroupAddon>
+                      <SearchIcon aria-hidden="true" />
+                    </InputGroupAddon>
+                  </InputGroup>
+
+                  <Select
+                    items={statusOptions}
+                    onValueChange={(value) => {
+                      setStatus(String(value));
                       resetPage();
                     }}
-                    placeholder="Search by name, ID, or author…"
-                    type="search"
-                    value={query}
+                    value={status}
+                  >
+                    <SelectTrigger aria-label="Filter by status">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectPopup>
+                      {statusOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectPopup>
+                  </Select>
+
+                  <Select
+                    items={typeOptions}
+                    onValueChange={(value) => {
+                      setType(String(value));
+                      resetPage();
+                    }}
+                    value={type}
+                  >
+                    <SelectTrigger aria-label="Filter by document type">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectPopup>
+                      {typeOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectPopup>
+                  </Select>
+
+                  <Select
+                    items={departmentOptions}
+                    onValueChange={(value) => {
+                      setDepartment(String(value));
+                      resetPage();
+                    }}
+                    value={department}
+                  >
+                    <SelectTrigger aria-label="Filter by department">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectPopup>
+                      {departmentOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectPopup>
+                  </Select>
+                </div>
+
+                <div className="flex min-h-7 flex-wrap items-center gap-2 text-sm">
+                  <SlidersHorizontalIcon
+                    aria-hidden="true"
+                    className="size-4 text-muted-foreground"
                   />
-                  <InputGroupAddon>
-                    <SearchIcon aria-hidden="true" />
-                  </InputGroupAddon>
-                </InputGroup>
+                  <span className="text-muted-foreground">
+                    {filteredDocuments.length}{" "}
+                    {filteredDocuments.length === 1 ? "document" : "documents"}
+                  </span>
+                  {hasActiveFilters && (
+                    <Button onClick={clearFilters} size="xs" variant="ghost">
+                      Clear filters
+                    </Button>
+                  )}
+                </div>
+              </section>
 
-                <Select
-                  items={statusOptions}
-                  onValueChange={(value) => {
-                    setStatus(String(value));
-                    resetPage();
-                  }}
-                  value={status}
-                >
-                  <SelectTrigger aria-label="Filter by status">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectPopup>
-                    {statusOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectPopup>
-                </Select>
-
-                <Select
-                  items={typeOptions}
-                  onValueChange={(value) => {
-                    setType(String(value));
-                    resetPage();
-                  }}
-                  value={type}
-                >
-                  <SelectTrigger aria-label="Filter by document type">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectPopup>
-                    {typeOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectPopup>
-                </Select>
-
-                <Select
-                  items={departmentOptions}
-                  onValueChange={(value) => {
-                    setDepartment(String(value));
-                    resetPage();
-                  }}
-                  value={department}
-                >
-                  <SelectTrigger aria-label="Filter by department">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectPopup>
-                    {departmentOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectPopup>
-                </Select>
-              </div>
-
-              <div className="flex min-h-7 flex-wrap items-center gap-2 text-sm">
-                <SlidersHorizontalIcon
-                  aria-hidden="true"
-                  className="size-4 text-muted-foreground"
-                />
-                <span className="text-muted-foreground">
-                  {filteredDocuments.length}{" "}
-                  {filteredDocuments.length === 1 ? "document" : "documents"}
-                </span>
-                {hasActiveFilters && (
-                  <Button onClick={clearFilters} size="xs" variant="ghost">
-                    Clear filters
-                  </Button>
-                )}
-              </div>
-            </section>
-
-            <section
-              aria-label="Documents table"
-              className="overflow-hidden rounded-xl border bg-card shadow-xs"
-            >
-              <Table>
-                <TableHeader className="bg-secondary/72">
-                  <TableRow className="hover:bg-transparent">
-                    <TableHead className="w-[220px] ps-4 text-xs">
-                      Document ID
-                    </TableHead>
-                    <TableHead className="min-w-[300px] text-xs">
-                      Name
-                    </TableHead>
-                    <TableHead className="w-[148px] text-xs">Status</TableHead>
-                    <TableHead className="w-[112px] text-xs max-[1180px]:hidden">
-                      Version
-                    </TableHead>
-                    <TableHead className="w-[180px] text-xs max-[1320px]:hidden">
-                      Department
-                    </TableHead>
-                    <TableHead className="w-[150px] text-xs max-[1460px]:hidden">
-                      Author
-                    </TableHead>
-                    <TableHead className="w-[140px] text-xs max-[1180px]:hidden">
-                      Effective date
-                    </TableHead>
-                    <TableHead className="w-12 pe-3 text-right text-xs">
-                      <span className="sr-only">Actions</span>
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {visibleDocuments.length > 0 ? (
-                    visibleDocuments.map((document) => (
-                      <TableRow
-                        key={`${document.id}-${document.version}`}
-                        className="hover:bg-secondary/48"
-                      >
-                        <TableCell className="ps-4">
-                          <span className="identifier text-muted-foreground text-xs">
-                            {document.id}
-                          </span>
-                        </TableCell>
-                        <TableCell>
-                          <button
-                            className="max-w-[420px] truncate text-left font-medium text-foreground outline-none transition-colors hover:text-primary hover:underline focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-ring"
-                            onClick={() => setSelectedDocument(document)}
-                            type="button"
-                          >
-                            {document.name}
-                          </button>
-                          <p className="mt-1 text-muted-foreground text-xs lg:hidden">
-                            {document.department} · {document.version}
-                          </p>
-                        </TableCell>
-                        <TableCell>
-                          <StatusBadge status={document.status} />
-                        </TableCell>
-                        <TableCell className="max-[1180px]:hidden">
-                          <span className="identifier">{document.version}</span>
-                          <p className="mt-1 text-muted-foreground text-xs">
-                            Current version
-                          </p>
-                        </TableCell>
-                        <TableCell className="max-[1320px]:hidden">
-                          {document.department}
-                        </TableCell>
-                        <TableCell className="max-[1460px]:hidden">
-                          {document.author}
-                        </TableCell>
-                        <TableCell className="max-[1180px]:hidden">
-                          {document.effectiveDate ?? "—"}
-                        </TableCell>
-                        <TableCell className="pe-3 text-right">
-                          <Menu>
-                            <MenuTrigger
-                              render={
-                                <Button
-                                  aria-label={`Actions for ${document.name}`}
-                                  size="icon-xs"
-                                  variant="ghost"
-                                />
-                              }
+              <section
+                aria-label="Documents table"
+                className="overflow-hidden rounded-xl border bg-card shadow-xs"
+              >
+                <Table>
+                  <TableHeader className="bg-secondary/72">
+                    <TableRow className="hover:bg-transparent">
+                      <TableHead className="w-[220px] ps-4 text-xs">
+                        Document ID
+                      </TableHead>
+                      <TableHead className="min-w-[300px] text-xs">
+                        Name
+                      </TableHead>
+                      <TableHead className="w-[148px] text-xs">
+                        Status
+                      </TableHead>
+                      <TableHead className="w-[112px] text-xs max-[1180px]:hidden">
+                        Version
+                      </TableHead>
+                      <TableHead className="w-[180px] text-xs max-[1320px]:hidden">
+                        Department
+                      </TableHead>
+                      <TableHead className="w-[150px] text-xs max-[1460px]:hidden">
+                        Author
+                      </TableHead>
+                      <TableHead className="w-[140px] text-xs max-[1180px]:hidden">
+                        Effective date
+                      </TableHead>
+                      <TableHead className="w-12 pe-3 text-right text-xs">
+                        <span className="sr-only">Actions</span>
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {visibleDocuments.length > 0 ? (
+                      visibleDocuments.map((document) => (
+                        <TableRow
+                          key={`${document.id}-${document.version}`}
+                          className="hover:bg-secondary/48"
+                        >
+                          <TableCell className="ps-4">
+                            <span className="identifier text-muted-foreground text-xs">
+                              {document.id}
+                            </span>
+                          </TableCell>
+                          <TableCell>
+                            <button
+                              className="max-w-[420px] truncate text-left font-medium text-foreground outline-none transition-colors hover:text-primary hover:underline focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-ring"
+                              onClick={() => openDocument(document)}
+                              type="button"
                             >
-                              <MoreHorizontalIcon aria-hidden="true" />
-                            </MenuTrigger>
-                            <MenuPopup align="end">
-                              <MenuItem
-                                onClick={() => setSelectedDocument(document)}
+                              {document.name}
+                            </button>
+                            <p className="mt-1 text-muted-foreground text-xs lg:hidden">
+                              {document.department} · {document.version}
+                            </p>
+                          </TableCell>
+                          <TableCell>
+                            <StatusBadge status={document.status} />
+                          </TableCell>
+                          <TableCell className="max-[1180px]:hidden">
+                            <span className="identifier">
+                              {document.version}
+                            </span>
+                            <p className="mt-1 text-muted-foreground text-xs">
+                              Current version
+                            </p>
+                          </TableCell>
+                          <TableCell className="max-[1320px]:hidden">
+                            {document.department}
+                          </TableCell>
+                          <TableCell className="max-[1460px]:hidden">
+                            {document.author}
+                          </TableCell>
+                          <TableCell className="max-[1180px]:hidden">
+                            {document.effectiveDate ?? "—"}
+                          </TableCell>
+                          <TableCell className="pe-3 text-right">
+                            <Menu>
+                              <MenuTrigger
+                                render={
+                                  <Button
+                                    aria-label={`Actions for ${document.name}`}
+                                    size="icon-xs"
+                                    variant="ghost"
+                                  />
+                                }
                               >
-                                <FileTextIcon aria-hidden="true" />
-                                View details
-                              </MenuItem>
-                              <MenuItem>
-                                <FileClockIcon aria-hidden="true" />
-                                Version history
-                              </MenuItem>
-                              <MenuSeparator />
-                              <MenuItem>
-                                <UserRoundIcon aria-hidden="true" />
-                                View owner
-                              </MenuItem>
-                            </MenuPopup>
-                          </Menu>
+                                <MoreHorizontalIcon aria-hidden="true" />
+                              </MenuTrigger>
+                              <MenuPopup align="end">
+                                <MenuItem
+                                  onClick={() => setSelectedDocument(document)}
+                                >
+                                  <FileTextIcon aria-hidden="true" />
+                                  View details
+                                </MenuItem>
+                                <MenuItem>
+                                  <FileClockIcon aria-hidden="true" />
+                                  Version history
+                                </MenuItem>
+                                <MenuSeparator />
+                                <MenuItem>
+                                  <UserRoundIcon aria-hidden="true" />
+                                  View owner
+                                </MenuItem>
+                              </MenuPopup>
+                            </Menu>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell className="h-64 text-center" colSpan={8}>
+                          <div className="mx-auto flex max-w-sm flex-col items-center gap-2">
+                            <div className="flex size-10 items-center justify-center rounded-full bg-muted">
+                              <FileSearchIcon
+                                aria-hidden="true"
+                                className="size-5 text-muted-foreground"
+                              />
+                            </div>
+                            <p className="font-medium">No documents found</p>
+                            <p className="text-muted-foreground text-sm">
+                              Adjust your search or clear the current filters.
+                            </p>
+                            <Button
+                              className="mt-2"
+                              onClick={clearFilters}
+                              size="sm"
+                              variant="outline"
+                            >
+                              Clear filters
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell className="h-64 text-center" colSpan={8}>
-                        <div className="mx-auto flex max-w-sm flex-col items-center gap-2">
-                          <div className="flex size-10 items-center justify-center rounded-full bg-muted">
-                            <FileSearchIcon
-                              aria-hidden="true"
-                              className="size-5 text-muted-foreground"
-                            />
-                          </div>
-                          <p className="font-medium">No documents found</p>
-                          <p className="text-muted-foreground text-sm">
-                            Adjust your search or clear the current filters.
-                          </p>
-                          <Button
-                            className="mt-2"
-                            onClick={clearFilters}
-                            size="sm"
-                            variant="outline"
-                          >
-                            Clear filters
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </section>
+                    )}
+                  </TableBody>
+                </Table>
+              </section>
 
-            <footer className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex shrink-0 items-center gap-2 whitespace-nowrap text-muted-foreground text-sm">
-                <span className="shrink-0">Rows per page</span>
-                <Select
-                  items={pageSizeOptions}
-                  onValueChange={(value) => {
-                    setPageSize(Number(value));
-                    setPage(1);
-                  }}
-                  value={String(pageSize)}
-                >
-                  <SelectTrigger
-                    aria-label="Rows per page"
-                    className="min-w-20"
-                    size="sm"
+              <footer className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex shrink-0 items-center gap-2 whitespace-nowrap text-muted-foreground text-sm">
+                  <span className="shrink-0">Rows per page</span>
+                  <Select
+                    items={pageSizeOptions}
+                    onValueChange={(value) => {
+                      setPageSize(Number(value));
+                      setPage(1);
+                    }}
+                    value={String(pageSize)}
                   >
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectPopup>
-                    {pageSizeOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectPopup>
-                </Select>
-                <span>{filteredDocuments.length} total</span>
-              </div>
+                    <SelectTrigger
+                      aria-label="Rows per page"
+                      className="min-w-20"
+                      size="sm"
+                    >
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectPopup>
+                      {pageSizeOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectPopup>
+                  </Select>
+                  <span>{filteredDocuments.length} total</span>
+                </div>
 
-              <nav
-                aria-label="Document pages"
-                className="flex items-center gap-1"
-              >
-                <Button
-                  aria-label="Previous page"
-                  disabled={safePage === 1}
-                  onClick={() => setPage((value) => Math.max(1, value - 1))}
-                  size="icon"
-                  variant="outline"
+                <nav
+                  aria-label="Document pages"
+                  className="flex items-center gap-1"
                 >
-                  <ChevronLeftIcon aria-hidden="true" />
-                </Button>
-                {Array.from({ length: pageCount }, (_, index) => index + 1).map(
-                  (pageNumber) => (
+                  <Button
+                    aria-label="Previous page"
+                    disabled={safePage === 1}
+                    onClick={() => setPage((value) => Math.max(1, value - 1))}
+                    size="icon"
+                    variant="outline"
+                  >
+                    <ChevronLeftIcon aria-hidden="true" />
+                  </Button>
+                  {Array.from(
+                    { length: pageCount },
+                    (_, index) => index + 1,
+                  ).map((pageNumber) => (
                     <Button
                       key={pageNumber}
                       aria-current={
@@ -969,22 +1056,29 @@ export function DocumentsPrototype() {
                     >
                       {pageNumber}
                     </Button>
-                  ),
-                )}
-                <Button
-                  aria-label="Next page"
-                  disabled={safePage === pageCount}
-                  onClick={() =>
-                    setPage((value) => Math.min(pageCount, value + 1))
-                  }
-                  size="icon"
-                  variant="outline"
-                >
-                  <ChevronRightIcon aria-hidden="true" />
-                </Button>
-              </nav>
-            </footer>
-          </div>
+                  ))}
+                  <Button
+                    aria-label="Next page"
+                    disabled={safePage === pageCount}
+                    onClick={() =>
+                      setPage((value) => Math.min(pageCount, value + 1))
+                    }
+                    size="icon"
+                    variant="outline"
+                  >
+                    <ChevronRightIcon aria-hidden="true" />
+                  </Button>
+                </nav>
+              </footer>
+            </div>
+          ) : (
+            <DocumentFlowScreen
+              documentKind={documentKind}
+              onBack={() => navigateToView("list")}
+              onViewChange={navigateToView}
+              view={activeView}
+            />
+          )}
         </main>
       </div>
 
@@ -1039,7 +1133,7 @@ export function DocumentsPrototype() {
                 <DialogClose render={<Button variant="ghost" />}>
                   Close
                 </DialogClose>
-                <Button>
+                <Button onClick={() => openDocument(selectedDocument)}>
                   Open document
                   <ChevronRightIcon aria-hidden="true" />
                 </Button>

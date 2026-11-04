@@ -1,4 +1,4 @@
-# Accura Documents List – Design QA
+# Accura Prototype – Design QA
 
 This file owns implementation verification and visual evidence for the executable prototype. Product facts, reusable UI rules, and decision rationale are owned by `docs/product-knowledge/`, `docs/rules/`, and `docs/change-log/DECISIONS.md` respectively.
 
@@ -28,13 +28,27 @@ This file owns implementation verification and visual evidence for the executabl
 - White-topbar comparison evidence: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/qa-comparison-white-topbar.png`
 - Even-padding implementation evidence: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-even-topbar-padding.png`
 - Even-padding comparison evidence: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/qa-comparison-even-topbar-padding.png`
+- Create screen evidence: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-flow-create.png`
+- Review screen evidence: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-flow-review.png`
+- Electronic-signature evidence: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-flow-signature.png`
+- QA Approval screen evidence: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-flow-qa.png`
+- Approved screen evidence: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-flow-approved.png`
+- Audit Trail evidence: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-flow-audit.png`
+- Full lifecycle comparison: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/qa-comparison-document-flow.png`
+- Dashboard banner reference: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/reference-dashboard-banner.png`
+- Existing Accura dashboard reference: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/reference-accura-dashboard.png`
+- Dashboard implementation evidence: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-dashboard.png`
+- Dashboard combined comparison: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/qa-comparison-dashboard.png`
+- Divider top-bar reference: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/reference-vercel-divider-topbar.png`
+- Divider top-bar implementation: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-divider-topbar.png`
+- Divider top-bar comparison: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/qa-comparison-divider-topbar.png`
 - State: light theme, expanded sidebar, default filters, page 1, 10 rows.
 - Latest captured viewport: 1265 × 712 CSS px in the in-app browser.
 - Desktop implementation remains the primary target; the narrow capture was also used to verify that the shell does not introduce horizontal page overflow.
 
 ## Findings
 
-No actionable P0, P1, or P2 differences remain in the redesigned shell.
+No actionable P0, P1, or P2 differences remain in the redesigned Documents flow. The unresolved role matrix, External Document lifecycle, taxonomy conflicts, and production e-signature rules remain product-verification gaps rather than hidden implementation assumptions.
 
 The implementation now intentionally differs from the older Accura demo and the preceding neutral pass in these ways:
 
@@ -47,14 +61,22 @@ The implementation now intentionally differs from the older Accura demo and the 
 - The notification count has its own ring and visible overflow, so it no longer clips into the bell control or header edge.
 - The old section label in the top bar is replaced by a functional global search with a visible `⌘ K` shortcut.
 - All product-interface icons now use Iconoir on a consistent 24 × 24 grid and 1.5 px stroke; the Accura logo remains the supplied brand SVG.
+- The Document list now opens status-aware record screens directly; secondary row actions retain the quick-view dialog.
+- Create/Edit uses a sectioned Record Editor with readiness, uploads, metadata, references, routing, and sticky Draft/Submit actions.
+- Review, QA Approval, and Approved use one Record Detail shell with a dominant preview, workflow stepper, metadata rail, signature chain, role-aware decisions, and Audit Trail drawer.
+- Dashboard combines the existing Accura overview and action-record structure with the supplied mint quality-workspace illustration. The banner keeps the requested eyebrow and headline in the open left region while the remaining workspace stays Zinc with white cards.
+- Dashboard navigation is now functional. Dashboard and Documents share the same shell, selected navigation treatment, global search, notification, and profile controls.
+- Dashboard module cards use restrained semantic color plus a branded selected state; Records retains the existing Accura tabs, priority filter, statuses, due dates, and realistic action data.
 
 ## Required Fidelity Surfaces
 
 - Fonts and typography: passed. Cal Sans is loaded through COSS; UI uses `GEOM 25`, headings use `GEOM 50`, identifiers use `GEOM 0`, optical sizing is automatic, and no letter-spacing was introduced.
 - Spacing and layout rhythm: passed. The 64 px sidebar state, 248 px expanded state, 64 px white top bar with 12 px padding on every side, open filter region, and white table surface form one consistent frame.
 - Colors and visual tokens: passed. Zinc 100 defines the application background, Zinc 50 defines the sidebar, and Brand 800 with white foreground defines the selected state and primary action. Native COSS status colors remain unchanged.
-- Image quality and asset fidelity: passed. `accura-logo.svg` and `accura-mark.svg` come from the user-authorized official asset folder. The mark changes only the SVG `viewBox` to remove unused artboard space; its paths and fills are untouched.
+- Image quality and asset fidelity: passed. `accura-logo.svg` and `accura-mark.svg` come from the user-authorized official asset folder. `quality-workspace-banner.png` is the exact 2578 × 432 px image supplied by the user in this session; Next Image preserves it as a decorative raster background without redrawing the illustration.
 - Copy and content: passed. App-specific labels use Documents terminology and typeset punctuation.
+- Lifecycle coverage: passed for prototype scope. Draft, In Review, In QA Approval, Approved, signed rejection back to Draft, New Version, and Audit Trail are represented with realistic mock data.
+- Dashboard composition: passed. The supplied illustration replaces the previous dark metrics hero, the two requested text lines remain readable in the left negative space, and the alert plus workload content continue immediately below it.
 
 ## Focused Interaction Evidence
 
@@ -72,6 +94,16 @@ The implementation now intentionally differs from the older Accura demo and the 
 - Collapsed navigation items now retain explicit accessible names while their visible labels are hidden.
 - Browser verification opened the document quick view after filtering for “Equipment”; document metadata and actions remained readable over the dark rail.
 - Browser console check returned no errors.
+- Browser verification completed the status-aware list-to-record path for In Review, In QA Approval, and Approved records.
+- Review approval requires the electronic-signature dialog; confirming a prototype password advances the record to In QA Approval.
+- Approved records expose Print, Download, New Version, View Audit Trail, and Mark as Obsolete; the audit drawer opened with four chronological verified events.
+- The 1265 px lifecycle capture reported `body.scrollWidth === body.clientWidth`; no horizontal page overflow was introduced.
+- Screen transitions reset page scroll to zero so record titles and primary actions are not hidden below the sticky top bar.
+- Dashboard and Documents navigation was exercised in both directions; each destination exposed its expected heading and preserved the shared shell.
+- Dashboard CTA scrolls to Records, Records tabs switch between five action rows and two upcoming rows, and the priority Select filters the current view.
+- At a 647 × 708 CSS px in-app viewport, the sidebar automatically collapses to 64 px; the dashboard remains readable without horizontal page overflow.
+- Dashboard browser capture is 632 × 692 px. The in-app browser reports device-pixel ratio 2 and returns a normalized 1× screenshot.
+- Dashboard runtime logs contained only Next.js development/HMR messages; no application errors were present.
 
 ## Validation
 
@@ -80,8 +112,63 @@ The implementation now intentionally differs from the older Accura demo and the 
 - TypeScript (`tsc --noEmit`): passed.
 - Next.js production build: passed.
 - Biome lint: passed with no warnings.
+- Changed-file Biome lint (`components/dashboard-screen.tsx`): passed. The current app-wide lint command also scans existing generated `.vercel/output` files and fails there; no diagnostic points to the changed dashboard component.
 
 ## Comparison History
+
+### Iteration 19 – Brand 300 banner border
+
+- User feedback: the illustrated quality-workspace banner needed a defined 1 px outline.
+- Fix: added a solid 1 px border using `--accura-brand-300` while preserving the existing 16 px radius, crop, text, and spacing. Brand 950 was tested first and then replaced because it looked too heavy against the pale mint artwork.
+- Browser evidence: `implementation-quality-workspace-banner-border.jpg`; computed styles report `border-top-width: 1px`, `border-top-style: solid`, and `border-top-color: rgb(112, 209, 160)`.
+- Result: the border follows the rounded hero edge evenly with no clipping or layout shift.
+
+### Iteration 18 – supplied quality-workspace banner
+
+- Source visual truth: `public/brand/quality-workspace-banner.png`, the exact user-supplied 2578 × 432 px RGBA image.
+- Implementation evidence: `implementation-quality-workspace-banner.jpg`, a 1421 × 768 browser-rendered Dashboard capture at a 1436 × 776 CSS viewport; focused hero evidence is `implementation-quality-workspace-banner-crop.jpg` at 1085 × 208 px.
+- State: light theme, Dashboard selected, page at top, default desktop navigation, no interaction overlay.
+- Full-view comparison evidence: the implementation capture shows the new banner in context between the greeting and action-required notice, with the rest of the Dashboard unchanged.
+- Focused comparison evidence: `qa-comparison-quality-workspace-banner.png` places the normalized source crop above the browser-rendered hero. The source was scaled to 1242 × 208 and center-cropped to 1085 × 208 to match the CSS `object-cover` frame; both comparison inputs are therefore equal-size 1× evidence.
+- Fonts and typography: Cal Sans remains active, no letter-spacing was added, and the requested eyebrow plus headline retain the prior hierarchy and exact copy.
+- Spacing and layout rhythm: the 208 px hero keeps 32 px desktop inset, centers the two-line text block vertically, and preserves the existing 20 px Dashboard section rhythm.
+- Colors and visual tokens: the mint asset supplies the background color; the eyebrow uses Accura primary and the headline uses Brand 950 for clear contrast without modifying the supplied art.
+- Image quality and asset fidelity: the source PNG loads through Next Image at its native 5.97:1 art direction; browser inspection confirmed a complete image load and no generated substitute, SVG redraw, gradient, or placeholder.
+- Copy and content: exactly “Your quality workspace” and “Keep quality moving, without losing sight of risk.” remain in the banner; the old description, CTA, and metric tiles were removed so they do not obscure the illustration.
+- Responsive evidence: visual checks at 1024 × 768 and 768 × 768 keep the complete headline readable; the decorative right-side artwork crops progressively rather than colliding with text.
+- Browser verification: the Dashboard rendered at `http://localhost:4173/`; the banner asset completed successfully, the expected heading was present in the accessibility tree, and browser error/warning logs were empty.
+- Earlier findings: none. The first normalized comparison found no actionable P0/P1/P2 mismatch.
+- Result: no actionable P0/P1/P2 findings remain.
+
+### Iteration 17 – border-only top bar
+
+- User feedback: the white rounded top-bar container felt too detached from the Zinc application canvas.
+- Source truth: `reference-vercel-divider-topbar.png` (2392 × 218 px) defines a background-free navigation region separated from content by one horizontal rule.
+- Fix: removed the top bar’s white fill, surrounding border, 16 px radius, and shadow; matched its fill to the Zinc canvas and retained only the bottom border.
+- Preserved: sticky behavior, 64 px height, 12 px internal padding, search input, notification, profile, and all interactions.
+- Post-fix evidence: `qa-comparison-divider-topbar.png` normalizes the reference to 632 px wide and compares it with the top 80 px of the 647 × 708 CSS implementation capture. The divider, open background, and control alignment are legible at the comparison scale.
+- Result: no actionable P0/P1/P2 findings remain.
+
+### Iteration 16 – branded Dashboard
+
+- Source truth: `reference-dashboard-banner.png` and `reference-accura-dashboard.png`, both 1914 × 956 px. The first defines banner hierarchy and restrained accent usage; the second defines Accura’s module overview, alerts, tabs, action table, and record content.
+- Implementation evidence: `implementation-dashboard.png`, 632 × 692 px, captured from the in-app browser at a 647 × 708 CSS viewport and normalized to 1× output. `qa-comparison-dashboard.png` places both references and the rendered implementation in one visual comparison.
+- State: light theme, Dashboard selected, My actions selected, All priorities, page at top, responsive sidebar collapsed.
+- Intentional adaptation: this is a hybrid redesign rather than a pixel clone, so QA compares hierarchy, content coverage, token use, density, and responsive behavior. The banner is Brand 950 rather than the PAV mint, matching the user’s requested dark-brand treatment.
+- Earlier P2: at the available narrow browser viewport, the 248 px sidebar left too little room for the banner and caused the header content to feel compressed.
+- Fix: automatically initialize the existing 64 px collapsed rail below 960 px while preserving manual expansion and the full desktop 248 px state.
+- Post-fix evidence: the implementation now exposes the full heading, banner CTA, three banner metrics, and alert without horizontal overflow. The screenshot itself is the focused hero-region evidence; a separate crop was unnecessary because banner typography, spacing, CTA, and metrics remain legible at 632 px.
+- Required surfaces: typography uses Cal Sans roles with no tracking; spacing follows the existing 8/12/16/24/32 rhythm; colors use Zinc, Brand 950/800, Pop, and existing semantic badges; no raster or decorative source asset was approximated; copy preserves Accura’s current workload data while improving hierarchy.
+- Result: no actionable P0/P1/P2 findings remain.
+
+### Iteration 15 – complete Documents lifecycle
+
+- Scope: implemented Create, Edit Draft, In Review, In QA Approval, Approved, electronic-signature, and Audit Trail states from the five remaining evidence screens and the 13-page module specification.
+- Architecture: added a reusable Record Editor and Record Review/Detail shell, plus shared workflow stepper, assignee, e-signature, document preview, and audit timeline patterns.
+- Interaction coverage: document rows open the correct screen by status; Create routes through category selection; signed approval advances Review → QA → Approved; Reject returns to Draft; New Version opens Draft; Audit opens a right-side drawer.
+- Earlier P2: switching from a scrolled list or detail screen could preserve the previous scroll offset and hide the new record title below the sticky top bar.
+- Fix: reset scroll to the page origin whenever the active Documents view changes; browser verification returned `scrollTop: 0` with the Approved title visible.
+- Post-fix evidence: `qa-comparison-document-flow.png` places the five source screens above the normalized browser-rendered Create, Review, QA, Approved, and Audit states. Source captures are 1918 × 991; implementation captures are 1265 × 712 (Audit 1280 × 720) and were top-cropped to the same 1.934:1 comparison ratio.
 
 ### Iteration 14 – even top-bar padding
 
@@ -202,5 +289,17 @@ The implementation now intentionally differs from the older Accura demo and the 
 - [x] No horizontal page overflow in the available responsive capture.
 - [x] TypeScript and production build.
 - [x] Primary reserved for principal actions; supporting interaction states use secondary or neutral roles.
+- [x] Create and Edit Draft editor states with readiness and routing.
+- [x] In Review and In QA Approval decision states.
+- [x] Approved lifecycle actions and signature chain.
+- [x] Electronic-signature confirmation for regulated transitions.
+- [x] Audit Trail drawer with verified chronological events.
+- [x] Status-aware row-to-record navigation and scroll reset.
+- [x] Dashboard with the supplied illustrated quality-workspace banner and retained text.
+- [x] Existing Accura module overview, alert, tabs, Records table, and workload data retained.
+- [x] Functional Dashboard/Documents navigation, record tabs, and priority filter.
+- [x] Branded active states with semantic status colors.
+- [x] Responsive 64 px sidebar initialization below 960 px.
+- [x] Border-only Zinc top bar with no card container styling.
 
 final result: passed

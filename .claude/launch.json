@@ -1,0 +1,13 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "accura-prototype",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--", "-p", "4173"],
+      "cwd": "apps/accura-prototype",
+      "url": "http://localhost:4173",
+      "port": 4173
+    }
+  ]
+}

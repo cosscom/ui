@@ -10,14 +10,16 @@
   --accura-pop: #d9f25f;
   --accura-pop-soft: #f1f8cf;
   --accura-coral: #ff7a66;
-  --sidebar: var(--accura-zinc-50);
-  --sidebar-foreground: var(--accura-zinc-700);
-  --sidebar-primary: var(--accura-brand-800-base);
-  --sidebar-primary-foreground: var(--color-white);
-  --sidebar-accent: var(--accura-brand-800-base);
-  --sidebar-accent-foreground: var(--color-white);
-  --sidebar-border: --alpha(var(--color-black) / 8%);
-  --sidebar-ring: var(--accura-brand-500);
+  --primary: var(--accura-brand-950-darkshade);
+  --ring: var(--accura-brand-950-darkshade);
+  --sidebar: var(--accura-brand-950-darkshade);
+  --sidebar-foreground: var(--accura-zinc-200);
+  --sidebar-primary: var(--accura-zinc-100);
+  --sidebar-primary-foreground: var(--accura-zinc-900);
+  --sidebar-accent: var(--accura-zinc-100);
+  --sidebar-accent-foreground: var(--accura-zinc-900);
+  --sidebar-border: --alpha(var(--color-white) / 16%);
+  --sidebar-ring: var(--accura-brand-150-lightshade);
 }
 
 body {
