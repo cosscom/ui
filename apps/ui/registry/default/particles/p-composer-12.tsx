@@ -42,15 +42,7 @@ export default function Particle() {
           <ComposerList>
             {(item: ComposerItemValue) => (
               <ComposerItem key={item.id} value={item}>
-                <span className="relative grid size-5 shrink-0 place-items-center text-xl/none">
-                  <span
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 grid scale-160 select-none place-items-center opacity-50 blur-[10px]"
-                  >
-                    {item.text}
-                  </span>
-                  <span className="relative">{item.text}</span>
-                </span>
+                <span className="shrink-0 text-xl/none">{item.text}</span>
                 <span className="truncate text-muted-foreground">
                   :{item.label}:
                 </span>

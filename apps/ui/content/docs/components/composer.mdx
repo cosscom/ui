@@ -234,7 +234,7 @@ const [emoji, setEmoji] = useState<ComposerItemValue[]>([])
 >
 ```
 
-Each `searchEmoji` result is `{ id: "thumbsup", label: "thumbsup", text: "👍", type: "text" }`. In the list, a blurred, enlarged, `aria-hidden` copy of the emoji sits behind the glyph as a glow in the emoji’s own colors; it’s absolutely positioned, so it doesn’t affect layout or scrolling.
+Each `searchEmoji` result is `{ id: "thumbsup", label: "thumbsup", text: "👍", type: "text" }`, so the list can show `item.text` beside `:{item.label}:`.
 
 ### Async results
 
