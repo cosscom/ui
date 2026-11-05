@@ -164,6 +164,11 @@ export const chat: Registry["items"] = [
         target: "@components/chat-demo/chat-demo-composer.tsx",
       },
       {
+        path: "chat-demo/chat-demo-emoji.ts",
+        type: "registry:component",
+        target: "@components/chat-demo/chat-demo-emoji.ts",
+      },
+      {
         path: "chat-demo/chat-demo-message-info.tsx",
         type: "registry:component",
         target: "@components/chat-demo/chat-demo-message-info.tsx",

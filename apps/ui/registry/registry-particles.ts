@@ -2269,6 +2269,26 @@ export const particles: ParticleItem[] = [
     type: "registry:block",
   },
   {
+    categories: categories("composer", "text editor"),
+    dependencies: ["lucide-react"],
+    description: "Composer with colon emoji suggestions that insert plain text",
+    files: [
+      { path: "particles/p-composer-12.tsx", type: "registry:block" },
+      {
+        path: "chat-demo/chat-demo-emoji.ts",
+        target: "@components/chat-demo/chat-demo-emoji.ts",
+        type: "registry:component",
+      },
+    ],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl",
+    },
+    name: "p-composer-12",
+    registryDependencies: ["@coss/button", "@coss/composer"],
+    type: "registry:block",
+  },
+  {
     categories: categories("command", "dialog"),
     dependencies: ["lucide-react"],
     description: "Command palette with dialog",

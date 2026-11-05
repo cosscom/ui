@@ -1171,6 +1171,11 @@
           "target": "@components/chat-demo/chat-demo-composer.tsx"
         },
         {
+          "path": "registry/default/chat-demo/chat-demo-emoji.ts",
+          "type": "registry:component",
+          "target": "@components/chat-demo/chat-demo-emoji.ts"
+        },
+        {
           "path": "registry/default/chat-demo/chat-demo-message-info.tsx",
           "type": "registry:component",
           "target": "@components/chat-demo/chat-demo-message-info.tsx"
@@ -5510,6 +5515,36 @@
         "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"
       },
       "name": "p-composer-11",
+      "registryDependencies": [
+        "@coss/button",
+        "@coss/composer"
+      ],
+      "type": "registry:block"
+    },
+    {
+      "categories": [
+        "composer",
+        "text editor"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "description": "Composer with colon emoji suggestions that insert plain text",
+      "files": [
+        {
+          "path": "registry/default/particles/p-composer-12.tsx",
+          "type": "registry:block"
+        },
+        {
+          "path": "registry/default/chat-demo/chat-demo-emoji.ts",
+          "target": "@components/chat-demo/chat-demo-emoji.ts",
+          "type": "registry:component"
+        }
+      ],
+      "meta": {
+        "className": "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"
+      },
+      "name": "p-composer-12",
       "registryDependencies": [
         "@coss/button",
         "@coss/composer"

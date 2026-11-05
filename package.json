@@ -22,7 +22,7 @@
     "format:all": "biome check --write --unsafe --no-errors-on-unmatched",
     "lint": "turbo run lint --",
     "prepare": "husky",
-    "test": "bun test --pass-with-no-tests",
+    "test": "bun test --pass-with-no-tests && bun test ./packages/ui/test/components/composer.dom.tsx",
     "typecheck": "turbo run typecheck"
   },
   "workspaces": [

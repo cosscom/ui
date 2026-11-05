@@ -2,7 +2,7 @@
 
 import { ArrowUpIcon } from "lucide-react";
 import type { ReactElement, ReactNode, RefObject } from "react";
-import { useId, useMemo } from "react";
+import { useId, useMemo, useState } from "react";
 import { useMediaQuery } from "@/registry/default/hooks/use-media-query";
 import { cn } from "@/registry/default/lib/utils";
 import { Button } from "@/registry/default/ui/button";
@@ -24,6 +24,7 @@ import {
   TooltipPopup,
   TooltipTrigger,
 } from "@/registry/default/ui/tooltip";
+import { searchEmoji } from "./chat-demo-emoji";
 import { ChatMemberAvatar } from "./chat-demo-message";
 import type { MemberId } from "./chat-demo-state";
 import { CHAT_MEMBERS } from "./chat-demo-state";
@@ -65,6 +66,7 @@ export function ChatDemoComposer({
 }): ReactElement {
   const hintId = useId();
   const touchInput = useMediaQuery({ pointer: "coarse" });
+  const [emoji, setEmoji] = useState<ComposerItemValue[]>([]);
   const triggers = useMemo<ComposerTrigger[]>(
     () => [
       {
@@ -75,8 +77,9 @@ export function ChatDemoComposer({
           label: CHAT_MEMBERS[id].handle,
         })),
       },
+      { character: ":", items: emoji, filter: null },
     ],
-    [mentionMembers],
+    [mentionMembers, emoji],
   );
 
   return (
@@ -93,6 +96,9 @@ export function ChatDemoComposer({
         submitOnEnter="desktop"
         triggers={triggers}
         value={value}
+        onQueryChange={(query) =>
+          setEmoji(query?.character === ":" ? searchEmoji(query.text) : [])
+        }
         onSubmit={onSend}
         onValueChange={onValueChange}
       >
@@ -108,6 +114,15 @@ export function ChatDemoComposer({
         <ComposerPopup>
           <ComposerList>
             {(item: ComposerItemValue) => {
+              if (item.type === "text")
+                return (
+                  <ComposerItem key={item.id} value={item}>
+                    <span className="shrink-0 text-xl/none">{item.text}</span>
+                    <span className="truncate text-muted-foreground">
+                      :{item.label}:
+                    </span>
+                  </ComposerItem>
+                );
               if (!isMemberId(item.id)) return null;
               return (
                 <ComposerItem key={item.id} value={item}>
