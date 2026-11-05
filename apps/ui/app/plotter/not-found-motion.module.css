@@ -1,0 +1,13 @@
+.animation {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .drawing[data-live] .animation {
+    display: block;
+  }
+
+  .drawing[data-live] .original {
+    visibility: hidden;
+  }
+}

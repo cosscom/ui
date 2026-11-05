@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Plotter · Seat and withdraw</title>
+    <link rel="stylesheet" href="../foundation/roles.css">
+    <style>
+      :root { color-scheme: light dark; }
+      body { margin: 24px; color: CanvasText; background: Canvas; font: 400 14px "Cal Sans", sans-serif; font-optical-sizing: auto; font-synthesis: none; font-variation-settings: "GEOM" 25; }
+      main { max-width: 560px; margin: auto; }
+      h1 { font: inherit; margin: 0; }
+      p { line-height: 1.5; }
+      .viewport { overflow-x: auto; }
+      svg { display: block; width: 560px; height: 440px; }
+      #motion-state { display: none; }
+      svg[data-live] #motion-state { display: inline; }
+      svg[data-live] #static-state { display: none; }
+      .controls { display: flex; flex-wrap: wrap; gap: 8px; }
+      [hidden] { display: none !important; }
+      button { color: inherit; background: transparent; border: 1px solid currentColor; border-radius: 6px; padding: 6px 10px; font: inherit; cursor: pointer; }
+      button:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+      @media (prefers-reduced-motion: reduce) {
+        svg[data-live] #motion-state { display: none; }
+        svg[data-live] #static-state { display: inline; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Seat and withdraw</h1>
+      <p>An instructional construction. The hatch identifies the core; the base owns their shared edge at contact.</p>
+      <div class="viewport" id="viewport">
+        <svg id="assembly" data-plotter="" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 440" width="560" height="440" fill="none" role="img" aria-labelledby="assembly-title" aria-describedby="assembly-description">
+          <title id="assembly-title">A core seats on a base</title>
+          <desc id="assembly-description">The square core is marked with diagonal lines. In motion it lowers onto the base, waits, then returns to its starting position. The static view shows it seated.</desc>
+          <defs>
+            <g id="assembly-core">
+              <path data-plotter-role="primary" d="M256 180V132H304V180"/>
+              <path data-plotter-role="hatch" stroke-linecap="butt" d="M256 144L268 132 M256 156L280 132 M256 168L292 132 M256 180L304 132 M268 180L304 144 M280 180L304 156 M292 180L304 168"/>
+            </g>
+          </defs>
+          <path data-plotter-role="primary" d="M216 276H344V284H216Z"/>
+          <g id="static-state">
+            <use href="#assembly-core" transform="translate(0 96)"/>
+          </g>
+          <g id="motion-state">
+            <g>
+              <animateTransform attributeName="transform" type="translate" dur="4s" repeatCount="indefinite" values="0 0;0 0;0 96;0 96;0 0;0 0" keyTimes="0;0.15;0.4;0.6;0.85;1" calcMode="spline" keySplines="0 0 1 1;0.42 0 0.58 1;0 0 1 1;0.42 0 0.58 1;0 0 1 1"/>
+              <use href="#assembly-core"/>
+              <path data-plotter-role="primary" d="M256 180H304">
+                <animate attributeName="visibility" dur="4s" repeatCount="indefinite" values="visible;hidden;visible;visible" keyTimes="0;0.4;0.600001;1" calcMode="discrete"/>
+              </path>
+            </g>
+          </g>
+          <path data-plotter-role="leader" d="M348 280H364"/>
+          <g fill="currentColor" stroke="none" font-size="11" opacity="0.58">
+            <text x="280" y="100" text-anchor="middle">Selected core</text>
+            <text x="372" y="284">Seat</text>
+            <text x="280" y="348" text-anchor="middle">One shared contact edge</text>
+          </g>
+        </svg>
+      </div>
+      <div class="controls" id="controls" hidden>
+        <button id="play" type="button">Pause</button>
+        <button id="replay" type="button">Replay</button>
+        <button id="mode" type="button">Show static</button>
+      </div>
+      <p id="status">Static drawing. Animation controls appear when supported.</p>
+    </main>
+    <script>
+      const svg = document.getElementById("assembly");
+      const controls = document.getElementById("controls");
+      const play = document.getElementById("play");
+      const replay = document.getElementById("replay");
+      const mode = document.getElementById("mode");
+      const status = document.getElementById("status");
+      const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+      let live = true;
+      let paused = false;
+      let inView = false;
+
+      function sync() {
+        const showMotion = live && !reducedMotion.matches;
+        svg.toggleAttribute("data-live", showMotion);
+        if (showMotion && !paused && inView && !document.hidden) svg.unpauseAnimations();
+        else svg.pauseAnimations();
+        controls.hidden = reducedMotion.matches;
+        play.hidden = replay.hidden = !live;
+        play.textContent = paused ? "Resume" : "Pause";
+        mode.textContent = live ? "Show static" : "Play animation";
+        status.textContent = reducedMotion.matches
+          ? "Reduced motion · Static drawing"
+          : !live ? "Static drawing"
+          : paused ? "Animation paused"
+          : "Four-second seating and withdrawal cycle";
+      }
+
+      if (typeof svg.pauseAnimations === "function" && typeof svg.setCurrentTime === "function" && "IntersectionObserver" in window) {
+        svg.pauseAnimations();
+        play.addEventListener("click", () => { paused = !paused; sync(); });
+        replay.addEventListener("click", () => { svg.setCurrentTime(0); paused = false; sync(); });
+        mode.addEventListener("click", () => { live = !live; if (live) { svg.setCurrentTime(0); paused = false; } sync(); });
+        reducedMotion.addEventListener("change", sync);
+        document.addEventListener("visibilitychange", sync);
+        new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; sync(); }).observe(document.getElementById("viewport"));
+        sync();
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="440" viewBox="0 0 560 440" fill="none" stroke="currentColor" stroke-linejoin="round" style="font-family:Cal Sans,sans-serif;font-optical-sizing:auto;font-synthesis:none;font-variation-settings:'GEOM' 25" role="img" aria-labelledby="registration-title registration-description">
+  <title id="registration-title">A place in the registry</title>
+  <desc id="registration-description">An independent agent moves into a matching registry cell. Its circular identity mark and three capability marks stay the same; its new row is identified as agent_07.</desc>
+  <!-- Mode: conceptual diagram. A fitted square represents one agent. The circle is its identity and the three slots its capabilities. Translation into the indexed registry preserves those marks. The drawing does not specify a protocol, authentication procedure, or lifecycle. -->
+  <!-- Registry geometry: three 80-unit rows. The active agent is an 80-unit square, equal to the incoming square. Every shared boundary has one stroke owner. -->
+  <g stroke-width="0.65" opacity="0.5">
+    <path d="M300 184V104H472V344H300V264"/>
+    <path d="M380 184H472M380 264H472"/>
+    <path d="M380 104V184M380 264V344"/>
+    <circle cx="340" cy="136" r="12"/>
+    <path d="M328 158H338V164H328ZM344 158H354V164H344Z"/>
+    <circle cx="340" cy="296" r="12"/>
+    <path d="M320 318H330V324H320ZM336 318H346V324H336ZM352 318H362V324H352Z"/>
+  </g>
+  <g stroke-width="0.6" opacity="0.24">
+    <path d="M196 184H292M196 264H292"/>
+    <path d="M300 88V96M472 88V96"/>
+  </g>
+  <g stroke-width="0.95">
+    <rect x="108" y="184" width="80" height="80" rx="0"/>
+    <rect x="300" y="184" width="80" height="80" rx="0"/>
+    <circle cx="148" cy="216" r="12"/>
+    <circle cx="340" cy="216" r="12"/>
+    <path d="M128 238H138V244H128ZM144 238H154V244H144ZM160 238H170V244H160Z"/>
+    <path d="M320 238H330V244H320ZM336 238H346V244H336ZM352 238H362V244H352Z"/>
+  </g>
+  <!-- Dashed shaft denotes the single conceptual registration transfer. It starts at the arrow tip to keep the terminal dash attached to the solid head. -->
+  <g stroke-width="0.65" opacity="0.5">
+    <path d="M282 224H204" stroke-dasharray="4 6" stroke-linecap="butt"/>
+    <path d="M277.757359 219.757359L282 224L277.757359 228.242641"/>
+  </g>
+  <g fill="currentColor" stroke="none" font-size="12" style="font-variation-settings:'GEOM' 25">
+    <text x="108" y="162">Agent</text>
+    <text x="300" y="82">Registry</text>
+    <text x="396" y="228">agent_07</text>
+  </g>
+  <g fill="currentColor" stroke="none" font-size="10" opacity="0.5" style="font-variation-settings:'GEOM' 25">
+    <text x="396" y="148">agent_06</text>
+    <text x="396" y="308">agent_08</text>
+    <text x="148" y="287" text-anchor="middle">Unlisted</text>
+    <text x="244" y="211" text-anchor="middle">Register</text>
+  </g>
+</svg>

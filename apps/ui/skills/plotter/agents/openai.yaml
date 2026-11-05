@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plotter"
+  short_description: "Draw and animate flat construction illustrations"
+  default_prompt: "Use $plotter to create an editable flat construction illustration, following its drawing or animation workflow as appropriate."
