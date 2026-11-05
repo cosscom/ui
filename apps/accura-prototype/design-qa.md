@@ -53,6 +53,15 @@ This file owns implementation verification and visual evidence for the executabl
 - Settings underline-tab comparison: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/qa-comparison-settings-tabs-underline.png`
 - Shared Accura tab implementation: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-accura-tabs-synced.png`
 - Dashboard grid-icon implementation: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-dashboard-grid-icon.png`
+- Collapsed-sidebar single-target evidence: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-sidebar-collapsed-single-target.png`
+- Combobox trailing-indicator evidence: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-combobox-trailing-indicator.png`
+- Settings save-toast evidence: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-settings-save-toast.png`
+- Collapsed-sidebar comparison: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/qa-comparison-sidebar-collapsed.png`
+- Combobox indicator comparison: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/qa-comparison-combobox-indicator.png`
+- Settings toast comparison: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/qa-comparison-settings-toast.png`
+- Persistent information reference: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/reference-persistent-information-panel.png`
+- Information-panel implementation: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/implementation-information-panel.png`
+- Information-panel comparison: `/Users/mac/Documents/GitHub/Coss/apps/accura-prototype/qa-comparison-information-panel.png`
 - State: light theme, expanded sidebar, default filters, page 1, 10 rows.
 - Latest captured viewport: 1265 × 712 CSS px in the in-app browser.
 - Desktop implementation remains the primary target; the narrow capture was also used to verify that the shell does not introduce horizontal page overflow.
@@ -68,7 +77,7 @@ The implementation now intentionally differs from the older Accura demo and the 
 - Filter controls, result count, title, description, primary action, and pagination sit directly on Zinc. The sticky top bar and table are the two white, rounded, bordered surfaces.
 - Mint is limited to the table header and subtle table hover states; coral remains limited to the unread badge.
 - The official Accura SVG lockup and mark replace the generated raster placeholder.
-- The sidebar collapses from 248 px to exactly 64 px. In the collapsed state the mark is shown alone and changes to the expand icon on hover or keyboard focus.
+- The sidebar collapses from 248 px to exactly 64 px. In the collapsed state the standalone mark remains the sole visual and acts as the expand control.
 - The notification count has its own ring and visible overflow, so it no longer clips into the bell control or header edge.
 - The old section label in the top bar is replaced by a functional global search with a visible `⌘ K` shortcut.
 - All product-interface icons now use Iconoir on a consistent 24 × 24 grid and 1.5 px stroke; the Accura logo remains the supplied brand SVG.
@@ -93,7 +102,7 @@ The implementation now intentionally differs from the older Accura demo and the 
 
 - Expanded sidebar computed width: 248 px.
 - Collapsed sidebar computed width after transition: 64 px.
-- Collapsed mark was verified visually; keyboard focus swaps it to the expand icon and exposes a visible branded focus ring.
+- Collapsed mark was verified visually as the only visual in its target; keyboard focus exposes a visible branded focus ring without swapping or layering another icon.
 - Collapsed geometry was measured after the transition: sidebar center, navigation button center, and icon center all resolve to x = 40 px inside the 64 px rail.
 - Activating the expand control restores 248 px and the full Accura lockup.
 - At 632 px, `body.scrollWidth` equals `body.clientWidth`; the shell adds no horizontal page overflow.
@@ -126,6 +135,31 @@ The implementation now intentionally differs from the older Accura demo and the 
 - Changed-file Biome lint (`components/dashboard-screen.tsx`): passed. The current app-wide lint command also scans existing generated `.vercel/output` files and fails there; no diagnostic points to the changed dashboard component.
 
 ## Comparison History
+
+### Iteration 25 – Persistent information panel
+
+- User feedback: the Invitation email explanation is informational content and should borrow the supplied inline information treatment while remaining visible without a close control. The initial neutral-gray pass was then replaced by semantic information blue, and the thick leading border was removed.
+- Component: added the Accura-level `AccuraInformationPanel`, composed from the shared COSS Alert information variant with `role="note"`, a subtle blue surface, a uniform thin border, an icon, title, and description. The component intentionally exposes no close or collapse control.
+- Application: replaced the invitation dialog’s one-off card-like block with the new component and retained the mail icon plus existing copy.
+- Source visual truth: `reference-persistent-information-panel.png` (2048 × 1536 px), using its expanded Information example as the structural reference rather than its blue semantic color.
+- Browser evidence: `implementation-information-panel.png`, captured at 1280 × 720 CSS px after scrolling the Invite user dialog to the role and information region.
+- Focused comparison: `qa-comparison-information-panel.png` places a normalized 460 × 120 reference crop beside the rendered 460 × 120 implementation crop. Both preserve semantic information blue, icon, title, explanation, and a thin bordered surface; the implementation deliberately removes the disclosure control and thick leading accent.
+- Required fidelity surfaces: Cal Sans and current dialog type roles remain unchanged; padding and radius follow the existing COSS Alert and dialog rhythm; the existing semantic information tokens supply the blue treatment; no raster or custom-drawn assets were introduced; invitation copy remains unchanged.
+- Accessibility: the panel is exposed as a labelled note rather than an assertive alert, and required explanatory context cannot be dismissed accidentally.
+- Findings: no actionable P0, P1, or P2 differences remain for the approved neutral, persistent direction.
+- Validation: changed-file Biome, TypeScript, browser rendering, scroll behavior, accessibility tree inspection, and runtime console inspection passed.
+
+### Iteration 24 – Sidebar, Combobox, and toast feedback
+
+- User feedback: the collapsed sidebar showed overlapping visuals, unselected Combobox options appeared to have a broken blank prefix, and Settings save confirmation should use a bottom-right snackbar-style message.
+- Sidebar fix: removed the mark-to-expand-icon cross-fade and made the official standalone Accura mark the sole visual and expand control in the collapsed rail.
+- Combobox fix: changed the shared COSS `ComboboxItem` grid so content begins at the leading edge and the selected check occupies the trailing edge. Unselected options no longer reserve an empty leading indicator column; registry and package sources carry the same behavior.
+- Feedback fix: wrapped the prototype in the shared toast provider, moved Settings save and invitation confirmation to bottom-right success toasts, and added a labelled dismiss control to the shared screen-toast composition.
+- Browser evidence: `implementation-sidebar-collapsed-single-target.png`, `implementation-combobox-trailing-indicator.png`, and `implementation-settings-save-toast.png` cover the collapsed shell, the expanded Departments list, and the post-save Settings state.
+- Focused comparisons: `qa-comparison-sidebar-collapsed.png` shows the supplied overlap report beside the single-target rail; `qa-comparison-combobox-indicator.png` shows the leading-check reference beside the trailing-check implementation; `qa-comparison-settings-toast.png` compares the supplied subtle success snackbar with the rendered Settings confirmation.
+- Accessibility: selection remains available through listbox state rather than color alone; the toast message is announced by the existing toast semantics and the close control has the accessible name “Dismiss notification.”
+- Findings: no actionable P0, P1, or P2 differences remain for the requested behaviors. Persistent or blocking feedback remains inline by rule; the new toast is reserved for brief completed-action confirmation.
+- Validation: changed-file Biome, TypeScript, repository diff checks, browser interaction, and runtime console inspection passed.
 
 ### Iteration 23 – Dashboard navigation icon
 
@@ -327,7 +361,7 @@ The implementation now intentionally differs from the older Accura demo and the 
 - [x] Brand 950 sidebar and recessed Zinc shell.
 - [x] Continuous Zinc application and content canvas.
 - [x] 248 px → 64 px collapse behavior.
-- [x] Hover/focus mark → expand icon behavior.
+- [x] Single collapsed mark as the expand target, with no layered icon transition.
 - [x] Notification badge correction.
 - [x] Supplied true-neutral Zinc primitive scale.
 - [x] Functional global search and keyboard shortcut.

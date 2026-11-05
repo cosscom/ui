@@ -2,6 +2,42 @@
 
 This is the canonical history of Accura product, design-system, and prototype decisions. It records why a direction was chosen and preserves superseded directions. Current product facts live in `docs/product-knowledge/`; current rules live in `docs/rules/`; implemented changes are indexed in root `CHANGELOG.md`.
 
+## 2026-11-04 - Persistent information uses an information panel
+
+### Decision
+
+Add the Accura-level `AccuraInformationPanel` composition for persistent explanatory content. It uses the shared COSS Alert information variant with a subtle blue surface, uniform thin border, icon, title, description, and `role="note"`; it exposes no close or collapse control. Use it for the Invitation email explanation in the user invitation dialog. The current usage rule is owned by [`../rules/ui-hierarchy.md`](../rules/ui-hierarchy.md#system-feedback).
+
+### Reasoning
+
+The Invitation email explanation is neither a role choice nor a transient system response. Its previous white card-like treatment made it look selectable. The semantic information treatment identifies its explanatory purpose without implying warning or success; keeping the border uniform avoids decorative weight at the leading edge. A reusable composition prevents future screens from rebuilding the distinction with one-off classes.
+
+## 2026-11-04 - Collapsed navigation names itself on hover and focus
+
+### Decision
+
+In the collapsed sidebar, every nav item shows its label in a tooltip on hover and on keyboard focus, and the Accura mark swaps to the expand icon on hover and focus. The swap hides the mark outright rather than cross-fading, so the two are never on screen together.
+
+This restores the expand affordance that [Selection indicators trail content and saves use toasts](#2026-11-04---selection-indicators-trail-content-and-saves-use-toasts) removed, without reintroducing the overlap that decision objected to.
+
+### Reasoning
+
+Collapsing the sidebar trades labels for space, but it should not trade away identification. With no tooltip, the only way to tell what an icon does is to expand the sidebar again, which defeats collapsing it. The mark had the same problem in a sharper form: it silently behaved as the expand control while looking like a logo, so nothing invited the click.
+
+The earlier removal was a reasonable fix for the wrong half of the problem. Its objection was that an opacity cross-fade could expose both visuals mid-transition; deleting the second visual solved that but left the control unannounced. Swapping on `display` instead of opacity removes the overlap by construction — the measured state is one visible, one `display: none`, never both — so the affordance returns without the defect.
+
+## 2026-11-04 - Selection indicators trail content and saves use toasts
+
+**Status:** The collapsed-mark portion is superseded by [Collapsed navigation names itself on hover and focus](#2026-11-04---collapsed-navigation-names-itself-on-hover-and-focus). The mark swaps to the expand icon again, by hiding rather than cross-fading. The combobox indicator and toast portions remain current.
+
+### Decision
+
+Move the shared COSS `ComboboxItem` selection indicator to the inline end while keeping every option’s content aligned at the inline start. Use dismissible bottom-right success toasts for completed Settings saves and invitations. In the collapsed Accura sidebar, make the standalone mark the expand control instead of layering a second expand icon over it. The enforceable behavior is owned by [`../rules/ui-hierarchy.md`](../rules/ui-hierarchy.md) and [`../rules/visual-system.md`](../rules/visual-system.md).
+
+### Reasoning
+
+A leading indicator column left an unexplained blank slot before every unselected option, which made a valid default state look broken. Trailing the indicator preserves one content alignment while still making selection explicit. Save confirmation is temporary and non-blocking, so a bottom-right toast keeps it visible without inserting a new banner into the Settings layout. The previous collapsed logo target cross-faded two visuals in the same geometry and could expose both during transition; one visual per target removes the overlap entirely.
+
 ## 2026-11-04 - Icon weight and an index of deliberate overrides
 
 ### Decision
@@ -216,11 +252,13 @@ The earlier dark and brand-tinted shells competed with the regulated document wo
 
 ## 2026-11-03 - Official logo and sidebar collapse behavior
 
+**Status:** Partially superseded by [Selection indicators trail content and saves use toasts](#2026-11-04---selection-indicators-trail-content-and-saves-use-toasts). The dimensions and official assets remain current; the mark no longer swaps to a second expand icon.
+
 ### Decision
 
 - Use the official Accura SVG logo and mark stored in the prototype.
 - Use a 248 px expanded sidebar and a 64 px collapsed sidebar.
-- In collapsed state, show only the Accura mark; hovering or focusing the mark reveals the expand icon in the same centered position.
+- In collapsed state, show only the Accura mark in the centered logo/expand target.
 
 ### Reasoning
 

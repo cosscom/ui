@@ -1,5 +1,6 @@
 import "./globals.css";
 
+import { ToastProvider } from "@coss/ui/components/toast";
 import { fontMono, fontSans } from "@coss/ui/fonts";
 import type { Metadata } from "next";
 
@@ -29,7 +30,7 @@ export default function RootLayout({
       <body
         className={`${fontSans.variable} ${fontMono.variable} bg-background font-sans text-foreground antialiased`}
       >
-        {children}
+        <ToastProvider position="bottom-right">{children}</ToastProvider>
       </body>
     </html>
   );

@@ -18,6 +18,8 @@ Use at most one solid primary action in the same task context. A page and an ope
 - Do not let selected navigation compete with the page’s principal action.
 - Prefer a secondary or brand-soft selected surface when a solid brand selection makes the shell visually heavy.
 - Keep visible focus independent from selected state.
+- When navigation collapses to icons, every item names itself on hover and on keyboard focus. An icon alone is a guess, and expanding the sidebar to find out what an item is defeats collapsing it. Expanded, the label is already visible, so no tooltip appears.
+- A brand mark that doubles as the expand control must reveal the expand icon on hover and focus; a logo that acts as a button without announcing it gives no reason to click. Swap the two by hiding one, never by cross-fading, so both are never visible at once.
 
 ## Icons
 
@@ -30,6 +32,20 @@ Use at most one solid primary action in the same task context. A page and an ope
 - Mark a required field with a red asterisk immediately after the label text. Mark an optional field with a muted "(Optional)" beside the label. Every field in a form carries one marker or the other, so absence is never ambiguous.
 - Do not add helper text that only repeats what the label, marker, or control already says. Reserve supporting text for rules the user cannot infer.
 - A disabled control must change surface, not only dim. Use the Zinc 100 recessed plane with muted text and keep the border at full strength; opacity alone makes a disabled field read as an empty editable one.
+
+## Selection controls
+
+- In listbox and combobox options, place the option content at the inline start and the selected check or state indicator at the inline end.
+- Unselected options must not reserve an empty indicator gutter before their content. Every option label begins on the same leading alignment, whether it is selected or not.
+- Apply this behavior in the shared COSS `ComboboxItem` primitive so single-select and multi-select consumers inherit it without screen-level overrides.
+
+## System feedback
+
+- Use a bottom-right toast for brief, non-blocking confirmation after a completed action such as saving Settings or sending an invitation.
+- Give each toast semantic text and an icon, include a dismiss control, and auto-dismiss it after a short interval. Color supports the message but never carries the meaning alone.
+- Keep inline alerts for persistent, contextual, blocking, or actionable information that must remain beside the affected content. Do not replace validation errors or required next steps with an ephemeral toast.
+- Use the Accura-level `AccuraInformationPanel` for persistent explanatory content that helps a user understand a nearby task but does not report validation, warning, or success. It uses the semantic information-blue surface, a uniform thin border, icon, title, and description so it remains distinct from selectable cards.
+- A persistent information panel has no close or collapse control by default. Do not imply that required task context can be dismissed; add a visibility control only when hiding the content is a real user setting.
 
 ## Tabs
 

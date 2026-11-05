@@ -61,6 +61,7 @@ import {
   TableHeader,
   TableRow,
 } from "@coss/ui/components/table";
+import { toastManager } from "@coss/ui/components/toast";
 import {
   Building as BuildingIcon,
   ArrowSeparateVertical as ChevronsUpDownIcon,
@@ -78,6 +79,7 @@ import {
   Tools as WrenchIcon,
 } from "iconoir-react";
 import { useMemo, useState } from "react";
+import { AccuraInformationPanel } from "./accura-information-panel";
 import { Tabs, TabsList, TabsPanel, TabsTab } from "./accura-tabs";
 
 type SettingsSection =
@@ -767,19 +769,10 @@ function UserFormDialog({
           )}
 
           {!editing && (
-            <div className="flex items-start gap-3 rounded-xl border border-primary/24 bg-secondary/64 p-3.5">
-              <MailIcon
-                aria-hidden="true"
-                className="mt-0.5 size-4 shrink-0 text-primary"
-              />
-              <div className="flex flex-col gap-0.5">
-                <p className="font-medium text-sm">Invitation email</p>
-                <p className="text-muted-foreground text-sm">
-                  After you send the invitation, the user receives a secure link
-                  to set up a password and then sign in.
-                </p>
-              </div>
-            </div>
+            <AccuraInformationPanel icon={MailIcon} title="Invitation email">
+              After you send the invitation, the user receives a secure link to
+              set up a password and then sign in.
+            </AccuraInformationPanel>
           )}
         </DialogPanel>
         <DialogFooter>
@@ -806,7 +799,6 @@ export function SettingsScreen() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<UserFormState>(emptyForm);
   const [formError, setFormError] = useState<string | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
 
   const activeItem = navGroups
     .flatMap((group) => group.items)
@@ -899,7 +891,10 @@ export function SettingsScreen() {
             : user,
         ),
       );
-      setNotice(`Saved changes to ${name}.`);
+      toastManager.add({
+        title: `Saved changes to ${name}.`,
+        type: "success",
+      });
     } else {
       setUsers((current) => [
         ...current,
@@ -912,7 +907,10 @@ export function SettingsScreen() {
           status: "Invitation pending",
         },
       ]);
-      setNotice(`Invitation sent to ${email}.`);
+      toastManager.add({
+        title: `Invitation sent to ${email}.`,
+        type: "success",
+      });
     }
 
     setFormOpen(false);
@@ -962,22 +960,6 @@ export function SettingsScreen() {
         </nav>
 
         <div className="flex min-w-0 flex-col gap-4">
-          {notice && (
-            <div
-              className="flex items-start justify-between gap-3 rounded-xl border border-primary/24 bg-secondary/64 px-4 py-3 text-sm"
-              role="status"
-            >
-              <p>{notice}</p>
-              <button
-                className="shrink-0 text-muted-foreground text-xs underline outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                onClick={() => setNotice(null)}
-                type="button"
-              >
-                Dismiss
-              </button>
-            </div>
-          )}
-
           {section === "users" && (
             <SectionCard>
               <SectionHeading

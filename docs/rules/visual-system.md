@@ -6,6 +6,7 @@
 - Use the horizontal logo in expanded navigation and the standalone mark in collapsed navigation.
 - Cropping an SVG artboard through its `viewBox` is allowed when paths, fills, proportions, and aspect ratio remain unchanged.
 - Do not redraw the Accura logo with an icon library or handcrafted SVG.
+- In collapsed navigation, render one visual inside the logo/expand target. The standalone mark may itself be the expand control; do not cross-fade or layer a second expand icon over it.
 
 ## Icons
 

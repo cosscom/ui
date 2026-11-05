@@ -9,6 +9,7 @@ import {
   InfoIcon,
   LoaderCircleIcon,
   TriangleAlertIcon,
+  XIcon,
 } from "lucide-react";
 import type React from "react";
 
@@ -178,6 +179,12 @@ function Toasts({
                     {toast.actionProps.children}
                   </Toast.Action>
                 )}
+                <Toast.Close
+                  aria-label="Dismiss notification"
+                  className="inline-flex size-6 shrink-0 items-center justify-center rounded-md text-muted-foreground outline-none transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-4"
+                >
+                  <XIcon aria-hidden="true" />
+                </Toast.Close>
               </Toast.Content>
             </Toast.Root>
           );

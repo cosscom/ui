@@ -44,6 +44,12 @@ import {
   TableRow,
 } from "@coss/ui/components/table";
 import {
+  Tooltip,
+  TooltipPopup,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@coss/ui/components/tooltip";
+import {
   Reports as BarChart3Icon,
   BellNotification as BellIcon,
   OpenBook as BookOpenIcon,
@@ -359,6 +365,55 @@ function StatusBadge({ status }: { status: DocumentStatus }) {
   );
 }
 
+function SidebarNavItem({
+  active,
+  collapsed,
+  icon: Icon,
+  label,
+  onClick,
+}: {
+  active: boolean;
+  collapsed: boolean;
+  icon: typeof BookOpenIcon;
+  label: string;
+  onClick: () => void;
+}) {
+  const button = (
+    <button
+      aria-current={active ? "page" : undefined}
+      aria-label={collapsed ? label : undefined}
+      className={`flex h-9 w-full items-center rounded-lg text-left text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-sidebar-ring ${
+        collapsed ? "justify-center px-0" : "gap-3 px-2.5"
+      } ${
+        active
+          ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground shadow-xs"
+          : "hover:bg-white/10 hover:text-white"
+      }`}
+      onClick={onClick}
+      type="button"
+    >
+      <Icon aria-hidden="true" className="size-4 shrink-0" />
+      <span className={`truncate ${collapsed ? "hidden" : "block"}`}>
+        {label}
+      </span>
+    </button>
+  );
+
+  // Expanded, the label is already on screen. Collapsed, the icon is all there
+  // is, so without this the only way to identify an item is to expand the
+  // sidebar again.
+  if (!collapsed) {
+    return button;
+  }
+
+  return (
+    <Tooltip>
+      <TooltipTrigger render={button} />
+      <TooltipPopup side="right">{label}</TooltipPopup>
+    </Tooltip>
+  );
+}
+
 function AppSidebar({
   activeModule,
   collapsed,
@@ -371,116 +426,102 @@ function AppSidebar({
   onToggle: () => void;
 }) {
   return (
-    <aside
-      className={`sticky top-2 flex h-[calc(100svh-1rem)] shrink-0 flex-col overflow-hidden rounded-xl border border-sidebar-border bg-sidebar text-sidebar-foreground shadow-sm transition-[width] duration-200 ${collapsed ? "w-16" : "w-[248px]"}`}
-    >
-      <div
-        className={`flex h-16 shrink-0 items-center ${collapsed ? "justify-center px-2" : "px-3"}`}
+    // Shared delay: the first hover waits, moving between items afterwards is
+    // instant, so scanning a collapsed sidebar does not stutter.
+    <TooltipProvider delay={400}>
+      <aside
+        className={`sticky top-2 flex h-[calc(100svh-1rem)] shrink-0 flex-col overflow-hidden rounded-xl border border-sidebar-border bg-sidebar text-sidebar-foreground shadow-sm transition-[width] duration-200 ${collapsed ? "w-16" : "w-[248px]"}`}
       >
-        {collapsed ? (
-          <button
-            aria-label="Expand navigation"
-            className="group relative flex size-10 items-center justify-center rounded-lg outline-none transition-colors hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-sidebar-ring"
-            onClick={onToggle}
-            type="button"
-          >
-            <Image
-              alt=""
-              aria-hidden="true"
-              className="size-8 object-contain brightness-0 invert transition-opacity group-hover:opacity-0 group-focus-visible:opacity-0"
-              height={32}
-              priority
-              src="/brand/accura-mark.svg"
-              width={32}
-            />
-            <PanelLeftOpenIcon
-              aria-hidden="true"
-              className="absolute size-5 text-sidebar-foreground opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
-            />
-          </button>
-        ) : (
-          <>
-            <Image
-              alt="Accura"
-              className="h-9 w-auto object-contain object-left brightness-0 invert"
-              height={59}
-              priority
-              src="/brand/accura-logo.svg"
-              width={164}
-            />
-            <Button
-              aria-label="Collapse navigation"
-              className="ms-auto text-sidebar-foreground hover:bg-white/10 hover:text-white"
-              onClick={onToggle}
-              size="icon-sm"
-              variant="ghost"
-            >
-              <PanelLeftCloseIcon aria-hidden="true" />
-            </Button>
-          </>
-        )}
-      </div>
-
-      <nav aria-label="Primary navigation" className="flex flex-col gap-1 p-2">
-        {navItems.map(({ icon: Icon, label, module }) => {
-          const active = module === activeModule;
-          return (
+        <div
+          className={`flex h-16 shrink-0 items-center ${collapsed ? "justify-center px-2" : "px-3"}`}
+        >
+          {collapsed ? (
             <button
+              aria-label="Expand navigation"
+              className="group flex size-10 items-center justify-center rounded-lg outline-none transition-colors hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-sidebar-ring"
+              onClick={onToggle}
+              type="button"
+            >
+              {/* Swapped, not cross-faded: the mark is hidden outright while the
+                expand icon shows, so the two are never visible at once. A
+                silent logo gives no sign it is the control that expands the
+                sidebar. */}
+              <Image
+                alt=""
+                aria-hidden="true"
+                className="size-8 object-contain brightness-0 invert group-hover:hidden group-focus-visible:hidden"
+                height={32}
+                priority
+                src="/brand/accura-mark.svg"
+                width={32}
+              />
+              <PanelLeftOpenIcon
+                aria-hidden="true"
+                className="hidden size-5 text-sidebar-foreground group-hover:block group-focus-visible:block"
+              />
+            </button>
+          ) : (
+            <>
+              <Image
+                alt="Accura"
+                className="h-9 w-auto object-contain object-left brightness-0 invert"
+                height={59}
+                priority
+                src="/brand/accura-logo.svg"
+                width={164}
+              />
+              <Button
+                aria-label="Collapse navigation"
+                className="ms-auto text-sidebar-foreground hover:bg-white/10 hover:text-white"
+                onClick={onToggle}
+                size="icon-sm"
+                variant="ghost"
+              >
+                <PanelLeftCloseIcon aria-hidden="true" />
+              </Button>
+            </>
+          )}
+        </div>
+
+        <nav
+          aria-label="Primary navigation"
+          className="flex flex-col gap-1 p-2"
+        >
+          {navItems.map(({ icon, label, module }) => (
+            <SidebarNavItem
+              active={module === activeModule}
+              collapsed={collapsed}
+              icon={icon}
               key={label}
-              aria-current={active ? "page" : undefined}
-              aria-label={collapsed ? label : undefined}
-              className={`flex h-9 w-full items-center rounded-lg text-left text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-sidebar-ring ${
-                collapsed ? "justify-center px-0" : "gap-3 px-2.5"
-              } ${
-                active
-                  ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground shadow-xs"
-                  : "hover:bg-white/10 hover:text-white"
-              }`}
+              label={label}
               onClick={() => {
                 if (module === "dashboard" || module === "documents") {
                   onNavigate(module);
                 }
               }}
-              type="button"
-            >
-              <Icon aria-hidden="true" className="size-4 shrink-0" />
-              <span className={`truncate ${collapsed ? "hidden" : "block"}`}>
-                {label}
-              </span>
-            </button>
-          );
-        })}
-      </nav>
+            />
+          ))}
+        </nav>
 
-      <nav
-        aria-label="Support navigation"
-        className="mt-auto flex flex-col gap-1 border-sidebar-border border-t p-2"
-      >
-        {secondaryNavItems.map(({ icon: Icon, label, module }) => (
-          <button
-            key={label}
-            aria-current={module === activeModule ? "page" : undefined}
-            aria-label={collapsed ? label : undefined}
-            className={`flex h-9 w-full items-center rounded-lg text-left text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-sidebar-ring ${
-              collapsed ? "justify-center px-0" : "gap-3 px-2.5"
-            } ${
-              module === activeModule
-                ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground shadow-xs"
-                : "hover:bg-white/10 hover:text-white"
-            }`}
-            onClick={() => {
-              if (module) onNavigate(module);
-            }}
-            type="button"
-          >
-            <Icon aria-hidden="true" className="size-4 shrink-0" />
-            <span className={`truncate ${collapsed ? "hidden" : "block"}`}>
-              {label}
-            </span>
-          </button>
-        ))}
-      </nav>
-    </aside>
+        <nav
+          aria-label="Support navigation"
+          className="mt-auto flex flex-col gap-1 border-sidebar-border border-t p-2"
+        >
+          {secondaryNavItems.map(({ icon, label, module }) => (
+            <SidebarNavItem
+              active={module === activeModule}
+              collapsed={collapsed}
+              icon={icon}
+              key={label}
+              label={label}
+              onClick={() => {
+                if (module) onNavigate(module);
+              }}
+            />
+          ))}
+        </nav>
+      </aside>
+    </TooltipProvider>
   );
 }
 
