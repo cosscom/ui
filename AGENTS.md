@@ -32,3 +32,4 @@ Do not duplicate product facts, rules, decisions, or implementation QA across fi
 ## Typography
 
 Set type per the [Cal Sans font guide](packages/ui/src/fonts/font-guide.md): no added letter-spacing, `font-optical-sizing: auto` instead of a hard-coded `opsz`, one `GEOM` value per role, no synthesized bold or italic, and typeset punctuation (’ – − “ ”) in UI strings.
+
