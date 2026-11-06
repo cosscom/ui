@@ -1,6 +1,7 @@
 import { Separator } from "@coss/ui/components/separator";
 import { SiteHeader as WorkspaceSiteHeader } from "@coss/ui/shared/site-header";
 import { CommandMenu } from "@/components/command-menu";
+import { DirectionSwitcher } from "@/components/direction-switcher";
 import { MainNav } from "@/components/main-nav";
 import { MobileNav } from "@/components/mobile-nav";
 import { appConfig } from "@/lib/config";
@@ -11,6 +12,7 @@ export function SiteHeader() {
 
   return (
     <WorkspaceSiteHeader
+      actions={<DirectionSwitcher />}
       currentProduct="ui"
       mobileNav={
         <MobileNav
