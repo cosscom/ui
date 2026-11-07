@@ -12,6 +12,7 @@ export function SiteHeader() {
   return (
     <WorkspaceSiteHeader
       currentProduct="ui"
+      homeHref="/"
       mobileNav={
         <MobileNav
           className="flex lg:hidden"

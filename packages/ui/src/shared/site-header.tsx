@@ -8,17 +8,21 @@ export function SiteHeader({
   mobileNav,
   children,
   currentProduct,
+  homeHref,
   github,
 }: {
   mobileNav?: React.ReactNode;
   children?: React.ReactNode;
   currentProduct?: string;
+  /** App-relative logo destination. Next.js applies the configured base path. */
+  homeHref?: string;
   /** The product's own repository for the GitHub link and its stars. */
   github?: { repo: string; href: string };
 }) {
   const gatewayOrigin = process.env.NEXT_PUBLIC_COSS_URL || "";
   const gatewayHome = gatewayOrigin ? `${gatewayOrigin}/` : "/";
-  const isExternal = !!gatewayOrigin;
+  const logoHref = homeHref ?? gatewayHome;
+  const isExternal = homeHref === undefined && !!gatewayOrigin;
 
   return (
     <header className="sticky top-0 z-40 w-full bg-sidebar/80 backdrop-blur-sm before:absolute before:inset-x-0 before:bottom-0 before:h-px before:bg-border/64">
@@ -26,11 +30,11 @@ export function SiteHeader({
         {mobileNav}
         <div className="flex shrink-0 items-center gap-1.5 font-bold font-heading text-[1.375em] [font-variation-settings:'GEOM'_50,'opsz'_32] sm:text-2xl">
           {isExternal ? (
-            <a aria-label="Home" href={gatewayHome}>
+            <a aria-label="Home" href={logoHref}>
               coss.com
             </a>
           ) : (
-            <Link aria-label="Home" href={gatewayHome}>
+            <Link aria-label="Home" href={logoHref}>
               coss.com
             </Link>
           )}
