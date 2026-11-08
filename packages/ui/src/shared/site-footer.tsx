@@ -1,6 +1,7 @@
-import Link from "next/link";
-
 export function SiteFooter() {
+  const gatewayOrigin = process.env.NEXT_PUBLIC_COSS_URL || "https://coss.com";
+  const gatewayHome = `${gatewayOrigin.replace(/\/$/, "")}/`;
+
   return (
     <footer className="relative mt-8 py-6 text-muted-foreground before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-border/64">
       <div
@@ -10,12 +11,12 @@ export function SiteFooter() {
       <div className="container flex w-full items-center justify-center gap-2 px-4 sm:px-6">
         <p>
           © {new Date().getFullYear()}{" "}
-          <Link
+          <a
             className="font-bold font-heading text-foreground [font-variation-settings:'GEOM'_50,'opsz'_32]"
-            href="/"
+            href={gatewayHome}
           >
             coss.com
-          </Link>{" "}
+          </a>{" "}
           – open source, open heart, open mind.
         </p>
       </div>

@@ -10,7 +10,6 @@ const links = [{ href: "/easings", text: "Easing Classes" }];
 
 export default function Header() {
   const isMobile = useIsMobile();
-  const cossHomeUrl = process.env.NEXT_PUBLIC_COSS_URL || "";
 
   return (
     <header className="relative mb-14 before:absolute before:-inset-x-32 before:bottom-0 before:h-px before:bg-[linear-gradient(to_right,--theme(--color-border/.3),--theme(--color-border)_200px,--theme(--color-border)_calc(100%-200px),--theme(--color-border/.3))]">
@@ -20,7 +19,7 @@ export default function Header() {
       />
       <div className="mx-auto flex h-[72px] w-full max-w-6xl items-center justify-between gap-3">
         <div className="-mt-0.5 flex shrink-0 items-start gap-1.5 font-heading text-2xl sm:text-[1.625em]">
-          <a aria-label="Home" href={cossHomeUrl}>
+          <a aria-label="Home" href="/ui">
             coss.com
           </a>
           <Link

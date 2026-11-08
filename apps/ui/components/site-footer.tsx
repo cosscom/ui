@@ -1,15 +1,16 @@
-import Link from "next/link";
-
 export function SiteFooter() {
+  const gatewayOrigin = process.env.NEXT_PUBLIC_COSS_URL || "https://coss.com";
+  const gatewayHome = `${gatewayOrigin.replace(/\/$/, "")}/`;
+
   return (
     <footer className="flex flex-col gap-0.5">
       <p>
-        <Link
+        <a
           className="font-bold font-heading text-lg [font-variation-settings:'GEOM'_50,'opsz'_32]"
-          href="/"
+          href={gatewayHome}
         >
           coss.com <span className="text-muted-foreground/72">ui</span>
-        </Link>
+        </a>
       </p>
       <p className="text-muted-foreground text-sm">
         Built by and for the team of{" "}

@@ -132,7 +132,7 @@ export default function SearchField({
   };
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="w-full max-w-xl">
       <Combobox
         aria-label="Filter particles"
         autoHighlight
