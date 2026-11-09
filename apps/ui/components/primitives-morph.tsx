@@ -2,6 +2,8 @@
 
 import { useEffect, useId, useRef } from "react";
 import { BlueprintDrawing } from "./blueprint-drawing";
+import { ConstructionStage } from "./primitives-construction-motion";
+import { PrimitivesGridLabelMask } from "./primitives-grid-label-mask";
 import { MorphDetails, morphDetailIds } from "./primitives-morph-details";
 import { secondaryLine } from "./primitives-morph-style";
 import {
@@ -121,22 +123,8 @@ const tangentIds = [
 ] as const;
 
 const gridPaths = [
-  "M124 68V298 M124 320V348",
-  "M164 68V240 M164 260V348",
-  "M204 68V348",
-  "M244 68V348",
-  "M284 68V121 M284 142V298 M284 320V348",
-  "M324 68V132 M324 163V348",
-  "M364 68V348",
-  "M404 68V348",
-  "M444 68V298 M444 320V348",
-  "M104 84H464",
-  "M104 124H273 M295 124H464",
-  "M104 164H172 M200 164H283 M354 164H464",
-  "M104 204H374 M394 204H464",
-  "M104 244H140 M168 244H464",
-  "M104 284H464",
-  "M104 324H464",
+  ...Array.from({ length: 9 }, (_, index) => `M${124 + index * 40} 68V348`),
+  ...Array.from({ length: 7 }, (_, index) => `M104 ${84 + index * 40}H464`),
 ];
 
 export function PrimitivesMorph({ paused }: { paused: boolean }) {
@@ -211,6 +199,7 @@ export function PrimitivesMorph({ paused }: { paused: boolean }) {
               strokeOpacity="1"
             />
             <SliderGridMask />
+            <PrimitivesGridLabelMask />
           </mask>
           {/* Origin at the circle center aligns a hatch line with its 45° radius. */}
           <pattern
@@ -294,22 +283,10 @@ export function PrimitivesMorph({ paused }: { paused: boolean }) {
         </g>
         <PrimitivesMorphTransitions />
         {morphDetailIds.map((stage, index) => (
-          <g data-construction={stage} key={stage} opacity="0">
-            <animate
-              attributeName="opacity"
-              begin={`${index * morphStageDuration}s`}
-              dur={`${morphCycleDuration}s`}
-              keyTimes={morphKeyTimes(
-                0,
-                0.18,
-                2.2,
-                morphHoldDuration,
-                morphCycleDuration,
-              )}
-              repeatCount="indefinite"
-              values="0;1;1;0;0"
-            />
-            <MorphDetails hatchId={hatchId} stage={stage} />
+          <g data-construction={stage} key={stage}>
+            <ConstructionStage stage={index}>
+              <MorphDetails hatchId={hatchId} stage={stage} />
+            </ConstructionStage>
           </g>
         ))}
         <g fill="currentColor" fontSize="10" opacity="0.52" stroke="none">
