@@ -47,15 +47,7 @@ export function SwitchConstruction() {
 export function SwitchThumb() {
   return (
     <g data-construction="switch-thumb" opacity="0">
-      <animate
-        attributeName="opacity"
-        begin="0s"
-        calcMode="linear"
-        dur={`${duration}s`}
-        keyTimes={keyTimes(0, 5.42, 5.6, 8.6, 8.8, duration)}
-        repeatCount="indefinite"
-        values="0;0;1;1;0;0"
-      />
+      <SwitchThumbVisibility />
       <g transform="translate(204 204)">
         {/* Geometry resets after the whole thumb is hidden. */}
         <animateTransform
@@ -82,15 +74,7 @@ export function SwitchThumb() {
           />
         </circle>
         <g opacity="0">
-          <animate
-            attributeName="opacity"
-            begin="0s"
-            calcMode="linear"
-            dur={`${duration}s`}
-            keyTimes={keyTimes(0, 7.4, 7.58, 8.82, 8.86, duration)}
-            repeatCount="indefinite"
-            values="0;0;1;1;0;0"
-          />
+          <SwitchRadiusVisibility />
           <path
             {...secondaryLine}
             d={`M0 0L${radiusEndpoint} ${radiusEndpoint} M${radiusEndpoint - 3} ${radiusEndpoint + 3}l6-6`}
@@ -110,5 +94,33 @@ export function SwitchThumb() {
         </g>
       </g>
     </g>
+  );
+}
+
+export function SwitchThumbVisibility() {
+  return (
+    <animate
+      attributeName="opacity"
+      begin="0s"
+      calcMode="linear"
+      dur={`${duration}s`}
+      keyTimes={keyTimes(0, 5.42, 5.6, 8.6, 8.8, duration)}
+      repeatCount="indefinite"
+      values="0;0;1;1;0;0"
+    />
+  );
+}
+
+export function SwitchRadiusVisibility() {
+  return (
+    <animate
+      attributeName="opacity"
+      begin="0s"
+      calcMode="linear"
+      dur={`${duration}s`}
+      keyTimes={keyTimes(0, 7.4, 7.58, 8.82, 8.86, duration)}
+      repeatCount="indefinite"
+      values="0;0;1;1;0;0"
+    />
   );
 }

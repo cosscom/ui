@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import {
   morphCycleDuration,
+  morphHoldDuration,
   morphKeyTimes,
   morphStageDuration,
 } from "./primitives-morph-timing";
@@ -65,6 +66,34 @@ export function ConstructionAnnotation({
         from={0}
         stage={stage}
         to={1}
+      />
+      {children}
+    </g>
+  );
+}
+
+export function ConstructionStage({
+  children,
+  stage,
+}: {
+  children: ReactNode;
+  stage: number;
+}) {
+  return (
+    <g opacity="0">
+      <animate
+        attributeName="opacity"
+        begin={`${stage * morphStageDuration}s`}
+        dur={`${morphCycleDuration}s`}
+        keyTimes={morphKeyTimes(
+          0,
+          0.18,
+          2.2,
+          morphHoldDuration,
+          morphCycleDuration,
+        )}
+        repeatCount="indefinite"
+        values="0;1;1;0;0"
       />
       {children}
     </g>
