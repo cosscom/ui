@@ -509,7 +509,7 @@ export function DrawerMenuTrigger({
       {...props}
     >
       {children}
-      <ChevronRightIcon className="ms-auto -me-0.5 opacity-80" />
+      <ChevronRightIcon className="ms-auto -me-0.5 opacity-80 rtl:rotate-180" />
     </DrawerTrigger>
   );
 }
