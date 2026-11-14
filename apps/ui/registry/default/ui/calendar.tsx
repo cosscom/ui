@@ -12,11 +12,26 @@ import { cn } from "@/registry/default/lib/utils";
 const buttonClassNames =
   "relative flex size-(--cell-size) text-base sm:text-sm items-center justify-center rounded-lg text-foreground not-in-data-selected:hover:bg-accent disabled:pointer-events-none disabled:opacity-64 [&_svg:not([class*='opacity-'])]:opacity-80 [&_svg:not([class*='size-'])]:size-4.5 sm:[&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0";
 
+type CalendarClassNames = NonNullable<
+  React.ComponentProps<typeof DayPicker>["classNames"]
+>;
+type CalendarFormatters = NonNullable<
+  React.ComponentProps<typeof DayPicker>["formatters"]
+>;
+
+// A key set to `undefined` counts as not provided, so it never clears a default.
+function withoutUndefined<T extends object>(value: T | undefined): Partial<T> {
+  return Object.fromEntries(
+    Object.entries(value ?? {}).filter(([, entry]) => entry !== undefined),
+  ) as Partial<T>;
+}
+
 export function Calendar({
   className,
   classNames,
   showOutsideDays = true,
   components: userComponents,
+  formatters: userFormatters,
   mode = "single",
   ...props
 }: React.ComponentProps<typeof DayPicker>): React.ReactElement {
@@ -53,7 +68,7 @@ export function Calendar({
     weekday:
       "size-(--cell-size) p-0 text-xs font-medium text-muted-foreground/72",
   };
-  const mergedClassNames: typeof defaultClassNames = Object.keys(
+  const mergedClassNames: CalendarClassNames = Object.keys(
     defaultClassNames,
   ).reduce(
     (acc, key) => {
@@ -67,7 +82,8 @@ export function Calendar({
 
       return acc;
     },
-    { ...defaultClassNames } as typeof defaultClassNames,
+    // Parts without a coss default keep the consumer's classes as passed.
+    withoutUndefined<CalendarClassNames>(classNames),
   );
 
   const defaultComponents = {
@@ -125,7 +141,8 @@ export function Calendar({
     formatters: {
       formatMonthDropdown: (month: Date, dateLib: DateLib) =>
         dateLib.format(month, "LLL"),
-    } as React.ComponentProps<typeof DayPicker>["formatters"],
+      ...withoutUndefined<CalendarFormatters>(userFormatters),
+    } as CalendarFormatters,
     mode,
     showOutsideDays,
     ...props,
