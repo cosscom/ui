@@ -441,7 +441,7 @@ export function ChatPreview({ direct = false }: { direct?: boolean }) {
             initial={false}
             onExitComplete={() => {
               setReplyFocus(null);
-              scroll.updatePosition();
+              if (dismissalRef.current === "cancel") scroll.updatePosition();
             }}
           >
             {replyTo !== null && replyFocus && replyMessage && (

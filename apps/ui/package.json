@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@coss/typescript-config": "workspace:*",
+    "@happy-dom/global-registrator": "^21.0.4",
     "@shikijs/transformers": "^3.15.0",
     "@tailwindcss/postcss": "^4.1.17",
     "@types/mdx": "^2.0.13",
