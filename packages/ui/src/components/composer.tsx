@@ -22,7 +22,6 @@ import { cn } from "@coss/ui/lib/utils";
 import type {
   ComponentProps,
   MouseEvent,
-  PointerEvent,
   ReactElement,
   ReactNode,
 } from "react";
@@ -467,21 +466,24 @@ export function ComposerSubmit({
   ...props
 }: Omit<ComponentProps<typeof ButtonPrimitive>, "type">): ReactElement {
   const editor = useComposerEditorContext();
+  const preserveInputFocus = (event: MouseEvent<HTMLButtonElement>): void => {
+    const input = editor?.rootRef.current?.querySelector(
+      '[data-slot="composer-input"]',
+    );
+    if (
+      event.button === 0 &&
+      input === event.currentTarget.ownerDocument.activeElement
+    ) {
+      event.preventDefault();
+    }
+  };
   const defaultProps = {
     "data-slot": "composer-submit",
     type: "button" as const,
     disabled: disabled ?? !editor?.canSubmit,
-    onPointerDown: (event: PointerEvent<HTMLButtonElement>): void => {
-      const input = editor?.rootRef.current?.querySelector(
-        '[data-slot="composer-input"]',
-      );
-      if (
-        event.button === 0 &&
-        input === event.currentTarget.ownerDocument.activeElement
-      ) {
-        event.preventDefault();
-      }
-    },
+    onPointerDown: preserveInputFocus,
+    // iOS can still move focus on compatibility mousedown after pointerdown is canceled.
+    onMouseDown: preserveInputFocus,
     onClick: (event: MouseEvent<HTMLButtonElement>): void => {
       if (event.defaultPrevented || disabled) return;
       event.preventDefault();
