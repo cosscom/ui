@@ -1,4 +1,3 @@
-// Run separately from suites that mock Base UI modules process-wide.
 import { afterAll, afterEach, describe, expect, test } from "bun:test";
 import { GlobalRegistrator } from "@happy-dom/global-registrator";
 
@@ -48,7 +47,6 @@ async function mount(): Promise<HTMLDivElement> {
   root = createRoot(container);
   await act(async () => root.render(<ChatPreview direct />));
   const viewport = find<HTMLDivElement>('[role="log"]');
-  // Happy DOM has no layout. Give the real timeline a scrollable message height.
   Object.defineProperties(viewport, {
     clientHeight: { get: () => 200 },
     scrollHeight: {

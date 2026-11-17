@@ -183,7 +183,6 @@ describe("Composer focus", () => {
   test("preserves the caret in a blank-line draft when refocused", async () => {
     await mount([{ type: "text", text: "\n" }]);
     await act(async () => input.focus());
-    // Native contenteditable line breaks can contain no text nodes.
     input.innerHTML = "<div><br></div><div><br></div>";
     const secondLine = input.lastChild;
     if (!secondLine) throw new Error("Blank line not rendered");
