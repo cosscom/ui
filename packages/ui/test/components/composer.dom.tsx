@@ -17,6 +17,7 @@ const {
   ComposerItem,
   ComposerList,
   ComposerPopup,
+  ComposerSubmit,
   getComposerText,
 } = await import("../../src/components/composer");
 type ComposerItemValue =
@@ -110,6 +111,114 @@ async function press(key: string, init: KeyboardEventInit = {}): Promise<void> {
 
 afterAll(async () => {
   await GlobalRegistrator.unregister();
+});
+
+describe("Composer focus", () => {
+  afterEach(async () => {
+    await act(async () => root.unmount());
+    container.remove();
+    window.getSelection()?.removeAllRanges();
+  });
+
+  async function mount(defaultValue: ComposerValue = []): Promise<void> {
+    function TestComposer(): ReactElement {
+      const [value, setValue] = useState(defaultValue);
+      return (
+        <Composer
+          value={value}
+          onValueChange={setValue}
+          onSubmit={() => setValue([])}
+        >
+          <ComposerInput aria-label="Message" />
+          <ComposerSubmit aria-label="Send message">Send</ComposerSubmit>
+        </Composer>
+      );
+    }
+    container = document.createElement("div");
+    document.body.append(container);
+    root = createRoot(container);
+    await act(async () => root.render(<TestComposer />));
+    const element = container.querySelector<HTMLDivElement>(
+      '[data-slot="composer-input"]',
+    );
+    if (!element) throw new Error("Composer input not rendered");
+    input = element;
+  }
+
+  test("initializes an empty caret during native focus, before focusin", async () => {
+    await mount();
+    window.getSelection()?.removeAllRanges();
+    let caretReady = false;
+    input.addEventListener(
+      "focusin",
+      () => {
+        const selection = window.getSelection();
+        caretReady =
+          selection?.anchorNode === input &&
+          selection.anchorOffset === 0 &&
+          selection.isCollapsed;
+      },
+      { once: true },
+    );
+    await act(async () => input.focus());
+    expect(caretReady).toBe(true);
+    expect(input.textContent).toBe("");
+  });
+
+  test("preserves the caret in an existing draft when refocused", async () => {
+    await mount([{ type: "text", text: "existing draft" }]);
+    await act(async () => input.focus());
+    const text = input.firstChild;
+    if (!text) throw new Error("Draft not rendered");
+    window.getSelection()?.setBaseAndExtent(text, 3, text, 3);
+    await act(async () => {
+      input.blur();
+      input.focus();
+    });
+    expect(window.getSelection()?.anchorNode).toBe(text);
+    expect(window.getSelection()?.anchorOffset).toBe(3);
+    expect(input.textContent).toBe("existing draft");
+  });
+
+  test("preserves the caret in a blank-line draft when refocused", async () => {
+    await mount([{ type: "text", text: "\n" }]);
+    await act(async () => input.focus());
+    input.innerHTML = "<div><br></div><div><br></div>";
+    const secondLine = input.lastChild;
+    if (!secondLine) throw new Error("Blank line not rendered");
+    window.getSelection()?.setBaseAndExtent(secondLine, 0, secondLine, 0);
+    await act(async () => {
+      input.blur();
+      input.focus();
+    });
+    expect(window.getSelection()?.anchorNode).toBe(secondLine);
+    expect(window.getSelection()?.anchorOffset).toBe(0);
+  });
+
+  test("prevents compatibility mousedown from stealing focus across sends", async () => {
+    await mount();
+    const button = container.querySelector<HTMLButtonElement>(
+      '[aria-label="Send message"]',
+    );
+    if (!button) throw new Error("Send button not rendered");
+    for (const message of ["first", "second"]) {
+      await type(message);
+      const down = new MouseEvent("mousedown", {
+        bubbles: true,
+        cancelable: true,
+        button: 0,
+      });
+      await act(async () => {
+        button.dispatchEvent(down);
+        if (!down.defaultPrevented) button.focus();
+        button.click();
+      });
+      expect(down.defaultPrevented).toBe(true);
+      expect(document.activeElement).toBe(input);
+      expect(input.textContent).toBe("");
+      await act(async () => input.blur());
+    }
+  });
 });
 
 describe("Composer text items", () => {

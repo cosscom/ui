@@ -958,7 +958,8 @@ export function ChatDemo({
                   initial={false}
                   onExitComplete={() => {
                     setReplyFocus(null);
-                    finishNestedDrawerClose();
+                    if (replyDismissalRef.current === "cancel")
+                      finishNestedDrawerClose();
                   }}
                 >
                   {replyMessage && replyFocus && (
