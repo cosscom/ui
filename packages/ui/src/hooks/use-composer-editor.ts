@@ -145,8 +145,6 @@ export function useComposerEditor({
     !disabled &&
     !readOnly &&
     Boolean(query) &&
-    // After a space, stay open only while a suggestion's name continues past
-    // the word just typed, even with showEmpty.
     (query?.spaceAfter
       ? options.some((item) => continuesPastQuery(item.label, query.text))
       : hasVisibleItems(trigger, options));
@@ -542,8 +540,6 @@ export function useComposerEditor({
         if (!event.defaultPrevented && !composing.current) updateQuery();
       },
       onClick: updateQuery,
-      // Leaving the field hides suggestions without dismissing them: coming
-      // back with the caret on a query should show them again.
       onFocus: updateQuery,
       onBlur: (event) => {
         lastSelection.current =

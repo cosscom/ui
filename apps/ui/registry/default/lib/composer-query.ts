@@ -37,8 +37,6 @@ export function getComposerQuery(
   };
 }
 
-// Whether a label continues past the query's last word: "sam " continues into
-// Sam Rivera, while "sa " and "clients " don't.
 export function continuesPastQuery(label: string, query: string): boolean {
   const normalize = (text: string) =>
     text
