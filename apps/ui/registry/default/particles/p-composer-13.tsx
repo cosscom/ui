@@ -142,8 +142,6 @@ const sections = [
   { kind: "tag", label: "Tags" },
 ] as const;
 
-// Maps each top-level node of the input to its range in the draft text. Chips
-// are the non-editable nodes, in draft order.
 function getSegments(input: HTMLElement, value: ComposerValue) {
   const chips = value.filter((part) => part.type !== "text");
   let offset = 0;
@@ -159,7 +157,6 @@ function getSegments(input: HTMLElement, value: ComposerValue) {
   });
 }
 
-// Replaces the draft text between two offsets of one text part.
 function spliceText(
   value: ComposerValue,
   start: number,
@@ -212,8 +209,6 @@ export default function Particle() {
   const caretAfter = useRef<number | null>(null);
   const keptOpen = useRef(false);
 
-  // After the draft is rewritten, put the caret back and let the composer
-  // read the query again in the same frame, so the list never blinks.
   useLayoutEffect(() => {
     const input = inputRef.current;
     const target = caretAfter.current;
@@ -228,7 +223,6 @@ export default function Particle() {
     document.dispatchEvent(new Event("selectionchange"));
   });
 
-  // Where the "@query" being typed sits in the draft text.
   function findQuery() {
     const input = inputRef.current;
     const selection = window.getSelection();
@@ -242,8 +236,6 @@ export default function Particle() {
     return start < 0 ? null : { caret, start };
   }
 
-  // Mentions an item in front of the query and leaves the query, the caret
-  // and so the list where they are.
   function mentionAndKeepOpen(item: ComposerItemValue) {
     const query = findQuery();
     if (!query) return;
@@ -272,7 +264,6 @@ export default function Particle() {
       event.preventDefault();
       mentionAndKeepOpen(item);
     } else if (event.key === "Escape" && keptOpen.current) {
-      // Done picking: drop the query that was only kept to hold the list open.
       const query = findQuery();
       if (!query) return;
       caretAfter.current = query.start;
@@ -280,7 +271,6 @@ export default function Particle() {
     }
   }
 
-  // People also match by their tags: "@cli" lists Clients and who has it.
   const matches = [...members, ...contacts, ...tagItems].filter(
     (item) =>
       contains(item.label, queryText) ||
@@ -289,8 +279,6 @@ export default function Particle() {
         tagsOf(item.label).some((tag) => contains(tag.label, queryText))),
   );
 
-  // Two or more letters that start a tag's name make the tag the likely pick:
-  // list tags first, best match on top, so it is highlighted.
   const startsTag = (item: ComposerItemValue) =>
     item.kind === "tag" && startsWith(item.label, queryText);
   const tagFirst = queryText.length >= 2 && matches.some(startsTag);

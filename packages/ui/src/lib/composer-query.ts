@@ -33,7 +33,6 @@ export function getComposerQuery(
     text: (beforeCaret + suffix).replace(/\p{Zs}+/gu, " ").trim(),
     start,
     end: caret + suffix.length,
-    // A space at the caret ends the word just typed.
     spaceAfter: !suffix && /\p{Zs}$/u.test(beforeCaret),
   };
 }
