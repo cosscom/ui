@@ -266,6 +266,26 @@ describe("Composer text items", () => {
     expect(options()).toEqual([]);
   });
 
+  test("closes on blur and reopens on every refocus", async () => {
+    await mount();
+    await type(":th");
+    for (let round = 0; round < 3; round++) {
+      await act(async () => input.blur());
+      expect(options()).toEqual([]);
+      await act(async () => input.focus());
+      expect(options()).toHaveLength(2);
+    }
+  });
+
+  test("reopens on refocus after Escape", async () => {
+    await mount();
+    await type(":th");
+    await press("Escape");
+    await act(async () => input.blur());
+    await act(async () => input.focus());
+    expect(options()).toHaveLength(2);
+  });
+
   test("navigates with arrows and inserts the character on Enter", async () => {
     await mount();
     await type("nice :thu");
@@ -300,5 +320,88 @@ describe("Composer text items", () => {
     expect(getComposerText(latest)).toBe("🎉 ");
     await press("z", { ctrlKey: true });
     expect(getComposerText(latest)).toBe(":tada");
+  });
+});
+
+const people: ComposerItemValue[] = [
+  { id: "sam", label: "Sam Rivera" },
+  { id: "sarah", label: "Sarah Lim" },
+  { id: "hannah", label: "Hannah Reed" },
+  { id: "clients", label: "Clients" },
+];
+
+function MentionComposer(): ReactElement {
+  return (
+    <Composer triggers={[{ character: "@", items: people }]}>
+      <ComposerInput aria-label="Message" />
+      <ComposerPopup>
+        <ComposerList>
+          {(item: ComposerItemValue) => (
+            <ComposerItem key={item.id} value={item}>
+              {item.label}
+            </ComposerItem>
+          )}
+        </ComposerList>
+      </ComposerPopup>
+    </Composer>
+  );
+}
+
+describe("Composer spaces in queries", () => {
+  afterEach(async () => {
+    await act(async () => root.unmount());
+    container.remove();
+  });
+
+  async function mount(): Promise<void> {
+    container = document.createElement("div");
+    document.body.append(container);
+    root = createRoot(container);
+    await act(async () => root.render(<MentionComposer />));
+    const element = container.querySelector<HTMLDivElement>(
+      '[data-slot="composer-input"]',
+    );
+    if (!element) throw new Error("Composer input not rendered");
+    input = element;
+  }
+
+  test("closes when a space ends a partial word", async () => {
+    await mount();
+    await type("@h");
+    expect(options()).toEqual(["Sarah Lim", "Hannah Reed"]);
+    await type(" ");
+    expect(options()).toEqual([]);
+  });
+
+  test("stays open while a name continues past the word", async () => {
+    await mount();
+    await type("@sam ");
+    expect(options()).toEqual(["Sam Rivera"]);
+    await type("r");
+    expect(options()).toEqual(["Sam Rivera"]);
+    await type(" ");
+    expect(options()).toEqual([]);
+  });
+
+  test("closes after a complete name", async () => {
+    await mount();
+    await type("@clients ");
+    expect(options()).toEqual([]);
+  });
+
+  test("closes text items after a space", async () => {
+    container = document.createElement("div");
+    document.body.append(container);
+    root = createRoot(container);
+    await act(async () => root.render(<EmojiComposer />));
+    const element = container.querySelector<HTMLDivElement>(
+      '[data-slot="composer-input"]',
+    );
+    if (!element) throw new Error("Composer input not rendered");
+    input = element;
+    await type(":thu");
+    expect(options()).toHaveLength(2);
+    await type(" ");
+    expect(options()).toEqual([]);
   });
 });

@@ -40,6 +40,7 @@ import {
   restoreSelection,
   writeValue,
 } from "@/registry/default/lib/composer-document";
+import { continuesPastQuery } from "@/registry/default/lib/composer-query";
 
 type ComposerChangeDetails = {
   reason: "input" | "selection" | "history" | "reset";
@@ -144,7 +145,11 @@ export function useComposerEditor({
     !disabled &&
     !readOnly &&
     Boolean(query) &&
-    hasVisibleItems(trigger, options);
+    // After a space, stay open only while a suggestion's name continues past
+    // the word just typed, even with showEmpty.
+    (query?.spaceAfter
+      ? options.some((item) => continuesPastQuery(item.label, query.text))
+      : hasVisibleItems(trigger, options));
   const isEmpty = !getComposerText(value);
   const canSubmit =
     !isComposing &&
@@ -537,10 +542,14 @@ export function useComposerEditor({
         if (!event.defaultPrevented && !composing.current) updateQuery();
       },
       onClick: updateQuery,
+      // Leaving the field hides suggestions without dismissing them: coming
+      // back with the caret on a query should show them again.
+      onFocus: updateQuery,
       onBlur: (event) => {
         lastSelection.current =
           readSelection(event.currentTarget) ?? lastSelection.current;
-        dismissSuggestions();
+        dismissedQuery.current = null;
+        setQuery(null);
       },
       onInput: () => {
         if (ignoreCompositionInput.current) return;
