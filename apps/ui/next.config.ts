@@ -22,6 +22,9 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  // The old booker sanitises event descriptions with isomorphic-dompurify,
+  // whose jsdom dependency breaks when bundled for the server.
+  serverExternalPackages: ["isomorphic-dompurify"],
   transpilePackages: ["@coss/ui"],
 };
 
