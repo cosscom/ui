@@ -13,6 +13,7 @@ import {
 import { FieldBlock, type FieldBlockProps, TermsNote } from "./field-block";
 import {
   type FieldValues,
+  getFormLayout,
   isFieldEmpty,
   isFieldVisible,
   type ProtoField,
@@ -44,13 +45,18 @@ function missingRequired(fields: ProtoField[], values: FieldValues) {
 }
 
 /**
- * A. One list. Every field in the order the event type gives them, one
- * column, buttons at the end. What Cal's own booking page does.
+ * A. One list (the chosen direction). The Booker never changes what the host
+ * decided: every field in the order the API returns, nothing optional hidden
+ * or moved, no steps. The Confirm bar is pinned to the bottom and counts the
+ * required fields still empty, so a long form stays usable.
  */
 export function VariantA(props: VariantProps) {
   const visible = props.fields.filter((field) =>
     isFieldVisible(field, props.values),
   );
+  // Only fields on screen count: a conditional required field joins the
+  // count when it appears.
+  const left = missingRequired(visible, props.values);
 
   return (
     <form
@@ -64,38 +70,52 @@ export function VariantA(props: VariantProps) {
         <FieldBlock field={field} key={field.slug} {...blockProps(props)} />
       ))}
       <TermsNote />
-      <div className="flex justify-end gap-2 pt-1">
-        <Button onClick={props.onBack} type="button" variant="ghost">
-          Back
-        </Button>
-        <Button type="submit">Confirm</Button>
+      <div className="sticky bottom-0 -mx-4 @5xl:-mx-6 -mb-4 @5xl:-mb-6 flex items-center justify-between gap-2 rounded-b-[calc(var(--radius-2xl)-1px)] @3xl:rounded-es-none border-t bg-card @5xl:px-6 px-4 py-3">
+        <span aria-live="polite" className="text-muted-foreground text-xs">
+          {left === 0
+            ? "Ready to confirm"
+            : `${left} required ${left === 1 ? "field" : "fields"} left`}
+        </span>
+        <div className="flex gap-2">
+          <Button onClick={props.onBack} type="button" variant="ghost">
+            Back
+          </Button>
+          <Button type="submit">Confirm</Button>
+        </div>
       </div>
     </form>
   );
 }
 
 /**
- * B. Two steps. "Your details" first (Cal's own fields), then the host's
- * questions. Each step is short; a step header shows where you are.
+ * B. Two steps, as a cut in the host's list. The Booker never changes what
+ * the host decided: every field stays in the order the API returns, nothing
+ * optional is hidden, notes and guests stay where they are. Step 1 is
+ * everything before the host's first custom question, step 2 is the rest.
+ * No custom question, a custom question first, or a short form: one list.
  */
 export function VariantB(props: VariantProps) {
-  const [step, setStep] = useState<1 | 2>(1);
-  const visible = props.fields.filter((field) =>
-    isFieldVisible(field, props.values),
-  );
-  const details = visible.filter(
-    (field) =>
-      field.system && field.kind !== "guests" && field.slug !== "notes",
-  );
-  const questions = visible.filter((field) => !details.includes(field));
-  const hasQuestions = questions.some((field) => !field.system);
-  const steps = hasQuestions
-    ? [
-        { fields: details, title: "Your details" },
-        { fields: questions, title: "A few questions" },
-      ]
-    : [{ fields: visible, title: "Your details" }];
-  const current = steps[Math.min(step, steps.length) - 1] ?? steps[0];
+  const [chosenStep, setStep] = useState<1 | 2>(1);
+  const layout = getFormLayout(props.fields);
+  const renderable = props.fields.filter((field) => field.kind !== "unknown");
+  const isVisible = (field: ProtoField) => isFieldVisible(field, props.values);
+  // The cut is made on the list as returned, not on what is visible right
+  // now, so it does not move while the attendee answers.
+  const steps =
+    layout.steps === 2
+      ? [
+          {
+            fields: renderable.slice(0, layout.cutIndex).filter(isVisible),
+            title: "Your details",
+          },
+          {
+            fields: renderable.slice(layout.cutIndex).filter(isVisible),
+            title: "A few questions",
+          },
+        ]
+      : [{ fields: renderable.filter(isVisible), title: "Your details" }];
+  const step = steps.length === 1 ? 1 : chosenStep;
+  const current = steps[step - 1] ?? steps[0];
   const isLast = step >= steps.length;
 
   return (

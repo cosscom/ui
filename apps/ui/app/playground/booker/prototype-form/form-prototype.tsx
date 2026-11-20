@@ -10,6 +10,7 @@ import { PrototypeSwitcher } from "../../prototype-switcher";
 import {
   type FieldValue,
   type FieldValues,
+  getFormLayout,
   getInitialValues,
   getScenarioFields,
   type ScenarioKey,
@@ -94,7 +95,9 @@ export function FormPrototype({
                   className="h-lh w-4.5 shrink-0 opacity-80 sm:w-4"
                 />
                 <span>
-                  {scenario === "simple" ? "Cal Video" : "3 location options"}
+                  {fields.some((field) => field.kind === "location")
+                    ? "3 location options"
+                    : "Cal Video"}
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -107,7 +110,7 @@ export function FormPrototype({
             </div>
           </div>
         </div>
-        <div className="@container @3xl:w-[min(28.75rem,100cqw-2*var(--booker-side))] w-full @3xl:shrink-0 @5xl:p-6 p-4">
+        <div className="@3xl:w-[min(28.75rem,100cqw-2*var(--booker-side))] w-full @3xl:shrink-0 @5xl:p-6 p-4">
           <Variant
             fields={fields}
             lockPrefilled={scenario === "prefilled"}
@@ -123,6 +126,12 @@ export function FormPrototype({
       <pre className="w-full max-w-3xl overflow-x-auto rounded-lg border border-dashed p-3 text-muted-foreground text-xs">
         {JSON.stringify(
           {
+            fieldOrder: fields
+              .filter((field) => field.kind !== "unknown")
+              .map(
+                (field) => `${field.slug}${field.system ? "" : " (custom)"}`,
+              ),
+            layoutForVariantB: getFormLayout(fields),
             lastAction,
             scenario,
             unknownOptionalFieldsSkipped: skipped,

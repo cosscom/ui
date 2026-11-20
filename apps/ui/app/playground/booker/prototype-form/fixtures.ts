@@ -212,6 +212,29 @@ export const fullFields: ProtoField[] = [
   { kind: "unknown", label: "unknown", slug: "unknown", system: false },
 ];
 
+const teamSizeField: ProtoField = {
+  error: "Choose a team size.",
+  kind: "select",
+  label: "Team size",
+  options: ["1–10", "11–50", "51–200", "More than 200"],
+  required: true,
+  slug: "team-size",
+  system: false,
+};
+
+// One custom question in a form short enough to stay a single list.
+export const shortFields: ProtoField[] = [
+  ...simpleFields.slice(0, 2),
+  teamSizeField,
+  ...simpleFields.slice(2),
+];
+
+// The host put a custom question first, so there is nothing to cut before it.
+export const customFirstFields: ProtoField[] = [
+  teamSizeField,
+  ...fullFields.filter((field) => field.slug !== "team-size"),
+];
+
 export const variants = [
   { key: "A", label: "One list" },
   { key: "B", label: "Two steps" },
@@ -222,7 +245,9 @@ export type VariantKey = (typeof variants)[number]["key"];
 
 export const scenarios = [
   { key: "full", label: "Every field kind" },
-  { key: "simple", label: "Default event" },
+  { key: "simple", label: "No custom questions" },
+  { key: "short", label: "Short, one question" },
+  { key: "customFirst", label: "Custom question first" },
   { key: "errors", label: "Errors" },
   { key: "prefilled", label: "Prefilled" },
 ] as const;
@@ -230,7 +255,48 @@ export const scenarios = [
 export type ScenarioKey = (typeof scenarios)[number]["key"];
 
 export function getScenarioFields(scenario: ScenarioKey): ProtoField[] {
-  return scenario === "simple" ? simpleFields : fullFields;
+  if (scenario === "simple") {
+    return simpleFields;
+  }
+  if (scenario === "short") {
+    return shortFields;
+  }
+  if (scenario === "customFirst") {
+    return customFirstFields;
+  }
+  return fullFields;
+}
+
+// A form with this many fields or fewer is never split into steps.
+export const SHORT_FORM_MAX_FIELDS = 6;
+
+export type FormLayout =
+  | { steps: 1; reason: string }
+  | { steps: 2; cutIndex: number; cutBefore: string };
+
+/**
+ * Where variant B cuts the host's list into two steps, if at all. The cut is
+ * made on the fields as the API returns them: step 1 is everything before the
+ * first custom question, step 2 is the rest.
+ */
+export function getFormLayout(fields: ProtoField[]): FormLayout {
+  const renderable = fields.filter((field) => field.kind !== "unknown");
+  const cutIndex = renderable.findIndex((field) => !field.system);
+  const firstCustom = renderable[cutIndex];
+
+  if (!firstCustom) {
+    return { reason: "no custom questions", steps: 1 };
+  }
+  if (cutIndex === 0) {
+    return { reason: "the first field is a custom question", steps: 1 };
+  }
+  if (renderable.length <= SHORT_FORM_MAX_FIELDS) {
+    return {
+      reason: `short form: ${renderable.length} fields, the limit is ${SHORT_FORM_MAX_FIELDS}`,
+      steps: 1,
+    };
+  }
+  return { cutBefore: firstCustom.slug, cutIndex, steps: 2 };
 }
 
 export function getInitialValues(
