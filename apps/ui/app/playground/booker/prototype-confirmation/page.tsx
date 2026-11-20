@@ -1,9 +1,9 @@
 // PROTOTYPE ONLY. Throwaway route for the wayfinder ticket "The confirmation
 // screen" (.scratch/booker/issues/09-confirmation-screen.md).
 //
-// Three variants of what an attendee sees after booking, switchable with the
-// `variant` search param (A, B, C), with a synthetic booking picked by the
-// `scenario` search param. Nothing is sent.
+// The chosen layout of what an attendee sees after booking, with a synthetic
+// booking picked by the `scenario` search param. Nothing is sent. The two
+// layouts that lost are on the `prototype/booker-confirmation` branch.
 
 import type { Metadata } from "next";
 import { ConfirmationPrototype } from "./confirmation-prototype";

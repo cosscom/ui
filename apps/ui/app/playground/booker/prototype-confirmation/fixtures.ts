@@ -69,11 +69,7 @@ export const bookings = {
   },
 } satisfies Record<string, ProtoBooking>;
 
-export const variants = [
-  { key: "A", label: "In place" },
-  { key: "B", label: "Whole card" },
-  { key: "C", label: "Summary and next steps" },
-] as const;
+export const variants = [{ key: "A", label: "In place" }] as const;
 
 export type VariantKey = (typeof variants)[number]["key"];
 

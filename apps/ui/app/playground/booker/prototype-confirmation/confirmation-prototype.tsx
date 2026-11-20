@@ -12,12 +12,12 @@ import {
   type VariantKey,
   variants,
 } from "./fixtures";
-import { VariantA, VariantB, VariantC, type VariantProps } from "./variants";
+import { VariantA, type VariantProps } from "./variants";
 
 const variantComponents: Record<
   VariantKey,
   (props: VariantProps) => React.ReactElement
-> = { A: VariantA, B: VariantB, C: VariantC };
+> = { A: VariantA };
 
 export function ConfirmationPrototype({
   variant,
