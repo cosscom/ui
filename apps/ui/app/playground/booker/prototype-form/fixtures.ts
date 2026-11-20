@@ -235,11 +235,7 @@ export const customFirstFields: ProtoField[] = [
   ...fullFields.filter((field) => field.slug !== "team-size"),
 ];
 
-export const variants = [
-  { key: "A", label: "One list" },
-  { key: "B", label: "Two steps" },
-  { key: "C", label: "Essentials first" },
-] as const;
+export const variants = [{ key: "A", label: "One list" }] as const;
 
 export type VariantKey = (typeof variants)[number]["key"];
 
@@ -265,38 +261,6 @@ export function getScenarioFields(scenario: ScenarioKey): ProtoField[] {
     return customFirstFields;
   }
   return fullFields;
-}
-
-// A form with this many fields or fewer is never split into steps.
-export const SHORT_FORM_MAX_FIELDS = 6;
-
-export type FormLayout =
-  | { steps: 1; reason: string }
-  | { steps: 2; cutIndex: number; cutBefore: string };
-
-/**
- * Where variant B cuts the host's list into two steps, if at all. The cut is
- * made on the fields as the API returns them: step 1 is everything before the
- * first custom question, step 2 is the rest.
- */
-export function getFormLayout(fields: ProtoField[]): FormLayout {
-  const renderable = fields.filter((field) => field.kind !== "unknown");
-  const cutIndex = renderable.findIndex((field) => !field.system);
-  const firstCustom = renderable[cutIndex];
-
-  if (!firstCustom) {
-    return { reason: "no custom questions", steps: 1 };
-  }
-  if (cutIndex === 0) {
-    return { reason: "the first field is a custom question", steps: 1 };
-  }
-  if (renderable.length <= SHORT_FORM_MAX_FIELDS) {
-    return {
-      reason: `short form: ${renderable.length} fields, the limit is ${SHORT_FORM_MAX_FIELDS}`,
-      steps: 1,
-    };
-  }
-  return { cutBefore: firstCustom.slug, cutIndex, steps: 2 };
 }
 
 export function getInitialValues(

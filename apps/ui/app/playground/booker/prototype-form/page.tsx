@@ -1,8 +1,9 @@
 // PROTOTYPE ONLY. Throwaway route for the wayfinder ticket "The form rendered
 // from booking fields" (.scratch/booker/issues/08-booking-fields-form.md).
 //
-// Three variants of the Booker's confirm step, switchable via `?variant=A|B|C`,
-// with synthetic booking fields chosen by `?scenario=`. Nothing is sent.
+// The chosen layout of the Booker's confirm step, with synthetic booking
+// fields picked by the `scenario` search param. Nothing is sent. The two
+// layouts that lost are on the `prototype/booker-form` branch.
 
 import type { Metadata } from "next";
 import {
