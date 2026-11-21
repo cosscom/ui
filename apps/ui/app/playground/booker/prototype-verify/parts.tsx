@@ -42,9 +42,6 @@ import { displayTimeLabel } from "@/lib/booker/utils";
 // Why the code step opened, which changes its first sentence.
 export type Reason = "eventType" | "address" | "refusedOnCreate";
 
-// What the form shows under the email field (variant B only).
-export type EmailNote = "sending" | "sent" | "notSent" | undefined;
-
 export type Flow = {
   stage: Stage;
   month: Date;
@@ -57,8 +54,6 @@ export type Flow = {
   setIs24Hour: (value: boolean) => void;
   values: FieldValues;
   setValue: (slug: string, value: FieldValue | undefined) => void;
-  onEmailBlur: () => void;
-  emailNote: EmailNote;
   // "Continue" when a code step is known to follow, else "Confirm".
   confirmLabel: string;
   confirm: () => void;
@@ -212,27 +207,7 @@ function SelectStep({ flow }: StepProps) {
   );
 }
 
-function EmailNoteLine({ note }: { note: EmailNote }) {
-  if (!note) {
-    return null;
-  }
-  if (note === "notSent") {
-    return (
-      <p className="-mt-2 text-destructive-foreground text-xs" role="alert">
-        We couldn’t send a code to this address. Use a different one.
-      </p>
-    );
-  }
-  return (
-    <p aria-live="polite" className="-mt-2 text-muted-foreground text-xs">
-      {note === "sending"
-        ? "Sending a verification code to this address…"
-        : "We sent a verification code to this address. You’ll enter it next."}
-    </p>
-  );
-}
-
-/** The chosen form, with a note under the email field in variant B. */
+/** The chosen form, unchanged: nothing is sent until Continue or Confirm. */
 function FormStep({ flow }: StepProps) {
   const left = simpleFields.filter(
     (field) => field.required && isFieldEmpty(flow.values[field.slug]),
@@ -242,16 +217,6 @@ function FormStep({ flow }: StepProps) {
   return (
     <form
       className={`${narrowStepClassName} flex flex-col gap-4`}
-      onBlurCapture={(event) => {
-        // The email field: the first email input, not a guest's.
-        if (
-          event.target instanceof HTMLInputElement &&
-          event.target.type === "email" &&
-          !event.target.getAttribute("aria-label")?.startsWith("Guest")
-        ) {
-          flow.onEmailBlur();
-        }
-      }}
       onSubmit={(event) => {
         event.preventDefault();
         if (left === 0) {
@@ -260,18 +225,14 @@ function FormStep({ flow }: StepProps) {
       }}
     >
       {simpleFields.map((field) => (
-        <div className="contents" key={field.slug}>
-          <FieldBlock
-            field={field}
-            lockPrefilled={false}
-            setValue={flow.setValue}
-            showErrors={false}
-            values={flow.values}
-          />
-          {field.kind === "email" ? (
-            <EmailNoteLine note={flow.emailNote} />
-          ) : null}
-        </div>
+        <FieldBlock
+          field={field}
+          key={field.slug}
+          lockPrefilled={false}
+          setValue={flow.setValue}
+          showErrors={false}
+          values={flow.values}
+        />
       ))}
       <TermsNote />
       <div className={barClassName}>

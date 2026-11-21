@@ -2,9 +2,10 @@
 // verification step" (.scratch/booker/issues/21-email-verification-step.md).
 //
 // The verification code as a step of the booking flow, after the form, inside
-// the Booker's own BookerSteps. Two variants of when the code is
-// sent, switchable with `variant`; the API's answers are picked by `scenario`;
-// `stage` opens partway through. Nothing is sent.
+// the Booker's own BookerSteps. The code is sent on Continue or Confirm. The
+// API's answers are picked by `scenario`; `stage` opens partway through.
+// Nothing is sent. The variant that sent the code once the email was entered
+// is on the prototype/booker-verify branch.
 
 import type { Metadata } from "next";
 import {

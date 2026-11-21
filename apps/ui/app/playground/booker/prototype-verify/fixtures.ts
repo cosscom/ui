@@ -1,10 +1,9 @@
 // PROTOTYPE ONLY. Synthetic verification behaviour for the email
 // verification step. No network: every API answer is decided here.
 
-export const variants = [
-  { key: "A", label: "Code on Confirm" },
-  { key: "B", label: "Code once the email is in" },
-] as const;
+// The variant that sent the code once the email was entered is on the
+// prototype/booker-verify branch.
+export const variants = [{ key: "A", label: "Code on Confirm" }] as const;
 
 export type VariantKey = (typeof variants)[number]["key"];
 
@@ -56,10 +55,6 @@ export function createRefuses(scenario: ScenarioKey) {
 /** `POST /send-code` answers `sent: false` for a watchlisted address. */
 export function sendSucceeds(scenario: ScenarioKey) {
   return scenario !== "notSent";
-}
-
-export function isEmail(value: string) {
-  return /^\S+@\S+\.\S+$/.test(value.trim());
 }
 
 export function wait(ms = latencyMs) {

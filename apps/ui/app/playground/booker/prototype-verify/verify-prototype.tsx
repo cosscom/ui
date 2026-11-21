@@ -2,8 +2,9 @@
 
 // PROTOTYPE ONLY. Holds the booking flow's state, decides every API answer
 // from the scenario, mounts the Booker card and prints the state. Nothing is
-// sent. The two variants differ only in when the code is sent: A on Confirm,
-// B as soon as an email that needs it is entered.
+// sent. The code is sent on Continue or Confirm, never earlier. The variant
+// that sent it once the email was entered is on the prototype/booker-verify
+// branch.
 
 import { useEffect, useRef, useState } from "react";
 import { PrototypeSwitcher } from "../../prototype-switcher";
@@ -15,7 +16,6 @@ import {
   correctCode,
   createRefuses,
   eventRequiresCode,
-  isEmail,
   resendCooldownSeconds,
   type ScenarioKey,
   type Stage,
@@ -26,7 +26,7 @@ import {
   variants,
   wait,
 } from "./fixtures";
-import { type EmailNote, type Flow, type Reason, VerifyBooker } from "./parts";
+import { type Flow, type Reason, VerifyBooker } from "./parts";
 
 type Send = { to: string; at: number; sent: boolean };
 
@@ -247,28 +247,6 @@ export function VerifyPrototype({
     setStage("booked");
   };
 
-  // Variant B: send as soon as an address that needs a code is entered.
-  const handledEmail = useRef("");
-  const onEmailBlur = async () => {
-    if (variant !== "B" || !isEmail(email) || handledEmail.current === email) {
-      return;
-    }
-    handledEmail.current = email;
-    const required = eventRequiresCode(scenario) || (await checkAddress(email));
-    if (required) {
-      await sendCode(email, { fresh: false });
-    }
-  };
-
-  let emailNote: EmailNote;
-  if (variant === "B" && stage === "form") {
-    if (busy === "sending") {
-      emailNote = "sending";
-    } else if (lastSend) {
-      emailNote = lastSend.sent ? "sent" : "notSent";
-    }
-  }
-
   const flow: Flow = {
     backToSelect: () => setStage("select"),
     busy,
@@ -283,7 +261,7 @@ export function VerifyPrototype({
         );
         input?.focus();
         input?.select();
-      }, 450);
+      });
     },
     code,
     codeError,
@@ -291,11 +269,9 @@ export function VerifyPrototype({
     confirm: () => void confirm(),
     confirmLabel: knownToNeedCode ? "Continue" : "Confirm",
     date,
-    emailNote,
     is24Hour,
     lastResendAt,
     month,
-    onEmailBlur: () => void onEmailBlur(),
     pickTime: (next) => {
       setTime(next);
       setStage("form");
