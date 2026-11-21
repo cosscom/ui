@@ -84,7 +84,7 @@ export function VariantA(props: VariantProps) {
     return (
       <Card className={cardClassName}>
         <EventPane {...props} />
-        <div className="@container flex min-w-0 flex-1 flex-col gap-5 @5xl:p-6 p-4">
+        <div className="@container flex @3xl:w-[min(36rem,100cqw-var(--booker-side))] w-full @3xl:shrink-0 flex-col gap-5 @5xl:p-6 p-4">
           <h2 className="font-heading text-xl">Pick a new time</h2>
           <FullPicker {...props} />
           <ReasonField flow={flow} label="Reason for rescheduling" />

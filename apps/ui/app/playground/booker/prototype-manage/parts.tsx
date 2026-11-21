@@ -220,7 +220,7 @@ export function FullPicker({ booking, flow }: VariantProps) {
   const original = toDate(booking.date);
 
   return (
-    <div className="flex @2xl:flex-row flex-col gap-4">
+    <div className="flex @md:flex-row flex-col gap-4">
       <Calendar
         className="shrink-0"
         defaultMonth={original}
