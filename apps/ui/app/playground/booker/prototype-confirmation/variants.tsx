@@ -113,7 +113,7 @@ function EventPane({ booking }: { booking: ProtoBooking }) {
             </p>
           </div>
           <div className="flex flex-col gap-1">
-            <h1 className="font-heading @3xl:@max-5xl:text-lg text-xl">
+            <h1 className="font-bold font-heading @3xl:@max-5xl:text-lg text-xl">
               {booking.title}
             </h1>
             <p className="text-muted-foreground sm:text-sm">
@@ -162,7 +162,7 @@ export function VariantA({ booking, onAction }: VariantProps) {
       <div className={`${mainClassName} flex flex-col gap-6`}>
         <div className="flex flex-col gap-2">
           <StatusIcon booking={booking} className="size-6" />
-          <h2 className="font-heading text-xl">{headline.title}</h2>
+          <h2 className="font-bold font-heading text-xl">{headline.title}</h2>
           <p className="text-muted-foreground sm:text-sm">{headline.text}</p>
         </div>
 

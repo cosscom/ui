@@ -182,7 +182,7 @@ function EventPane({ booking, flow }: StepProps) {
             </p>
           </div>
           <div className="flex flex-col gap-1">
-            <h1 className="font-heading @3xl:@max-5xl:text-lg text-xl">
+            <h1 className="font-bold font-heading @3xl:@max-5xl:text-lg text-xl">
               {booking.title}
             </h1>
             <p className="text-muted-foreground sm:text-sm">
@@ -359,7 +359,7 @@ function CancelStep({ booking, flow }: StepProps) {
   return (
     <div className={`${narrowStepClassName} flex min-h-64 flex-col gap-5`}>
       <div className="flex flex-col gap-2">
-        <h2 className="font-heading text-xl">Cancel this {noun}?</h2>
+        <h2 className="font-bold font-heading text-xl">Cancel this {noun}?</h2>
         <p className="text-muted-foreground sm:text-sm">
           {booking.host} will be told.
         </p>
@@ -474,7 +474,7 @@ function SummaryStep({ booking, flow }: StepProps) {
     <div className={`${narrowStepClassName} flex min-h-64 flex-col gap-6`}>
       <div className="flex flex-col gap-2">
         {icon}
-        <h2 className="font-heading text-xl">{title}</h2>
+        <h2 className="font-bold font-heading text-xl">{title}</h2>
         <p className="text-muted-foreground sm:text-sm">{text}</p>
       </div>
 

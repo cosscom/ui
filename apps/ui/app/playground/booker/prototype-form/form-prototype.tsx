@@ -65,7 +65,7 @@ export function FormPrototype({
                 </p>
               </div>
               <div className="flex flex-col gap-1">
-                <h1 className="font-heading @3xl:@max-5xl:text-lg text-xl">
+                <h1 className="font-bold font-heading @3xl:@max-5xl:text-lg text-xl">
                   Product demo
                 </h1>
                 <p className="text-muted-foreground sm:text-sm">

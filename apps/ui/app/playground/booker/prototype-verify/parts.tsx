@@ -117,7 +117,7 @@ function EventPane({ flow }: StepProps) {
             </p>
           </div>
           <div className="flex flex-col gap-1">
-            <h1 className="font-heading @3xl:@max-5xl:text-lg text-xl">
+            <h1 className="font-bold font-heading @3xl:@max-5xl:text-lg text-xl">
               Product demo
             </h1>
             <p className="text-muted-foreground sm:text-sm">
@@ -305,7 +305,9 @@ function VerifyStep({ flow }: StepProps) {
             aria-hidden="true"
             className="size-6 text-destructive-foreground"
           />
-          <h2 className="font-heading text-xl">We couldn’t send a code</h2>
+          <h2 className="font-bold font-heading text-xl">
+            We couldn’t send a code
+          </h2>
           <p className="text-muted-foreground sm:text-sm">
             This booking needs a verified email address, and we couldn’t send a
             code to <span className="text-foreground">{email}</span>. Use a
@@ -345,7 +347,7 @@ function VerifyStep({ flow }: StepProps) {
     >
       <div className="flex flex-col gap-2">
         <MailIcon aria-hidden="true" className="size-6 text-muted-foreground" />
-        <h2 className="font-heading text-xl">Check your email</h2>
+        <h2 className="font-bold font-heading text-xl">Check your email</h2>
         <p className="text-muted-foreground sm:text-sm">
           {intro} <span className="text-foreground">{email}</span>.
         </p>
@@ -444,7 +446,7 @@ function BookedStep({ flow }: StepProps) {
         aria-hidden="true"
         className="size-6 text-success-foreground"
       />
-      <h2 className="font-heading text-xl">You’re booked</h2>
+      <h2 className="font-bold font-heading text-xl">You’re booked</h2>
       <p className="text-muted-foreground sm:text-sm">
         A calendar invitation was sent to {getEmail(flow)}.
       </p>

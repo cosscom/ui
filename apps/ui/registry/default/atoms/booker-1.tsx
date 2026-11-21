@@ -98,7 +98,7 @@ export function Booker({
               <div className="flex flex-col gap-1">
                 {displayMeta ? (
                   <>
-                    <h1 className="font-heading @3xl:@max-5xl:text-lg text-xl">
+                    <h1 className="font-bold font-heading @3xl:@max-5xl:text-lg text-xl">
                       {displayMeta.eventTypeTitle}
                     </h1>
                     <EventDescription
@@ -227,7 +227,7 @@ export function Booker({
       </Card>
       <a
         href="https://cal.com"
-        className="font-heading text-xl"
+        className="font-bold font-heading text-xl"
         target="_blank"
         rel="noreferrer"
       >

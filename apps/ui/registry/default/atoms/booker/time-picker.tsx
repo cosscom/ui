@@ -75,7 +75,7 @@ export function TimePicker({
               {slotsLoading ? (
                 <Skeleton className="h-6 w-16" />
               ) : (
-                <div className="flex items-center gap-1.5 font-heading @3xl:@max-5xl:text-base text-lg">
+                <div className="flex items-center gap-1.5 font-heading font-semibold @3xl:@max-5xl:text-base text-lg">
                   <span>
                     {formatSelectedWeekday(selectedDate ?? new Date(), locale)}
                   </span>

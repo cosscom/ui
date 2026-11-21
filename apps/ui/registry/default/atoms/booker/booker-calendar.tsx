@@ -339,7 +339,7 @@ export function MonthCaption({
   return (
     <div
       className={cn(
-        "@5xl:ps-1 font-heading @3xl:@max-5xl:text-base text-lg",
+        "@5xl:ps-1 font-heading font-semibold @3xl:@max-5xl:text-base text-lg",
         className,
       )}
     >
