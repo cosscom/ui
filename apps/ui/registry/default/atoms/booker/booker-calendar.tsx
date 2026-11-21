@@ -775,7 +775,7 @@ export function BookerCalendar({
                       modifiers.outside && "text-muted-foreground/50",
                       modifiers.today &&
                         !dayCellsLoading &&
-                        "*:before:pointer-events-none *:before:absolute *:before:start-1/2 *:before:bottom-1/7 *:before:z-1 *:before:size-1 *:before:-translate-x-1/2 *:before:rounded-full *:before:bg-primary *:before:transition-colors [&[data-selected]>*]:before:bg-primary-foreground",
+                        "*:before:pointer-events-none *:before:absolute *:before:start-1/2 *:before:bottom-1/7 *:before:z-1 *:before:size-1 *:before:-translate-x-1/2 *:before:rounded-full *:before:bg-primary [&[data-selected]>*]:before:bg-primary-foreground",
                     );
 
                     // Label (e.g. "Aug") sits on the 1st of the next month.
@@ -818,7 +818,7 @@ export function BookerCalendar({
                           </button>
                         ) : (
                           <DayButton
-                            className="in-data-disabled:pointer-events-none relative flex @max-3xl:aspect-auto aspect-square @max-3xl:h-9 w-full items-center justify-center rounded-lg bg-muted in-data-disabled:bg-transparent in-data-selected:bg-primary font-medium in-data-disabled:font-normal in-data-selected:text-primary-foreground text-foreground tabular-nums in-data-disabled:opacity-50 outline-none transition-shadow duration-150 ease-out after:absolute @5xl:after:-inset-0.75 after:-inset-0.5 not-in-data-disabled:not-in-data-selected:hover:ring-2 not-in-data-disabled:not-in-data-selected:hover:ring-primary/72 focus-visible:z-1 focus-visible:ring-2 focus-visible:ring-primary/72 sm:text-sm"
+                            className="in-data-disabled:pointer-events-none relative flex @max-3xl:aspect-auto aspect-square @max-3xl:h-9 w-full items-center justify-center rounded-lg bg-muted in-data-disabled:bg-transparent in-data-selected:bg-primary font-medium in-data-disabled:font-normal in-data-selected:text-primary-foreground text-foreground tabular-nums in-data-disabled:opacity-50 outline-none after:absolute @5xl:after:-inset-0.75 after:-inset-0.5 not-in-data-disabled:not-in-data-selected:hover:ring-2 not-in-data-disabled:not-in-data-selected:hover:ring-primary/72 focus-visible:z-1 focus-visible:ring-2 focus-visible:ring-primary/72 sm:text-sm"
                             type="button"
                             focused={modifiers.focused}
                             nextMonthLabel={nextMonthLabel}
@@ -878,9 +878,10 @@ export function BookerCalendar({
           <Tooltip handle={monthTooltipHandle} disableHoverablePopup>
             {({ payload }) => (
               <TooltipPopup
-                className="**:data-current:opacity-100! **:data-previous:opacity-0! **:data-current:transition-none! **:data-previous:transition-none!"
+                className="transition-none! **:data-current:opacity-100! **:data-previous:opacity-0! **:data-current:transition-none! **:data-previous:transition-none!"
                 portalProps={{
-                  className: "**:data-[slot=tooltip-positioner]:ease-out",
+                  className:
+                    "**:data-[slot=tooltip-positioner]:transition-none!",
                 }}
               >
                 {payload}

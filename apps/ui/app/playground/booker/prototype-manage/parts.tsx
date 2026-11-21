@@ -2,7 +2,7 @@
 
 // PROTOTYPE ONLY. Rescheduling and cancelling as steps of the booking flow.
 // The left pane is the Booker's event information; the right-hand side is one
-// step at a time inside the Booker's own BookerSteps transition. The select
+// step at a time inside the Booker's own BookerSteps. The select
 // step uses the Booker's real calendar and time list, unchanged.
 
 import {

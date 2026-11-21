@@ -2,7 +2,7 @@
 // cancel screens" (.scratch/booker/issues/18-reschedule-and-cancel-screens.md).
 //
 // Rescheduling and cancelling an existing booking as steps of the booking
-// flow, inside the Booker's own BookerSteps transition. A synthetic booking is
+// flow, inside the Booker's own BookerSteps. A synthetic booking is
 // picked by the `scenario` search param, and the `stage` search param opens
 // partway through a flow. Nothing is sent.
 

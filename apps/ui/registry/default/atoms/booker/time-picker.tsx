@@ -94,12 +94,8 @@ export function TimePicker({
                     className="pointer-events-none absolute inset-0 z-1 flex items-center text-center font-medium text-xs [&:has(+[data-slot=switch][data-checked])>*:first-child]:text-muted-foreground/72 [&:has(+[data-slot=switch][data-unchecked])>*:last-child]:text-muted-foreground/72"
                     aria-hidden="true"
                   >
-                    <span className="flex-1 transition-colors">
-                      {labels.hour12Short}
-                    </span>
-                    <span className="flex-1 transition-colors">
-                      {labels.hour24Short}
-                    </span>
+                    <span className="flex-1">{labels.hour12Short}</span>
+                    <span className="flex-1">{labels.hour24Short}</span>
                   </span>
                   <Switch
                     className="h-9 w-[calc(var(--thumb-size)*2)] rounded-lg bg-muted! p-0.5 [--thumb-size:--spacing(10)] *:data-[slot=switch-thumb]:data-checked:translate-x-[calc(var(--thumb-size)-2px)] *:data-[slot=switch-thumb]:aspect-auto *:data-[slot=switch-thumb]:w-[calc(var(--thumb-size)-2px)] *:data-[slot=switch-thumb]:rounded-md sm:h-8 dark:*:data-[slot=switch-thumb]:bg-input sm:[--thumb-size:--spacing(9)] *:[[span]]:text-muted-foreground/70"
@@ -162,7 +158,7 @@ export function TimePicker({
                         key={time}
                         type="button"
                         onClick={() => onSelectTime(time)}
-                        className="relative flex h-9 cursor-pointer items-center justify-center rounded-lg bg-muted font-medium text-foreground tabular-nums outline-none transition-shadow after:absolute @5xl:after:-inset-1 after:-inset-0.75 hover:ring-2 hover:ring-primary/72 focus-visible:z-1 focus-visible:ring-2 focus-visible:ring-primary/72 sm:h-8 sm:text-sm"
+                        className="relative flex h-9 cursor-pointer items-center justify-center rounded-lg bg-muted font-medium text-foreground tabular-nums outline-none after:absolute @5xl:after:-inset-1 after:-inset-0.75 hover:ring-2 hover:ring-primary/72 focus-visible:z-1 focus-visible:ring-2 focus-visible:ring-primary/72 sm:h-8 sm:text-sm"
                       >
                         <span>
                           {!is24Hour && isSingleDigit12HourLabel(time) ? (
