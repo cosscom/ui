@@ -1,4 +1,5 @@
-// PROTOTYPE ONLY. A synthetic booking to reschedule or cancel. No network.
+// PROTOTYPE ONLY. A synthetic booking to reschedule or cancel, and synthetic
+// availability for the Booker's real calendar and time list. No network.
 
 export type ManageBooking = {
   kind: "single" | "occurrence" | "seat";
@@ -9,12 +10,13 @@ export type ManageBooking = {
   hostInitials: string;
   // Local date parts, so the server and the browser agree.
   date: { year: number; month: number; day: number };
+  // 24-hour "HH:mm", as the Booker's time list uses.
   time: string;
   duration: string;
   timeZone: string;
   location: string;
   attendeeEmail: string;
-  // "This is meeting 2 of 4" for one occurrence of a series.
+  // "Meeting 2 of 4, weekly" for one occurrence of a series.
   seriesNote?: string;
 };
 
@@ -28,7 +30,7 @@ const base: ManageBooking = {
   kind: "single",
   location: "Cal Video",
   status: "accepted",
-  time: "10:00am",
+  time: "10:00",
   timeZone: "Europe/Rome",
   title: "Product demo",
 };
@@ -47,9 +49,8 @@ export const bookings = {
 } satisfies Record<string, ManageBooking>;
 
 export const variants = [
-  { key: "A", label: "In place" },
-  { key: "B", label: "Dialogs" },
-  { key: "C", label: "Inline, compact" },
+  { key: "A", label: "Cancel in the pane" },
+  { key: "B", label: "Cancel in a dialog" },
 ] as const;
 
 export type VariantKey = (typeof variants)[number]["key"];
@@ -69,6 +70,7 @@ export type ScenarioKey = (typeof scenarios)[number]["key"];
 export const stages = [
   "summary",
   "rescheduling",
+  "confirmingReschedule",
   "rescheduled",
   "cancelling",
   "cancelled",
@@ -76,23 +78,51 @@ export const stages = [
 
 export type Stage = (typeof stages)[number];
 
-export const slots = [
-  "9:00am",
-  "9:30am",
-  "10:00am",
-  "10:30am",
-  "11:00am",
-  "2:00pm",
-  "2:30pm",
-  "3:00pm",
-  "4:00pm",
-];
-
 // The prototype's fixed "today".
 export const today = new Date(2026, 10, 20);
 
+const weekdaySlots = [
+  "09:00",
+  "09:30",
+  "10:00",
+  "10:30",
+  "11:00",
+  "14:00",
+  "14:30",
+  "15:00",
+  "16:00",
+];
+
+/** Synthetic availability: weekdays from tomorrow on, the same times. */
+export function getDaySlots(date: Date | undefined): string[] {
+  if (!date || date <= today) {
+    return [];
+  }
+  const day = date.getDay();
+  return day === 0 || day === 6 ? [] : weekdaySlots;
+}
+
+export function hasSlots(date: Date) {
+  return getDaySlots(date).length > 0;
+}
+
+export function getNextAvailableDate(from: Date): Date | null {
+  const cursor = new Date(from);
+  for (let index = 0; index < 60; index += 1) {
+    if (hasSlots(cursor)) {
+      return new Date(cursor);
+    }
+    cursor.setDate(cursor.getDate() + 1);
+  }
+  return null;
+}
+
 export function toDate(parts: ManageBooking["date"]) {
   return new Date(parts.year, parts.month, parts.day);
+}
+
+export function startOfMonth(date: Date) {
+  return new Date(date.getFullYear(), date.getMonth(), 1);
 }
 
 export function formatDate(date: Date) {
@@ -102,29 +132,4 @@ export function formatDate(date: Date) {
     weekday: "long",
     year: "numeric",
   });
-}
-
-export function formatShortDate(date: Date) {
-  return date.toLocaleDateString("en-US", {
-    day: "numeric",
-    month: "short",
-    weekday: "short",
-  });
-}
-
-export function isSameDay(a: Date | undefined, b: Date | undefined) {
-  return Boolean(a && b && a.toDateString() === b.toDateString());
-}
-
-// The next weekdays with availability, for the compact picker.
-export function getUpcomingDays(count: number) {
-  const days: Date[] = [];
-  const cursor = new Date(today);
-  while (days.length < count) {
-    cursor.setDate(cursor.getDate() + 1);
-    if (cursor.getDay() !== 0 && cursor.getDay() !== 6) {
-      days.push(new Date(cursor));
-    }
-  }
-  return days;
 }

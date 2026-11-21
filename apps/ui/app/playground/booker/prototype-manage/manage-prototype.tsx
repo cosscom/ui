@@ -9,17 +9,24 @@ import {
   bookings,
   formatDate,
   type ScenarioKey,
+  type Stage,
   scenarios,
+  startOfMonth,
+  toDate,
   type VariantKey,
   variants,
 } from "./fixtures";
-import type { Flow, Scope, Stage, VariantProps } from "./parts";
-import { VariantA, VariantB, VariantC } from "./variants";
+import type { Flow, Scope, VariantProps } from "./parts";
+import { VariantA, VariantB } from "./variants";
 
 const variantComponents: Record<
   VariantKey,
   (props: VariantProps) => React.ReactElement
-> = { A: VariantA, B: VariantB, C: VariantC };
+> = { A: VariantA, B: VariantB };
+
+// A day and a time with availability, for links that open after a pick.
+const pickedDate = new Date(2026, 10, 25);
+const pickedTime = "14:00";
 
 export function ManagePrototype({
   variant,
@@ -32,15 +39,25 @@ export function ManagePrototype({
   initialStage: Stage;
 }) {
   const booking = bookings[scenario];
-  const startsWithNewTime =
-    initialStage === "rescheduling" || initialStage === "rescheduled";
+  const original = toDate(booking.date);
+  const hasPicked =
+    initialStage === "confirmingReschedule" || initialStage === "rescheduled";
+
   const [stage, setStage] = useState<Stage>(initialStage);
+  const [month, setMonth] = useState(
+    startOfMonth(hasPicked ? pickedDate : original),
+  );
   const [date, setDate] = useState<Date | undefined>(
-    startsWithNewTime ? new Date(2026, 10, 25) : undefined,
+    hasPicked
+      ? pickedDate
+      : initialStage === "rescheduling"
+        ? original
+        : undefined,
   );
   const [time, setTime] = useState<string | undefined>(
-    initialStage === "rescheduled" ? "2:00pm" : undefined,
+    hasPicked ? pickedTime : undefined,
   );
+  const [is24Hour, setIs24Hour] = useState(false);
   const [reason, setReason] = useState("");
   const [scope, setScope] = useState<Scope>("this");
   const [rescheduleError, setRescheduleError] = useState<string>();
@@ -48,6 +65,7 @@ export function ManagePrototype({
 
   const startOver = () => {
     setStage("summary");
+    setMonth(startOfMonth(original));
     setDate(undefined);
     setTime(undefined);
     setReason("");
@@ -70,16 +88,20 @@ export function ManagePrototype({
   const flow: Flow = {
     cancelError,
     date,
+    is24Hour,
+    month,
     reason,
     rescheduleError,
     scope,
     setDate,
+    setIs24Hour,
+    setMonth,
     setReason,
     setScope,
     setStage: (next) => {
       setRescheduleError(undefined);
       setCancelError(undefined);
-      if (next === "summary" && stage === "rescheduling") {
+      if (next === "summary") {
         setDate(undefined);
         setTime(undefined);
       }
@@ -88,6 +110,14 @@ export function ManagePrototype({
     setTime,
     stage,
     startOver,
+    // Opens the select step on the booking's own day, as Cal does.
+    startReschedule: () => {
+      setMonth(startOfMonth(original));
+      setDate(original);
+      setTime(undefined);
+      setRescheduleError(undefined);
+      setStage("rescheduling");
+    },
     submitCancel: () => {
       // The API can demand a reason; that is only known when it refuses.
       if (scenario === "refusals" && reason.trim() === "") {

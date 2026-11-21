@@ -1,8 +1,7 @@
 "use client";
 
-// PROTOTYPE ONLY. Building blocks shared by the manage-booking variants: the
-// event pane, the pickers and the reason field. The variants decide where
-// these go.
+// PROTOTYPE ONLY. Building blocks shared by the manage-booking variants. The
+// reschedule path uses the Booker's own calendar and time list, unchanged.
 
 import {
   CalendarIcon,
@@ -13,23 +12,26 @@ import {
   HourglassIcon,
   VideoIcon,
 } from "lucide-react";
+import { BookerCalendar } from "@/registry/default/atoms/booker/booker-calendar";
+import { getBookerLabels } from "@/registry/default/atoms/booker/booker-labels";
+import { TimePicker } from "@/registry/default/atoms/booker/time-picker";
 import { Button } from "@/registry/default/ui/button";
-import { Calendar } from "@/registry/default/ui/calendar";
 import { Field, FieldError, FieldLabel } from "@/registry/default/ui/field";
 import { Label } from "@/registry/default/ui/label";
 import { Radio, RadioGroup } from "@/registry/default/ui/radio-group";
 import { Textarea } from "@/registry/default/ui/textarea";
 import {
   formatDate,
-  formatShortDate,
-  getUpcomingDays,
-  isSameDay,
+  getDaySlots,
+  getNextAvailableDate,
+  hasSlots,
   type ManageBooking,
   type Stage,
-  slots,
+  startOfMonth,
   toDate,
   today,
 } from "./fixtures";
+import { displayTimeLabel } from "@/lib/booker/utils";
 
 export type { Stage };
 
@@ -38,10 +40,14 @@ export type Scope = "this" | "following";
 export type Flow = {
   stage: Stage;
   setStage: (stage: Stage) => void;
+  month: Date;
+  setMonth: (month: Date) => void;
   date: Date | undefined;
   setDate: (date: Date | undefined) => void;
   time: string | undefined;
   setTime: (time: string | undefined) => void;
+  is24Hour: boolean;
+  setIs24Hour: (value: boolean) => void;
   reason: string;
   setReason: (reason: string) => void;
   scope: Scope;
@@ -49,6 +55,7 @@ export type Flow = {
   // What the API said when it refused, if it did.
   rescheduleError: string | undefined;
   cancelError: string | undefined;
+  startReschedule: () => void;
   submitReschedule: () => void;
   submitCancel: () => void;
   startOver: () => void;
@@ -56,13 +63,16 @@ export type Flow = {
 
 export type VariantProps = { booking: ManageBooking; flow: Flow };
 
+// The same classes the Booker uses for its card and panes.
 export const cardClassName =
   "@max-3xl:w-full @3xl:flex-row @5xl:[--booker-side:--spacing(70)] [--booker-side:--spacing(56)]";
-export const sideClassName =
+const sideClassName =
   "@3xl:w-(--booker-side) @3xl:shrink-0 @3xl:border-e border-b @3xl:border-b-0";
 export const mainClassName =
   "@3xl:w-[min(28.75rem,100cqw-2*var(--booker-side))] w-full @3xl:shrink-0 @5xl:p-6 p-4";
 const metaIconClassName = "h-lh w-4.5 shrink-0 opacity-80 sm:w-4";
+
+const labels = getBookerLabels();
 
 export function canManage(booking: ManageBooking) {
   return booking.status !== "ended";
@@ -72,17 +82,27 @@ export function getNoun(booking: ManageBooking) {
   return booking.kind === "seat" ? "seat" : "booking";
 }
 
+function timeLabel(time: string, is24Hour: boolean) {
+  return displayTimeLabel(time, !is24Hour);
+}
+
 /**
- * The event information, unchanged from booking. While a new time is being
- * picked, and after, the former time is struck through above the new one.
+ * The event information, as during booking. From the moment rescheduling
+ * starts, the former time is struck through; the new one appears below it
+ * once picked.
  */
 export function EventPane({ booking, flow }: VariantProps) {
   const original = toDate(booking.date);
+  const isRescheduling =
+    flow.stage === "rescheduling" ||
+    flow.stage === "confirmingReschedule" ||
+    flow.stage === "rescheduled";
   const hasNewTime =
+    isRescheduling &&
+    flow.stage !== "rescheduling" &&
     flow.date !== undefined &&
-    flow.time !== undefined &&
-    (flow.stage === "rescheduling" || flow.stage === "rescheduled");
-  const isCancelled = flow.stage === "cancelled";
+    flow.time !== undefined;
+  const isStruck = isRescheduling || flow.stage === "cancelled";
 
   return (
     <div className={sideClassName}>
@@ -111,16 +131,14 @@ export function EventPane({ booking, flow }: VariantProps) {
             <span className="flex flex-col gap-1">
               <span
                 className={
-                  hasNewTime || isCancelled
-                    ? "text-muted-foreground line-through"
-                    : undefined
+                  isStruck ? "text-muted-foreground line-through" : undefined
                 }
               >
-                {formatDate(original)} {booking.time}
+                {formatDate(original)} {timeLabel(booking.time, flow.is24Hour)}
               </span>
-              {hasNewTime && flow.date ? (
+              {hasNewTime && flow.date && flow.time ? (
                 <span>
-                  {formatDate(flow.date)} {flow.time}
+                  {formatDate(flow.date)} {timeLabel(flow.time, flow.is24Hour)}
                 </span>
               ) : null}
               {booking.seriesNote ? (
@@ -143,6 +161,93 @@ export function EventPane({ booking, flow }: VariantProps) {
             <span>{booking.timeZone}</span>
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * The Booker's select step, unchanged: its own calendar and time list, in
+ * the same layout. Picking a time moves on, as it does when booking.
+ */
+export function RescheduleSelect({ flow }: VariantProps) {
+  const daySlots = getDaySlots(flow.date);
+  const monthStart = startOfMonth(flow.month);
+  const nextMonth = new Date(
+    monthStart.getFullYear(),
+    monthStart.getMonth() + 1,
+    1,
+  );
+  const nextAvailableDate = getNextAvailableDate(
+    flow.date && flow.date > today ? flow.date : today,
+  );
+  const hasAvailabilityInView = Boolean(
+    nextAvailableDate && nextAvailableDate < nextMonth,
+  );
+  const goToDate = (date: Date) => {
+    flow.setMonth(startOfMonth(date));
+    flow.setDate(date);
+  };
+
+  return (
+    <div className="flex w-full @3xl:flex-row flex-col">
+      <div className="flex @3xl:w-[min(28.75rem,100cqw-2*var(--booker-side))] w-full @3xl:shrink-0 flex-col items-center @3xl:@max-5xl:px-2 px-4 @3xl:@max-5xl:py-2 pt-3 pb-4">
+        <BookerCalendar
+          disabled={(date) => !hasSlots(date)}
+          locale="en-US"
+          month={flow.month}
+          onMonthChange={flow.setMonth}
+          onSelect={(date) => flow.setDate(date)}
+          selected={flow.date}
+          startMonth={startOfMonth(today)}
+          today={today}
+        />
+      </div>
+      <TimePicker
+        availabilityLoading={false}
+        currentMonth={flow.month}
+        daySlots={daySlots}
+        goToDate={goToDate}
+        hasAvailabilityInView={hasAvailabilityInView}
+        initialLoading={false}
+        is24Hour={flow.is24Hour}
+        labels={{
+          hour12Short: labels.hour12Short,
+          hour24Short: labels.hour24Short,
+          noAvailableTimes: labels.noAvailableTimes,
+          noSlotsAvailable: labels.noSlotsAvailable,
+          noSlotsThisDay: labels.noSlotsThisDay,
+          noSlotsThisMonth: labels.noSlotsThisMonth,
+          use24Hour: labels.use24Hour,
+          viewFirstAvailability: labels.viewFirstAvailability,
+        }}
+        locale="en-US"
+        nextAvailableDate={nextAvailableDate}
+        onIs24HourChange={flow.setIs24Hour}
+        onSelectTime={(time) => {
+          flow.setTime(time);
+          flow.setStage("confirmingReschedule");
+        }}
+        selectedDate={flow.date}
+      />
+    </div>
+  );
+}
+
+/**
+ * The reschedule step's short confirm: no booking form, since the API reuses
+ * the attendee's answers. The same pinned bar as the booking form.
+ */
+export function RescheduleConfirm({ flow }: VariantProps) {
+  return (
+    <div className={`${mainClassName} flex flex-col gap-4`}>
+      <ReasonField flow={flow} label="Reason for rescheduling" />
+      <ApiRefusal message={flow.rescheduleError} />
+      <div className="sticky bottom-0 -mx-4 @5xl:-mx-6 mt-auto -mb-4 @5xl:-mb-6 flex items-center justify-end gap-2 rounded-b-[calc(var(--radius-2xl)-1px)] @3xl:rounded-es-none border-t bg-card @5xl:px-6 px-4 py-3">
+        <Button onClick={() => flow.setStage("rescheduling")} variant="ghost">
+          Back
+        </Button>
+        <Button onClick={flow.submitReschedule}>Reschedule</Button>
       </div>
     </div>
   );
@@ -211,93 +316,6 @@ export function StatusHeadline({ booking, flow }: VariantProps) {
           ? ` You can reschedule or cancel this ${noun} below.`
           : null}
       </p>
-    </div>
-  );
-}
-
-/** A month grid and the times for the chosen day, as in the booking flow. */
-export function FullPicker({ booking, flow }: VariantProps) {
-  const original = toDate(booking.date);
-
-  return (
-    <div className="flex @md:flex-row flex-col gap-4">
-      <Calendar
-        className="shrink-0"
-        defaultMonth={original}
-        disabled={[{ dayOfWeek: [0, 6] }, { before: today }]}
-        mode="single"
-        onSelect={(next) => {
-          flow.setDate(next);
-          flow.setTime(undefined);
-        }}
-        selected={flow.date}
-      />
-      <div className="flex min-w-36 flex-1 flex-col gap-2">
-        <p className="font-medium sm:text-sm">
-          {flow.date ? formatShortDate(flow.date) : "Pick a day"}
-        </p>
-        {flow.date ? (
-          <SlotButtons booking={booking} className="flex-col" flow={flow} />
-        ) : null}
-      </div>
-    </div>
-  );
-}
-
-/** A strip of upcoming days and a wrap of times. No month grid. */
-export function CompactPicker({ booking, flow }: VariantProps) {
-  return (
-    <div className="flex flex-col gap-3">
-      <div className="flex gap-1.5 overflow-x-auto pb-1">
-        {getUpcomingDays(8).map((day) => (
-          <Button
-            className="shrink-0"
-            key={day.toDateString()}
-            onClick={() => {
-              flow.setDate(day);
-              flow.setTime(undefined);
-            }}
-            size="sm"
-            type="button"
-            variant={isSameDay(day, flow.date) ? "default" : "outline"}
-          >
-            {formatShortDate(day)}
-          </Button>
-        ))}
-      </div>
-      {flow.date ? (
-        <SlotButtons booking={booking} className="flex-wrap" flow={flow} />
-      ) : null}
-    </div>
-  );
-}
-
-function SlotButtons({
-  booking,
-  flow,
-  className,
-}: VariantProps & { className: string }) {
-  const original = toDate(booking.date);
-
-  return (
-    <div className={`flex gap-1.5 ${className}`}>
-      {slots.map((slot) => {
-        const isCurrent =
-          isSameDay(flow.date, original) && slot === booking.time;
-        return (
-          <Button
-            disabled={isCurrent}
-            key={slot}
-            onClick={() => flow.setTime(slot)}
-            size="sm"
-            type="button"
-            variant={flow.time === slot ? "default" : "outline"}
-          >
-            {slot}
-            {isCurrent ? " (current)" : null}
-          </Button>
-        );
-      })}
     </div>
   );
 }
