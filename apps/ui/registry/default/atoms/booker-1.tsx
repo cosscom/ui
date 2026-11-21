@@ -186,7 +186,7 @@ export function Booker({
         </div>
         <BookerSteps step={booker.step}>
           {booker.step === "select" ? (
-            <div key="select" className="flex w-full @3xl:flex-row flex-col">
+            <div className="flex w-full @3xl:flex-row flex-col">
               <div className="flex @3xl:w-[min(28.75rem,100cqw-2*var(--booker-side))] w-full @3xl:shrink-0 flex-col items-center @3xl:@max-5xl:px-2 px-4 @3xl:@max-5xl:py-2 pt-3 pb-4">
                 <BookerCalendar {...booker.calendarProps} />
               </div>
@@ -205,10 +205,7 @@ export function Booker({
               />
             </div>
           ) : (
-            <div
-              key="confirm"
-              className="@3xl:w-[min(28.75rem,100cqw-2*var(--booker-side))] w-full @3xl:shrink-0 @5xl:p-6 p-4"
-            >
+            <div className="@3xl:w-[min(28.75rem,100cqw-2*var(--booker-side))] w-full @3xl:shrink-0 @5xl:p-6 p-4">
               <BookerConfirmForm
                 {...booker.confirmFormProps}
                 defaultEmail={

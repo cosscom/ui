@@ -8,7 +8,6 @@ import {
   useReducedMotion,
 } from "motion/react";
 import { type ReactNode, useEffect, useLayoutEffect, useRef } from "react";
-import type { BookerStep } from "@/lib/booker/use-booker";
 
 const EASE = [0.32, 0.72, 0, 1] as const;
 const SIZE_TRANSITION = { duration: 0.3, ease: EASE } as const;
@@ -24,7 +23,7 @@ const measure = (element: HTMLElement): Size => ({
   height: element.offsetHeight,
 });
 
-function useStepTransition(step: BookerStep) {
+function useStepTransition(step: string) {
   const containerRef = useRef<HTMLDivElement>(null);
   const previousStepRef = useRef(step);
   const restingSizeRef = useRef<Size | null>(null);
@@ -98,11 +97,17 @@ function useStepTransition(step: BookerStep) {
   return containerRef;
 }
 
+/**
+ * Animates the Booker's right-hand side between steps: the card resizes to
+ * the new step and the new step fades in. `step` is any key that names what
+ * is shown; a change of key is a change of step. The children are the
+ * current step's content; BookerSteps keys them by `step` itself.
+ */
 export function BookerSteps({
   step,
   children,
 }: {
-  step: BookerStep;
+  step: string;
   children: ReactNode;
 }) {
   const containerRef = useStepTransition(step);
@@ -114,7 +119,7 @@ export function BookerSteps({
           ref={containerRef}
           className="relative w-full @3xl:flex-1 overflow-clip"
         >
-          {children}
+          <div key={step}>{children}</div>
         </div>
       </MotionConfig>
     </LazyMotion>
