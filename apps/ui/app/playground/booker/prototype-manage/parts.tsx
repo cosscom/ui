@@ -1,21 +1,31 @@
 "use client";
 
-// PROTOTYPE ONLY. Building blocks shared by the manage-booking variants. The
-// reschedule path uses the Booker's own calendar and time list, unchanged.
+// PROTOTYPE ONLY. Rescheduling and cancelling as steps of the booking flow.
+// The left pane is the Booker's event information; the right-hand side is one
+// step at a time inside the Booker's own BookerSteps transition. The select
+// step uses the Booker's real calendar and time list, unchanged.
 
 import {
   CalendarIcon,
+  CalendarPlusIcon,
   CircleCheckIcon,
   CircleXIcon,
   Clock3Icon,
-  GlobeIcon,
   HourglassIcon,
   VideoIcon,
 } from "lucide-react";
+import type { ReactNode } from "react";
 import { BookerCalendar } from "@/registry/default/atoms/booker/booker-calendar";
 import { getBookerLabels } from "@/registry/default/atoms/booker/booker-labels";
+import { BookerSteps } from "@/registry/default/atoms/booker/booker-steps";
+import { DurationPicker } from "@/registry/default/atoms/booker/duration-picker";
 import { TimePicker } from "@/registry/default/atoms/booker/time-picker";
+import {
+  TimezoneDisplay,
+  TimezonePicker,
+} from "@/registry/default/atoms/booker/timezone-picker";
 import { Button } from "@/registry/default/ui/button";
+import { Card } from "@/registry/default/ui/card";
 import { Field, FieldError, FieldLabel } from "@/registry/default/ui/field";
 import { Label } from "@/registry/default/ui/label";
 import { Radio, RadioGroup } from "@/registry/default/ui/radio-group";
@@ -24,85 +34,140 @@ import {
   formatDate,
   getDaySlots,
   getNextAvailableDate,
+  getStepKey,
   hasSlots,
   type ManageBooking,
   type Stage,
   startOfMonth,
-  toDate,
   today,
 } from "./fixtures";
 import { displayTimeLabel } from "@/lib/booker/utils";
 
-export type { Stage };
+export type Slot = { date: Date; time: string; durationMinutes: number };
 
 export type Scope = "this" | "following";
 
 export type Flow = {
   stage: Stage;
-  setStage: (stage: Stage) => void;
+  // The booking as it stands, and the time it had before a reschedule.
+  current: Slot;
+  former: Slot | undefined;
+  // What is being picked during a reschedule.
   month: Date;
   setMonth: (month: Date) => void;
   date: Date | undefined;
   setDate: (date: Date | undefined) => void;
   time: string | undefined;
-  setTime: (time: string | undefined) => void;
+  durationMinutes: number;
+  setDurationMinutes: (minutes: number) => void;
+  timeZone: string;
+  setTimeZone: (timeZone: string) => void;
   is24Hour: boolean;
   setIs24Hour: (value: boolean) => void;
   reason: string;
   setReason: (reason: string) => void;
+  reasonError: string | undefined;
   scope: Scope;
   setScope: (scope: Scope) => void;
   // What the API said when it refused, if it did.
   rescheduleError: string | undefined;
   cancelError: string | undefined;
   startReschedule: () => void;
+  pickTime: (time: string) => void;
+  backToSelect: () => void;
   submitReschedule: () => void;
+  startCancel: () => void;
   submitCancel: () => void;
-  startOver: () => void;
+  backToSummary: () => void;
+  bookAgain: () => void;
 };
 
-export type VariantProps = { booking: ManageBooking; flow: Flow };
+export type StepProps = { booking: ManageBooking; flow: Flow };
 
 // The same classes the Booker uses for its card and panes.
-export const cardClassName =
+const cardClassName =
   "@max-3xl:w-full @3xl:flex-row @5xl:[--booker-side:--spacing(70)] [--booker-side:--spacing(56)]";
 const sideClassName =
   "@3xl:w-(--booker-side) @3xl:shrink-0 @3xl:border-e border-b @3xl:border-b-0";
-export const mainClassName =
+const narrowStepClassName =
   "@3xl:w-[min(28.75rem,100cqw-2*var(--booker-side))] w-full @3xl:shrink-0 @5xl:p-6 p-4";
 const metaIconClassName = "h-lh w-4.5 shrink-0 opacity-80 sm:w-4";
+const barClassName =
+  "sticky bottom-0 -mx-4 @5xl:-mx-6 -mb-4 @5xl:-mb-6 mt-auto flex items-center justify-between gap-2 rounded-b-[calc(var(--radius-2xl)-1px)] @3xl:rounded-es-none border-t bg-card @5xl:px-6 px-4 py-3";
 
 const labels = getBookerLabels();
 
-export function canManage(booking: ManageBooking) {
-  return booking.status !== "ended";
+function isReschedulingStage(stage: Stage) {
+  return stage === "rescheduling" || stage === "confirmingReschedule";
 }
 
 export function getNoun(booking: ManageBooking) {
   return booking.kind === "seat" ? "seat" : "booking";
 }
 
-function timeLabel(time: string, is24Hour: boolean) {
-  return displayTimeLabel(time, !is24Hour);
+function SlotLine({
+  slot,
+  is24Hour,
+  struck,
+}: {
+  slot: Slot;
+  is24Hour: boolean;
+  struck?: boolean;
+}) {
+  return (
+    <span className={struck ? "text-muted-foreground line-through" : undefined}>
+      {formatDate(slot.date)} {displayTimeLabel(slot.time, !is24Hour)}
+    </span>
+  );
 }
 
 /**
- * The event information, as during booking. From the moment rescheduling
- * starts, the former time is struck through; the new one appears below it
- * once picked.
+ * The event information, as during booking. While rescheduling, the current
+ * time is struck through and the duration and timezone pickers work, as they
+ * do when booking. After a reschedule, the former time stays struck through
+ * above the new one.
  */
-export function EventPane({ booking, flow }: VariantProps) {
-  const original = toDate(booking.date);
-  const isRescheduling =
-    flow.stage === "rescheduling" ||
-    flow.stage === "confirmingReschedule" ||
-    flow.stage === "rescheduled";
-  const hasNewTime =
-    isRescheduling &&
-    flow.stage !== "rescheduling" &&
-    flow.date !== undefined &&
-    flow.time !== undefined;
-  const isStruck = isRescheduling || flow.stage === "cancelled";
+function EventPane({ booking, flow }: StepProps) {
+  const rescheduling = isReschedulingStage(flow.stage);
+  const picked =
+    flow.date && flow.time
+      ? {
+          date: flow.date,
+          durationMinutes: flow.durationMinutes,
+          time: flow.time,
+        }
+      : undefined;
+
+  let timeLines: ReactNode;
+  if (rescheduling) {
+    timeLines = (
+      <>
+        <SlotLine is24Hour={flow.is24Hour} slot={flow.current} struck />
+        {flow.stage === "confirmingReschedule" && picked ? (
+          <SlotLine is24Hour={flow.is24Hour} slot={picked} />
+        ) : null}
+      </>
+    );
+  } else if (flow.former) {
+    timeLines = (
+      <>
+        <SlotLine is24Hour={flow.is24Hour} slot={flow.former} struck />
+        <SlotLine
+          is24Hour={flow.is24Hour}
+          slot={flow.current}
+          struck={flow.stage === "cancelled"}
+        />
+      </>
+    );
+  } else {
+    timeLines = (
+      <SlotLine
+        is24Hour={flow.is24Hour}
+        slot={flow.current}
+        struck={flow.stage === "cancelled"}
+      />
+    );
+  }
 
   return (
     <div className={sideClassName}>
@@ -129,18 +194,7 @@ export function EventPane({ booking, flow }: VariantProps) {
           <div className="flex gap-2">
             <CalendarIcon aria-hidden="true" className={metaIconClassName} />
             <span className="flex flex-col gap-1">
-              <span
-                className={
-                  isStruck ? "text-muted-foreground line-through" : undefined
-                }
-              >
-                {formatDate(original)} {timeLabel(booking.time, flow.is24Hour)}
-              </span>
-              {hasNewTime && flow.date && flow.time ? (
-                <span>
-                  {formatDate(flow.date)} {timeLabel(flow.time, flow.is24Hour)}
-                </span>
-              ) : null}
+              {timeLines}
               {booking.seriesNote ? (
                 <span className="text-muted-foreground">
                   {booking.seriesNote}
@@ -148,30 +202,41 @@ export function EventPane({ booking, flow }: VariantProps) {
               ) : null}
             </span>
           </div>
-          <div className="flex items-center gap-2">
-            <Clock3Icon aria-hidden="true" className={metaIconClassName} />
-            <span>{booking.duration}</span>
-          </div>
+          {rescheduling && booking.durationOptions.length > 1 ? (
+            <DurationPicker
+              formatLabel={labels.durationMinutes}
+              onValueChange={flow.setDurationMinutes}
+              options={booking.durationOptions}
+              value={flow.durationMinutes}
+            />
+          ) : (
+            <div className="flex items-center gap-2">
+              <Clock3Icon aria-hidden="true" className={metaIconClassName} />
+              <span>
+                {labels.durationMinutes(flow.current.durationMinutes)}
+              </span>
+            </div>
+          )}
           <div className="flex items-center gap-2">
             <VideoIcon aria-hidden="true" className={metaIconClassName} />
             <span>{booking.location}</span>
           </div>
-          <div className="flex items-center gap-2">
-            <GlobeIcon aria-hidden="true" className={metaIconClassName} />
-            <span>{booking.timeZone}</span>
-          </div>
+          {flow.stage === "rescheduling" ? (
+            <TimezonePicker
+              onValueChange={flow.setTimeZone}
+              value={flow.timeZone}
+            />
+          ) : (
+            <TimezoneDisplay value={flow.timeZone} />
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-/**
- * The Booker's select step, unchanged: its own calendar and time list, in
- * the same layout. Picking a time moves on, as it does when booking.
- */
-export function RescheduleSelect({ flow }: VariantProps) {
-  const daySlots = getDaySlots(flow.date);
+/** Step 1 of a reschedule: the Booker's select step, unchanged. */
+function SelectStep({ flow }: StepProps) {
   const monthStart = startOfMonth(flow.month);
   const nextMonth = new Date(
     monthStart.getFullYear(),
@@ -181,13 +246,6 @@ export function RescheduleSelect({ flow }: VariantProps) {
   const nextAvailableDate = getNextAvailableDate(
     flow.date && flow.date > today ? flow.date : today,
   );
-  const hasAvailabilityInView = Boolean(
-    nextAvailableDate && nextAvailableDate < nextMonth,
-  );
-  const goToDate = (date: Date) => {
-    flow.setMonth(startOfMonth(date));
-    flow.setDate(date);
-  };
 
   return (
     <div className="flex w-full @3xl:flex-row flex-col">
@@ -206,9 +264,14 @@ export function RescheduleSelect({ flow }: VariantProps) {
       <TimePicker
         availabilityLoading={false}
         currentMonth={flow.month}
-        daySlots={daySlots}
-        goToDate={goToDate}
-        hasAvailabilityInView={hasAvailabilityInView}
+        daySlots={getDaySlots(flow.date)}
+        goToDate={(date) => {
+          flow.setMonth(startOfMonth(date));
+          flow.setDate(date);
+        }}
+        hasAvailabilityInView={Boolean(
+          nextAvailableDate && nextAvailableDate < nextMonth,
+        )}
         initialLoading={false}
         is24Hour={flow.is24Hour}
         labels={{
@@ -224,10 +287,7 @@ export function RescheduleSelect({ flow }: VariantProps) {
         locale="en-US"
         nextAvailableDate={nextAvailableDate}
         onIs24HourChange={flow.setIs24Hour}
-        onSelectTime={(time) => {
-          flow.setTime(time);
-          flow.setStage("confirmingReschedule");
-        }}
+        onSelectTime={flow.pickTime}
         selectedDate={flow.date}
       />
     </div>
@@ -235,27 +295,134 @@ export function RescheduleSelect({ flow }: VariantProps) {
 }
 
 /**
- * The reschedule step's short confirm: no booking form, since the API reuses
- * the attendee's answers. The same pinned bar as the booking form.
+ * Step 2 of a reschedule: where the booking form would be, the host's
+ * `rescheduleReason` field as they set it (label, required, hidden), and the
+ * form's pinned bar.
  */
-export function RescheduleConfirm({ flow }: VariantProps) {
+function ReasonStep({ booking, flow }: StepProps) {
+  const field = booking.rescheduleReason;
+  const left =
+    !field.hidden && field.required && flow.reason.trim() === "" ? 1 : 0;
+
   return (
-    <div className={`${mainClassName} flex flex-col gap-4`}>
-      <ReasonField flow={flow} label="Reason for rescheduling" />
+    <form
+      className={`${narrowStepClassName} flex min-h-64 flex-col gap-4`}
+      onSubmit={(event) => {
+        event.preventDefault();
+        flow.submitReschedule();
+      }}
+    >
+      {field.hidden ? null : (
+        <Field
+          className="w-full"
+          invalid={Boolean(flow.reasonError)}
+          name="rescheduleReason"
+        >
+          <FieldLabel>
+            {field.label}
+            {field.required ? (
+              <span aria-hidden="true" className="text-destructive-foreground">
+                *
+              </span>
+            ) : null}
+          </FieldLabel>
+          <Textarea
+            onChange={(event) => flow.setReason(event.target.value)}
+            rows={3}
+            value={flow.reason}
+          />
+          {flow.reasonError ? (
+            <FieldError match>{flow.reasonError}</FieldError>
+          ) : null}
+        </Field>
+      )}
       <ApiRefusal message={flow.rescheduleError} />
-      <div className="sticky bottom-0 -mx-4 @5xl:-mx-6 mt-auto -mb-4 @5xl:-mb-6 flex items-center justify-end gap-2 rounded-b-[calc(var(--radius-2xl)-1px)] @3xl:rounded-es-none border-t bg-card @5xl:px-6 px-4 py-3">
-        <Button onClick={() => flow.setStage("rescheduling")} variant="ghost">
-          Back
+      <div className={barClassName}>
+        <span aria-live="polite" className="text-muted-foreground text-xs">
+          {left === 0 ? "Ready to confirm" : "1 required field left"}
+        </span>
+        <div className="flex gap-2">
+          <Button onClick={flow.backToSelect} type="button" variant="ghost">
+            Back
+          </Button>
+          <Button type="submit">Reschedule</Button>
+        </div>
+      </div>
+    </form>
+  );
+}
+
+/** The cancel step: what is cancelled, an optional reason, and the bar. */
+function CancelStep({ booking, flow }: StepProps) {
+  const noun = getNoun(booking);
+
+  return (
+    <div className={`${narrowStepClassName} flex min-h-64 flex-col gap-5`}>
+      <div className="flex flex-col gap-2">
+        <h2 className="font-heading text-xl">Cancel this {noun}?</h2>
+        <p className="text-muted-foreground sm:text-sm">
+          {booking.host} will be told.
+        </p>
+      </div>
+      {booking.kind === "occurrence" ? (
+        <RadioGroup
+          aria-label="What to cancel"
+          onValueChange={(next) =>
+            flow.setScope(next === "following" ? "following" : "this")
+          }
+          value={flow.scope}
+        >
+          <Label className="font-normal">
+            <Radio value="this" /> This meeting only
+          </Label>
+          <Label className="font-normal">
+            <Radio value="following" /> This and all following meetings
+          </Label>
+        </RadioGroup>
+      ) : null}
+      <Field
+        className="w-full"
+        invalid={Boolean(flow.cancelError)}
+        name="cancellationReason"
+      >
+        <FieldLabel>
+          Reason for cancelling
+          {flow.cancelError ? (
+            <span aria-hidden="true" className="text-destructive-foreground">
+              *
+            </span>
+          ) : (
+            <span className="font-normal text-muted-foreground">Optional</span>
+          )}
+        </FieldLabel>
+        <Textarea
+          onChange={(event) => flow.setReason(event.target.value)}
+          rows={3}
+          value={flow.reason}
+        />
+        {flow.cancelError ? (
+          <FieldError match>{flow.cancelError}</FieldError>
+        ) : null}
+      </Field>
+      <div className={`${barClassName} justify-end!`}>
+        <Button onClick={flow.backToSummary} variant="ghost">
+          Keep {noun}
         </Button>
-        <Button onClick={flow.submitReschedule}>Reschedule</Button>
+        <Button onClick={flow.submitCancel} variant="destructive">
+          Cancel {noun}
+        </Button>
       </div>
     </div>
   );
 }
 
-/** Icon, headline and one sentence for where the booking stands now. */
-export function StatusHeadline({ booking, flow }: VariantProps) {
+/** The confirmation screen: where the booking stands, and what can be done. */
+function SummaryStep({ booking, flow }: StepProps) {
   const noun = getNoun(booking);
+  const ended = booking.status === "ended";
+  const cancelled = flow.stage === "cancelled";
+  const pending = booking.status === "pending";
+
   let icon = (
     <CircleCheckIcon
       aria-hidden="true"
@@ -265,7 +432,7 @@ export function StatusHeadline({ booking, flow }: VariantProps) {
   let title = booking.kind === "seat" ? "Your seat is booked" : "You’re booked";
   let text = `A calendar invitation was sent to ${booking.attendeeEmail}.`;
 
-  if (flow.stage === "cancelled") {
+  if (cancelled) {
     icon = (
       <CircleXIcon
         aria-hidden="true"
@@ -277,10 +444,16 @@ export function StatusHeadline({ booking, flow }: VariantProps) {
       flow.scope === "following" && booking.kind === "occurrence"
         ? `This meeting and all following ones are cancelled. ${booking.host} has been told.`
         : `${booking.host} has been told.`;
-  } else if (
-    booking.status === "pending" &&
-    (flow.stage === "rescheduled" || flow.stage === "summary")
-  ) {
+  } else if (ended) {
+    icon = (
+      <CircleCheckIcon
+        aria-hidden="true"
+        className="size-6 text-muted-foreground"
+      />
+    );
+    title = "This meeting has ended";
+    text = "It can no longer be changed.";
+  } else if (pending) {
     icon = (
       <HourglassIcon
         aria-hidden="true"
@@ -295,86 +468,53 @@ export function StatusHeadline({ booking, flow }: VariantProps) {
   } else if (flow.stage === "rescheduled") {
     title = "Rescheduled";
     text = `An updated invitation is on its way to ${booking.attendeeEmail}.`;
-  } else if (booking.status === "ended") {
-    icon = (
-      <CircleCheckIcon
-        aria-hidden="true"
-        className="size-6 text-muted-foreground"
-      />
-    );
-    title = "This meeting has ended";
-    text = `It can no longer be changed. You can book a new time with ${booking.host}.`;
   }
 
   return (
-    <div className="flex flex-col gap-2">
-      {icon}
-      <h2 className="font-heading text-xl">{title}</h2>
-      <p className="text-muted-foreground sm:text-sm">
-        {text}
-        {flow.stage === "summary" && canManage(booking)
-          ? ` You can reschedule or cancel this ${noun} below.`
-          : null}
-      </p>
+    <div className={`${narrowStepClassName} flex min-h-64 flex-col gap-6`}>
+      <div className="flex flex-col gap-2">
+        {icon}
+        <h2 className="font-heading text-xl">{title}</h2>
+        <p className="text-muted-foreground sm:text-sm">{text}</p>
+      </div>
+
+      {cancelled || ended ? null : (
+        <div className="flex flex-col gap-2">
+          <p className="font-medium sm:text-sm">Add to calendar</p>
+          <div className="flex flex-wrap gap-2">
+            {["Google", "Outlook", "Apple or other (.ics)"].map((calendar) => (
+              <Button key={calendar} size="sm" variant="outline">
+                <CalendarPlusIcon aria-hidden="true" />
+                {calendar}
+              </Button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {ended ? null : (
+        <div className="mt-auto flex justify-end gap-2 border-t pt-4">
+          {cancelled ? (
+            <Button onClick={flow.bookAgain} variant="outline">
+              Book again
+            </Button>
+          ) : (
+            <>
+              <Button onClick={flow.startCancel} variant="ghost">
+                Cancel {noun}
+              </Button>
+              <Button onClick={flow.startReschedule} variant="outline">
+                Reschedule
+              </Button>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 }
 
-export function ReasonField({
-  label,
-  flow,
-  error,
-}: {
-  label: string;
-  flow: Flow;
-  error?: string;
-}) {
-  return (
-    <Field className="w-full" invalid={Boolean(error)} name="reason">
-      <FieldLabel>
-        {label}
-        {error ? (
-          <span aria-hidden="true" className="text-destructive-foreground">
-            *
-          </span>
-        ) : (
-          <span className="font-normal text-muted-foreground">Optional</span>
-        )}
-      </FieldLabel>
-      <Textarea
-        onChange={(event) => flow.setReason(event.target.value)}
-        rows={2}
-        value={flow.reason}
-      />
-      {error ? <FieldError match>{error}</FieldError> : null}
-    </Field>
-  );
-}
-
-/** For one meeting of a series: just this one, or this and the rest. */
-export function ScopeChoice({ booking, flow }: VariantProps) {
-  if (booking.kind !== "occurrence") {
-    return null;
-  }
-  return (
-    <RadioGroup
-      aria-label="What to cancel"
-      onValueChange={(next) =>
-        flow.setScope(next === "following" ? "following" : "this")
-      }
-      value={flow.scope}
-    >
-      <Label className="font-normal">
-        <Radio value="this" /> This meeting only
-      </Label>
-      <Label className="font-normal">
-        <Radio value="following" /> This and all following meetings
-      </Label>
-    </RadioGroup>
-  );
-}
-
-export function ApiRefusal({ message }: { message: string | undefined }) {
+function ApiRefusal({ message }: { message: string | undefined }) {
   if (!message) {
     return null;
   }
@@ -382,5 +522,22 @@ export function ApiRefusal({ message }: { message: string | undefined }) {
     <p className="text-destructive-foreground text-sm" role="alert">
       {message}
     </p>
+  );
+}
+
+/** The whole Booker card: event pane, then one step through BookerSteps. */
+export function ManageBooker(props: StepProps) {
+  const step = getStepKey(props.flow.stage);
+
+  return (
+    <Card className={cardClassName}>
+      <EventPane {...props} />
+      <BookerSteps step={step}>
+        {step === "select" ? <SelectStep {...props} /> : null}
+        {step === "reason" ? <ReasonStep {...props} /> : null}
+        {step === "cancel" ? <CancelStep {...props} /> : null}
+        {step === "summary" ? <SummaryStep {...props} /> : null}
+      </BookerSteps>
+    </Card>
   );
 }

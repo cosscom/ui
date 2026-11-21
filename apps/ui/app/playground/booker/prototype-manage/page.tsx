@@ -1,11 +1,10 @@
 // PROTOTYPE ONLY. Throwaway route for the wayfinder ticket "Reschedule and
 // cancel screens" (.scratch/booker/issues/18-reschedule-and-cancel-screens.md).
 //
-// Rescheduling and cancelling an existing booking. Rescheduling uses the
-// Booker's own calendar and time list. Two variants, chosen with the `variant`
-// search param (A, B), differ only in where cancelling happens. A synthetic
-// booking is picked by the `scenario` search param, and the `stage` search
-// param opens partway through a flow. Nothing is sent.
+// Rescheduling and cancelling an existing booking as steps of the booking
+// flow, inside the Booker's own BookerSteps transition. A synthetic booking is
+// picked by the `scenario` search param, and the `stage` search param opens
+// partway through a flow. Nothing is sent.
 
 import type { Metadata } from "next";
 import {

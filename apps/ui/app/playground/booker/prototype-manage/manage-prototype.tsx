@@ -1,13 +1,14 @@
 "use client";
 
-// PROTOTYPE ONLY. Holds the reschedule and cancel flow's state, mounts one
-// variant, and prints the state. Every "submit" is a stub.
+// PROTOTYPE ONLY. Holds the reschedule and cancel flow's state, mounts the
+// Booker card, and prints the state. Every "submit" is a stub.
 
 import { useEffect, useRef, useState } from "react";
 import { PrototypeSwitcher } from "../../prototype-switcher";
 import {
   bookings,
   formatDate,
+  getStepKey,
   type ScenarioKey,
   type Stage,
   scenarios,
@@ -16,13 +17,13 @@ import {
   type VariantKey,
   variants,
 } from "./fixtures";
-import type { Flow, Scope, VariantProps } from "./parts";
-import { VariantA, VariantB } from "./variants";
+import type { Flow, Scope, Slot, StepProps } from "./parts";
+import { VariantA } from "./variants";
 
 const variantComponents: Record<
   VariantKey,
-  (props: VariantProps) => React.ReactElement
-> = { A: VariantA, B: VariantB };
+  (props: StepProps) => React.ReactElement
+> = { A: VariantA };
 
 // A day and a time with availability, for links that open after a pick.
 const pickedDate = new Date(2026, 10, 25);
@@ -39,43 +40,74 @@ export function ManagePrototype({
   initialStage: Stage;
 }) {
   const booking = bookings[scenario];
-  const original = toDate(booking.date);
-  const hasPicked =
-    initialStage === "confirmingReschedule" || initialStage === "rescheduled";
+  const original: Slot = {
+    date: toDate(booking.date),
+    durationMinutes: booking.durationMinutes,
+    time: booking.time,
+  };
+  const picked: Slot = {
+    date: pickedDate,
+    durationMinutes: booking.durationMinutes,
+    time: pickedTime,
+  };
+  const linkHasPicked = initialStage === "confirmingReschedule";
+  const linkRescheduled = initialStage === "rescheduled";
 
   const [stage, setStage] = useState<Stage>(initialStage);
+  const [current, setCurrent] = useState<Slot>(
+    linkRescheduled ? picked : original,
+  );
+  const [former, setFormer] = useState<Slot | undefined>(
+    linkRescheduled ? original : undefined,
+  );
   const [month, setMonth] = useState(
-    startOfMonth(hasPicked ? pickedDate : original),
+    startOfMonth(linkHasPicked ? pickedDate : original.date),
   );
   const [date, setDate] = useState<Date | undefined>(
-    hasPicked
+    linkHasPicked
       ? pickedDate
       : initialStage === "rescheduling"
-        ? original
+        ? original.date
         : undefined,
   );
   const [time, setTime] = useState<string | undefined>(
-    hasPicked ? pickedTime : undefined,
+    linkHasPicked ? pickedTime : undefined,
   );
+  const [durationMinutes, setDurationMinutes] = useState(
+    booking.durationMinutes,
+  );
+  const [timeZone, setTimeZone] = useState(booking.timeZone);
   const [is24Hour, setIs24Hour] = useState(false);
   const [reason, setReason] = useState("");
+  const [reasonError, setReasonError] = useState<string>();
   const [scope, setScope] = useState<Scope>("this");
   const [rescheduleError, setRescheduleError] = useState<string>();
   const [cancelError, setCancelError] = useState<string>();
+  const [lastAction, setLastAction] = useState("none");
 
-  const startOver = () => {
-    setStage("summary");
-    setMonth(startOfMonth(original));
-    setDate(undefined);
-    setTime(undefined);
-    setReason("");
-    setScope("this");
+  const clearMessages = () => {
+    setReasonError(undefined);
     setRescheduleError(undefined);
     setCancelError(undefined);
   };
 
-  // Start over when the variant or scenario changes, but not on first mount,
-  // so a link's stage survives.
+  const startOver = () => {
+    clearMessages();
+    setStage("summary");
+    setCurrent(original);
+    setFormer(undefined);
+    setMonth(startOfMonth(original.date));
+    setDate(undefined);
+    setTime(undefined);
+    setDurationMinutes(booking.durationMinutes);
+    setTimeZone(booking.timeZone);
+    setReason("");
+    setScope("this");
+    setLastAction("none");
+  };
+
+  // Start over when the scenario changes, but not on first mount, so a
+  // link's stage survives.
   const mounted = useRef(false);
   // biome-ignore lint/correctness/useExhaustiveDependencies: reset on switch
   useEffect(() => {
@@ -86,36 +118,55 @@ export function ManagePrototype({
   }, [scenario, variant]);
 
   const flow: Flow = {
+    backToSelect: () => {
+      clearMessages();
+      setStage("rescheduling");
+    },
+    backToSummary: () => {
+      clearMessages();
+      setReason("");
+      setStage(former ? "rescheduled" : "summary");
+    },
+    bookAgain: () => setLastAction("book again (stub: starts a new booking)"),
     cancelError,
+    current,
     date,
+    durationMinutes,
+    former,
     is24Hour,
     month,
+    pickTime: (next) => {
+      setTime(next);
+      setStage("confirmingReschedule");
+    },
     reason,
+    reasonError,
     rescheduleError,
     scope,
     setDate,
+    setDurationMinutes,
     setIs24Hour,
     setMonth,
-    setReason,
-    setScope,
-    setStage: (next) => {
-      setRescheduleError(undefined);
-      setCancelError(undefined);
-      if (next === "summary") {
-        setDate(undefined);
-        setTime(undefined);
-      }
-      setStage(next);
+    setReason: (next) => {
+      setReason(next);
+      setReasonError(undefined);
     },
-    setTime,
+    setScope,
+    setTimeZone,
     stage,
-    startOver,
     // Opens the select step on the booking's own day, as Cal does.
+    startCancel: () => {
+      clearMessages();
+      setReason("");
+      setStage("cancelling");
+    },
     startReschedule: () => {
-      setMonth(startOfMonth(original));
-      setDate(original);
+      clearMessages();
+      setReason("");
+      setMonth(startOfMonth(current.date));
+      setDate(current.date);
       setTime(undefined);
-      setRescheduleError(undefined);
+      setDurationMinutes(current.durationMinutes);
       setStage("rescheduling");
     },
     submitCancel: () => {
@@ -124,17 +175,28 @@ export function ManagePrototype({
         setCancelError("Please give a reason.");
         return;
       }
-      setCancelError(undefined);
+      clearMessages();
       setStage("cancelled");
     },
     submitReschedule: () => {
+      const field = booking.rescheduleReason;
+      if (!field.hidden && field.required && reason.trim() === "") {
+        setReasonError("Enter a reason.");
+        return;
+      }
       if (scenario === "refusals") {
         setRescheduleError("This booking can’t be rescheduled.");
         return;
       }
+      if (date && time) {
+        setFormer(current);
+        setCurrent({ date, durationMinutes, time });
+      }
+      clearMessages();
       setStage("rescheduled");
     },
     time,
+    timeZone,
   };
 
   const Variant = variantComponents[variant];
@@ -146,14 +208,16 @@ export function ManagePrototype({
       <pre className="w-full max-w-3xl overflow-x-auto rounded-lg border border-dashed p-3 text-muted-foreground text-xs">
         {JSON.stringify(
           {
-            cancelError: cancelError ?? null,
-            newTime: date && time ? `${formatDate(date)} ${time}` : null,
+            current: `${formatDate(current.date)} ${current.time}, ${current.durationMinutes} min`,
+            former: former ? `${formatDate(former.date)} ${former.time}` : null,
+            lastAction,
             reason,
-            rescheduleError: rescheduleError ?? null,
+            rescheduleReasonField: booking.rescheduleReason,
             scenario,
             scope: booking.kind === "occurrence" ? scope : "n/a",
             stage,
-            variant,
+            step: getStepKey(stage),
+            timeZone,
           },
           null,
           2,
