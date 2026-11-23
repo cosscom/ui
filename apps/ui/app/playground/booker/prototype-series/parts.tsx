@@ -16,20 +16,28 @@ import {
   Clock3Icon,
   ExternalLinkIcon,
   GlobeIcon,
-  RepeatIcon,
-  UsersIcon,
+  RefreshCcwIcon,
+  UserIcon,
   VideoIcon,
 } from "lucide-react";
-import type { ReactNode } from "react";
+import { useId } from "react";
 import { BookerAvatars } from "@/registry/default/atoms/booker/booker-avatars";
 import { BookerCalendar } from "@/registry/default/atoms/booker/booker-calendar";
 import { getBookerLabels } from "@/registry/default/atoms/booker/booker-labels";
 import { BookerSteps } from "@/registry/default/atoms/booker/booker-steps";
-import { TimePicker } from "@/registry/default/atoms/booker/time-picker";
+import {
+  TimePicker,
+  type TimeSlotDetail,
+} from "@/registry/default/atoms/booker/time-picker";
 import { Badge } from "@/registry/default/ui/badge";
 import { Button } from "@/registry/default/ui/button";
 import { Card } from "@/registry/default/ui/card";
-import { Input } from "@/registry/default/ui/input";
+import { Field, FieldError, FieldLabel } from "@/registry/default/ui/field";
+import {
+  NumberField,
+  NumberFieldGroup,
+  NumberFieldInput,
+} from "@/registry/default/ui/number-field";
 import {
   Popover,
   PopoverPopup,
@@ -77,10 +85,10 @@ export type Flow = {
   setIs24Hour: (value: boolean) => void;
   values: FieldValues;
   setValue: (slug: string, value: FieldValue | undefined) => void;
-  // Recurring: what is typed in the occurrence field, and what the booking
-  // uses (the maximum while the entry is out of range).
-  countInput: string;
-  setCountInput: (value: string) => void;
+  // Recurring: what is in the occurrence field, and what the booking uses
+  // (the maximum while the entry is out of range).
+  countValue: number | null;
+  setCountValue: (value: number | null) => void;
   count: number;
   countValid: boolean;
   // Seated: what the host chose to show, and the seats left on a time.
@@ -120,6 +128,13 @@ function getDates(flow: Flow) {
   return flow.date ? getSeriesDates(flow.date, flow.count) : [];
 }
 
+/** A clock time as the design system writes it: "10:00 am", or "14:00". */
+function formatClock(time: string, is24Hour: boolean) {
+  return is24Hour
+    ? time
+    : displayTimeLabel(time, true).replace(/(am|pm)$/, " $1");
+}
+
 /** A resolved date, as the design system writes it: "Tue, Sep 15, 10:00 am". */
 function formatOccurrence(date: Date, time: string, is24Hour: boolean) {
   const day = date.toLocaleDateString("en-US", {
@@ -127,143 +142,150 @@ function formatOccurrence(date: Date, time: string, is24Hour: boolean) {
     month: "short",
     weekday: "short",
   });
-  return `${day}, ${displayTimeLabel(time, !is24Hour)}`;
+  return `${day}, ${formatClock(time, is24Hour)}`;
 }
 
 function getTitle(kind: Kind) {
   return kind === "recurring" ? "Weekly coaching" : "Group workshop";
 }
 
-/** The badge for a slot whose exact count is hidden. */
-function FillBadge({ remaining }: { remaining: number }) {
+type FillBadge = { label: string; variant: "secondary" | "warning" };
+
+/** "Filling fast" from half booked, "Almost full" from 83%. */
+function getFillBadge(remaining: number): FillBadge | undefined {
   const fill = getFill(remaining);
   if (fill === "almostFull") {
-    return (
-      <Badge size="sm" variant="warning">
-        Almost full
-      </Badge>
-    );
+    return { label: "Almost full", variant: "warning" };
   }
   if (fill === "fillingFast") {
-    return (
-      <Badge size="sm" variant="secondary">
-        Filling fast
-      </Badge>
-    );
+    return { label: "Filling fast", variant: "secondary" };
   }
-  return null;
+  return undefined;
 }
 
-/** The second line of a seated time slot. One mode for the whole list. */
-function SlotSeats({
-  remaining,
-  showCount,
-}: {
-  remaining: number;
-  showCount: boolean;
-}) {
-  let content: ReactNode = (
-    <>
-      Seats available
-      <FillBadge remaining={remaining} />
-    </>
-  );
+/**
+ * A seated slot's second line, from the design system's time slots: exact
+ * counts, or "Seats available" with a badge. One mode for the whole list.
+ */
+function getSlotDetail(remaining: number, showCount: boolean): TimeSlotDetail {
   if (remaining <= 0) {
-    content = "No more seats available";
-  } else if (showCount) {
-    content =
-      remaining === 1 ? "1 seat available" : `${remaining} seats available`;
+    return { detail: "No more seats available", disabled: true };
   }
-  return (
-    <span className="flex items-center gap-1.5 font-normal text-muted-foreground text-xs">
-      {content}
-    </span>
-  );
+  if (showCount) {
+    return {
+      detail:
+        remaining === 1 ? "1 seat available" : `${remaining} seats available`,
+    };
+  }
+  return { badge: getFillBadge(remaining), detail: "Seats available" };
 }
 
-/** The occurrence field, inline in the recurrence sentence. */
-function OccurrenceCount({ flow }: StepProps) {
+/** The design system's RecurrenceSelector. */
+function RecurrenceSelector({ flow }: StepProps) {
+  const inputId = useId();
+
   return (
-    <div className="flex flex-col gap-1.5">
-      <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-        <span>Every week for</span>
-        <Input
-          aria-invalid={!flow.countValid || undefined}
-          aria-label="Number of occurrences"
-          className="w-16"
-          inputMode="numeric"
-          max={recurrence.occurrences}
-          min={1}
-          nativeInput
-          onChange={(event) => flow.setCountInput(event.target.value)}
-          size="sm"
-          type="number"
-          value={flow.countInput}
+    <Field className="gap-1" invalid={!flow.countValid}>
+      <div className="flex gap-2 sm:text-sm">
+        <RefreshCcwIcon
+          aria-hidden="true"
+          className="h-lh w-4.5 shrink-0 opacity-80 sm:w-4"
         />
-        <span>occurrences</span>
+        <div className="flex flex-col gap-1">
+          <FieldLabel
+            className="self-start font-normal leading-6 sm:leading-5"
+            htmlFor={inputId}
+          >
+            Every week for <span className="sr-only">occurrences</span>
+          </FieldLabel>
+          <div className="flex items-center gap-2">
+            <NumberField
+              allowOutOfRange
+              className="w-14"
+              max={recurrence.occurrences}
+              min={1}
+              onValueChange={flow.setCountValue}
+              size="sm"
+              value={flow.countValue}
+            >
+              <NumberFieldGroup>
+                <NumberFieldInput id={inputId} />
+              </NumberFieldGroup>
+            </NumberField>
+            <span>occurrences</span>
+          </div>
+        </div>
       </div>
-      {flow.countValid ? null : (
-        <p className="text-destructive-foreground text-xs" role="alert">
-          Please enter a number between 1 and {recurrence.occurrences}
-        </p>
-      )}
-    </div>
+      <FieldError className="ps-6" match={!flow.countValid}>
+        Please enter a number between 1 and {recurrence.occurrences}
+      </FieldError>
+    </Field>
   );
 }
 
-/** The resolved dates, in place of the field once a time is picked. */
-function ResolvedDates({ flow }: StepProps) {
+/** The design system's RecurrenceDates. */
+function RecurrenceDates({ flow }: StepProps) {
   const time = flow.time;
-  const dates = getDates(flow);
   if (!time) {
     return null;
   }
+  const dates = getDates(flow);
   const rest = dates.slice(shownDates);
 
   return (
-    <div className="flex flex-col gap-1 tabular-nums">
-      {dates.slice(0, shownDates).map((date) => (
-        <span key={date.toISOString()}>
-          {formatOccurrence(date, time, flow.is24Hour)}
-        </span>
-      ))}
-      {rest.length > 0 ? (
-        <Popover>
-          <PopoverTrigger className="cursor-pointer self-start text-muted-foreground underline-offset-4 outline-none hover:underline focus-visible:underline">
-            + {rest.length} more
-          </PopoverTrigger>
-          <PopoverPopup className="tabular-nums">
-            <div className="flex flex-col gap-1 sm:text-sm">
-              {rest.map((date) => (
-                <span key={date.toISOString()}>
-                  {formatOccurrence(date, time, flow.is24Hour)}
-                </span>
-              ))}
-            </div>
-          </PopoverPopup>
-        </Popover>
-      ) : null}
+    <div className="flex gap-2 sm:text-sm">
+      <RefreshCcwIcon
+        aria-hidden="true"
+        className="h-lh w-4.5 shrink-0 opacity-80 sm:w-4"
+      />
+      <div className="flex min-w-0 flex-col gap-1">
+        {dates.slice(0, shownDates).map((date) => (
+          <p key={date.toISOString()}>
+            {formatOccurrence(date, time, flow.is24Hour)}
+          </p>
+        ))}
+        {rest.length > 0 ? (
+          <Popover>
+            <PopoverTrigger
+              className="w-fit decoration-current/32 decoration-dotted underline-offset-2 hover:text-foreground hover:underline"
+              delay={0}
+              openOnHover
+            >
+              + {rest.length} more
+            </PopoverTrigger>
+            <PopoverPopup
+              align="start"
+              aria-label="Additional occurrence dates"
+              className="*:p-3"
+              side="top"
+            >
+              <ul className="flex flex-col gap-1">
+                {rest.map((date) => (
+                  <li className="font-medium text-xs" key={date.toISOString()}>
+                    {formatOccurrence(date, time, flow.is24Hour)}
+                  </li>
+                ))}
+              </ul>
+            </PopoverPopup>
+          </Popover>
+        ) : null}
+      </div>
     </div>
   );
 }
 
 /** The recurrence row: the count while picking, the dates after. */
 function RecurrenceRow({ flow }: StepProps) {
-  return (
-    <div className="flex gap-2">
-      <RepeatIcon aria-hidden="true" className={metaIconClassName} />
-      {flow.stage === "select" ? (
-        <OccurrenceCount flow={flow} />
-      ) : (
-        <ResolvedDates flow={flow} />
-      )}
-    </div>
+  return flow.stage === "select" ? (
+    <RecurrenceSelector flow={flow} />
+  ) : (
+    <RecurrenceDates flow={flow} />
   );
 }
 
 /**
- * The seat row, during the booking step, when at least one seat is taken.
- * Exact counts only when the host shows them.
+ * The design system's seat availability row, during the booking step, when
+ * at least one seat is taken. Exact counts only when the host shows them.
  */
 function SeatRow({ flow }: StepProps) {
   if (flow.stage === "select" || !flow.date || !flow.time) {
@@ -273,19 +295,24 @@ function SeatRow({ flow }: StepProps) {
   if (remaining >= seatsPerTimeSlot || remaining <= 0) {
     return null;
   }
+  const badge = flow.showSeatCount ? undefined : getFillBadge(remaining);
+
   return (
-    <div className="flex items-center gap-2">
-      <UsersIcon aria-hidden="true" className={metaIconClassName} />
-      {flow.showSeatCount ? (
-        <span>
-          {remaining} / {seatsPerTimeSlot} Seats available
-        </span>
-      ) : (
-        <span className="flex items-center gap-1.5">
-          Seats available
-          <FillBadge remaining={remaining} />
-        </span>
-      )}
+    <div className="flex items-center gap-2 sm:text-sm">
+      <UserIcon
+        aria-hidden="true"
+        className="size-4.5 shrink-0 opacity-80 sm:size-4"
+      />
+      <span>
+        {flow.showSeatCount
+          ? `${remaining} / ${seatsPerTimeSlot} Seats available`
+          : "Seats available"}
+      </span>
+      {badge ? (
+        <Badge size="sm" variant={badge.variant}>
+          {badge.label}
+        </Badge>
+      ) : null}
     </div>
   );
 }
@@ -391,9 +418,6 @@ function SelectStep({ flow }: StepProps) {
         )}
         initialLoading={false}
         is24Hour={flow.is24Hour}
-        isSlotDisabled={
-          seated ? (time) => flow.seatsRemaining(date, time) <= 0 : undefined
-        }
         labels={{
           hour12Short: labels.hour12Short,
           hour24Short: labels.hour24Short,
@@ -408,14 +432,13 @@ function SelectStep({ flow }: StepProps) {
         nextAvailableDate={nextAvailableDate}
         onIs24HourChange={flow.setIs24Hour}
         onSelectTime={flow.pickTime}
-        renderSlotDetail={
+        getSlotDetail={
           seated
-            ? (time) => (
-                <SlotSeats
-                  remaining={flow.seatsRemaining(date, time)}
-                  showCount={flow.showSeatCount}
-                />
-              )
+            ? (time) =>
+                getSlotDetail(
+                  flow.seatsRemaining(date, time),
+                  flow.showSeatCount,
+                )
             : undefined
         }
         selectedDate={flow.date}

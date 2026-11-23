@@ -65,8 +65,10 @@ export function SeriesPrototype({
     opensFilled ? filledValues : {},
   );
   // Leaving the count out books the whole series, so it starts at the limit.
-  const [countInput, setCountInput] = useState(String(recurrence.occurrences));
-  const { count, valid: countValid } = resolveCount(countInput);
+  const [countValue, setCountValue] = useState<number | null>(
+    recurrence.occurrences,
+  );
+  const { count, valid: countValid } = resolveCount(countValue);
   const [full, setFull] = useState<string[]>([]);
   const [createError, setCreateError] = useState<CreateError>();
   const [busy, setBusy] = useState(false);
@@ -85,7 +87,7 @@ export function SeriesPrototype({
       setDate(undefined);
       setTime(undefined);
       setValues({});
-      setCountInput(String(recurrence.occurrences));
+      setCountValue(recurrence.occurrences);
       setFull([]);
       setCreateError(undefined);
       setLog([]);
@@ -136,7 +138,7 @@ export function SeriesPrototype({
     },
     busy,
     count,
-    countInput,
+    countValue,
     countValid,
     createError,
     date,
@@ -150,7 +152,7 @@ export function SeriesPrototype({
     },
     seatsRemaining: (day, slot) =>
       full.includes(slotKey(day, slot)) ? 0 : getSeatsRemaining(day, slot),
-    setCountInput,
+    setCountValue,
     setDate,
     setIs24Hour,
     setMonth,
@@ -178,7 +180,7 @@ export function SeriesPrototype({
             variant,
             ...(kind === "recurring"
               ? {
-                  countTyped: countInput,
+                  countInField: countValue,
                   recurrenceCount: count,
                   seriesDates:
                     date && time

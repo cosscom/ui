@@ -43,10 +43,9 @@ export const recurrence = { frequency: "weekly", interval: 1, occurrences: 12 };
  * The count the booking uses. An entry out of range stays visible in the
  * field, but the booking uses the event type's maximum.
  */
-export function resolveCount(input: string) {
-  const value = Number(input);
+export function resolveCount(value: number | null) {
   const valid =
-    input.trim() !== "" &&
+    value !== null &&
     Number.isInteger(value) &&
     value >= 1 &&
     value <= recurrence.occurrences;

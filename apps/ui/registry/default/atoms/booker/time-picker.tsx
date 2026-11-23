@@ -1,8 +1,8 @@
 "use client";
 
 import { CalendarX2Icon } from "lucide-react";
-import type { ReactNode } from "react";
 import { cn } from "@/registry/default/lib/utils";
+import { Badge } from "@/registry/default/ui/badge";
 import { Button } from "@/registry/default/ui/button";
 import {
   Empty,
@@ -35,6 +35,13 @@ type TimePickerLabels = {
   hour24Short: string;
 };
 
+/** A seated slot's second line, and whether it can be picked. */
+export type TimeSlotDetail = {
+  detail?: string;
+  badge?: { label: string; variant: "secondary" | "warning" };
+  disabled?: boolean;
+};
+
 type TimePickerProps = {
   availabilityLoading: boolean;
   currentMonth: Date;
@@ -49,10 +56,8 @@ type TimePickerProps = {
   onSelectTime: (time: string) => void;
   selectedDate: Date | undefined;
   hasAvailabilityInView: boolean;
-  /** A second line under a time, such as its seat availability. */
-  renderSlotDetail?: (time: string) => ReactNode;
-  /** A time that is listed but cannot be picked, such as a full one. */
-  isSlotDisabled?: (time: string) => boolean;
+  /** Seat availability for a time, when the event type has seats. */
+  getSlotDetail?: (time: string) => TimeSlotDetail | undefined;
 };
 
 export function TimePicker({
@@ -69,8 +74,7 @@ export function TimePicker({
   onSelectTime,
   selectedDate,
   hasAvailabilityInView,
-  renderSlotDetail,
-  isSlotDisabled,
+  getSlotDetail,
 }: TimePickerProps) {
   const slotsLoading = initialLoading || availabilityLoading;
 
@@ -162,16 +166,17 @@ export function TimePicker({
                 ) : (
                   <div className="grid w-full grid-cols-1 @5xl:gap-1.5 gap-1">
                     {daySlots.map((time) => {
-                      const detail = renderSlotDetail?.(time);
+                      const slot = getSlotDetail?.(time);
+                      const hasDetail = Boolean(slot?.detail || slot?.badge);
                       return (
                         <button
                           key={time}
                           type="button"
-                          disabled={isSlotDisabled?.(time)}
+                          disabled={slot?.disabled}
                           onClick={() => onSelectTime(time)}
                           className={cn(
-                            "relative flex h-9 cursor-pointer flex-col items-center justify-center rounded-lg bg-muted font-medium text-foreground tabular-nums outline-none after:absolute @5xl:after:-inset-1 after:-inset-0.75 hover:ring-2 hover:ring-primary/72 focus-visible:z-1 focus-visible:ring-2 focus-visible:ring-primary/72 disabled:pointer-events-none disabled:opacity-64 sm:h-8 sm:text-sm",
-                            detail != null && "h-auto! gap-0.5 py-1.5",
+                            "relative flex h-9 cursor-pointer flex-col items-center justify-center rounded-lg bg-muted font-medium text-foreground tabular-nums outline-none after:absolute @5xl:after:-inset-1 after:-inset-0.75 focus-visible:z-1 focus-visible:ring-2 focus-visible:ring-primary/72 enabled:hover:ring-2 enabled:hover:ring-primary/72 disabled:cursor-not-allowed disabled:opacity-50 disabled:after:hidden sm:h-8 sm:text-sm",
+                            hasDetail && "h-auto min-h-12 gap-y-1 px-1 py-2",
                           )}
                         >
                           <span>
@@ -182,7 +187,16 @@ export function TimePicker({
                             ) : null}
                             {displayTimeLabel(time, !is24Hour)}
                           </span>
-                          {detail}
+                          {hasDetail ? (
+                            <span className="flex items-center gap-1 text-xs">
+                              {slot?.detail}
+                              {slot?.badge ? (
+                                <Badge size="sm" variant={slot.badge.variant}>
+                                  {slot.badge.label}
+                                </Badge>
+                              ) : null}
+                            </span>
+                          ) : null}
                         </button>
                       );
                     })}
