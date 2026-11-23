@@ -5,8 +5,8 @@
 // list are the Booker's real ones and reload when the choice changes.
 //
 // The design system has no host picker. What is copied from it: the host
-// identity (HostAvatars and its label) and the row and Select of its
-// reschedule host preference.
+// identity (HostAvatars and its label). The picker is coss's multiple
+// combobox, in the row the time zone picker uses.
 
 import {
   CalendarIcon,
@@ -22,16 +22,19 @@ import { BookerCalendar } from "@/registry/default/atoms/booker/booker-calendar"
 import { getBookerLabels } from "@/registry/default/atoms/booker/booker-labels";
 import { BookerSteps } from "@/registry/default/atoms/booker/booker-steps";
 import { TimePicker } from "@/registry/default/atoms/booker/time-picker";
-import { Avatar, AvatarFallback } from "@/registry/default/ui/avatar";
 import { Button } from "@/registry/default/ui/button";
 import { Card } from "@/registry/default/ui/card";
 import {
-  Select,
-  SelectItem,
-  SelectPopup,
-  SelectTrigger,
-  SelectValue,
-} from "@/registry/default/ui/select";
+  Combobox,
+  ComboboxChip,
+  ComboboxChips,
+  ComboboxChipsInput,
+  ComboboxEmpty,
+  ComboboxItem,
+  ComboboxList,
+  ComboboxPopup,
+  ComboboxValue,
+} from "@/registry/default/ui/combobox";
 import { FieldBlock, TermsNote } from "../prototype-form/field-block";
 import {
   type FieldValue,
@@ -41,7 +44,7 @@ import {
 } from "../prototype-form/fixtures";
 import { formatDate, startOfMonth, today } from "../prototype-manage/fixtures";
 import { type Host, type Stage, teamName } from "./fixtures";
-import { displayTimeLabel, getInitials } from "@/lib/booker/utils";
+import { displayTimeLabel } from "@/lib/booker/utils";
 
 export type Flow = {
   stage: Stage;
@@ -88,12 +91,16 @@ function getEmail(flow: Flow) {
   return typeof email === "string" ? email.trim() : "";
 }
 
+/** Who attends: the chosen hosts, or everyone when none are chosen. */
 function getChosenHosts(flow: Flow) {
+  if (flow.chosen.length === 0) {
+    return flow.hosts;
+  }
   return flow.hosts.filter((host) => flow.chosen.includes(host.username));
 }
 
 function allChosen(flow: Flow) {
-  return flow.chosen.length === flow.hosts.length;
+  return flow.chosen.length === 0 || flow.chosen.length === flow.hosts.length;
 }
 
 /** The design system's host identity label, with the team's name for everyone. */
@@ -117,70 +124,61 @@ function formatNames(names: string[]) {
   return `${names.slice(0, -1).join(", ")} and ${names.at(-1)}`;
 }
 
-function HostAvatar({ name }: { name: string }) {
-  return (
-    <Avatar className="[--avatar-size:--spacing(5)]">
-      <AvatarFallback>{getInitials(name)}</AvatarFallback>
-    </Avatar>
-  );
-}
-
-/** The trigger's text: everyone, one name, or the first name and a count. */
-function renderChosen(flow: Flow) {
-  return (usernames: string[]) => {
-    if (usernames.length === flow.hosts.length) {
-      return "All hosts";
-    }
-    const first = flow.hosts.find((host) => host.username === usernames[0]);
-    const more = usernames.length > 1 ? ` (+${usernames.length - 1} more)` : "";
-    return <span className="truncate">{`${first?.name ?? ""}${more}`}</span>;
-  };
-}
-
 /**
- * The hosts in a multiple Select, in the row the design system gives the
- * reschedule host preference. The last chosen host cannot be removed.
+ * The hosts in a multiple combobox, as coss renders one (`p-combobox-9`):
+ * the chosen hosts as chips in the field, a search typed after them, the
+ * hosts in the popup. In the time zone picker's row. An empty field means
+ * everyone, so nothing is chosen to start with.
  */
-function HostSelect({ flow }: StepProps) {
-  const last = flow.chosen.length === 1 ? flow.chosen[0] : undefined;
+function HostCombobox({ flow }: StepProps) {
+  const chosen = flow.hosts.filter((host) =>
+    flow.chosen.includes(host.username),
+  );
 
   return (
-    <div className="flex items-center gap-2 sm:text-sm">
+    <div className="flex items-center gap-2">
       <UserIcon
         aria-hidden="true"
         className="size-4.5 shrink-0 opacity-80 sm:size-4"
       />
-      <Select
+      <Combobox
+        items={flow.hosts}
+        itemToStringLabel={(host: Host) => host.name}
         multiple
-        onValueChange={(next: string[]) => {
-          if (next.length > 0) {
-            flow.setChosen(next);
-          }
-        }}
-        value={flow.chosen}
+        onValueChange={(next: Host[]) =>
+          flow.setChosen(next.map((host) => host.username))
+        }
+        value={chosen}
       >
-        <SelectTrigger
-          aria-label="Hosts who attend"
-          className="w-auto min-w-0 shrink font-normal"
-          size="sm"
-        >
-          <SelectValue>{renderChosen(flow)}</SelectValue>
-        </SelectTrigger>
-        <SelectPopup alignItemWithTrigger={false}>
-          {flow.hosts.map((host) => (
-            <SelectItem
-              disabled={host.username === last}
-              key={host.username}
-              value={host.username}
-            >
-              <span className="flex items-center gap-2">
-                <HostAvatar name={host.name} />
+        <ComboboxChips>
+          <ComboboxValue>
+            {(value: Host[]) => (
+              <>
+                {value?.map((host) => (
+                  <ComboboxChip aria-label={host.name} key={host.username}>
+                    {host.name}
+                  </ComboboxChip>
+                ))}
+                <ComboboxChipsInput
+                  aria-label="Hosts who attend"
+                  placeholder={value.length > 0 ? undefined : "All hosts"}
+                  size="sm"
+                />
+              </>
+            )}
+          </ComboboxValue>
+        </ComboboxChips>
+        <ComboboxPopup>
+          <ComboboxEmpty>No hosts found.</ComboboxEmpty>
+          <ComboboxList>
+            {(host: Host) => (
+              <ComboboxItem key={host.username} value={host}>
                 {host.name}
-              </span>
-            </SelectItem>
-          ))}
-        </SelectPopup>
-      </Select>
+              </ComboboxItem>
+            )}
+          </ComboboxList>
+        </ComboboxPopup>
+      </Combobox>
     </div>
   );
 }
@@ -260,7 +258,7 @@ function EventPane({ flow }: StepProps) {
             <GlobeIcon aria-hidden="true" className={metaIconClassName} />
             <span>Europe/Rome</span>
           </div>
-          {picking ? <HostSelect flow={flow} /> : null}
+          {picking ? <HostCombobox flow={flow} /> : null}
           {flow.hostChoice && flow.stage !== "select" ? (
             <ChosenRow flow={flow} />
           ) : null}
