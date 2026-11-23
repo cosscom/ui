@@ -4,6 +4,10 @@
 // Booker's steps: select → form → booked, or → broken when a series fails
 // partway. Every change goes through BookerSteps. The select step is the
 // Booker's real calendar and time list; the form is the chosen form.
+//
+// The recurrence and seat rows follow the design system: "Booker event
+// information" (Recurrence, Seat availability) and "Booker time slots"
+// (Seat availability).
 
 import {
   CalendarIcon,
@@ -13,8 +17,10 @@ import {
   ExternalLinkIcon,
   GlobeIcon,
   RepeatIcon,
+  UsersIcon,
   VideoIcon,
 } from "lucide-react";
+import type { ReactNode } from "react";
 import { BookerAvatars } from "@/registry/default/atoms/booker/booker-avatars";
 import { BookerCalendar } from "@/registry/default/atoms/booker/booker-calendar";
 import { getBookerLabels } from "@/registry/default/atoms/booker/booker-labels";
@@ -23,13 +29,12 @@ import { TimePicker } from "@/registry/default/atoms/booker/time-picker";
 import { Badge } from "@/registry/default/ui/badge";
 import { Button } from "@/registry/default/ui/button";
 import { Card } from "@/registry/default/ui/card";
+import { Input } from "@/registry/default/ui/input";
 import {
-  NumberField,
-  NumberFieldDecrement,
-  NumberFieldGroup,
-  NumberFieldIncrement,
-  NumberFieldInput,
-} from "@/registry/default/ui/number-field";
+  Popover,
+  PopoverPopup,
+  PopoverTrigger,
+} from "@/registry/default/ui/popover";
 import { FieldBlock, TermsNote } from "../prototype-form/field-block";
 import {
   type FieldValue,
@@ -47,20 +52,19 @@ import {
 } from "../prototype-manage/fixtures";
 import {
   bookingUrl,
+  getFill,
   getOtherAttendees,
-  getSeatsRemaining,
   getSeriesDates,
   type Kind,
   recurrence,
   type Stage,
-  type VariantKey,
+  seatsPerTimeSlot,
 } from "./fixtures";
 import { displayTimeLabel } from "@/lib/booker/utils";
 
 export type CreateError = "seatGone" | "alreadyIn";
 
 export type Flow = {
-  variant: VariantKey;
   kind: Kind;
   stage: Stage;
   month: Date;
@@ -73,13 +77,16 @@ export type Flow = {
   setIs24Hour: (value: boolean) => void;
   values: FieldValues;
   setValue: (slug: string, value: FieldValue | undefined) => void;
-  // Recurring: how many meetings to book.
+  // Recurring: what is typed in the occurrence field, and what the booking
+  // uses (the maximum while the entry is out of range).
+  countInput: string;
+  setCountInput: (value: string) => void;
   count: number;
-  setCount: (count: number) => void;
-  // Seated: what the host chose to show, and the times already full.
+  countValid: boolean;
+  // Seated: what the host chose to show, and the seats left on a time.
   showSeatCount: boolean;
   showAttendees: boolean;
-  isFull: (date: Date, time: string) => boolean;
+  seatsRemaining: (date: Date, time: string) => number;
   createError: CreateError | undefined;
   submit: () => void;
   backToSelect: () => void;
@@ -98,6 +105,10 @@ const metaIconClassName = "h-lh w-4.5 shrink-0 opacity-80 sm:w-4";
 const barClassName =
   "sticky bottom-0 -mx-4 @5xl:-mx-6 -mb-4 @5xl:-mb-6 mt-auto flex items-center justify-between gap-2 rounded-b-[calc(var(--radius-2xl)-1px)] @3xl:rounded-es-none border-t bg-card @5xl:px-6 px-4 py-3";
 
+// The design system shows the first five resolved dates; the rest go in a
+// popover behind "+ N more".
+const shownDates = 5;
+
 const labels = getBookerLabels();
 
 function getEmail(flow: Flow) {
@@ -109,100 +120,172 @@ function getDates(flow: Flow) {
   return flow.date ? getSeriesDates(flow.date, flow.count) : [];
 }
 
-/** A short date for the lists of meetings, such as "Wed, Nov 25". */
-function formatShortDate(date: Date) {
-  return date.toLocaleDateString("en-US", {
+/** A resolved date, as the design system writes it: "Tue, Sep 15, 10:00 am". */
+function formatOccurrence(date: Date, time: string, is24Hour: boolean) {
+  const day = date.toLocaleDateString("en-US", {
     day: "numeric",
     month: "short",
     weekday: "short",
   });
-}
-
-function seatsNote(left: number) {
-  return left === 1 ? "1 seat left" : `${left} seats left`;
+  return `${day}, ${displayTimeLabel(time, !is24Hour)}`;
 }
 
 function getTitle(kind: Kind) {
   return kind === "recurring" ? "Weekly coaching" : "Group workshop";
 }
 
-/** How many meetings to book, from one up to the event type's limit. */
-function MeetingCount({ flow }: StepProps) {
+/** The badge for a slot whose exact count is hidden. */
+function FillBadge({ remaining }: { remaining: number }) {
+  const fill = getFill(remaining);
+  if (fill === "almostFull") {
+    return (
+      <Badge size="sm" variant="warning">
+        Almost full
+      </Badge>
+    );
+  }
+  if (fill === "fillingFast") {
+    return (
+      <Badge size="sm" variant="secondary">
+        Filling fast
+      </Badge>
+    );
+  }
+  return null;
+}
+
+/** The second line of a seated time slot. One mode for the whole list. */
+function SlotSeats({
+  remaining,
+  showCount,
+}: {
+  remaining: number;
+  showCount: boolean;
+}) {
+  let content: ReactNode = (
+    <>
+      Seats available
+      <FillBadge remaining={remaining} />
+    </>
+  );
+  if (remaining <= 0) {
+    content = "No more seats available";
+  } else if (showCount) {
+    content =
+      remaining === 1 ? "1 seat available" : `${remaining} seats available`;
+  }
   return (
-    <NumberField
-      className="w-28"
-      max={recurrence.occurrences}
-      min={1}
-      onValueChange={(value) => flow.setCount(value ?? 1)}
-      size="sm"
-      value={flow.count}
-    >
-      <NumberFieldGroup>
-        <NumberFieldDecrement />
-        <NumberFieldInput aria-label="Number of meetings" />
-        <NumberFieldIncrement />
-      </NumberFieldGroup>
-    </NumberField>
+    <span className="flex items-center gap-1.5 font-normal text-muted-foreground text-xs">
+      {content}
+    </span>
   );
 }
 
-/** The dates the series will book, computed the way the server does. */
-function SeriesDates({ flow }: StepProps) {
+/** The occurrence field, inline in the recurrence sentence. */
+function OccurrenceCount({ flow }: StepProps) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+        <span>Every week for</span>
+        <Input
+          aria-invalid={!flow.countValid || undefined}
+          aria-label="Number of occurrences"
+          className="w-16"
+          inputMode="numeric"
+          max={recurrence.occurrences}
+          min={1}
+          nativeInput
+          onChange={(event) => flow.setCountInput(event.target.value)}
+          size="sm"
+          type="number"
+          value={flow.countInput}
+        />
+        <span>occurrences</span>
+      </div>
+      {flow.countValid ? null : (
+        <p className="text-destructive-foreground text-xs" role="alert">
+          Please enter a number between 1 and {recurrence.occurrences}
+        </p>
+      )}
+    </div>
+  );
+}
+
+/** The resolved dates, in place of the field once a time is picked. */
+function ResolvedDates({ flow }: StepProps) {
+  const time = flow.time;
   const dates = getDates(flow);
-  if (!flow.time || dates.length === 0) {
+  if (!time) {
     return null;
   }
+  const rest = dates.slice(shownDates);
+
   return (
-    <div className="flex flex-col gap-2">
-      <ol className="flex flex-col gap-1 tabular-nums sm:text-sm">
-        {dates.map((date) => (
-          <li key={date.toISOString()}>
-            {formatShortDate(date)}{" "}
-            {displayTimeLabel(flow.time ?? "", !flow.is24Hour)}
-          </li>
-        ))}
-      </ol>
-      <p className="text-muted-foreground text-xs">
-        Only the first date is checked against the host’s calendar. The others
-        are booked as listed.
-      </p>
+    <div className="flex flex-col gap-1 tabular-nums">
+      {dates.slice(0, shownDates).map((date) => (
+        <span key={date.toISOString()}>
+          {formatOccurrence(date, time, flow.is24Hour)}
+        </span>
+      ))}
+      {rest.length > 0 ? (
+        <Popover>
+          <PopoverTrigger className="cursor-pointer self-start text-muted-foreground underline-offset-4 outline-none hover:underline focus-visible:underline">
+            + {rest.length} more
+          </PopoverTrigger>
+          <PopoverPopup className="tabular-nums">
+            <div className="flex flex-col gap-1 sm:text-sm">
+              {rest.map((date) => (
+                <span key={date.toISOString()}>
+                  {formatOccurrence(date, time, flow.is24Hour)}
+                </span>
+              ))}
+            </div>
+          </PopoverPopup>
+        </Popover>
+      ) : null}
+    </div>
+  );
+}
+
+/** The recurrence row: the count while picking, the dates after. */
+function RecurrenceRow({ flow }: StepProps) {
+  return (
+    <div className="flex gap-2">
+      <RepeatIcon aria-hidden="true" className={metaIconClassName} />
+      {flow.stage === "select" ? (
+        <OccurrenceCount flow={flow} />
+      ) : (
+        <ResolvedDates flow={flow} />
+      )}
     </div>
   );
 }
 
 /**
- * The repeat line in the event pane. In A it holds the meeting count, and
- * the dates appear under it once a time is picked. In B it only says what
- * the host allows; the count is on the form.
+ * The seat row, during the booking step, when at least one seat is taken.
+ * Exact counts only when the host shows them.
  */
-function RepeatLine({ flow }: StepProps) {
-  const editable =
-    flow.variant === "A" && (flow.stage === "select" || flow.stage === "form");
-  const fixed = flow.stage === "booked";
-
+function SeatRow({ flow }: StepProps) {
+  if (flow.stage === "select" || !flow.date || !flow.time) {
+    return null;
+  }
+  const remaining = flow.seatsRemaining(flow.date, flow.time);
+  if (remaining >= seatsPerTimeSlot || remaining <= 0) {
+    return null;
+  }
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex gap-2">
-        <RepeatIcon aria-hidden="true" className={metaIconClassName} />
-        {editable ? (
-          <div className="flex flex-col items-start gap-2">
-            <span>Every week, for</span>
-            <div className="flex items-center gap-2">
-              <MeetingCount flow={flow} />
-              <span>{flow.count === 1 ? "meeting" : "meetings"}</span>
-            </div>
-          </div>
-        ) : (
-          <span>
-            {fixed
-              ? `Every week, ${flow.count} ${flow.count === 1 ? "meeting" : "meetings"}`
-              : `Every week, up to ${recurrence.occurrences} meetings`}
-          </span>
-        )}
-      </div>
-      {flow.variant === "A" && flow.stage === "form" ? (
-        <SeriesDates flow={flow} />
-      ) : null}
+    <div className="flex items-center gap-2">
+      <UsersIcon aria-hidden="true" className={metaIconClassName} />
+      {flow.showSeatCount ? (
+        <span>
+          {remaining} / {seatsPerTimeSlot} Seats available
+        </span>
+      ) : (
+        <span className="flex items-center gap-1.5">
+          Seats available
+          <FillBadge remaining={remaining} />
+        </span>
+      )}
     </div>
   );
 }
@@ -251,7 +334,7 @@ function EventPane({ flow }: StepProps) {
               {labels.durationMinutes(flow.kind === "recurring" ? 30 : 60)}
             </span>
           </div>
-          {flow.kind === "recurring" ? <RepeatLine flow={flow} /> : null}
+          {flow.kind === "recurring" ? <RecurrenceRow flow={flow} /> : null}
           <div className="flex items-center gap-2">
             <VideoIcon aria-hidden="true" className={metaIconClassName} />
             <span>Cal Video</span>
@@ -260,13 +343,14 @@ function EventPane({ flow }: StepProps) {
             <GlobeIcon aria-hidden="true" className={metaIconClassName} />
             <span>Europe/Rome</span>
           </div>
+          {flow.kind === "seated" ? <SeatRow flow={flow} /> : null}
         </div>
       </div>
     </div>
   );
 }
 
-/** The Booker's select step, unchanged, with seat counts when the host shows them. */
+/** The Booker's select step, with seat availability on each seated time. */
 function SelectStep({ flow }: StepProps) {
   const monthStart = startOfMonth(flow.month);
   const nextMonth = new Date(
@@ -278,9 +362,7 @@ function SelectStep({ flow }: StepProps) {
     flow.date && flow.date > today ? flow.date : today,
   );
   const date = flow.date;
-  const daySlots = date
-    ? getDaySlots(date).filter((time) => !flow.isFull(date, time))
-    : [];
+  const seated = flow.kind === "seated" && date;
 
   return (
     <div className="flex w-full @3xl:flex-row flex-col">
@@ -299,12 +381,7 @@ function SelectStep({ flow }: StepProps) {
       <TimePicker
         availabilityLoading={false}
         currentMonth={flow.month}
-        daySlots={daySlots}
-        getSlotNote={
-          flow.kind === "seated" && flow.showSeatCount && date
-            ? (time) => seatsNote(getSeatsRemaining(date, time))
-            : undefined
-        }
+        daySlots={getDaySlots(date)}
         goToDate={(day) => {
           flow.setMonth(startOfMonth(day));
           flow.setDate(day);
@@ -314,6 +391,9 @@ function SelectStep({ flow }: StepProps) {
         )}
         initialLoading={false}
         is24Hour={flow.is24Hour}
+        isSlotDisabled={
+          seated ? (time) => flow.seatsRemaining(date, time) <= 0 : undefined
+        }
         labels={{
           hour12Short: labels.hour12Short,
           hour24Short: labels.hour24Short,
@@ -328,6 +408,16 @@ function SelectStep({ flow }: StepProps) {
         nextAvailableDate={nextAvailableDate}
         onIs24HourChange={flow.setIs24Hour}
         onSelectTime={flow.pickTime}
+        renderSlotDetail={
+          seated
+            ? (time) => (
+                <SlotSeats
+                  remaining={flow.seatsRemaining(date, time)}
+                  showCount={flow.showSeatCount}
+                />
+              )
+            : undefined
+        }
         selectedDate={flow.date}
       />
     </div>
@@ -368,12 +458,11 @@ const createErrorCopy: Record<CreateError, (email: string) => string> = {
     "The last seat at this time was just taken. Pick another time.",
 };
 
-/** The chosen form. In B, a recurring event's meeting count is at the top. */
+/** The chosen form, unchanged. */
 function FormStep({ flow }: StepProps) {
   const left = simpleFields.filter(
     (field) => field.required && isFieldEmpty(flow.values[field.slug]),
   ).length;
-  const countHere = flow.kind === "recurring" && flow.variant === "B";
 
   return (
     <form
@@ -385,20 +474,6 @@ function FormStep({ flow }: StepProps) {
         }
       }}
     >
-      {countHere ? (
-        <div className="flex flex-col gap-3 border-b pb-4">
-          <div className="flex flex-col gap-2">
-            <p className="font-medium sm:text-sm">How many meetings?</p>
-            <div className="flex items-center gap-2 sm:text-sm">
-              <MeetingCount flow={flow} />
-              <span className="text-muted-foreground">
-                every week, up to {recurrence.occurrences}
-              </span>
-            </div>
-          </div>
-          <SeriesDates flow={flow} />
-        </div>
-      ) : null}
       {simpleFields.map((field) => (
         <FieldBlock
           field={field}
@@ -442,8 +517,10 @@ function FormStep({ flow }: StepProps) {
   );
 }
 
-/** A series: each meeting with its own status, as the API returns them. */
+/** A series: each occurrence with its own status, as the API returns them. */
 function SeriesBooked({ flow }: StepProps) {
+  const time = flow.time ?? "";
+
   return (
     <>
       <div className="flex flex-col gap-2">
@@ -455,7 +532,7 @@ function SeriesBooked({ flow }: StepProps) {
         <p className="text-muted-foreground sm:text-sm">
           {flow.count === 1
             ? `A calendar invitation was sent to ${getEmail(flow)}.`
-            : `${flow.count} meetings, every week. Calendar invitations were sent to ${getEmail(flow)}.`}
+            : `${flow.count} occurrences, every week. Calendar invitations were sent to ${getEmail(flow)}.`}
         </p>
       </div>
       <ul className="flex flex-col divide-y rounded-lg border">
@@ -464,10 +541,7 @@ function SeriesBooked({ flow }: StepProps) {
             className="flex items-center justify-between gap-2 px-3 py-2 tabular-nums sm:text-sm"
             key={date.toISOString()}
           >
-            <span>
-              {formatShortDate(date)}{" "}
-              {displayTimeLabel(flow.time ?? "", !flow.is24Hour)}
-            </span>
+            <span>{formatOccurrence(date, time, flow.is24Hour)}</span>
             <Badge variant="success">Booked</Badge>
           </li>
         ))}
@@ -517,7 +591,7 @@ function BookedStep({ flow }: StepProps) {
 
 /**
  * The series failed partway. The API returns only the error, so the Booker
- * cannot tell which meetings were booked before it.
+ * cannot tell which occurrences were booked before it.
  */
 function BrokenStep({ flow }: StepProps) {
   return (
@@ -528,10 +602,10 @@ function BrokenStep({ flow }: StepProps) {
           className="size-6 text-warning-foreground"
         />
         <h2 className="font-bold font-heading text-xl">
-          Not every meeting was booked
+          Not every occurrence was booked
         </h2>
         <p className="text-muted-foreground sm:text-sm">
-          Something went wrong partway through the series. The first meetings
+          Something went wrong partway through the series. The first occurrences
           may already be booked: check {getEmail(flow)} for invitations before
           you try again.
         </p>

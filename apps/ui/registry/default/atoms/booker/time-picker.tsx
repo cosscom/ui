@@ -1,6 +1,8 @@
 "use client";
 
 import { CalendarX2Icon } from "lucide-react";
+import type { ReactNode } from "react";
+import { cn } from "@/registry/default/lib/utils";
 import { Button } from "@/registry/default/ui/button";
 import {
   Empty,
@@ -47,8 +49,10 @@ type TimePickerProps = {
   onSelectTime: (time: string) => void;
   selectedDate: Date | undefined;
   hasAvailabilityInView: boolean;
-  /** A short note next to a time, such as the seats left. */
-  getSlotNote?: (time: string) => string | undefined;
+  /** A second line under a time, such as its seat availability. */
+  renderSlotDetail?: (time: string) => ReactNode;
+  /** A time that is listed but cannot be picked, such as a full one. */
+  isSlotDisabled?: (time: string) => boolean;
 };
 
 export function TimePicker({
@@ -65,7 +69,8 @@ export function TimePicker({
   onSelectTime,
   selectedDate,
   hasAvailabilityInView,
-  getSlotNote,
+  renderSlotDetail,
+  isSlotDisabled,
 }: TimePickerProps) {
   const slotsLoading = initialLoading || availabilityLoading;
 
@@ -157,13 +162,17 @@ export function TimePicker({
                 ) : (
                   <div className="grid w-full grid-cols-1 @5xl:gap-1.5 gap-1">
                     {daySlots.map((time) => {
-                      const note = getSlotNote?.(time);
+                      const detail = renderSlotDetail?.(time);
                       return (
                         <button
                           key={time}
                           type="button"
+                          disabled={isSlotDisabled?.(time)}
                           onClick={() => onSelectTime(time)}
-                          className="relative flex h-9 cursor-pointer items-center justify-center gap-2 rounded-lg bg-muted font-medium text-foreground tabular-nums outline-none after:absolute @5xl:after:-inset-1 after:-inset-0.75 hover:ring-2 hover:ring-primary/72 focus-visible:z-1 focus-visible:ring-2 focus-visible:ring-primary/72 sm:h-8 sm:text-sm"
+                          className={cn(
+                            "relative flex h-9 cursor-pointer flex-col items-center justify-center rounded-lg bg-muted font-medium text-foreground tabular-nums outline-none after:absolute @5xl:after:-inset-1 after:-inset-0.75 hover:ring-2 hover:ring-primary/72 focus-visible:z-1 focus-visible:ring-2 focus-visible:ring-primary/72 disabled:pointer-events-none disabled:opacity-64 sm:h-8 sm:text-sm",
+                            detail != null && "h-auto! gap-0.5 py-1.5",
+                          )}
                         >
                           <span>
                             {!is24Hour && isSingleDigit12HourLabel(time) ? (
@@ -173,11 +182,7 @@ export function TimePicker({
                             ) : null}
                             {displayTimeLabel(time, !is24Hour)}
                           </span>
-                          {note ? (
-                            <span className="font-normal text-muted-foreground text-xs">
-                              {note}
-                            </span>
-                          ) : null}
+                          {detail}
                         </button>
                       );
                     })}

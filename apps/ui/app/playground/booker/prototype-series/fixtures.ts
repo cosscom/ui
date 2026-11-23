@@ -1,16 +1,16 @@
 // PROTOTYPE ONLY. Synthetic recurring and seated event types. No network:
 // every API answer is decided here.
 
+// One variant: the design system's Booker event information and time slots.
 export const variants = [
-  { key: "A", label: "Meeting count in the event pane" },
-  { key: "B", label: "Meeting count on the form" },
+  { key: "A", label: "As in the design system" },
 ] as const;
 
 export type VariantKey = (typeof variants)[number]["key"];
 
 export const scenarios = [
-  { key: "recurring", label: "Recurring, every week, up to 6" },
-  { key: "recurringBreaks", label: "Recurring, fails at the 4th meeting" },
+  { key: "recurring", label: "Recurring, every week, up to 12" },
+  { key: "recurringBreaks", label: "Recurring, fails at the 4th occurrence" },
   { key: "seated", label: "Seated, counts and attendees shown" },
   { key: "seatedQuiet", label: "Seated, counts and attendees hidden" },
   { key: "seatGone", label: "Seated, the last seat goes first" },
@@ -36,8 +36,22 @@ export function getKind(scenario: ScenarioKey): Kind {
     : "seated";
 }
 
-/** The event type's `recurrence`: every week, at most 6 meetings. */
-export const recurrence = { frequency: "weekly", interval: 1, occurrences: 6 };
+/** The event type's `recurrence`: every week, at most 12 occurrences. */
+export const recurrence = { frequency: "weekly", interval: 1, occurrences: 12 };
+
+/**
+ * The count the booking uses. An entry out of range stays visible in the
+ * field, but the booking uses the event type's maximum.
+ */
+export function resolveCount(input: string) {
+  const value = Number(input);
+  const valid =
+    input.trim() !== "" &&
+    Number.isInteger(value) &&
+    value >= 1 &&
+    value <= recurrence.occurrences;
+  return { count: valid ? value : recurrence.occurrences, valid };
+}
 
 /** The event type's `seats`. */
 export const seatsPerTimeSlot = 10;
@@ -82,7 +96,26 @@ export function getSeriesDates(first: Date, count: number) {
   });
 }
 
-// "Fails at the 4th meeting": three are booked, then only an error comes back.
+/**
+ * How full a slot is, as the design system words it: below half booked
+ * nothing extra, from half "Filling fast", from 83% "Almost full".
+ */
+export function getFill(seatsRemaining: number) {
+  const booked = seatsPerTimeSlot - seatsRemaining;
+  const share = booked / seatsPerTimeSlot;
+  if (seatsRemaining <= 0) {
+    return "full" as const;
+  }
+  if (share >= 0.83) {
+    return "almostFull" as const;
+  }
+  if (share >= 0.5) {
+    return "fillingFast" as const;
+  }
+  return "open" as const;
+}
+
+// "Fails at the 4th occurrence": three are booked, then only an error comes back.
 export const breaksAtOccurrence = 4;
 
 export type CreateAnswer =

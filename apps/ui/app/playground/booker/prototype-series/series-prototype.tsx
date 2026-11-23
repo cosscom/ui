@@ -2,8 +2,7 @@
 
 // PROTOTYPE ONLY. Holds the flow's state, decides every API answer from the
 // scenario, mounts the Booker card and prints the state. Nothing is sent.
-// The two variants differ only in where a recurring event's meeting count
-// is chosen.
+// One variant, following the design system.
 
 import { useEffect, useRef, useState } from "react";
 import { PrototypeSwitcher } from "../../prototype-switcher";
@@ -17,6 +16,7 @@ import {
   getSeatsRemaining,
   getSeriesDates,
   recurrence,
+  resolveCount,
   type ScenarioKey,
   type Stage,
   scenarios,
@@ -65,7 +65,8 @@ export function SeriesPrototype({
     opensFilled ? filledValues : {},
   );
   // Leaving the count out books the whole series, so it starts at the limit.
-  const [count, setCount] = useState(recurrence.occurrences);
+  const [countInput, setCountInput] = useState(String(recurrence.occurrences));
+  const { count, valid: countValid } = resolveCount(countInput);
   const [full, setFull] = useState<string[]>([]);
   const [createError, setCreateError] = useState<CreateError>();
   const [busy, setBusy] = useState(false);
@@ -84,7 +85,7 @@ export function SeriesPrototype({
       setDate(undefined);
       setTime(undefined);
       setValues({});
-      setCount(recurrence.occurrences);
+      setCountInput(String(recurrence.occurrences));
       setFull([]);
       setCreateError(undefined);
       setLog([]);
@@ -135,10 +136,11 @@ export function SeriesPrototype({
     },
     busy,
     count,
+    countInput,
+    countValid,
     createError,
     date,
     is24Hour,
-    isFull: (day, slot) => full.includes(slotKey(day, slot)),
     kind,
     month,
     pickTime: (next) => {
@@ -146,7 +148,9 @@ export function SeriesPrototype({
       setTime(next);
       setStage("form");
     },
-    setCount,
+    seatsRemaining: (day, slot) =>
+      full.includes(slotKey(day, slot)) ? 0 : getSeatsRemaining(day, slot),
+    setCountInput,
     setDate,
     setIs24Hour,
     setMonth,
@@ -158,7 +162,6 @@ export function SeriesPrototype({
     submit: () => void submit(),
     time,
     values,
-    variant,
   };
 
   return (
@@ -175,6 +178,7 @@ export function SeriesPrototype({
             variant,
             ...(kind === "recurring"
               ? {
+                  countTyped: countInput,
                   recurrenceCount: count,
                   seriesDates:
                     date && time
