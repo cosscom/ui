@@ -181,6 +181,27 @@ describe("getSortableKeyboardTarget", () => {
     ).toEqual({ container: "todo", index: 0 });
   });
 
+  it("moves by rows in a grid", () => {
+    const tiles = { grid: ["a", "b", "c", "d", "e", "f", "g"] };
+    const grid = { gridColumns: 3, orientation: "grid" as const };
+    const at = (index: number) => ({ container: "grid", index });
+    expect(getSortableKeyboardTarget(tiles, at(1), "ArrowDown", grid)).toEqual(
+      at(4),
+    );
+    expect(getSortableKeyboardTarget(tiles, at(4), "ArrowUp", grid)).toEqual(
+      at(1),
+    );
+    expect(getSortableKeyboardTarget(tiles, at(5), "ArrowDown", grid)).toEqual(
+      at(6),
+    );
+    expect(
+      getSortableKeyboardTarget(tiles, at(6), "ArrowDown", grid),
+    ).toBeNull();
+    expect(getSortableKeyboardTarget(tiles, at(2), "ArrowRight", grid)).toEqual(
+      at(3),
+    );
+  });
+
   it("mirrors left and right in right-to-left layouts", () => {
     expect(
       getSortableKeyboardTarget(

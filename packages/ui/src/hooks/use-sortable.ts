@@ -47,6 +47,8 @@ const visuallyHidden: React.CSSProperties = {
 const useIsoLayoutEffect: typeof useLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
 
+const claimedEvents: WeakSet<Event> = new WeakSet<Event>();
+
 type Point = { x: number; y: number };
 
 type Session = {
@@ -63,11 +65,11 @@ type Drag<Item> = SortableActive<Item> & {
   pointer?: { grab: Point; height: number; origin: Point; width: number };
 };
 
-type Latest<Item> = {
-  committed: SortableValue<Item>;
-  getItemId: (item: Item) => string;
-  options: UseSortableOptions<Item>;
-  preview: SortableValue<Item>;
+type Latest<Value extends SortableValue<unknown>> = {
+  committed: SortableValue<SortableItem<Value>>;
+  getItemId: (item: SortableItem<Value>) => string;
+  options: UseSortableOptions<Value>;
+  preview: SortableValue<SortableItem<Value>>;
 };
 
 function defaultGetItemId(item: unknown): string {
@@ -163,7 +165,7 @@ function scrollNearEdges(point: Point): boolean {
 
 export type SortableValue<Item> = Record<string, readonly Item[]>;
 
-export type SortableOrientation = "vertical" | "horizontal";
+export type SortableOrientation = "vertical" | "horizontal" | "grid";
 
 export type SortableReason = "pointer" | "keyboard";
 
@@ -207,46 +209,54 @@ export type SortableProps = React.HTMLAttributes<HTMLElement> & {
   ref?: SortableRef;
 };
 
-export type UseSortableOptions<Item> = {
+/** The item type of a value, for example `Task` for `{ todo: Task[] }`. */
+export type SortableItem<Value extends SortableValue<unknown>> =
+  Value[keyof Value][number];
+
+export type UseSortableOptions<Value extends SortableValue<unknown>> = {
   /** Items per container, in order. Controlled. */
-  value?: SortableValue<Item>;
+  value?: Value;
   /** Initial items per container when uncontrolled. */
-  defaultValue?: SortableValue<Item>;
+  defaultValue?: Value;
   /** Called once per completed move, on drop. */
   onValueChange?: (
-    value: SortableValue<Item>,
-    details: SortableChangeDetails<Item>,
+    value: Value,
+    details: SortableChangeDetails<SortableItem<Value>>,
   ) => void;
   /** Defaults to the item for strings and numbers, or its `id`. */
-  getItemId?: (item: Item) => string;
+  getItemId?: (item: SortableItem<Value>) => string;
   /** Name of an item in announcements. Defaults to its id. */
-  getItemLabel?: (item: Item) => string;
+  getItemLabel?: (item: SortableItem<Value>) => string;
   /** Name of a container in announcements. Defaults to its key. */
   getContainerLabel?: (container: string) => string;
   /** Return `false` to refuse a move, for example into a full column. */
-  canMove?: (move: SortableMove<Item>) => boolean;
+  canMove?: (move: SortableMove<SortableItem<Value>>) => boolean;
   /** Direction items flow inside a container. Defaults to `"vertical"`. */
   orientation?: SortableOrientation;
-  /** Start moves from elements with `getHandleProps`. The keyboard uses the handle. */
-  handle?: boolean;
-  /** With `handle`, also start mouse and touch drags from anywhere on the item. */
-  dragFromItem?: boolean;
+  /**
+   * Where a drag can start. `"item"`: anywhere on the item. `"handle"`: only
+   * from `getHandleProps`. `"both"`: mouse and touch from anywhere, keyboard
+   * from the handle. Defaults to `"item"`.
+   */
+  dragFrom?: "item" | "handle" | "both";
   disabled?: boolean;
   /** Scroll near the edges while dragging. Defaults to `true`. */
   autoScroll?: boolean;
   /** Keyboard instructions for screen readers. */
   instructions?: string;
   /** Custom announcements. Return `undefined` to stay silent. */
-  getAnnouncement?: (event: SortableEvent<Item>) => string | undefined;
+  getAnnouncement?: (
+    event: SortableEvent<SortableItem<Value>>,
+  ) => string | undefined;
 };
 
-export type UseSortableReturn<Item> = {
+export type UseSortableReturn<Value extends SortableValue<unknown>> = {
   /** The value to render. While dragging, it shows the item at its new place. */
-  value: SortableValue<Item>;
-  active: SortableActive<Item> | null;
+  value: Value & SortableValue<SortableItem<Value>>;
+  active: SortableActive<SortableItem<Value>> | null;
   getContainerProps: (container: string) => SortableProps;
-  getItemProps: (item: Item) => SortableProps;
-  getHandleProps: (item: Item) => SortableProps;
+  getItemProps: (item: SortableItem<Value>) => SortableProps;
+  getHandleProps: (item: SortableItem<Value>) => SortableProps;
   getOverlayProps: () => SortableProps;
   getAnnouncerProps: () => SortableProps;
 };
@@ -283,6 +293,8 @@ export function getSortableKeyboardTarget<Item>(
     /** Container keys in the order they appear. Defaults to the key order. */
     containers?: readonly string[];
     direction?: "ltr" | "rtl";
+    /** Items per row when `orientation` is `"grid"`. */
+    gridColumns?: number;
     orientation?: SortableOrientation;
   } = {},
 ): SortablePosition | null {
@@ -290,6 +302,7 @@ export function getSortableKeyboardTarget<Item>(
     canMoveTo = (): boolean => true,
     containers = Object.keys(value),
     direction = "ltr",
+    gridColumns = 1,
     orientation = "vertical",
   } = options;
   const list = value[position.container];
@@ -309,11 +322,22 @@ export function getSortableKeyboardTarget<Item>(
     return valid && canMoveTo(target) ? target : null;
   };
 
+  if (orientation === "grid") {
+    const columns = Math.max(1, gridColumns);
+    const row = Math.floor(position.index / columns);
+    const lastRow = Math.floor((list.length - 1) / columns);
+    if (key === "ArrowUp") return within(position.index - columns);
+    if (key === "ArrowDown") {
+      if (row >= lastRow) return null;
+      return within(Math.min(position.index + columns, list.length - 1));
+    }
+  }
+
   if (key === previous) return within(position.index - 1);
   if (key === next) return within(position.index + 1);
   if (key === "Home") return within(0);
   if (key === "End") return within(list.length - 1);
-  if (key !== before && key !== after) return null;
+  if (orientation === "grid" || (key !== before && key !== after)) return null;
 
   const step = key === before ? -1 : 1;
   for (
@@ -329,23 +353,26 @@ export function getSortableKeyboardTarget<Item>(
   return null;
 }
 
-export function useSortable<Item>(
-  options: UseSortableOptions<Item>,
-): UseSortableReturn<Item> {
+export function useSortable<Value extends SortableValue<unknown>>(
+  options: UseSortableOptions<Value>,
+): UseSortableReturn<Value> {
+  type Item = SortableItem<Value>;
   const {
     value: valueProp,
     defaultValue,
     getItemId = defaultGetItemId as (item: Item) => string,
-    handle = false,
-    dragFromItem = false,
+    dragFrom = "item",
     disabled = false,
     instructions = DEFAULT_INSTRUCTIONS,
   } = options;
+  const handle = dragFrom !== "item";
+  const dragFromItem = dragFrom === "both";
 
   const [uncontrolledValue, setUncontrolledValue] = useState<
     SortableValue<Item>
-  >(() => defaultValue ?? {});
-  const committed = valueProp ?? uncontrolledValue;
+  >(() => (defaultValue ?? {}) as SortableValue<Item>);
+  const committed =
+    (valueProp as SortableValue<Item> | undefined) ?? uncontrolledValue;
   const [drag, setDrag] = useState<Drag<Item> | null>(null);
   const [announcement, setAnnouncement] = useState("");
   const instructionsId = useId();
@@ -356,7 +383,7 @@ export function useSortable<Item>(
     [committed, drag, getItemId],
   );
 
-  const latest = useRef<Latest<Item>>(null as unknown as Latest<Item>);
+  const latest = useRef<Latest<Value>>(null as unknown as Latest<Value>);
   latest.current = { committed, getItemId, options, preview };
   const dragRef = useRef<Drag<Item> | null>(null);
   const focusRef = useRef<string | null>(null);
@@ -438,7 +465,12 @@ export function useSortable<Item>(
       if (moved) {
         if (options.value === undefined) setUncontrolledValue(next);
         const { item, reason, to } = current;
-        options.onValueChange?.(next, { from, item, reason, to });
+        options.onValueChange?.(next as unknown as Value, {
+          from,
+          item,
+          reason,
+          to,
+        });
       }
       announce(
         commit ? "drop" : "cancel",
@@ -478,24 +510,37 @@ export function useSortable<Item>(
       }
 
       const [container, element] = target;
-      const vertical = options.orientation !== "horizontal";
-      const reversed = !vertical && isRtl(element);
-      const center = vertical
-        ? y - grab.y + height / 2
-        : x - grab.x + width / 2;
-      let index = 0;
+      const orientation = options.orientation ?? "vertical";
+      const reversed = orientation !== "vertical" && isRtl(element);
+      const centerX = x - grab.x + width / 2;
+      const centerY = y - grab.y + height / 2;
+      const isBefore = (rect: DOMRect): boolean => {
+        const middleX = rect.left + rect.width / 2;
+        const leading = reversed ? middleX > centerX : middleX < centerX;
+        if (orientation === "vertical") {
+          return rect.top + rect.height / 2 < centerY;
+        }
+        if (orientation === "horizontal") return leading;
+        return (
+          rect.bottom < centerY ||
+          (rect.top <= centerY && centerY <= rect.bottom && leading)
+        );
+      };
+      // Count positions among all items, so lists that only render the
+      // visible part (virtualized) still get the right index.
+      let lastBefore = -1;
+      let firstAfter = -1;
+      let position = 0;
       for (const item of preview[container] ?? []) {
         const id = getItemId(item);
-        const rect =
-          id === current.id
-            ? undefined
-            : elements.item.get(id)?.getBoundingClientRect();
-        if (!rect) continue;
-        const middle = vertical
-          ? rect.top + rect.height / 2
-          : rect.left + rect.width / 2;
-        if (reversed ? middle > center : middle < center) index++;
+        if (id === current.id) continue;
+        const rect = elements.item.get(id)?.getBoundingClientRect();
+        if (rect && isBefore(rect)) lastBefore = position;
+        else if (rect && firstAfter === -1) firstAfter = position;
+        position++;
       }
+      const index =
+        lastBefore !== -1 ? lastBefore + 1 : Math.max(firstAfter, 0);
 
       const to = { container, index };
       const same = samePosition(to, current.to);
@@ -633,6 +678,7 @@ export function useSortable<Item>(
       const element = event.currentTarget;
       const ignored = (event.target as Element).closest?.(ignore);
       if (
+        claimedEvents.has(event.nativeEvent) ||
         latest.current.options.disabled ||
         session ||
         dragRef.current ||
@@ -642,6 +688,7 @@ export function useSortable<Item>(
       ) {
         return;
       }
+      claimedEvents.add(event.nativeEvent);
       const start = { x: event.clientX, y: event.clientY };
       const touch = event.pointerType === "touch";
       session = {
@@ -661,6 +708,22 @@ export function useSortable<Item>(
         });
         session.timer = setTimeout(activate, TOUCH_DELAY);
       }
+    };
+
+    const countGridColumns = (list: readonly Item[]): number => {
+      const { getItemId } = latest.current;
+      let top: number | undefined;
+      let count = 0;
+      for (const item of list) {
+        const rect = elements.item
+          .get(getItemId(item))
+          ?.getBoundingClientRect();
+        if (!rect) continue;
+        top ??= rect.top;
+        if (Math.abs(rect.top - top) > 1) break;
+        count++;
+      }
+      return Math.max(count, 1);
     };
 
     const onKeyDown = (
@@ -712,6 +775,7 @@ export function useSortable<Item>(
         },
         containers,
         direction: isRtl(event.currentTarget) ? "rtl" : "ltr",
+        gridColumns: countGridColumns(value[current.to.container] ?? []),
         orientation: options.orientation,
       });
       if (
@@ -878,6 +942,6 @@ export function useSortable<Item>(
           : { display: "none" },
       };
     },
-    value: preview,
+    value: preview as unknown as Value & SortableValue<Item>,
   };
 }
