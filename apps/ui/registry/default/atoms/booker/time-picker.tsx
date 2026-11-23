@@ -247,7 +247,7 @@ function SlotButton({
     <button
       aria-pressed={selected}
       className={cn(
-        "relative col-span-full grid h-9 w-full cursor-pointer grid-cols-subgrid items-center rounded-lg bg-input font-medium text-foreground tabular-nums outline-none after:absolute @5xl:after:-inset-1 after:-inset-0.75 focus-visible:z-1 focus-visible:ring-2 focus-visible:ring-primary/72 enabled:hover:ring-2 enabled:hover:ring-primary/72 disabled:cursor-not-allowed disabled:opacity-50 disabled:after:hidden sm:h-8 sm:text-sm",
+        "relative col-span-full grid h-9 w-full cursor-pointer grid-cols-subgrid items-center rounded-lg bg-muted font-medium text-foreground tabular-nums outline-none after:absolute @5xl:after:-inset-1 after:-inset-0.75 focus-visible:z-1 focus-visible:ring-2 focus-visible:ring-primary/72 enabled:hover:ring-2 enabled:hover:ring-primary/72 disabled:cursor-not-allowed disabled:opacity-50 disabled:after:hidden sm:h-8 sm:text-sm",
         selected && "ring-2 ring-primary/72",
         (offsetLabel || slot.detail || slot.badge) &&
           "h-auto min-h-12 gap-y-1 px-1 py-2 sm:h-auto",

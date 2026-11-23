@@ -171,7 +171,7 @@ function CalendarDayButton({
       aria-current={today ? "date" : undefined}
       aria-label={label}
       className={cn(
-        "in-data-disabled:pointer-events-none relative flex w-full items-center justify-center rounded-lg bg-input in-data-disabled:bg-transparent in-data-selected:bg-primary font-medium in-data-disabled:font-normal in-data-selected:text-primary-foreground text-foreground tabular-nums in-data-disabled:opacity-50 outline-none after:absolute not-in-data-disabled:not-in-data-selected:hover:ring-2 not-in-data-disabled:not-in-data-selected:hover:ring-primary/72 focus-visible:z-1 focus-visible:ring-2 focus-visible:ring-primary/72 sm:text-sm",
+        "in-data-disabled:pointer-events-none relative flex w-full items-center justify-center rounded-lg bg-muted in-data-disabled:bg-transparent in-data-selected:bg-primary font-medium in-data-disabled:font-normal in-data-selected:text-primary-foreground text-foreground tabular-nums in-data-disabled:opacity-50 outline-none after:absolute not-in-data-disabled:not-in-data-selected:hover:ring-2 not-in-data-disabled:not-in-data-selected:hover:ring-primary/72 focus-visible:z-1 focus-visible:ring-2 focus-visible:ring-primary/72 sm:text-sm",
         styles.cell,
         styles.hitArea,
       )}
