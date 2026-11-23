@@ -77,8 +77,16 @@ function isFree(
   if (scenario === "noTime" && (hostIndex === 0 || hostIndex === 3)) {
     return (timeIndex + date.getDate()) % 2 === (hostIndex === 0 ? 0 : 1);
   }
-  const busyEvery = scenario === "many" ? 9 : 3;
-  return (date.getDate() * 5 + timeIndex * 3 + hostIndex * 7) % busyEvery !== 0;
+  // A spread that leaves every host free at a few times a day, and more
+  // times the fewer hosts are chosen.
+  const busyBelow = scenario === "many" ? 1 : 2;
+  const spread =
+    (date.getDate() * 7 +
+      timeIndex * 5 +
+      hostIndex * 3 +
+      timeIndex * hostIndex) %
+    11;
+  return spread >= busyBelow;
 }
 
 /**
