@@ -8,6 +8,7 @@ export const hooks: Registry["items"] = [
     registryDependencies: [
       "@coss/composer-document",
       "@coss/composer-clipboard",
+      "@coss/composer-query",
     ],
     type: "registry:hook",
   },

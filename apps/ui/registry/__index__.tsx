@@ -4865,6 +4865,24 @@ export const Index: Record<string, any> = {
     categories: ["composer","text editor"],
     meta: {"className":"**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"},
   },
+  "p-composer-13": {
+    name: "p-composer-13",
+    description: "Composer mention list that can stay open to mention several people in a row",
+    type: "registry:block",
+    registryDependencies: ["@coss/avatar","@coss/badge","@coss/button","@coss/composer","@coss/kbd"],
+    files: [{
+      path: "registry/default/particles/p-composer-13.tsx",
+      type: "registry:block",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/particles/p-composer-13.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: ["composer","avatar","badge","multiselect","tag"],
+    meta: {"className":"**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl"},
+  },
   "p-command-1": {
     name: "p-command-1",
     description: "Command palette with dialog",
@@ -10891,7 +10909,7 @@ export const Index: Record<string, any> = {
     name: "use-composer-editor",
     description: "",
     type: "registry:hook",
-    registryDependencies: ["@coss/composer-document","@coss/composer-clipboard"],
+    registryDependencies: ["@coss/composer-document","@coss/composer-clipboard","@coss/composer-query"],
     files: [{
       path: "registry/default/hooks/use-composer-editor.ts",
       type: "registry:hook",

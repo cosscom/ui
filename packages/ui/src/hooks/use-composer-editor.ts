@@ -27,6 +27,7 @@ import {
   restoreSelection,
   writeValue,
 } from "@coss/ui/lib/composer-document";
+import { continuesPastQuery } from "@coss/ui/lib/composer-query";
 import type {
   ComponentProps,
   FormEvent,
@@ -144,7 +145,9 @@ export function useComposerEditor({
     !disabled &&
     !readOnly &&
     Boolean(query) &&
-    hasVisibleItems(trigger, options);
+    (query?.spaceAfter
+      ? options.some((item) => continuesPastQuery(item.label, query.text))
+      : hasVisibleItems(trigger, options));
   const isEmpty = !getComposerText(value);
   const canSubmit =
     !isComposing &&
@@ -537,10 +540,12 @@ export function useComposerEditor({
         if (!event.defaultPrevented && !composing.current) updateQuery();
       },
       onClick: updateQuery,
+      onFocus: updateQuery,
       onBlur: (event) => {
         lastSelection.current =
           readSelection(event.currentTarget) ?? lastSelection.current;
-        dismissSuggestions();
+        dismissedQuery.current = null;
+        setQuery(null);
       },
       onInput: () => {
         if (ignoreCompositionInput.current) return;

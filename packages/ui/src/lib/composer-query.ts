@@ -2,7 +2,13 @@ export function getComposerQuery(
   text: string,
   caret: number,
   triggers: readonly string[],
-): { character: string; text: string; start: number; end: number } | null {
+): {
+  character: string;
+  text: string;
+  start: number;
+  end: number;
+  spaceAfter: boolean;
+} | null {
   let start = -1;
   let character = "";
   for (const trigger of triggers) {
@@ -18,14 +24,26 @@ export function getComposerQuery(
 
   const beforeCaret = text.slice(start + character.length, caret);
   if (/^\s/u.test(beforeCaret)) return null;
-  if (!/^[\p{L}\p{M}\p{N}\p{Zs}_.’'-]*$/u.test(beforeCaret)) return null;
+  if (!/^[\p{L}\p{M}\p{N}\p{Zs}_.’'+-]*$/u.test(beforeCaret)) return null;
 
   // Complete the word at the caret without consuming subsequent prose.
-  const suffix = /^[\p{L}\p{M}\p{N}_.’'-]*/u.exec(text.slice(caret))?.[0] ?? "";
+  const suffix =
+    /^[\p{L}\p{M}\p{N}_.’'+-]*/u.exec(text.slice(caret))?.[0] ?? "";
   return {
     character,
     text: (beforeCaret + suffix).replace(/\p{Zs}+/gu, " ").trim(),
     start,
     end: caret + suffix.length,
+    spaceAfter: !suffix && /\p{Zs}$/u.test(beforeCaret),
   };
+}
+
+export function continuesPastQuery(label: string, query: string): boolean {
+  const normalize = (text: string) =>
+    text
+      .normalize("NFD")
+      .replace(/\p{M}/gu, "")
+      .replace(/\s+/gu, " ")
+      .toLocaleLowerCase();
+  return ` ${normalize(label)}`.includes(` ${normalize(query)} `);
 }

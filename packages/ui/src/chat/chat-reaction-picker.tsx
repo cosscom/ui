@@ -12,7 +12,7 @@ import {
   TooltipPopup,
   TooltipTrigger,
 } from "@coss/ui/components/tooltip";
-import { HeartIcon } from "lucide-react";
+import { SmilePlusIcon } from "lucide-react";
 import type { ComponentProps, ReactElement } from "react";
 import { useRef, useState } from "react";
 import { useChatPopupDismissal } from "./hooks/use-chat-popup-dismissal";
@@ -68,7 +68,7 @@ export function ChatReactionPicker({
         <TooltipTrigger
           render={inToolbar ? <ToolbarButton render={trigger} /> : trigger}
         >
-          <HeartIcon aria-hidden="true" className="size-3.5" />
+          <SmilePlusIcon aria-hidden="true" className="size-3.5" />
         </TooltipTrigger>
         <TooltipPopup>{triggerTooltip}</TooltipPopup>
       </Tooltip>
