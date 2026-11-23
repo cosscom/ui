@@ -92,12 +92,16 @@ function getEmail(flow: Flow) {
   return typeof email === "string" ? email.trim() : "";
 }
 
+/** Who attends: the ticked hosts, or everyone when none are ticked. */
 function getChosenHosts(flow: Flow) {
+  if (flow.chosen.length === 0) {
+    return flow.hosts;
+  }
   return flow.hosts.filter((host) => flow.chosen.includes(host.username));
 }
 
 function allChosen(flow: Flow) {
-  return flow.chosen.length === flow.hosts.length;
+  return flow.chosen.length === 0 || flow.chosen.length === flow.hosts.length;
 }
 
 /** The design system's host identity label, with the team's name for everyone. */
@@ -127,7 +131,7 @@ function formatNames(names: string[]) {
  */
 function ChosenLabel({ flow, value }: { flow: Flow; value: Host[] }) {
   const first = value[0];
-  if (value.length === flow.hosts.length || !first) {
+  if (!first || value.length === flow.hosts.length) {
     return <span className="truncate">All hosts</span>;
   }
   return (
@@ -142,14 +146,14 @@ function ChosenLabel({ flow, value }: { flow: Flow; value: Host[] }) {
 
 /**
  * The hosts in a combobox built like the time zone picker (a button that
- * opens a popup with a search field), allowing several choices. The last
- * chosen host cannot be unticked.
+ * opens a popup with a search field), allowing several choices. As Cal's
+ * data table filters: nothing ticked means everyone, and "Clear" at the
+ * bottom of the popup, shown once a host is ticked, goes back to that.
  */
 function HostCombobox({ flow }: StepProps) {
   const chosen = flow.hosts.filter((host) =>
     flow.chosen.includes(host.username),
   );
-  const last = chosen.length === 1 ? chosen[0] : undefined;
 
   return (
     <div className="flex items-center gap-2">
@@ -165,11 +169,9 @@ function HostCombobox({ flow }: StepProps) {
         items={flow.hosts}
         itemToStringLabel={(host: Host) => host.name}
         multiple
-        onValueChange={(next: Host[]) => {
-          if (next.length > 0) {
-            flow.setChosen(next.map((host) => host.username));
-          }
-        }}
+        onValueChange={(next: Host[]) =>
+          flow.setChosen(next.map((host) => host.username))
+        }
         value={chosen}
       >
         <ComboboxTrigger
@@ -200,15 +202,31 @@ function HostCombobox({ flow }: StepProps) {
           <ComboboxEmpty>No hosts found.</ComboboxEmpty>
           <ComboboxList>
             {(host: Host) => (
-              <ComboboxItem
-                disabled={host.username === last?.username}
-                key={host.username}
-                value={host}
-              >
+              <ComboboxItem key={host.username} value={host}>
                 {host.name}
               </ComboboxItem>
             )}
           </ComboboxList>
+          {chosen.length > 0 ? (
+            <div className="border-t p-2">
+              <Button
+                className="w-full rounded-md"
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  flow.setChosen([]);
+                }}
+                onMouseDown={(event) => {
+                  event.preventDefault();
+                }}
+                size="sm"
+                type="button"
+                variant="outline"
+              >
+                Clear
+              </Button>
+            </div>
+          ) : null}
         </ComboboxPopup>
       </Combobox>
     </div>

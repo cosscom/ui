@@ -43,8 +43,9 @@ export function HostsPrototype({
   const opensPicked = initialStage !== "select";
 
   const [stage, setStage] = useState<Stage>(initialStage);
-  // Everyone starts chosen: that is the event as the host set it up.
-  const [chosen, setChosenState] = useState<string[]>(everyone);
+  // Nothing ticked means everyone: the event as the host set it up.
+  const [chosen, setChosenState] = useState<string[]>([]);
+  const attending = chosen.length > 0 ? chosen : everyone;
   const [loading, setLoading] = useState(false);
   const [month, setMonth] = useState(startOfMonth(pickedDate));
   const [date, setDate] = useState<Date | undefined>(
@@ -66,8 +67,9 @@ export function HostsPrototype({
   const note = (line: string) =>
     setLog((current) => [...current.slice(-5), line]);
 
-  // Only a narrowed choice is sent; everyone chosen sends nothing.
-  const hostUsernames = chosen.length === hosts.length ? undefined : chosen;
+  // Only a narrowed choice is sent; everyone sends nothing.
+  const hostUsernames =
+    chosen.length === 0 || chosen.length === hosts.length ? undefined : chosen;
   const query = hostUsernames
     ? `hostUsernames=${hostUsernames.join(",")}`
     : "no hostUsernames";
@@ -79,7 +81,7 @@ export function HostsPrototype({
   useEffect(() => {
     if (mounted.current) {
       setStage("select");
-      setChosenState(getHosts(scenario).map((host) => host.username));
+      setChosenState([]);
       setDate(undefined);
       setTime(undefined);
       setValues({});
@@ -97,7 +99,7 @@ export function HostsPrototype({
     const id = loadId.current + 1;
     loadId.current = id;
     const sent =
-      next.length === hosts.length
+      next.length === 0 || next.length === hosts.length
         ? "no hostUsernames"
         : `hostUsernames=${next.join(",")}`;
     note(`GET slots (${sent})`);
@@ -120,11 +122,11 @@ export function HostsPrototype({
       setInvalidHosts(true);
       return;
     }
-    note(`POST booking (${query}) → 201, hosts: ${chosen.length}`);
+    note(`POST booking (${query}) → 201, hosts: ${attending.length}`);
     setStage("booked");
   };
 
-  const times = getCommonTimes(scenario, hosts, chosen, date);
+  const times = getCommonTimes(scenario, hosts, attending, date);
 
   const flow: Flow = {
     backToSelect: () => {
@@ -139,13 +141,13 @@ export function HostsPrototype({
     invalidHosts,
     is24Hour,
     isDayAvailable: (day) =>
-      getCommonTimes(scenario, hosts, chosen, day).length > 0,
+      getCommonTimes(scenario, hosts, attending, day).length > 0,
     loading,
     month,
     nextAvailableDate: getNextCommonDate(
       scenario,
       hosts,
-      chosen,
+      attending,
       date ?? month,
     ),
     pickTime: (next) => {
@@ -173,7 +175,7 @@ export function HostsPrototype({
         {JSON.stringify(
           {
             apiCalls: log,
-            chosen: `${chosen.length} of ${hosts.length}`,
+            attending: `${attending.length} of ${hosts.length}`,
             hostUsernames: hostUsernames ?? null,
             loading,
             scenario,
