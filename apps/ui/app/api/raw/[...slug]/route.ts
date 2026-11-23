@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { type NextRequest, NextResponse } from "next/server";
+import { absoluteUrl } from "@/lib/canonical";
 
 export async function GET(
   _request: NextRequest,
@@ -37,13 +38,18 @@ export async function GET(
       content = await fs.readFile(mdPath, "utf-8");
     }
 
+    const headers: Record<string, string> = {
+      "Cache-Control": "public, max-age=3600",
+      "Content-Type": "text/plain; charset=utf-8",
+    };
+    // `/docs/<page>.md` is a copy of the docs page: point search engines at it.
+    if (slug[0] === "docs") {
+      const page = `/${slug.join("/")}`.replace(/\.mdx?$/, "");
+      headers.Link = `<${absoluteUrl(page)}>; rel="canonical"`;
+    }
+
     // Return raw markdown with appropriate headers
-    return new NextResponse(content, {
-      headers: {
-        "Cache-Control": "public, max-age=3600",
-        "Content-Type": "text/plain; charset=utf-8",
-      },
-    });
+    return new NextResponse(content, { headers });
   } catch {
     return NextResponse.json({ error: "File not found" }, { status: 404 });
   }

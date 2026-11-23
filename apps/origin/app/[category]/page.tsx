@@ -7,6 +7,7 @@ import Cta from "@/components/cta";
 import PageGrid from "@/components/page-grid";
 import PageHeader from "@/components/page-header";
 import { categories, getCategory } from "@/config/components";
+import { absoluteUrl } from "@/lib/canonical";
 import { getComponentsByNames } from "@/lib/utils";
 
 type Props = {
@@ -26,10 +27,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   );
 
   const isSingleComponent = components.length === 1;
+  const alternates = { canonical: absoluteUrl(`/${category.slug}`) };
 
   // Custom title and description for event-calendar
   if (category.slug === "event-calendar") {
     return {
+      alternates,
       description:
         "An event calendar component built with React and Tailwind CSS. Originally built in v0 and currently in early alpha stage.",
       title:
@@ -38,6 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
+    alternates,
     description: isSingleComponent
       ? `A beautiful and accessible ${category.name.toLowerCase()} component built with React and Tailwind CSS.`
       : `A collection of beautiful and accessible ${category.name.toLowerCase()} components built with React and Tailwind CSS.`,

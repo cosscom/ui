@@ -2,7 +2,8 @@ import { ArrowUpRightIcon } from "lucide-react";
 
 export default function TopBanner() {
   const gatewayOrigin = process.env.NEXT_PUBLIC_COSS_UI_URL || "";
-  const gatewayHome = gatewayOrigin ? `${gatewayOrigin}/` : "/";
+  // No trailing slash: coss.com/ui/ redirects to coss.com/ui, the canonical.
+  const gatewayHome = gatewayOrigin ? gatewayOrigin.replace(/\/$/, "") : "/";
 
   return (
     <div className="dark relative bg-zinc-900 px-4 text-foreground/80">

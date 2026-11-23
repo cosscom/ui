@@ -20,6 +20,7 @@ import { getCategoryThumbnail } from "@/components/category-thumbnails";
 import { PrimitivesBlueprint } from "@/components/primitives-blueprint";
 import { PrimitivesMotion } from "@/components/primitives-motion";
 import { categories } from "@/config/categories";
+import { absoluteUrl } from "@/lib/canonical";
 import { PAGES_NEW } from "@/lib/docs";
 
 const description =
@@ -27,6 +28,7 @@ const description =
 const particleCount = particles.length;
 
 export const metadata: Metadata = {
+  alternates: { canonical: absoluteUrl("/") },
   description,
   title: "A modern React UI component library – coss ui",
 };

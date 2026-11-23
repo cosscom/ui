@@ -8,6 +8,7 @@ import { ScrollArea } from "@/registry/default/ui/scroll-area";
 import { DocsCopyPage } from "@/components/docs-copy-page";
 import { DocsTableOfContents } from "@/components/docs-toc";
 import { SiteFooter } from "@/components/site-footer";
+import { absoluteUrl } from "@/lib/canonical";
 import { source } from "@/lib/source";
 import { mdxComponents } from "@/mdx-components";
 
@@ -36,6 +37,7 @@ export async function generateMetadata(props: {
   }
 
   return {
+    alternates: { canonical: absoluteUrl(page.url) },
     description: doc.description,
     title: `${doc.title} - coss ui`,
   };
