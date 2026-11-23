@@ -47,6 +47,8 @@ type TimePickerProps = {
   onSelectTime: (time: string) => void;
   selectedDate: Date | undefined;
   hasAvailabilityInView: boolean;
+  /** A short note next to a time, such as the seats left. */
+  getSlotNote?: (time: string) => string | undefined;
 };
 
 export function TimePicker({
@@ -63,6 +65,7 @@ export function TimePicker({
   onSelectTime,
   selectedDate,
   hasAvailabilityInView,
+  getSlotNote,
 }: TimePickerProps) {
   const slotsLoading = initialLoading || availabilityLoading;
 
@@ -153,23 +156,31 @@ export function TimePicker({
                   </div>
                 ) : (
                   <div className="grid w-full grid-cols-1 @5xl:gap-1.5 gap-1">
-                    {daySlots.map((time) => (
-                      <button
-                        key={time}
-                        type="button"
-                        onClick={() => onSelectTime(time)}
-                        className="relative flex h-9 cursor-pointer items-center justify-center rounded-lg bg-muted font-medium text-foreground tabular-nums outline-none after:absolute @5xl:after:-inset-1 after:-inset-0.75 hover:ring-2 hover:ring-primary/72 focus-visible:z-1 focus-visible:ring-2 focus-visible:ring-primary/72 sm:h-8 sm:text-sm"
-                      >
-                        <span>
-                          {!is24Hour && isSingleDigit12HourLabel(time) ? (
-                            <span aria-hidden="true" className="invisible">
-                              0
+                    {daySlots.map((time) => {
+                      const note = getSlotNote?.(time);
+                      return (
+                        <button
+                          key={time}
+                          type="button"
+                          onClick={() => onSelectTime(time)}
+                          className="relative flex h-9 cursor-pointer items-center justify-center gap-2 rounded-lg bg-muted font-medium text-foreground tabular-nums outline-none after:absolute @5xl:after:-inset-1 after:-inset-0.75 hover:ring-2 hover:ring-primary/72 focus-visible:z-1 focus-visible:ring-2 focus-visible:ring-primary/72 sm:h-8 sm:text-sm"
+                        >
+                          <span>
+                            {!is24Hour && isSingleDigit12HourLabel(time) ? (
+                              <span aria-hidden="true" className="invisible">
+                                0
+                              </span>
+                            ) : null}
+                            {displayTimeLabel(time, !is24Hour)}
+                          </span>
+                          {note ? (
+                            <span className="font-normal text-muted-foreground text-xs">
+                              {note}
                             </span>
                           ) : null}
-                          {displayTimeLabel(time, !is24Hour)}
-                        </span>
-                      </button>
-                    ))}
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
               </div>
