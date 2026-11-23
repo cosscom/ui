@@ -2289,6 +2289,26 @@ export const particles: ParticleItem[] = [
     type: "registry:block",
   },
   {
+    categories: categories("composer", "avatar", "badge", "multiselect", "tag"),
+    dependencies: ["lucide-react"],
+    description:
+      "Composer mention list that can stay open to mention several people in a row",
+    files: [{ path: "particles/p-composer-13.tsx", type: "registry:block" }],
+    meta: {
+      className:
+        "**:data-[slot=preview]:w-full **:data-[slot=preview]:max-w-xl",
+    },
+    name: "p-composer-13",
+    registryDependencies: [
+      "@coss/avatar",
+      "@coss/badge",
+      "@coss/button",
+      "@coss/composer",
+      "@coss/kbd",
+    ],
+    type: "registry:block",
+  },
+  {
     categories: categories("command", "dialog"),
     dependencies: ["lucide-react"],
     description: "Command palette with dialog",

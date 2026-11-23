@@ -188,7 +188,7 @@ To extend the anatomy above, pass `triggers={triggers}` to `Composer` and insert
 </ComposerPopup>
 ```
 
-Configure only the triggers you need. Queries can contain spaces: `@sam r` finds Sam Rivera. A space immediately after the trigger closes the suggestions. By default, selecting an item inserts a token into the draft; it does not send the message or execute an action. Supply `onAction` to handle items with `type: "action"` as commands: Composer removes the active query and calls your handler without inserting a token or submitting. Your application owns execution.
+Configure only the triggers you need. Queries can contain spaces: `@sam r` finds Sam Rivera. A space keeps the suggestions open only while a name continues past the word just typed, so `@sam ` still shows Sam Rivera, while `@sa ` and `@sam rivera ` close them. A space immediately after the trigger closes them too. By default, selecting an item inserts a token into the draft; it does not send the message or execute an action. Supply `onAction` to handle items with `type: "action"` as commands: Composer removes the active query and calls your handler without inserting a token or submitting. Your application owns execution.
 
 To open a trigger from a button inside `ComposerActions`, call `useComposerContext().insertTrigger("@")` or `insertTrigger("/")`. The trigger is inserted at the caret and opens the same suggestions as typing it.
 
@@ -214,6 +214,14 @@ The selected item's `kind` reaches `renderToken`, so a person and a team selecte
 The default filter ignores case and accents. Set a trigger's `filter` to customize matching. `useComposerFilter` exposes Base UI's `contains`, `startsWith`, and `endsWith` helpers.
 
 <ComponentPreview name="p-composer-5" />
+
+### People and tags
+
+List people and tags apart: team members first, then contacts, then tags. Each person shows their tags next to their name, and a tag row mentions everyone who has that tag. Typing a tag name also lists its people, and once two or more letters start a tag’s name, the tag moves to the top so it is highlighted first.
+
+To mention several people in a row, the list can stay open. Enter or a click mentions the highlighted row and closes the list; holding Shift while pressing Enter or clicking mentions it and keeps the list open on the same search. Escape then closes the list and removes the leftover query.
+
+<ComponentPreview name="p-composer-13" />
 
 ### Emoji
 

@@ -2,7 +2,13 @@ export function getComposerQuery(
   text: string,
   caret: number,
   triggers: readonly string[],
-): { character: string; text: string; start: number; end: number } | null {
+): {
+  character: string;
+  text: string;
+  start: number;
+  end: number;
+  spaceAfter: boolean;
+} | null {
   let start = -1;
   let character = "";
   for (const trigger of triggers) {
@@ -28,5 +34,16 @@ export function getComposerQuery(
     text: (beforeCaret + suffix).replace(/\p{Zs}+/gu, " ").trim(),
     start,
     end: caret + suffix.length,
+    spaceAfter: !suffix && /\p{Zs}$/u.test(beforeCaret),
   };
+}
+
+export function continuesPastQuery(label: string, query: string): boolean {
+  const normalize = (text: string) =>
+    text
+      .normalize("NFD")
+      .replace(/\p{M}/gu, "")
+      .replace(/\s+/gu, " ")
+      .toLocaleLowerCase();
+  return ` ${normalize(label)}`.includes(` ${normalize(query)} `);
 }

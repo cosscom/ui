@@ -199,7 +199,6 @@ export function ComposerInput({
   });
   return (
     <>
-      {/* The drawer reserves keyboard space; its nested input scroller needs no extra bottom padding. */}
       <ScrollArea
         ref={scrollRef}
         className="in-[[data-layout=adaptive][data-multiline]]:col-span-full in-[[data-layout=adaptive][data-multiline]]:col-start-1 in-data-[layout=adaptive]:col-start-2 in-data-[layout=adaptive]:row-start-1 flex h-auto! min-h-0 min-w-0 flex-col in-[[data-layout=adaptive][data-multiline]]:self-stretch in-[[data-layout=adaptive]:not([data-multiline])]:rounded-none rounded-t-[inherit] text-base [--composer-scroll-padding:var(--composer-padding)] in-[[data-layout=adaptive]:not([data-multiline])]:[--composer-scroll-padding:0px] **:data-[slot=scroll-area-viewport]:h-auto! **:data-[slot=scroll-area-viewport]:max-h-[min(var(--composer-max-height,calc(var(--composer-max-rows,8)*var(--composer-line-height,1lh)+var(--composer-input-padding,--spacing(2))+var(--composer-scroll-padding))),50dvh)] **:data-[slot=scroll-area-viewport]:min-h-0 **:data-[slot=scroll-area-content]:pt-[max(0px,calc(var(--composer-scroll-padding)-1px))] **:data-[slot=scroll-area-viewport]:pb-0! md:text-sm"
@@ -291,6 +290,7 @@ export function ComposerPopup({
     <PopoverPrimitive.Portal {...portalProps}>
       <PopoverPrimitive.Positioner
         anchor={anchor ?? anchorRef ?? undefined}
+        collisionAvoidance={{ fallbackAxisSide: "none" }}
         side={side}
         align={align}
         sideOffset={sideOffset}
@@ -300,7 +300,7 @@ export function ComposerPopup({
       >
         <PopoverPrimitive.Popup
           className={cn(
-            "relative w-(--anchor-width) max-w-(--available-width) rounded-lg border bg-popover not-dark:bg-clip-padding text-popover-foreground shadow-lg/5 outline-none transition-opacity before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-lg)-1px)] before:shadow-[0_1px_--theme(--color-black/4%)] data-ending-style:invisible data-starting-style:opacity-0 dark:before:shadow-[0_-1px_--theme(--color-white/6%)]",
+            "relative flex max-h-(--available-height) w-(--anchor-width) max-w-(--available-width) flex-col rounded-lg border bg-popover not-dark:bg-clip-padding text-popover-foreground shadow-lg/5 outline-none transition-opacity before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-lg)-1px)] before:shadow-[0_1px_--theme(--color-black/4%)] data-ending-style:invisible data-starting-style:opacity-0 dark:before:shadow-[0_-1px_--theme(--color-white/6%)]",
             className,
           )}
           data-slot="composer-popup"
@@ -350,7 +350,7 @@ export function ComposerList({
   });
   return (
     <ScrollArea
-      className="h-auto! **:data-[slot=scroll-area-viewport]:h-auto! **:data-[slot=scroll-area-viewport]:max-h-[min(var(--available-height),16rem)]"
+      className="flex flex-col *:data-[slot=scroll-area-viewport]:max-h-64 *:data-[slot=scroll-area-viewport]:min-h-0"
       overscrollContain
       scrollbarGutter
       scrollFade
@@ -482,7 +482,6 @@ export function ComposerSubmit({
     type: "button" as const,
     disabled: disabled ?? !editor?.canSubmit,
     onPointerDown: preserveInputFocus,
-    // iOS can still move focus on compatibility mousedown after pointerdown is canceled.
     onMouseDown: preserveInputFocus,
     onClick: (event: MouseEvent<HTMLButtonElement>): void => {
       if (event.defaultPrevented || disabled) return;
