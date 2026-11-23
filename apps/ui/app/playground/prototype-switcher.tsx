@@ -6,6 +6,7 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
+import { cn } from "@/registry/default/lib/utils";
 
 type Choice = { key: string; label: string };
 
@@ -82,35 +83,48 @@ export function PrototypeSwitcher({
     return null;
   }
 
+  // Once a prototype is down to its chosen variant, there is nothing to flip.
+  const hasVariants = variants.length > 1;
+  if (!hasVariants && !scenarios?.length) {
+    return null;
+  }
+
   const currentVariant = variants.find((item) => item.key === variant);
   const currentScenario = scenarios?.find((item) => item.key === scenario);
 
   return (
     <div className="fixed start-1/2 bottom-4 z-50 flex -translate-x-1/2 items-center gap-1 rounded-full bg-neutral-900 p-1 font-mono text-neutral-50 text-xs shadow-lg dark:bg-neutral-100 dark:text-neutral-900">
-      <button
-        aria-label="Previous variant"
-        className="flex size-7 items-center justify-center rounded-full hover:bg-white/15 dark:hover:bg-black/10"
-        onClick={() => cycleVariant(-1)}
-        type="button"
-      >
-        <ChevronLeftIcon aria-hidden="true" className="size-4" />
-      </button>
-      <span className="min-w-40 px-1 text-center">
-        {currentVariant
-          ? `${currentVariant.key} (${currentVariant.label})`
-          : variant}
-      </span>
-      <button
-        aria-label="Next variant"
-        className="flex size-7 items-center justify-center rounded-full hover:bg-white/15 dark:hover:bg-black/10"
-        onClick={() => cycleVariant(1)}
-        type="button"
-      >
-        <ChevronRightIcon aria-hidden="true" className="size-4" />
-      </button>
+      {hasVariants ? (
+        <>
+          <button
+            aria-label="Previous variant"
+            className="flex size-7 items-center justify-center rounded-full hover:bg-white/15 dark:hover:bg-black/10"
+            onClick={() => cycleVariant(-1)}
+            type="button"
+          >
+            <ChevronLeftIcon aria-hidden="true" className="size-4" />
+          </button>
+          <span className="min-w-40 px-1 text-center">
+            {currentVariant
+              ? `${currentVariant.key} (${currentVariant.label})`
+              : variant}
+          </span>
+          <button
+            aria-label="Next variant"
+            className="flex size-7 items-center justify-center rounded-full hover:bg-white/15 dark:hover:bg-black/10"
+            onClick={() => cycleVariant(1)}
+            type="button"
+          >
+            <ChevronRightIcon aria-hidden="true" className="size-4" />
+          </button>
+        </>
+      ) : null}
       {scenarios?.length ? (
         <button
-          className="ms-1 h-7 rounded-full border border-white/25 px-3 hover:bg-white/15 dark:border-black/20 dark:hover:bg-black/10"
+          className={cn(
+            "h-7 rounded-full border border-white/25 px-3 hover:bg-white/15 dark:border-black/20 dark:hover:bg-black/10",
+            hasVariants && "ms-1",
+          )}
           onClick={cycleScenario}
           type="button"
         >
