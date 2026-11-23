@@ -20,6 +20,7 @@ import { BookerCalendar } from "@/registry/default/atoms/booker/booker-calendar"
 import { getBookerLabels } from "@/registry/default/atoms/booker/booker-labels";
 import { BookerSteps } from "@/registry/default/atoms/booker/booker-steps";
 import { TimePicker } from "@/registry/default/atoms/booker/time-picker";
+import { cn } from "@/registry/default/lib/utils";
 import { Button } from "@/registry/default/ui/button";
 import { Card } from "@/registry/default/ui/card";
 import { FieldBlock, TermsNote } from "../prototype-form/field-block";
@@ -126,6 +127,25 @@ function MeetNowAboveCalendar({ flow }: StepProps) {
         from the team can join in a minute or two.
       </p>
       <Button onClick={flow.meetNow} size="sm" variant="outline">
+        <ZapIcon aria-hidden="true" />
+        Meet now
+      </Button>
+    </div>
+  );
+}
+
+/**
+ * Variant C puts it in a bar along the bottom of the whole card, like Cal's
+ * floating "Connect now" bar, but kept inside the card.
+ */
+function MeetNowBar({ flow }: StepProps) {
+  return (
+    <div className="flex basis-full flex-wrap items-center justify-between gap-3 rounded-b-[calc(var(--radius-2xl)-1px)] border-t bg-muted/64 @5xl:px-6 px-4 py-3">
+      <p className="text-muted-foreground sm:text-sm">
+        <span className="font-medium text-foreground">Don’t want to wait?</span>{" "}
+        Someone from the team can join in a minute or two.
+      </p>
+      <Button onClick={flow.meetNow} size="sm">
         <ZapIcon aria-hidden="true" />
         Meet now
       </Button>
@@ -430,9 +450,12 @@ function BookedStep({ flow }: StepProps) {
 
 export function InstantBooker(props: StepProps) {
   const step = props.flow.stage;
+  const showBar =
+    props.flow.variant === "C" && props.flow.offerInstant && step === "select";
 
   return (
-    <Card className={cardClassName}>
+    // The bar wraps onto its own line under the pane and the steps.
+    <Card className={cn(cardClassName, showBar && "flex-wrap")}>
       <EventPane {...props} />
       <BookerSteps step={step}>
         {step === "select" ? <SelectStep {...props} /> : null}
@@ -442,6 +465,7 @@ export function InstantBooker(props: StepProps) {
         {step === "ended" ? <EndedStep {...props} /> : null}
         {step === "booked" ? <BookedStep {...props} /> : null}
       </BookerSteps>
+      {showBar ? <MeetNowBar {...props} /> : null}
     </Card>
   );
 }

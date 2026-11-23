@@ -2,7 +2,7 @@
 
 // PROTOTYPE ONLY. Holds the flow's state, decides every API answer from the
 // scenario, mounts the Booker card and prints the state. Nothing is sent.
-// The two variants differ only in where "Meet now" is offered.
+// The variants differ only in where "Meet now" is offered.
 
 import { useEffect, useRef, useState } from "react";
 import { PrototypeSwitcher } from "../../prototype-switcher";
