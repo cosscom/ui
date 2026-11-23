@@ -3,7 +3,7 @@
 
 import { getDaySlots, today } from "../prototype-manage/fixtures";
 
-export const variants = [{ key: "A", label: "Hosts in a select" }] as const;
+export const variants = [{ key: "A", label: "Hosts in a combobox" }] as const;
 
 export type VariantKey = (typeof variants)[number]["key"];
 

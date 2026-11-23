@@ -1,7 +1,7 @@
 // PROTOTYPE ONLY. Throwaway route for the wayfinder ticket "The host picker
 // on a collective event" (.scratch/booker/issues/22-host-picker.md).
 //
-// Choosing which hosts of a collective event attend, in a multiple Select.
+// Choosing which hosts of a collective event attend, in a combobox.
 // The event and the API's answers are picked by `scenario`; `stage` opens
 // partway through. Nothing is sent.
 

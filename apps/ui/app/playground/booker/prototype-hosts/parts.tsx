@@ -5,15 +5,17 @@
 // list are the Booker's real ones and reload when the choice changes.
 //
 // The design system has no host picker. What is copied from it: the host
-// identity (HostAvatars and its label). The picker is coss's multiple
-// combobox, in the row the time zone picker uses.
+// identity (HostAvatars and its label). The picker is built like the time
+// zone picker, allowing several choices.
 
 import {
   CalendarIcon,
+  ChevronsUpDownIcon,
   CircleAlertIcon,
   CircleCheckIcon,
   Clock3Icon,
   GlobeIcon,
+  SearchIcon,
   UserIcon,
   VideoIcon,
 } from "lucide-react";
@@ -26,13 +28,12 @@ import { Button } from "@/registry/default/ui/button";
 import { Card } from "@/registry/default/ui/card";
 import {
   Combobox,
-  ComboboxChip,
-  ComboboxChips,
-  ComboboxChipsInput,
   ComboboxEmpty,
+  ComboboxInput,
   ComboboxItem,
   ComboboxList,
   ComboboxPopup,
+  ComboboxTrigger,
   ComboboxValue,
 } from "@/registry/default/ui/combobox";
 import { FieldBlock, TermsNote } from "../prototype-form/field-block";
@@ -91,16 +92,12 @@ function getEmail(flow: Flow) {
   return typeof email === "string" ? email.trim() : "";
 }
 
-/** Who attends: the chosen hosts, or everyone when none are chosen. */
 function getChosenHosts(flow: Flow) {
-  if (flow.chosen.length === 0) {
-    return flow.hosts;
-  }
   return flow.hosts.filter((host) => flow.chosen.includes(host.username));
 }
 
 function allChosen(flow: Flow) {
-  return flow.chosen.length === 0 || flow.chosen.length === flow.hosts.length;
+  return flow.chosen.length === flow.hosts.length;
 }
 
 /** The design system's host identity label, with the team's name for everyone. */
@@ -125,15 +122,34 @@ function formatNames(names: string[]) {
 }
 
 /**
- * The hosts in a multiple combobox, as coss renders one (`p-combobox-9`):
- * the chosen hosts as chips in the field, a search typed after them, the
- * hosts in the popup. In the time zone picker's row. An empty field means
- * everyone, so nothing is chosen to start with.
+ * The button's text, as a multiple Select labels itself: everyone, one name,
+ * or the first name and how many more. The name truncates; the count stays.
+ */
+function ChosenLabel({ flow, value }: { flow: Flow; value: Host[] }) {
+  const first = value[0];
+  if (value.length === flow.hosts.length || !first) {
+    return <span className="truncate">All hosts</span>;
+  }
+  return (
+    <span className="flex min-w-0">
+      <span className="truncate">{first.name}</span>
+      {value.length > 1 ? (
+        <span className="shrink-0 whitespace-pre">{` (+${value.length - 1} more)`}</span>
+      ) : null}
+    </span>
+  );
+}
+
+/**
+ * The hosts in a combobox built like the time zone picker (a button that
+ * opens a popup with a search field), allowing several choices. The last
+ * chosen host cannot be unticked.
  */
 function HostCombobox({ flow }: StepProps) {
   const chosen = flow.hosts.filter((host) =>
     flow.chosen.includes(host.username),
   );
+  const last = chosen.length === 1 ? chosen[0] : undefined;
 
   return (
     <div className="flex items-center gap-2">
@@ -142,37 +158,53 @@ function HostCombobox({ flow }: StepProps) {
         className="size-4.5 shrink-0 opacity-80 sm:size-4"
       />
       <Combobox
+        autoHighlight
+        isItemEqualToValue={(item: Host, selected: Host) =>
+          item.username === selected.username
+        }
         items={flow.hosts}
         itemToStringLabel={(host: Host) => host.name}
         multiple
-        onValueChange={(next: Host[]) =>
-          flow.setChosen(next.map((host) => host.username))
-        }
+        onValueChange={(next: Host[]) => {
+          if (next.length > 0) {
+            flow.setChosen(next.map((host) => host.username));
+          }
+        }}
         value={chosen}
       >
-        <ComboboxChips>
+        <ComboboxTrigger
+          render={
+            <Button
+              aria-label="Hosts who attend"
+              className="min-w-0 shrink justify-between font-normal"
+              size="sm"
+              variant="outline"
+            />
+          }
+        >
           <ComboboxValue>
-            {(value: Host[]) => (
-              <>
-                {value?.map((host) => (
-                  <ComboboxChip aria-label={host.name} key={host.username}>
-                    {host.name}
-                  </ComboboxChip>
-                ))}
-                <ComboboxChipsInput
-                  aria-label="Hosts who attend"
-                  placeholder={value.length > 0 ? undefined : "All hosts"}
-                  size="sm"
-                />
-              </>
-            )}
+            {(value: Host[]) => <ChosenLabel flow={flow} value={value} />}
           </ComboboxValue>
-        </ComboboxChips>
-        <ComboboxPopup>
+          <ChevronsUpDownIcon className="-me-1!" />
+        </ComboboxTrigger>
+        <ComboboxPopup aria-label="Select hosts" className="w-72">
+          <div className="border-b p-2">
+            <ComboboxInput
+              className="rounded-md before:rounded-[calc(var(--radius-md)-1px)]"
+              placeholder="Search hosts"
+              showTrigger={false}
+              size="sm"
+              startAddon={<SearchIcon />}
+            />
+          </div>
           <ComboboxEmpty>No hosts found.</ComboboxEmpty>
           <ComboboxList>
             {(host: Host) => (
-              <ComboboxItem key={host.username} value={host}>
+              <ComboboxItem
+                disabled={host.username === last?.username}
+                key={host.username}
+                value={host}
+              >
                 {host.name}
               </ComboboxItem>
             )}
