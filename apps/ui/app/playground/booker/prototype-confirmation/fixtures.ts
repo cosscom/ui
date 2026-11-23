@@ -16,7 +16,9 @@ export type ProtoBooking = {
   hostInitials: string;
   date: string;
   time: string;
-  duration: string;
+  // The same start, local time, for the event pane's selected time.
+  start: Date;
+  durationMinutes: number;
   timeZone: string;
   location: ProtoLocation;
   attendee: { name: string; email: string };
@@ -30,7 +32,7 @@ const base: ProtoBooking = {
   attendee: { email: "dana@example.com", name: "Dana Whitfield" },
   date: "Monday, November 23, 2026",
   description: "A walkthrough tailored to your team, with time for questions.",
-  duration: "30 min",
+  durationMinutes: 30,
   guests: [],
   host: "Rick Astley",
   hostInitials: "RA",
@@ -39,6 +41,7 @@ const base: ProtoBooking = {
     label: "Cal Video",
     link: "https://app.cal.com/video/abc123",
   },
+  start: new Date(2026, 10, 23, 10, 0),
   status: "accepted",
   time: "10:00 – 10:30am",
   timeZone: "Europe/Rome",

@@ -8,18 +8,31 @@
 import {
   CalendarIcon,
   CircleCheckIcon,
-  Clock3Icon,
-  GlobeIcon,
   HourglassIcon,
   PhoneOffIcon,
   VideoIcon,
   ZapIcon,
 } from "lucide-react";
-import { BookerAvatars } from "@/registry/default/atoms/booker/booker-avatars";
-import { BookerCalendar } from "@/registry/default/atoms/booker/booker-calendar";
+import { useState } from "react";
+import {
+  BookerCalendar,
+  BookerCalendarPane,
+} from "@/registry/default/atoms/booker/booker-calendar";
 import { getBookerLabels } from "@/registry/default/atoms/booker/booker-labels";
 import { BookerSteps } from "@/registry/default/atoms/booker/booker-steps";
+import { EventDescription } from "@/registry/default/atoms/booker/event-description";
+import {
+  EventTitle,
+  FixedDuration,
+  HostIdentity,
+  SelectedTime,
+} from "@/registry/default/atoms/booker/event-meta";
+import { LocationRow } from "@/registry/default/atoms/booker/location";
 import { TimePicker } from "@/registry/default/atoms/booker/time-picker";
+import {
+  TimezoneDisplay,
+  TimezonePicker,
+} from "@/registry/default/atoms/booker/timezone-picker";
 import { Button } from "@/registry/default/ui/button";
 import { Card } from "@/registry/default/ui/card";
 import { FieldBlock, TermsNote } from "../prototype-form/field-block";
@@ -30,17 +43,16 @@ import {
   simpleFields,
 } from "../prototype-form/fixtures";
 import {
-  formatDate,
+  getCalendarProps,
   getDaySlots,
   getNextAvailableDate,
-  hasSlots,
+  slotStart,
   slotTime,
   startOfMonth,
   today,
   toSlots,
 } from "../prototype-manage/fixtures";
 import type { EndReason, Stage } from "./fixtures";
-import { displayTimeLabel } from "@/lib/booker/utils";
 
 export type Mode = "scheduled" | "instant";
 
@@ -129,54 +141,45 @@ function TimeLine({ flow }: StepProps) {
   }
   if (flow.stage !== "select" && flow.date && flow.time) {
     return (
-      <div className="flex gap-2">
-        <CalendarIcon aria-hidden="true" className={metaIconClassName} />
-        <span>
-          {formatDate(flow.date)} {displayTimeLabel(flow.time, !flow.is24Hour)}
-        </span>
-      </div>
+      <SelectedTime
+        durationMinutes={30}
+        is24Hour={flow.is24Hour}
+        locale="en-US"
+        start={slotStart(flow.date, flow.time)}
+      />
     );
   }
   return null;
 }
 
 function EventPane({ flow }: StepProps) {
+  const [timeZone, setTimeZone] = useState("Europe/Rome");
+
   return (
     <div className={sideClassName}>
       <div className="flex flex-col gap-6 @5xl:p-6 p-4">
         <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-2">
-            <BookerAvatars
-              avatars={flow.host ? undefined : team}
-              fallbackName={flow.host ?? "Sales team"}
-            />
-            <p className="font-medium text-muted-foreground sm:text-sm">
-              {flow.host ?? "Sales team"}
-            </p>
-          </div>
+          <HostIdentity
+            avatars={flow.host ? undefined : team}
+            name={flow.host ?? "Sales team"}
+          />
           <div className="flex flex-col gap-1">
-            <h1 className="font-bold font-heading @3xl:@max-5xl:text-lg text-xl">
-              Product demo
-            </h1>
-            <p className="text-muted-foreground sm:text-sm">
-              A walkthrough tailored to your team, with time for questions.
-            </p>
+            <EventTitle>Product demo</EventTitle>
+            <EventDescription description="A walkthrough tailored to your team, with time for questions." />
           </div>
         </div>
         <div className="flex flex-col gap-3 sm:text-sm">
           <TimeLine flow={flow} />
-          <div className="flex items-center gap-2">
-            <Clock3Icon aria-hidden="true" className={metaIconClassName} />
-            <span>{labels.durationMinutes(30)}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <VideoIcon aria-hidden="true" className={metaIconClassName} />
-            <span>Cal Video</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <GlobeIcon aria-hidden="true" className={metaIconClassName} />
-            <span>Europe/Rome</span>
-          </div>
+          <FixedDuration label={labels.durationMinutes(30)} />
+          {/* As the design system: an instant meeting shows no location. */}
+          {flow.mode === "instant" ? null : (
+            <LocationRow label="Cal Video" provider="cal-video" />
+          )}
+          {flow.stage === "select" ? (
+            <TimezonePicker onValueChange={setTimeZone} value={timeZone} />
+          ) : (
+            <TimezoneDisplay value={timeZone} />
+          )}
         </div>
         {flow.offerInstant && flow.stage === "select" ? (
           <MeetNowInPane flow={flow} />
@@ -195,18 +198,9 @@ function SelectStep({ flow }: StepProps) {
   return (
     <div className="flex w-full flex-col">
       <div className="flex w-full @3xl:flex-row flex-col">
-        <div className="flex @3xl:w-[min(28.75rem,100cqw-2*var(--booker-side))] w-full @3xl:shrink-0 flex-col items-center @3xl:@max-5xl:px-2 px-4 @3xl:@max-5xl:py-2 pt-3 pb-4">
-          <BookerCalendar
-            disabled={(date) => !hasSlots(date)}
-            locale="en-US"
-            month={flow.month}
-            onMonthChange={flow.setMonth}
-            onSelect={(date) => flow.setDate(date)}
-            selected={flow.date}
-            startMonth={startOfMonth(today)}
-            today={today}
-          />
-        </div>
+        <BookerCalendarPane>
+          <BookerCalendar locale="en-US" {...getCalendarProps(flow)} />
+        </BookerCalendarPane>
         <TimePicker
           currentMonth={flow.month}
           is24Hour={flow.is24Hour}

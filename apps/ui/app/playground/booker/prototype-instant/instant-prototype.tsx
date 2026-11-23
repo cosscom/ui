@@ -6,7 +6,7 @@
 import { useEffect, useRef, useState } from "react";
 import { PrototypeSwitcher } from "../../prototype-switcher";
 import type { FieldValues } from "../prototype-form/fixtures";
-import { startOfMonth } from "../prototype-manage/fixtures";
+import { resolveDate, startOfMonth } from "../prototype-manage/fixtures";
 import {
   acceptAfterSeconds,
   createAnswer,
@@ -50,8 +50,11 @@ export function InstantPrototype({
     initialStage === "booked" ? "scheduled" : "instant",
   );
   const [month, setMonth] = useState(startOfMonth(pickedDate));
+  // The select step opens on the first selectable day, as the design system.
   const [date, setDate] = useState<Date | undefined>(
-    initialStage === "booked" ? pickedDate : undefined,
+    initialStage === "booked"
+      ? pickedDate
+      : resolveDate(startOfMonth(pickedDate)),
   );
   const [time, setTime] = useState<string | undefined>(
     initialStage === "booked" ? "14:00" : undefined,
@@ -133,7 +136,7 @@ export function InstantPrototype({
     if (mounted.current) {
       setStage("select");
       setMode("instant");
-      setDate(undefined);
+      setDate(resolveDate(month));
       setTime(undefined);
       setValues({});
       setRequested(false);

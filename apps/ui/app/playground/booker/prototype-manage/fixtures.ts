@@ -1,6 +1,14 @@
 // PROTOTYPE ONLY. A synthetic booking to reschedule or cancel, and synthetic
 // availability for the Booker's real calendar and time list. No network.
 
+import type { BookerCalendarProps } from "@/registry/default/atoms/booker/booker-calendar";
+import {
+  calendarGrid,
+  localDate,
+  localDateKey,
+  resolveSelection,
+} from "@/registry/default/atoms/booker/booker-calendar-model";
+
 export type ReasonFieldConfig = {
   label: string;
   required: boolean;
@@ -161,6 +169,76 @@ export function startOfMonth(date: Date) {
   return new Date(date.getFullYear(), date.getMonth(), 1);
 }
 
+/**
+ * The selection for a month, as the design system's: kept while it is still
+ * visible and selectable, else the month's first selectable day.
+ */
+export function resolveDate(
+  month: Date,
+  selected?: Date,
+  isAvailable: (date: Date) => boolean = hasSlots,
+): Date | undefined {
+  const selectedKey = selected ? localDateKey(selected) : undefined;
+  const todayKey = localDateKey(today);
+  const key = resolveSelection(
+    selectedKey,
+    calendarGrid({
+      minDate: todayKey,
+      month: localDateKey(month).slice(0, 7),
+      today: todayKey,
+    }),
+    (day) => ({ available: isAvailable(localDate(day)) }),
+  );
+  if (!key) {
+    return undefined;
+  }
+  return key === selectedKey ? selected : localDate(key);
+}
+
+/**
+ * The calendar's props for a prototype's select step. Changing month keeps a
+ * still-valid selection; a keyboard move keeps it as it is.
+ */
+export function getCalendarProps({
+  month,
+  setMonth,
+  date,
+  setDate,
+  isAvailable = hasSlots,
+}: {
+  month: Date;
+  setMonth: (month: Date) => void;
+  date: Date | undefined;
+  setDate: (date: Date | undefined) => void;
+  isAvailable?: (date: Date) => boolean;
+}): Pick<
+  BookerCalendarProps,
+  | "getDay"
+  | "minDate"
+  | "month"
+  | "onMonthChange"
+  | "onSelect"
+  | "selected"
+  | "today"
+> {
+  const todayKey = localDateKey(today);
+  return {
+    getDay: (day) => ({ available: isAvailable(localDate(day)) }),
+    minDate: todayKey,
+    month: localDateKey(month).slice(0, 7),
+    onMonthChange: (next, preserveSelection) => {
+      const nextMonth = localDate(`${next}-01`);
+      setMonth(nextMonth);
+      if (!preserveSelection) {
+        setDate(resolveDate(nextMonth, date, isAvailable));
+      }
+    },
+    onSelect: (day) => setDate(localDate(day)),
+    selected: date ? localDateKey(date) : undefined,
+    today: todayKey,
+  };
+}
+
 export function formatDate(date: Date) {
   return date.toLocaleDateString("en-US", {
     day: "numeric",
@@ -191,4 +269,16 @@ export function slotTime(start: string) {
   const date = new Date(start);
   const pad = (value: number) => String(value).padStart(2, "0");
   return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+/** A picked day at an "HH:mm" time, as a local Date: the start of a slot. */
+export function slotStart(date: Date, time: string) {
+  const [hours = 0, minutes = 0] = time.split(":").map(Number);
+  return new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    hours,
+    minutes,
+  );
 }

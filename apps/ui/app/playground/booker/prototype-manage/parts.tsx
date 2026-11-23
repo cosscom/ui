@@ -6,20 +6,27 @@
 // step uses the Booker's real calendar and time list, unchanged.
 
 import {
-  CalendarIcon,
   CalendarPlusIcon,
   CircleCheckIcon,
   CircleXIcon,
-  Clock3Icon,
   HourglassIcon,
-  VideoIcon,
 } from "lucide-react";
-import type { ReactNode } from "react";
-import { BookerAvatars } from "@/registry/default/atoms/booker/booker-avatars";
-import { BookerCalendar } from "@/registry/default/atoms/booker/booker-calendar";
+import {
+  BookerCalendar,
+  BookerCalendarPane,
+} from "@/registry/default/atoms/booker/booker-calendar";
 import { getBookerLabels } from "@/registry/default/atoms/booker/booker-labels";
 import { BookerSteps } from "@/registry/default/atoms/booker/booker-steps";
 import { DurationPicker } from "@/registry/default/atoms/booker/duration-picker";
+import { EventDescription } from "@/registry/default/atoms/booker/event-description";
+import {
+  EventTitle,
+  FixedDuration,
+  FormerTime,
+  HostIdentity,
+  SelectedTime,
+} from "@/registry/default/atoms/booker/event-meta";
+import { LocationRow } from "@/registry/default/atoms/booker/location";
 import { TimePicker } from "@/registry/default/atoms/booker/time-picker";
 import {
   TimezoneDisplay,
@@ -32,19 +39,18 @@ import { Label } from "@/registry/default/ui/label";
 import { Radio, RadioGroup } from "@/registry/default/ui/radio-group";
 import { Textarea } from "@/registry/default/ui/textarea";
 import {
-  formatDate,
+  getCalendarProps,
   getDaySlots,
   getNextAvailableDate,
   getStepKey,
-  hasSlots,
   type ManageBooking,
   type Stage,
+  slotStart,
   slotTime,
   startOfMonth,
   today,
   toSlots,
 } from "./fixtures";
-import { displayTimeLabel } from "@/lib/booker/utils";
 
 export type Slot = { date: Date; time: string; durationMinutes: number };
 
@@ -94,7 +100,6 @@ const sideClassName =
   "@3xl:w-(--booker-side) @3xl:shrink-0 @3xl:border-e border-b @3xl:border-b-0";
 const narrowStepClassName =
   "@3xl:w-[min(28.75rem,100cqw-2*var(--booker-side))] w-full @3xl:shrink-0 @5xl:p-6 p-4";
-const metaIconClassName = "h-lh w-4.5 shrink-0 opacity-80 sm:w-4";
 const barClassName =
   "sticky bottom-0 -mx-4 @5xl:-mx-6 -mb-4 @5xl:-mb-6 mt-auto flex items-center justify-between gap-2 rounded-b-[calc(var(--radius-2xl)-1px)] @3xl:rounded-es-none border-t bg-card @5xl:px-6 px-4 py-3";
 
@@ -108,27 +113,11 @@ export function getNoun(booking: ManageBooking) {
   return booking.kind === "seat" ? "seat" : "booking";
 }
 
-function SlotLine({
-  slot,
-  is24Hour,
-  struck,
-}: {
-  slot: Slot;
-  is24Hour: boolean;
-  struck?: boolean;
-}) {
-  return (
-    <span className={struck ? "text-muted-foreground line-through" : undefined}>
-      {formatDate(slot.date)} {displayTimeLabel(slot.time, !is24Hour)}
-    </span>
-  );
-}
-
 /**
  * The event information, as during booking. While rescheduling, the current
- * time is struck through and the duration and timezone pickers work, as they
- * do when booking. After a reschedule, the former time stays struck through
- * above the new one.
+ * time is the former time and the duration and timezone pickers work, as they
+ * do when picking a time. After a reschedule, the former time stays above the
+ * new one.
  */
 function EventPane({ booking, flow }: StepProps) {
   const rescheduling = isReschedulingStage(flow.stage);
@@ -141,69 +130,61 @@ function EventPane({ booking, flow }: StepProps) {
         }
       : undefined;
 
-  let timeLines: ReactNode;
+  let former: Slot | undefined;
+  let selected: Slot | undefined;
   if (rescheduling) {
-    timeLines = (
-      <>
-        <SlotLine is24Hour={flow.is24Hour} slot={flow.current} struck />
-        {flow.stage === "confirmingReschedule" && picked ? (
-          <SlotLine is24Hour={flow.is24Hour} slot={picked} />
-        ) : null}
-      </>
-    );
-  } else if (flow.former) {
-    timeLines = (
-      <>
-        <SlotLine is24Hour={flow.is24Hour} slot={flow.former} struck />
-        <SlotLine
-          is24Hour={flow.is24Hour}
-          slot={flow.current}
-          struck={flow.stage === "cancelled"}
-        />
-      </>
-    );
+    former = flow.current;
+    selected = flow.stage === "confirmingReschedule" ? picked : undefined;
   } else {
-    timeLines = (
-      <SlotLine
-        is24Hour={flow.is24Hour}
-        slot={flow.current}
-        struck={flow.stage === "cancelled"}
-      />
-    );
+    former = flow.former;
+    selected = flow.current;
   }
+
+  const selectedTime = selected ? (
+    <SelectedTime
+      durationMinutes={selected.durationMinutes}
+      is24Hour={flow.is24Hour}
+      locale="en-US"
+      start={slotStart(selected.date, selected.time)}
+    />
+  ) : null;
 
   return (
     <div className={sideClassName}>
       <div className="flex flex-col gap-6 @5xl:p-6 p-4">
         <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-2">
-            <BookerAvatars fallbackName={booking.host} />
-            <p className="font-medium text-muted-foreground sm:text-sm">
-              {booking.host}
-            </p>
-          </div>
+          <HostIdentity name={booking.host} />
           <div className="flex flex-col gap-1">
-            <h1 className="font-bold font-heading @3xl:@max-5xl:text-lg text-xl">
-              {booking.title}
-            </h1>
-            <p className="text-muted-foreground sm:text-sm">
-              {booking.description}
-            </p>
+            <EventTitle>{booking.title}</EventTitle>
+            <EventDescription description={booking.description} />
           </div>
         </div>
         <div className="flex flex-col gap-3 sm:text-sm">
-          <div className="flex gap-2">
-            <CalendarIcon aria-hidden="true" className={metaIconClassName} />
-            <span className="flex flex-col gap-1">
-              {timeLines}
-              {booking.seriesNote ? (
-                <span className="text-muted-foreground">
-                  {booking.seriesNote}
-                </span>
-              ) : null}
-            </span>
-          </div>
-          {rescheduling && booking.durationOptions.length > 1 ? (
+          {former ? (
+            <FormerTime
+              is24Hour={flow.is24Hour}
+              label="Former time"
+              locale="en-US"
+              start={slotStart(former.date, former.time)}
+            />
+          ) : null}
+          {/* The design system has no cancelled time: it stays struck. */}
+          {flow.stage === "cancelled" ? (
+            <div className="text-muted-foreground line-through">
+              {selectedTime}
+            </div>
+          ) : (
+            selectedTime
+          )}
+          {booking.seriesNote ? (
+            <p className="ps-6.5 text-muted-foreground sm:ps-6">
+              {booking.seriesNote}
+            </p>
+          ) : null}
+          {/* As the design system: the duration can be changed while picking
+              a time, and is static during the booking step. */}
+          {flow.stage === "rescheduling" &&
+          booking.durationOptions.length > 1 ? (
             <DurationPicker
               formatLabel={labels.durationMinutes}
               onValueChange={flow.setDurationMinutes}
@@ -211,17 +192,15 @@ function EventPane({ booking, flow }: StepProps) {
               value={flow.durationMinutes}
             />
           ) : (
-            <div className="flex items-center gap-2">
-              <Clock3Icon aria-hidden="true" className={metaIconClassName} />
-              <span>
-                {labels.durationMinutes(flow.current.durationMinutes)}
-              </span>
-            </div>
+            <FixedDuration
+              label={labels.durationMinutes(
+                rescheduling
+                  ? flow.durationMinutes
+                  : flow.current.durationMinutes,
+              )}
+            />
           )}
-          <div className="flex items-center gap-2">
-            <VideoIcon aria-hidden="true" className={metaIconClassName} />
-            <span>{booking.location}</span>
-          </div>
+          <LocationRow label={booking.location} provider="cal-video" />
           {flow.stage === "rescheduling" ? (
             <TimezonePicker
               onValueChange={flow.setTimeZone}
@@ -244,18 +223,9 @@ function SelectStep({ flow }: StepProps) {
 
   return (
     <div className="flex w-full @3xl:flex-row flex-col">
-      <div className="flex @3xl:w-[min(28.75rem,100cqw-2*var(--booker-side))] w-full @3xl:shrink-0 flex-col items-center @3xl:@max-5xl:px-2 px-4 @3xl:@max-5xl:py-2 pt-3 pb-4">
-        <BookerCalendar
-          disabled={(date) => !hasSlots(date)}
-          locale="en-US"
-          month={flow.month}
-          onMonthChange={flow.setMonth}
-          onSelect={(date) => flow.setDate(date)}
-          selected={flow.date}
-          startMonth={startOfMonth(today)}
-          today={today}
-        />
-      </div>
+      <BookerCalendarPane>
+        <BookerCalendar locale="en-US" {...getCalendarProps(flow)} />
+      </BookerCalendarPane>
       <TimePicker
         currentMonth={flow.month}
         is24Hour={flow.is24Hour}

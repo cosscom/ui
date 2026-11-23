@@ -6,7 +6,7 @@
 import { useEffect, useRef, useState } from "react";
 import { PrototypeSwitcher } from "../../prototype-switcher";
 import type { FieldValues } from "../prototype-form/fixtures";
-import { startOfMonth } from "../prototype-manage/fixtures";
+import { resolveDate, startOfMonth } from "../prototype-manage/fixtures";
 import {
   createAnswer,
   getCommonTimes,
@@ -46,9 +46,14 @@ export function HostsPrototype({
   // Everyone starts chosen: that is the event as the host set it up.
   const [chosen, setChosenState] = useState<string[]>(everyone);
   const [loading, setLoading] = useState(false);
+  const openForEveryone = (day: Date) =>
+    getCommonTimes(scenario, hosts, everyone, day).length > 0;
   const [month, setMonth] = useState(startOfMonth(pickedDate));
+  // The select step opens on the first selectable day, as the design system.
   const [date, setDate] = useState<Date | undefined>(
-    opensPicked ? pickedDate : undefined,
+    opensPicked
+      ? pickedDate
+      : resolveDate(startOfMonth(pickedDate), undefined, openForEveryone),
   );
   const [time, setTime] = useState<string | undefined>(
     opensPicked
@@ -80,7 +85,7 @@ export function HostsPrototype({
     if (mounted.current) {
       setStage("select");
       setChosenState(getHosts(scenario).map((host) => host.username));
-      setDate(undefined);
+      setDate(resolveDate(month, undefined, openForEveryone));
       setTime(undefined);
       setValues({});
       setInvalidHosts(false);

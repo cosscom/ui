@@ -9,6 +9,7 @@ import {
   bookings,
   formatDate,
   getStepKey,
+  resolveDate,
   type ScenarioKey,
   type Stage,
   scenarios,
@@ -67,7 +68,7 @@ export function ManagePrototype({
     linkHasPicked
       ? pickedDate
       : initialStage === "rescheduling"
-        ? original.date
+        ? resolveDate(startOfMonth(original.date), original.date)
         : undefined,
   );
   const [time, setTime] = useState<string | undefined>(
@@ -164,7 +165,7 @@ export function ManagePrototype({
       clearMessages();
       setReason("");
       setMonth(startOfMonth(current.date));
-      setDate(current.date);
+      setDate(resolveDate(startOfMonth(current.date), current.date));
       setTime(undefined);
       setDurationMinutes(current.durationMinutes);
       setStage("rescheduling");

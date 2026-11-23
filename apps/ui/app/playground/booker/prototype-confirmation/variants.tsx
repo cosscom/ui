@@ -4,19 +4,19 @@
 // booking. The two layouts that lost are on the prototype/booker-confirmation
 // branch.
 
-import {
-  CalendarIcon,
-  CalendarPlusIcon,
-  CircleCheckIcon,
-  Clock3Icon,
-  GlobeIcon,
-  HourglassIcon,
-  MapPinIcon,
-  PhoneIcon,
-  VideoIcon,
-} from "lucide-react";
+import { CalendarPlusIcon, CircleCheckIcon, HourglassIcon } from "lucide-react";
 import type { ReactNode } from "react";
-import { BookerAvatars } from "@/registry/default/atoms/booker/booker-avatars";
+import { getBookerLabels } from "@/registry/default/atoms/booker/booker-labels";
+import { EventDescription } from "@/registry/default/atoms/booker/event-description";
+import {
+  EventTitle,
+  FixedDuration,
+  HostIdentity,
+  RequiresConfirmation,
+  SelectedTime,
+} from "@/registry/default/atoms/booker/event-meta";
+import { LocationRow } from "@/registry/default/atoms/booker/location";
+import { TimezoneDisplay } from "@/registry/default/atoms/booker/timezone-picker";
 import { Button } from "@/registry/default/ui/button";
 import { Card } from "@/registry/default/ui/card";
 import {
@@ -24,8 +24,9 @@ import {
   getHeadline,
   getLocationText,
   type ProtoBooking,
-  type ProtoLocation,
 } from "./fixtures";
+
+const labels = getBookerLabels();
 
 export type VariantProps = {
   booking: ProtoBooking;
@@ -38,7 +39,6 @@ const sideClassName =
   "@3xl:w-(--booker-side) @3xl:border-e border-b @3xl:border-b-0";
 const mainClassName =
   "@3xl:w-[min(28.75rem,100cqw-2*var(--booker-side))] w-full @3xl:shrink-0 @5xl:p-6 p-4";
-const metaIconClassName = "h-lh w-4.5 shrink-0 opacity-80 sm:w-4";
 
 function StatusIcon({
   booking,
@@ -58,22 +58,6 @@ function StatusIcon({
       className={`text-success-foreground ${className ?? ""}`}
     />
   );
-}
-
-function LocationIcon({
-  location,
-  className,
-}: {
-  location: ProtoLocation;
-  className?: string;
-}) {
-  if (location.kind === "video") {
-    return <VideoIcon aria-hidden="true" className={className} />;
-  }
-  if (location.kind === "address") {
-    return <MapPinIcon aria-hidden="true" className={className} />;
-  }
-  return <PhoneIcon aria-hidden="true" className={className} />;
 }
 
 function WhenValue({ booking }: { booking: ProtoBooking }) {
@@ -105,43 +89,30 @@ function EventPane({ booking }: { booking: ProtoBooking }) {
     <div className={sideClassName}>
       <div className="flex flex-col gap-6 @5xl:p-6 p-4">
         <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-2">
-            <BookerAvatars fallbackName={booking.host} />
-            <p className="font-medium text-muted-foreground sm:text-sm">
-              {booking.host}
-            </p>
-          </div>
+          <HostIdentity name={booking.host} />
           <div className="flex flex-col gap-1">
-            <h1 className="font-bold font-heading @3xl:@max-5xl:text-lg text-xl">
-              {booking.title}
-            </h1>
-            <p className="text-muted-foreground sm:text-sm">
-              {booking.description}
-            </p>
+            <EventTitle>{booking.title}</EventTitle>
+            <EventDescription description={booking.description} />
           </div>
         </div>
         <div className="flex flex-col gap-3 sm:text-sm">
-          <div className="flex gap-2">
-            <CalendarIcon aria-hidden="true" className={metaIconClassName} />
-            <span>
-              {booking.date} {booking.time}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Clock3Icon aria-hidden="true" className={metaIconClassName} />
-            <span>{booking.duration}</span>
-          </div>
-          <div className="flex gap-2">
-            <LocationIcon
-              className={metaIconClassName}
-              location={booking.location}
-            />
-            <span>{getLocationText(booking.location)}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <GlobeIcon aria-hidden="true" className={metaIconClassName} />
-            <span>{booking.timeZone}</span>
-          </div>
+          <SelectedTime
+            durationMinutes={booking.durationMinutes}
+            is24Hour={false}
+            locale="en-US"
+            start={booking.start}
+          />
+          {booking.status === "pending" ? (
+            <RequiresConfirmation label="Requires confirmation" />
+          ) : null}
+          <FixedDuration
+            label={labels.durationMinutes(booking.durationMinutes)}
+          />
+          <LocationRow
+            label={getLocationText(booking.location)}
+            provider={booking.location.kind === "video" ? "cal-video" : ""}
+          />
+          <TimezoneDisplay value={booking.timeZone} />
         </div>
       </div>
     </div>

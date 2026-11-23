@@ -9,7 +9,7 @@
 import { useEffect, useRef, useState } from "react";
 import { PrototypeSwitcher } from "../../prototype-switcher";
 import type { FieldValues } from "../prototype-form/fixtures";
-import { startOfMonth } from "../prototype-manage/fixtures";
+import { resolveDate, startOfMonth } from "../prototype-manage/fixtures";
 import {
   checkSaysRequired,
   codeLength,
@@ -50,8 +50,11 @@ export function VerifyPrototype({
 
   const [stage, setStage] = useState<Stage>(initialStage);
   const [month, setMonth] = useState(startOfMonth(pickedDate));
+  // The select step opens on the first selectable day, as the design system.
   const [date, setDate] = useState<Date | undefined>(
-    initialStage === "select" ? undefined : pickedDate,
+    initialStage === "select"
+      ? resolveDate(startOfMonth(pickedDate))
+      : pickedDate,
   );
   const [time, setTime] = useState<string | undefined>(
     initialStage === "select" ? undefined : pickedTime,

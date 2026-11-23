@@ -3,9 +3,17 @@
 // PROTOTYPE ONLY. The Booker's card with a static event-details pane on the
 // left and one form variant on the right, so each variant is judged in place.
 
-import { CalendarIcon, Clock3Icon, GlobeIcon, VideoIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { BookerAvatars } from "@/registry/default/atoms/booker/booker-avatars";
+import { getBookerLabels } from "@/registry/default/atoms/booker/booker-labels";
+import { EventDescription } from "@/registry/default/atoms/booker/event-description";
+import {
+  EventTitle,
+  FixedDuration,
+  HostIdentity,
+  SelectedTime,
+} from "@/registry/default/atoms/booker/event-meta";
+import { Location } from "@/registry/default/atoms/booker/location";
+import { TimezoneDisplay } from "@/registry/default/atoms/booker/timezone-picker";
 import { Card } from "@/registry/default/ui/card";
 import { PrototypeSwitcher } from "../../prototype-switcher";
 import {
@@ -24,6 +32,18 @@ const variantComponents: Record<
   VariantKey,
   (props: VariantProps) => React.ReactElement
 > = { A: VariantA };
+
+const labels = getBookerLabels();
+
+// Monday, November 23, 2026 at 10:00, local time.
+const SELECTED_START = new Date(2026, 10, 23, 10, 0);
+
+// The location question's three options, as the event's locations.
+const LOCATION_OPTIONS = [
+  { label: "Cal Video", provider: "cal-video" },
+  { label: "Phone call (we call you)", provider: "" },
+  { label: "In person (your address)", provider: "" },
+];
 
 export function FormPrototype({
   variant,
@@ -57,54 +77,32 @@ export function FormPrototype({
         <div className="@3xl:w-(--booker-side) @3xl:border-e border-b @3xl:border-b-0">
           <div className="flex flex-col gap-6 @5xl:p-6 p-4">
             <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-2">
-                <BookerAvatars fallbackName={"Rick Astley"} />
-                <p className="font-medium text-muted-foreground sm:text-sm">
-                  Rick Astley
-                </p>
-              </div>
+              <HostIdentity name="Rick Astley" />
               <div className="flex flex-col gap-1">
-                <h1 className="font-bold font-heading @3xl:@max-5xl:text-lg text-xl">
-                  Product demo
-                </h1>
-                <p className="text-muted-foreground sm:text-sm">
-                  A walkthrough tailored to your team, with time for questions.
-                </p>
+                <EventTitle>Product demo</EventTitle>
+                <EventDescription description="A walkthrough tailored to your team, with time for questions." />
               </div>
             </div>
             <div className="flex flex-col gap-3 sm:text-sm">
-              <div className="flex gap-2">
-                <CalendarIcon
-                  aria-hidden="true"
-                  className="h-lh w-4.5 shrink-0 opacity-80 sm:w-4"
-                />
-                <span>Monday, November 23, 2026 10:00 – 10:30am</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Clock3Icon
-                  aria-hidden="true"
-                  className="h-lh w-4.5 shrink-0 opacity-80 sm:w-4"
-                />
-                <span>30 min</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <VideoIcon
-                  aria-hidden="true"
-                  className="h-lh w-4.5 shrink-0 opacity-80 sm:w-4"
-                />
-                <span>
-                  {fields.some((field) => field.kind === "location")
-                    ? "3 location options"
-                    : "Cal Video"}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <GlobeIcon
-                  aria-hidden="true"
-                  className="h-lh w-4.5 shrink-0 opacity-80 sm:w-4"
-                />
-                <span>Europe/Rome</span>
-              </div>
+              <SelectedTime
+                durationMinutes={30}
+                is24Hour={false}
+                locale="en-US"
+                start={SELECTED_START}
+              />
+              <FixedDuration label={labels.durationMinutes(30)} />
+              <Location
+                labels={{
+                  locationOptions: labels.locationOptions,
+                  selectOnNextStep: labels.locationSelectOnNextStep,
+                }}
+                locations={
+                  fields.some((field) => field.kind === "location")
+                    ? LOCATION_OPTIONS
+                    : LOCATION_OPTIONS.slice(0, 1)
+                }
+              />
+              <TimezoneDisplay value="Europe/Rome" />
             </div>
           </div>
         </div>
