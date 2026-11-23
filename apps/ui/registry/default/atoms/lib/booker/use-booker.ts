@@ -266,6 +266,7 @@ function deriveBookerData(
       eventTypeLocations: eventType.eventTypeLocations,
       eventTypeTitle: eventType.eventTypeTitle,
       disableGuests: eventType.disableGuests ?? false,
+      successRedirectUrl: eventType.successRedirectUrl,
       hostAvatarUrl: host.hostAvatarUrl,
       hostAvatars,
       hostName:

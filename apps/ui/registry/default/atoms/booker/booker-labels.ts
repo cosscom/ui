@@ -47,6 +47,15 @@ export type BookerLabels = {
   confirmTermsPrefix: string;
   confirmTerms: string;
   confirmPrivacyPolicy: string;
+  confirmedTitle: string;
+  confirmedText: (email: string) => string;
+  pendingTitle: string;
+  pendingText: (hostName: string, email: string) => string;
+  confirmationGuests: string;
+  confirmationNotes: string;
+  addToCalendar: string;
+  cancelBooking: string;
+  reschedule: string;
 };
 
 const DEFAULT_BOOKER_LABELS: BookerLabels = {
@@ -102,6 +111,17 @@ const DEFAULT_BOOKER_LABELS: BookerLabels = {
   confirmTermsPrefix: "By proceeding, you agree to Cal.com's",
   confirmTerms: "Terms",
   confirmPrivacyPolicy: "Privacy Policy",
+  // The confirmation screen ("The confirmation screen", first-draft wording).
+  confirmedTitle: "You’re booked",
+  confirmedText: (email) => `A calendar invitation is on its way to ${email}.`,
+  pendingTitle: "Waiting for confirmation",
+  pendingText: (hostName, email) =>
+    `${hostName} needs to confirm this booking. We’ll email ${email} when they do.`,
+  confirmationGuests: "Guests",
+  confirmationNotes: "Notes",
+  addToCalendar: "Add to calendar",
+  cancelBooking: "Cancel booking",
+  reschedule: "Reschedule",
 };
 
 export function getBookerLabels(labels?: Partial<BookerLabels>): BookerLabels {

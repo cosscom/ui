@@ -31,6 +31,11 @@ type BookerProps = {
   initialData?: BookerInitialData;
   defaultFormValues?: Record<string, unknown>;
   onCreateBookingSuccess?: (data: unknown) => void;
+  /**
+   * Follow the event type's redirect after a booking (on by default). The
+   * success callback is called first.
+   */
+  redirectOnSuccess?: boolean;
   labels?: Partial<BookerLabels>;
 };
 
@@ -41,6 +46,7 @@ export function Booker({
   labels,
   defaultFormValues,
   onCreateBookingSuccess,
+  redirectOnSuccess = true,
 }: BookerProps) {
   const t = getBookerLabels(labels);
   const booker = useBooker({ initialData, target, timezone });
@@ -191,6 +197,8 @@ export function Booker({
             <div className="@3xl:w-[min(28.75rem,100cqw-2*var(--booker-side))] w-full @3xl:shrink-0 @5xl:p-6 p-4">
               <BookerConfirmForm
                 {...booker.confirmFormProps}
+                eventTitle={displayMeta?.eventTypeTitle}
+                hostName={displayMeta?.hostName}
                 defaultEmail={
                   typeof defaultFormValues?.email === "string"
                     ? defaultFormValues.email
@@ -202,7 +210,13 @@ export function Booker({
                     : undefined
                 }
                 labels={t}
-                onSuccess={onCreateBookingSuccess}
+                onSuccess={(booking) => {
+                  onCreateBookingSuccess?.(booking);
+                  const redirectUrl = displayMeta?.successRedirectUrl;
+                  if (redirectOnSuccess && redirectUrl) {
+                    window.location.assign(redirectUrl);
+                  }
+                }}
               />
             </div>
           )}

@@ -9,6 +9,10 @@ import { Form } from "@/registry/default/ui/form";
 import { Group } from "@/registry/default/ui/group";
 import { Input } from "@/registry/default/ui/input";
 import { Textarea } from "@/registry/default/ui/textarea";
+import {
+  BookerConfirmation,
+  type ConfirmedBooking,
+} from "./booker-confirmation";
 import type { BookerLabels } from "./booker-labels";
 import { getLocationOptionValue, LocationPicker } from "./location";
 import { createBookingAction } from "@/lib/booker/actions";
@@ -21,6 +25,9 @@ export type BookerConfirmFormProps = BookerConfirmFormContext & {
   defaultName?: string;
   labels: BookerLabels;
   onSuccess?: (booking: Booking) => void;
+  /** For the confirmation screen and its calendar links. */
+  eventTitle?: string;
+  hostName?: string;
 };
 
 function RequiredMark() {
@@ -41,6 +48,8 @@ function getDefaultLocationProvider(
 export function BookerConfirmForm({
   defaultEmail,
   defaultName,
+  eventTitle,
+  hostName,
   disableGuests = false,
   durationMinutes,
   includeLengthInMinutes,
@@ -61,7 +70,9 @@ export function BookerConfirmForm({
   );
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [successBooking, setSuccessBooking] = useState<Booking | null>(null);
+  const [successBooking, setSuccessBooking] = useState<ConfirmedBooking | null>(
+    null,
+  );
 
   const resolvedLocationProvider =
     locations.length > 1
@@ -124,7 +135,19 @@ export function BookerConfirmForm({
         return;
       }
 
-      setSuccessBooking(result.booking);
+      setSuccessBooking({
+        attendeeEmail: email,
+        end: result.booking.end,
+        guests,
+        hostName: hostName || result.booking.hosts[0]?.name || "",
+        location: result.booking.location,
+        meetingUrl: result.booking.meetingUrl,
+        notes: notes || undefined,
+        start: result.booking.start,
+        status: result.booking.status,
+        title: eventTitle || result.booking.title,
+        uid: result.booking.uid,
+      });
       onSuccess?.(result.booking);
     } catch {
       setSubmitError(labels.confirmError);
@@ -134,25 +157,7 @@ export function BookerConfirmForm({
   };
 
   if (successBooking) {
-    return (
-      <div className="flex flex-col gap-4">
-        <p className="font-medium text-base sm:text-sm">
-          {labels.confirmSuccess}
-        </p>
-        {successBooking.meetingUrl ? (
-          <p className="text-muted-foreground text-sm">
-            <a
-              className="text-foreground underline-offset-4 hover:underline"
-              href={successBooking.meetingUrl}
-              rel="noreferrer"
-              target="_blank"
-            >
-              {successBooking.meetingUrl}
-            </a>
-          </p>
-        ) : null}
-      </div>
-    );
+    return <BookerConfirmation booking={successBooking} labels={labels} />;
   }
 
   return (

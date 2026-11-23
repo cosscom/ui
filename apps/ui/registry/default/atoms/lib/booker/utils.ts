@@ -22,6 +22,7 @@ export type BookerMeta = {
   eventTypeLocations: EventTypeLocationOption[];
   eventTypeImageUrl: string;
   disableGuests: boolean;
+  successRedirectUrl?: string;
   bookingWindowStart: Date | null;
   bookingWindowEnd: Date | null;
   /** First day of the week, 0 = Sunday … 6 = Saturday. */
@@ -36,6 +37,8 @@ export type EventTypeInfo = {
   eventTypeLocations: EventTypeLocationOption[];
   eventTypeImageUrl: string;
   disableGuests?: boolean;
+  /** The host's address to send the attendee to after a booking. */
+  successRedirectUrl?: string;
 };
 
 export function prettifyLocation(value: string): string {
@@ -490,6 +493,11 @@ export function extractEventTypeInfo(payload: unknown): EventTypeInfo {
         record.coverImageUrl,
     ),
     disableGuests: record.disableGuests === true,
+    successRedirectUrl:
+      typeof record.successRedirectUrl === "string" &&
+      record.successRedirectUrl.trim()
+        ? record.successRedirectUrl.trim()
+        : undefined,
   };
 }
 
