@@ -65,6 +65,9 @@ type TimePickerLabels = Pick<
   | "slotHostOverride"
   | "slotCalendarBusy"
   | "slotCalendarAvailable"
+  | "morning"
+  | "afternoon"
+  | "evening"
 >;
 
 type TimePickerProps = {
@@ -244,7 +247,7 @@ function SlotButton({
     <button
       aria-pressed={selected}
       className={cn(
-        "relative col-span-full grid h-9 w-full cursor-pointer grid-cols-subgrid items-center rounded-lg bg-muted font-medium text-foreground tabular-nums outline-none after:absolute @5xl:after:-inset-1 after:-inset-0.75 focus-visible:z-1 focus-visible:ring-2 focus-visible:ring-primary/72 enabled:hover:ring-2 enabled:hover:ring-primary/72 disabled:cursor-not-allowed disabled:opacity-50 disabled:after:hidden sm:h-8 sm:text-sm",
+        "relative col-span-full grid h-9 w-full cursor-pointer grid-cols-subgrid items-center rounded-lg bg-input font-medium text-foreground tabular-nums outline-none after:absolute @5xl:after:-inset-1 after:-inset-0.75 focus-visible:z-1 focus-visible:ring-2 focus-visible:ring-primary/72 enabled:hover:ring-2 enabled:hover:ring-primary/72 disabled:cursor-not-allowed disabled:opacity-50 disabled:after:hidden sm:h-8 sm:text-sm",
         selected && "ring-2 ring-primary/72",
         (offsetLabel || slot.detail || slot.badge) &&
           "h-auto min-h-12 gap-y-1 px-1 py-2 sm:h-auto",
@@ -333,32 +336,78 @@ function SlotList({
     labelCounts.set(label, (labelCounts.get(label) ?? 0) + 1);
   }
 
-  return (
-    <div className="grid w-full grid-cols-[1fr_auto_auto_1fr] @5xl:gap-1.5 gap-1 @5xl:gap-x-2 gap-x-2">
-      {loading
-        ? Array.from({ length: 20 }, (_, index) => `slot-${index}`).map(
-            (key) => (
-              <Skeleton
-                className="col-span-full h-9 w-full rounded-lg sm:h-8"
-                key={key}
-              />
-            ),
-          )
-        : slots.map((slot, index) => (
-            <SlotButton
-              formatter={formatter}
-              key={slot.start}
-              labels={labels}
-              offsetLabel={
-                (labelCounts.get(timeLabels[index] ?? "") ?? 0) > 1
-                  ? formatUtcOffset(slot.start, timeZone)
-                  : undefined
-              }
-              onSelect={onSelect}
-              selected={selected === slot.start}
-              slot={slot}
+  const gridClassName =
+    "grid w-full grid-cols-[1fr_auto_auto_1fr] @5xl:gap-1.5 gap-1 @5xl:gap-x-2 gap-x-2";
+
+  if (loading) {
+    return (
+      <div className={gridClassName}>
+        {Array.from({ length: 20 }, (_, index) => `slot-${index}`).map(
+          (key) => (
+            <Skeleton
+              className="col-span-full h-9 w-full rounded-lg sm:h-8"
+              key={key}
             />
-          ))}
+          ),
+        )}
+      </div>
+    );
+  }
+
+  // The times are grouped by part of the day in the Booker's timezone
+  // (Pasquale, 2026-11-23): morning before noon, afternoon before 5 pm,
+  // evening after.
+  const hourFormatter = new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    hourCycle: "h23",
+    timeZone,
+  });
+  const groups: {
+    label: string;
+    items: { slot: TimeSlot; index: number }[];
+  }[] = [
+    { items: [], label: labels.morning },
+    { items: [], label: labels.afternoon },
+    { items: [], label: labels.evening },
+  ];
+  slots.forEach((slot, index) => {
+    const hour = Number(hourFormatter.format(new Date(slot.start)));
+    const group = hour < 12 ? groups[0] : hour < 17 ? groups[1] : groups[2];
+    group?.items.push({ index, slot });
+  });
+
+  return (
+    <div className="flex flex-col gap-4">
+      {groups
+        .filter((group) => group.items.length > 0)
+        .map((group) => (
+          <section
+            aria-label={group.label}
+            className="flex flex-col gap-1.5"
+            key={group.label}
+          >
+            <h3 className="font-medium text-muted-foreground text-xs">
+              {group.label}
+            </h3>
+            <div className={gridClassName}>
+              {group.items.map(({ slot, index }) => (
+                <SlotButton
+                  formatter={formatter}
+                  key={slot.start}
+                  labels={labels}
+                  offsetLabel={
+                    (labelCounts.get(timeLabels[index] ?? "") ?? 0) > 1
+                      ? formatUtcOffset(slot.start, timeZone)
+                      : undefined
+                  }
+                  onSelect={onSelect}
+                  selected={selected === slot.start}
+                  slot={slot}
+                />
+              ))}
+            </div>
+          </section>
+        ))}
     </div>
   );
 }
