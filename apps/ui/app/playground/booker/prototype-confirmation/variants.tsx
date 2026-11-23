@@ -16,6 +16,7 @@ import {
   VideoIcon,
 } from "lucide-react";
 import type { ReactNode } from "react";
+import { BookerAvatars } from "@/registry/default/atoms/booker/booker-avatars";
 import { Button } from "@/registry/default/ui/button";
 import { Card } from "@/registry/default/ui/card";
 import {
@@ -105,9 +106,7 @@ function EventPane({ booking }: { booking: ProtoBooking }) {
       <div className="flex flex-col gap-6 @5xl:p-6 p-4">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
-            <span className="flex size-8 items-center justify-center rounded-full bg-muted font-medium text-xs">
-              {booking.hostInitials}
-            </span>
+            <BookerAvatars fallbackName={booking.host} />
             <p className="font-medium text-muted-foreground sm:text-sm">
               {booking.host}
             </p>

@@ -14,6 +14,7 @@ import {
   MailXIcon,
   VideoIcon,
 } from "lucide-react";
+import { BookerAvatars } from "@/registry/default/atoms/booker/booker-avatars";
 import { BookerCalendar } from "@/registry/default/atoms/booker/booker-calendar";
 import { getBookerLabels } from "@/registry/default/atoms/booker/booker-labels";
 import { BookerSteps } from "@/registry/default/atoms/booker/booker-steps";
@@ -104,9 +105,7 @@ function EventPane({ flow }: StepProps) {
       <div className="flex flex-col gap-6 @5xl:p-6 p-4">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
-            <span className="flex size-8 items-center justify-center rounded-full bg-muted font-medium text-xs">
-              RA
-            </span>
+            <BookerAvatars fallbackName={"Rick Astley"} />
             <p className="font-medium text-muted-foreground sm:text-sm">
               Rick Astley
             </p>

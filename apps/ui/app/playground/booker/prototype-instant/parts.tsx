@@ -15,6 +15,7 @@ import {
   VideoIcon,
   ZapIcon,
 } from "lucide-react";
+import { BookerAvatars } from "@/registry/default/atoms/booker/booker-avatars";
 import { BookerCalendar } from "@/registry/default/atoms/booker/booker-calendar";
 import { getBookerLabels } from "@/registry/default/atoms/booker/booker-labels";
 import { BookerSteps } from "@/registry/default/atoms/booker/booker-steps";
@@ -81,7 +82,12 @@ const barClassName =
   "sticky bottom-0 -mx-4 @5xl:-mx-6 -mb-4 @5xl:-mb-6 mt-auto flex items-center justify-between gap-2 rounded-b-[calc(var(--radius-2xl)-1px)] @3xl:rounded-es-none border-t bg-card @5xl:px-6 px-4 py-3";
 
 const labels = getBookerLabels();
-const team = ["RA", "JD", "MK"];
+// The team's hosts until one accepts; then only that host.
+const team = ["Rick Astley", "Jane Doe", "Mia Kato"].map((name) => ({
+  avatarUrl: "",
+  name,
+  profileUrl: "",
+}));
 
 function formatCountdown(seconds: number) {
   const minutes = Math.floor(seconds / 60);
@@ -155,16 +161,10 @@ function EventPane({ flow }: StepProps) {
       <div className="flex flex-col gap-6 @5xl:p-6 p-4">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
-            <div className="flex -space-x-1.5">
-              {(flow.host ? ["RA"] : team).map((initials) => (
-                <span
-                  className="flex size-8 items-center justify-center rounded-full bg-muted font-medium text-xs ring-2 ring-card"
-                  key={initials}
-                >
-                  {initials}
-                </span>
-              ))}
-            </div>
+            <BookerAvatars
+              avatars={flow.host ? undefined : team}
+              fallbackName={flow.host ?? "Sales team"}
+            />
             <p className="font-medium text-muted-foreground sm:text-sm">
               {flow.host ?? "Sales team"}
             </p>

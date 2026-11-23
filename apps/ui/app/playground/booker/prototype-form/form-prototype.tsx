@@ -5,6 +5,7 @@
 
 import { CalendarIcon, Clock3Icon, GlobeIcon, VideoIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import { BookerAvatars } from "@/registry/default/atoms/booker/booker-avatars";
 import { Card } from "@/registry/default/ui/card";
 import { PrototypeSwitcher } from "../../prototype-switcher";
 import {
@@ -57,9 +58,7 @@ export function FormPrototype({
           <div className="flex flex-col gap-6 @5xl:p-6 p-4">
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
-                <span className="flex size-8 items-center justify-center rounded-full bg-muted font-medium text-xs">
-                  RA
-                </span>
+                <BookerAvatars fallbackName={"Rick Astley"} />
                 <p className="font-medium text-muted-foreground sm:text-sm">
                   Rick Astley
                 </p>
