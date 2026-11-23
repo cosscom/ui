@@ -84,17 +84,8 @@ function resolveProviderIcons(provider?: string): string[] {
     .map(normalizeIconUrl);
 }
 
-export function LocationIcon({
-  provider,
-  small = false,
-}: {
-  provider?: string;
-  /** The design system's popover list uses 14px icons. */
-  small?: boolean;
-}) {
-  const symbolClassName = small
-    ? "size-3.5 shrink-0 opacity-80"
-    : "size-4.5 shrink-0 opacity-80 sm:size-4";
+export function LocationIcon({ provider }: { provider?: string }) {
+  const symbolClassName = "size-4.5 shrink-0 opacity-80 sm:size-4";
   const iconUrls = useMemo(() => resolveProviderIcons(provider), [provider]);
   const [failedIconUrls, setFailedIconUrls] = useState<Set<string>>(
     () => new Set(),
@@ -113,7 +104,7 @@ export function LocationIcon({
       <img
         alt=""
         aria-hidden="true"
-        className={small ? "size-3.5 shrink-0" : "size-4.5 shrink-0 sm:size-4"}
+        className="size-4.5 shrink-0 sm:size-4"
         onError={() => setFailedIconUrls((prev) => new Set(prev).add(iconUrl))}
         src={iconUrl}
       />
@@ -121,6 +112,28 @@ export function LocationIcon({
   }
 
   return <MapPinIcon aria-hidden="true" className={symbolClassName} />;
+}
+
+const IN_PERSON_PROVIDERS = new Set([
+  "",
+  "address",
+  "attendeeaddress",
+  "inperson",
+  "in-person",
+]);
+
+/**
+ * The popover list's icon, as the design system draws it: a plain 14px pin
+ * for a place, a link icon for everything else. No provider logos, so
+ * nothing loads (or flashes) when the popover opens.
+ */
+function LocationListIcon({ provider }: { provider?: string }) {
+  const className = "size-3.5 shrink-0 opacity-80";
+  return IN_PERSON_PROVIDERS.has((provider ?? "").trim().toLowerCase()) ? (
+    <MapPinIcon aria-hidden="true" className={className} />
+  ) : (
+    <ExternalLinkIcon aria-hidden="true" className={className} />
+  );
 }
 
 export function LocationRow({ label, provider }: EventTypeLocationOption) {
@@ -236,7 +249,7 @@ export function Location({ locations, labels }: LocationProps) {
               className="flex items-center gap-2 font-medium text-xs"
               key={`${location.label}-${location.provider}-${index}`}
             >
-              <LocationIcon provider={location.provider} small />
+              <LocationListIcon provider={location.provider} />
               <span>{location.label}</span>
             </li>
           ))}
