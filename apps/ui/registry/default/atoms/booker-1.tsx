@@ -222,12 +222,11 @@ export function Booker({
           )}
         </BookerSteps>
       </Card>
-      {/* The brand role in the Cal Sans font guide: weight 700 and GEOM 50,
-          which draws the wordmark's single-story a. Optical size stays
-          automatic. */}
+      {/* The Cal.com logo: weight 700 with "GEOM" 50, "opsz" 32 (Pasquale,
+          2026-11-23), as the design system's font-heading. */}
       <a
         href="https://cal.com"
-        className='font-bold font-heading text-xl [font-variation-settings:"GEOM"_50]'
+        className='font-bold font-heading text-lg [font-variation-settings:"GEOM"_50,"opsz"_32]'
         target="_blank"
         rel="noreferrer"
       >
