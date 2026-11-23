@@ -43,7 +43,13 @@ import {
   isFieldEmpty,
   simpleFields,
 } from "../prototype-form/fixtures";
-import { formatDate, startOfMonth, today } from "../prototype-manage/fixtures";
+import {
+  formatDate,
+  slotTime,
+  startOfMonth,
+  today,
+  toSlots,
+} from "../prototype-manage/fixtures";
 import { type Host, type Stage, teamName } from "./fixtures";
 import { displayTimeLabel } from "@/lib/booker/utils";
 
@@ -302,13 +308,6 @@ function EventPane({ flow }: StepProps) {
 
 /** The Booker's select step: its real calendar and time list, reloading. */
 function SelectStep({ flow }: StepProps) {
-  const monthStart = startOfMonth(flow.month);
-  const nextMonth = new Date(
-    monthStart.getFullYear(),
-    monthStart.getMonth() + 1,
-    1,
-  );
-
   return (
     <div className="flex w-full @3xl:flex-row flex-col">
       <div className="flex @3xl:w-[min(28.75rem,100cqw-2*var(--booker-side))] w-full @3xl:shrink-0 flex-col items-center @3xl:@max-5xl:px-2 px-4 @3xl:@max-5xl:py-2 pt-3 pb-4">
@@ -325,33 +324,23 @@ function SelectStep({ flow }: StepProps) {
         />
       </div>
       <TimePicker
-        availabilityLoading={flow.loading}
         currentMonth={flow.month}
-        daySlots={flow.times}
-        goToDate={(day) => {
-          flow.setMonth(startOfMonth(day));
-          flow.setDate(day);
-        }}
-        hasAvailabilityInView={Boolean(
-          flow.nextAvailableDate && flow.nextAvailableDate < nextMonth,
-        )}
-        initialLoading={false}
         is24Hour={flow.is24Hour}
-        labels={{
-          hour12Short: labels.hour12Short,
-          hour24Short: labels.hour24Short,
-          noAvailableTimes: labels.noAvailableTimes,
-          noSlotsAvailable: labels.noSlotsAvailable,
-          noSlotsThisDay: labels.noSlotsThisDay,
-          noSlotsThisMonth: labels.noSlotsThisMonth,
-          use24Hour: labels.use24Hour,
-          viewFirstAvailability: labels.viewFirstAvailability,
-        }}
+        loading={flow.loading ? "refresh" : undefined}
         locale="en-US"
-        nextAvailableDate={flow.nextAvailableDate}
         onIs24HourChange={flow.setIs24Hour}
-        onSelectTime={flow.pickTime}
+        onSelect={(start) => flow.pickTime(slotTime(start))}
+        onViewFirstAvailability={
+          flow.nextAvailableDate
+            ? () => {
+                const first = flow.nextAvailableDate as Date;
+                flow.setMonth(startOfMonth(first));
+                flow.setDate(first);
+              }
+            : undefined
+        }
         selectedDate={flow.date}
+        slots={toSlots(flow.date, flow.times)}
       />
     </div>
   );

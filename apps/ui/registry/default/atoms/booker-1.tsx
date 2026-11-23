@@ -190,19 +190,7 @@ export function Booker({
               <div className="flex @3xl:w-[min(28.75rem,100cqw-2*var(--booker-side))] w-full @3xl:shrink-0 flex-col items-center @3xl:@max-5xl:px-2 px-4 @3xl:@max-5xl:py-2 pt-3 pb-4">
                 <BookerCalendar {...booker.calendarProps} />
               </div>
-              <TimePicker
-                labels={{
-                  hour12Short: t.hour12Short,
-                  hour24Short: t.hour24Short,
-                  noAvailableTimes: t.noAvailableTimes,
-                  noSlotsAvailable: t.noSlotsAvailable,
-                  noSlotsThisDay: t.noSlotsThisDay,
-                  noSlotsThisMonth: t.noSlotsThisMonth,
-                  use24Hour: t.use24Hour,
-                  viewFirstAvailability: t.viewFirstAvailability,
-                }}
-                {...booker.timePickerProps}
-              />
+              <TimePicker labels={t} {...booker.timePickerProps} />
             </div>
           ) : (
             <div className="@3xl:w-[min(28.75rem,100cqw-2*var(--booker-side))] w-full @3xl:shrink-0 @5xl:p-6 p-4">

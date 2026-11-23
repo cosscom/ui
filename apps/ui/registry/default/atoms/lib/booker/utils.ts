@@ -873,7 +873,7 @@ export function isCalendarMonthBefore(left: Date, right: Date): boolean {
   return leftMonth.getTime() < rightMonth.getTime();
 }
 
-function toTimeLabel(date: Date, timeZone: string): string {
+export function toTimeLabel(date: Date, timeZone: string): string {
   return new Intl.DateTimeFormat("en-GB", {
     hour: "2-digit",
     hour12: false,

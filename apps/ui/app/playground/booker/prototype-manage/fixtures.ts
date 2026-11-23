@@ -169,3 +169,26 @@ export function formatDate(date: Date) {
     year: "numeric",
   });
 }
+
+/**
+ * The time list takes the API's instants. The prototypes' stub times are
+ * wall-clock "HH:mm" in the browser's timezone, so they are turned into
+ * instants at the list and back when one is picked.
+ */
+export function toSlots(date: Date | undefined, times: string[]) {
+  if (!date) {
+    return [];
+  }
+  return times.map((time) => {
+    const [hours = 0, minutes = 0] = time.split(":").map(Number);
+    const start = new Date(date);
+    start.setHours(hours, minutes, 0, 0);
+    return { start: start.toISOString() };
+  });
+}
+
+export function slotTime(start: string) {
+  const date = new Date(start);
+  const pad = (value: number) => String(value).padStart(2, "0");
+  return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}

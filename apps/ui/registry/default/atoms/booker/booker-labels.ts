@@ -6,14 +6,26 @@ export type BookerLabels = {
   retry: string;
   durationUnknown: string;
   durationMinutes: (minutes: number) => string;
-  noAvailableTimes: string;
-  noSlotsAvailable: string;
-  noSlotsThisDay: string;
-  noSlotsThisMonth: string;
-  viewFirstAvailability: string;
-  use24Hour: string;
+  availableTimes: string;
+  loadingTimes: string;
+  findingFirstAvailable: string;
+  timeFormat: string;
   hour12Short: string;
+  hour12: string;
   hour24Short: string;
+  hour24: string;
+  noAvailableTimes: string;
+  noTimesThisDay: string;
+  viewFirstAvailability: string;
+  noTimesInRange: string;
+  findFirstAvailable: string;
+  noTimesInWindow: string;
+  loadTimesError: string;
+  loadTimesErrorDescription: string;
+  slotNormallyAvailable: string;
+  slotHostOverride: string;
+  slotCalendarBusy: string;
+  slotCalendarAvailable: string;
   headerImageAlt: (hostName: string, eventTitle: string) => string;
   locationOptions: (count: number) => string;
   locationSelectOnNextStep: string;
@@ -47,14 +59,27 @@ const DEFAULT_BOOKER_LABELS: BookerLabels = {
   retry: "Try again",
   durationUnknown: "Unknown",
   durationMinutes: (minutes) => `${minutes} min`,
-  noAvailableTimes: "No available times",
-  noSlotsAvailable: "There are no open slots.",
-  noSlotsThisDay: "There are no open slots on this day.",
-  noSlotsThisMonth: "There are no open slots this month.",
-  viewFirstAvailability: "View first availability",
-  use24Hour: "Use 24-hour time",
+  // The time list's strings are the design system's (Booker time slots).
+  availableTimes: "Available times",
+  loadingTimes: "Loading available times",
+  findingFirstAvailable: "Finding the first available time",
+  timeFormat: "Time format",
   hour12Short: "12h",
+  hour12: "12h (12-hour format)",
   hour24Short: "24h",
+  hour24: "24h (24-hour format)",
+  noAvailableTimes: "No available times",
+  noTimesThisDay: "There are no times on this day. Try another date.",
+  viewFirstAvailability: "View first availability",
+  noTimesInRange: "No availability in the dates checked so far.",
+  findFirstAvailable: "Find first available time",
+  noTimesInWindow: "There is no availability in this event's booking window.",
+  loadTimesError: "Couldn’t load available times",
+  loadTimesErrorDescription: "Try again to check this date.",
+  slotNormallyAvailable: "Normally available",
+  slotHostOverride: "Available only with host override",
+  slotCalendarBusy: "Busy in your calendar",
+  slotCalendarAvailable: "Available in your calendar",
   headerImageAlt: (hostName, eventTitle) =>
     `Banner for ${eventTitle} with ${hostName}`,
   locationOptions: (count) => `${count} location options`,

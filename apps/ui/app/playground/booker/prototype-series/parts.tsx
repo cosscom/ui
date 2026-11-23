@@ -27,7 +27,7 @@ import { getBookerLabels } from "@/registry/default/atoms/booker/booker-labels";
 import { BookerSteps } from "@/registry/default/atoms/booker/booker-steps";
 import {
   TimePicker,
-  type TimeSlotDetail,
+  type TimeSlot,
 } from "@/registry/default/atoms/booker/time-picker";
 import { Badge } from "@/registry/default/ui/badge";
 import { Button } from "@/registry/default/ui/button";
@@ -55,8 +55,10 @@ import {
   getDaySlots,
   getNextAvailableDate,
   hasSlots,
+  slotTime,
   startOfMonth,
   today,
+  toSlots,
 } from "../prototype-manage/fixtures";
 import {
   bookingUrl,
@@ -167,7 +169,10 @@ function getFillBadge(remaining: number): FillBadge | undefined {
  * A seated slot's second line, from the design system's time slots: exact
  * counts, or "Seats available" with a badge. One mode for the whole list.
  */
-function getSlotDetail(remaining: number, showCount: boolean): TimeSlotDetail {
+function getSlotDetail(
+  remaining: number,
+  showCount: boolean,
+): Omit<TimeSlot, "start"> {
   if (remaining <= 0) {
     return { detail: "No more seats available", disabled: true };
   }
@@ -379,12 +384,6 @@ function EventPane({ flow }: StepProps) {
 
 /** The Booker's select step, with seat availability on each seated time. */
 function SelectStep({ flow }: StepProps) {
-  const monthStart = startOfMonth(flow.month);
-  const nextMonth = new Date(
-    monthStart.getFullYear(),
-    monthStart.getMonth() + 1,
-    1,
-  );
   const nextAvailableDate = getNextAvailableDate(
     flow.date && flow.date > today ? flow.date : today,
   );
@@ -406,42 +405,32 @@ function SelectStep({ flow }: StepProps) {
         />
       </div>
       <TimePicker
-        availabilityLoading={false}
         currentMonth={flow.month}
-        daySlots={getDaySlots(date)}
-        goToDate={(day) => {
-          flow.setMonth(startOfMonth(day));
-          flow.setDate(day);
-        }}
-        hasAvailabilityInView={Boolean(
-          nextAvailableDate && nextAvailableDate < nextMonth,
-        )}
-        initialLoading={false}
         is24Hour={flow.is24Hour}
-        labels={{
-          hour12Short: labels.hour12Short,
-          hour24Short: labels.hour24Short,
-          noAvailableTimes: labels.noAvailableTimes,
-          noSlotsAvailable: labels.noSlotsAvailable,
-          noSlotsThisDay: labels.noSlotsThisDay,
-          noSlotsThisMonth: labels.noSlotsThisMonth,
-          use24Hour: labels.use24Hour,
-          viewFirstAvailability: labels.viewFirstAvailability,
-        }}
         locale="en-US"
-        nextAvailableDate={nextAvailableDate}
         onIs24HourChange={flow.setIs24Hour}
-        onSelectTime={flow.pickTime}
-        getSlotDetail={
-          seated
-            ? (time) =>
-                getSlotDetail(
-                  flow.seatsRemaining(date, time),
-                  flow.showSeatCount,
-                )
+        onSelect={(start) => flow.pickTime(slotTime(start))}
+        onViewFirstAvailability={
+          nextAvailableDate
+            ? () => {
+                const first = nextAvailableDate;
+                flow.setMonth(startOfMonth(first));
+                flow.setDate(first);
+              }
             : undefined
         }
         selectedDate={flow.date}
+        slots={toSlots(date, getDaySlots(date)).map((slot) =>
+          seated
+            ? {
+                ...slot,
+                ...getSlotDetail(
+                  flow.seatsRemaining(date, slotTime(slot.start)),
+                  flow.showSeatCount,
+                ),
+              }
+            : slot,
+        )}
       />
     </div>
   );

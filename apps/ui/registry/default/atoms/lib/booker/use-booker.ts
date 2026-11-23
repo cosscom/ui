@@ -8,6 +8,10 @@ import {
   useRef,
   useState,
 } from "react";
+import type {
+  TimePickerEmpty,
+  TimeSlot,
+} from "@/registry/default/atoms/booker/time-picker";
 import {
   type FetchRawBookerResult,
   fetchRawBookerDataAction,
@@ -19,6 +23,7 @@ import {
 } from "@/lib/booker/target";
 import {
   type BookerMeta,
+  buildBookingStartIso,
   type CalendarViewOptions,
   extractBookingWindowEnd,
   extractBookingWindowStart,
@@ -38,6 +43,7 @@ import {
   pickDefaultSelectedDate,
   prefers24Hour,
   toCalendarDateKey,
+  toTimeLabel,
 } from "@/lib/booker/utils";
 
 const WINDOW_MONTHS = 3;
@@ -329,19 +335,22 @@ type BookerCalendarState = {
   today: Date;
 };
 
+// What the time list takes. This data layer keeps wall-clock "HH:mm" times
+// per day; the list takes the API's instants, so they are converted at this
+// edge. The build replaces this data layer (see the map's data-layer
+// decision) and keeps the instants throughout.
 type BookerTimePickerState = {
-  availabilityLoading: boolean;
   currentMonth: Date;
-  daySlots: string[];
-  goToDate: (date: Date) => void;
-  hasAvailabilityInView: boolean;
-  initialLoading: boolean;
+  empty: TimePickerEmpty;
   is24Hour: boolean;
+  loading: "initial" | "refresh" | undefined;
   locale: string;
-  nextAvailableDate: Date | null;
   onIs24HourChange: (value: boolean) => void;
-  onSelectTime: (time: string) => void;
+  onSelect: (start: string) => void;
+  onViewFirstAvailability: (() => void) | undefined;
   selectedDate: Date | undefined;
+  slots: TimeSlot[];
+  timeZone: string;
 };
 
 export type BookerStep = "select" | "confirm";
@@ -1051,18 +1060,26 @@ export function useBooker({
     retry,
     step,
     timePickerProps: {
-      availabilityLoading,
       currentMonth,
-      daySlots,
-      goToDate,
-      hasAvailabilityInView,
-      initialLoading,
+      empty: nextAvailableDate || hasAvailabilityInView ? "day" : "range",
       is24Hour,
+      loading: initialLoading
+        ? "initial"
+        : availabilityLoading
+          ? "refresh"
+          : undefined,
       locale,
-      nextAvailableDate,
       onIs24HourChange: setIs24Hour,
-      onSelectTime: handleSelectTime,
+      onSelect: (start) =>
+        handleSelectTime(toTimeLabel(new Date(start), selectedTimeZone)),
+      onViewFirstAvailability: nextAvailableDate
+        ? () => goToDate(nextAvailableDate)
+        : undefined,
       selectedDate,
+      slots: daySlots.map((time) => ({
+        start: buildBookingStartIso(selectedDateKey, time, selectedTimeZone),
+      })),
+      timeZone: selectedTimeZone,
     },
     timezoneProps: {
       onValueChange: setSelectedTimeZone,
