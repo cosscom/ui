@@ -273,7 +273,10 @@ function deriveBookerData(
         host.hostName === "Unknown user" && target.type === "user"
           ? target.username
           : result.raw.publicDisplayName || hostName,
-      weekStart: extractWeekStart(result.raw.selectedEventType),
+      weekStart: extractWeekStart(
+        result.raw.selectedEventType,
+        getDynamicContext(target)?.usernames[0],
+      ),
     },
     minimumBookingNotice,
     selectedDurationMinutes,

@@ -683,17 +683,38 @@ export function extractBookingWindowEnd(payload: unknown): Date | null {
 
 // The calendar's first day of the week: the event type's, falling back to
 // its first host's, Sunday when neither says.
-export function extractWeekStart(payload: unknown): number {
+/**
+ * The event type's week start, else its first host's. On a group link the
+ * first host is the first username in the link (as Cal does), not the API's
+ * first user, which can come back in another order.
+ */
+export function extractWeekStart(
+  payload: unknown,
+  firstUsername?: string,
+): number {
   if (!payload || typeof payload !== "object") {
     return 0;
   }
 
   const eventType = payload as Record<string, unknown>;
-  const owner = [eventType.users, eventType.hosts]
+  const people = [eventType.users, eventType.hosts]
+    .flatMap((list) => (Array.isArray(list) ? list : []))
+    .filter((item): item is Record<string, unknown> =>
+      Boolean(item && typeof item === "object"),
+    );
+  const firstListed = [eventType.users, eventType.hosts]
     .flatMap((list) => (Array.isArray(list) ? list.slice(0, 1) : []))
     .find((item): item is Record<string, unknown> =>
       Boolean(item && typeof item === "object"),
     );
+  const owner =
+    (firstUsername
+      ? people.find(
+          (person) =>
+            typeof person.username === "string" &&
+            person.username.toLowerCase() === firstUsername.toLowerCase(),
+        )
+      : undefined) ?? firstListed;
 
   return toWeekStart(eventType.weekStart) ?? toWeekStart(owner?.weekStart) ?? 0;
 }
