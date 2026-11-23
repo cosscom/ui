@@ -4,7 +4,6 @@ export type BookerLabels = {
   errorNetwork: string;
   errorGeneric: string;
   retry: string;
-  durationUnknown: string;
   durationMinutes: (minutes: number) => string;
   availableTimes: string;
   loadingTimes: string;
@@ -57,7 +56,6 @@ const DEFAULT_BOOKER_LABELS: BookerLabels = {
   errorNetwork: "Unable to connect. Please check your internet connection.",
   errorGeneric: "Something went wrong loading the booker.",
   retry: "Try again",
-  durationUnknown: "Unknown",
   durationMinutes: (minutes) => `${minutes} min`,
   // The time list's strings are the design system's (Booker time slots).
   availableTimes: "Available times",

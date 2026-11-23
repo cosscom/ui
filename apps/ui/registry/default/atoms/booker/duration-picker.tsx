@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock3Icon } from "lucide-react";
+import { ClockIcon } from "lucide-react";
 import { useMemo } from "react";
 import {
   Select,
@@ -34,7 +34,7 @@ export function DurationPicker({
 
   return (
     <div className="flex items-center gap-2">
-      <Clock3Icon
+      <ClockIcon
         className="size-4.5 shrink-0 opacity-80 sm:size-4"
         aria-hidden="true"
       />

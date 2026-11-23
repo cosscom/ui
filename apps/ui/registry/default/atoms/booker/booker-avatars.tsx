@@ -31,7 +31,7 @@ type BookerAvatarsProps = {
 export function BookerAvatars({ avatars, fallbackName }: BookerAvatarsProps) {
   if (!fallbackName) {
     return (
-      <Avatar className="@3xl:@max-5xl:size-12 size-14 outline-2 outline-background">
+      <Avatar className="[--avatar-size:--spacing(14)]">
         <AvatarFallback className="bg-transparent">
           <Skeleton className="size-full rounded-full" />
         </AvatarFallback>
@@ -50,21 +50,25 @@ export function BookerAvatars({ avatars, fallbackName }: BookerAvatarsProps) {
   const firstAvatar = visibleAvatars[0];
 
   if (visibleAvatars.length === 1 && firstAvatar) {
+    // As the design system's HostAvatars: the avatar is the link.
     return (
-      <a
-        aria-label={firstAvatar.name}
-        className="w-fit rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background"
-        href={firstAvatar.profileUrl || "#"}
-        rel={firstAvatar.profileUrl ? "noreferrer" : undefined}
-        target={firstAvatar.profileUrl ? "_blank" : undefined}
+      <Avatar
+        className="outline-none [--avatar-size:--spacing(14)] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-card"
+        render={
+          // biome-ignore lint/a11y/useAnchorContent: the avatar is the content
+          <a
+            aria-label={firstAvatar.name}
+            href={firstAvatar.profileUrl || "#"}
+            rel={firstAvatar.profileUrl ? "noreferrer" : undefined}
+            target={firstAvatar.profileUrl ? "_blank" : undefined}
+          />
+        }
       >
-        <Avatar className="@3xl:@max-5xl:size-12 size-14 outline-2 outline-background">
-          {firstAvatar.avatarUrl ? (
-            <AvatarImage alt={firstAvatar.name} src={firstAvatar.avatarUrl} />
-          ) : null}
-          <AvatarFallback>{getInitials(firstAvatar.name)}</AvatarFallback>
-        </Avatar>
-      </a>
+        {firstAvatar.avatarUrl ? (
+          <AvatarImage alt={firstAvatar.name} src={firstAvatar.avatarUrl} />
+        ) : null}
+        <AvatarFallback>{getInitials(firstAvatar.name)}</AvatarFallback>
+      </Avatar>
     );
   }
 
@@ -99,6 +103,7 @@ export function BookerAvatars({ avatars, fallbackName }: BookerAvatarsProps) {
                 />
               }
             >
+              <span className="sr-only">{avatar.name}</span>
               {avatar.avatarUrl ? (
                 <AvatarImage alt={avatar.name} src={avatar.avatarUrl} />
               ) : null}

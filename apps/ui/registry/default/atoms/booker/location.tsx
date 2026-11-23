@@ -84,7 +84,17 @@ function resolveProviderIcons(provider?: string): string[] {
     .map(normalizeIconUrl);
 }
 
-export function LocationIcon({ provider }: { provider?: string }) {
+export function LocationIcon({
+  provider,
+  small = false,
+}: {
+  provider?: string;
+  /** The design system's popover list uses 14px icons. */
+  small?: boolean;
+}) {
+  const symbolClassName = small
+    ? "size-3.5 shrink-0 opacity-80"
+    : "size-4.5 shrink-0 opacity-80 sm:size-4";
   const iconUrls = useMemo(() => resolveProviderIcons(provider), [provider]);
   const [failedIconUrls, setFailedIconUrls] = useState<Set<string>>(
     () => new Set(),
@@ -95,10 +105,7 @@ export function LocationIcon({ provider }: { provider?: string }) {
   if (iconUrl) {
     if (iconUrl === "external-link") {
       return (
-        <ExternalLinkIcon
-          className="size-4.5 shrink-0 opacity-80 sm:size-4"
-          aria-hidden="true"
-        />
+        <ExternalLinkIcon aria-hidden="true" className={symbolClassName} />
       );
     }
 
@@ -106,19 +113,14 @@ export function LocationIcon({ provider }: { provider?: string }) {
       <img
         alt=""
         aria-hidden="true"
-        className="size-4.5 shrink-0 sm:size-4"
+        className={small ? "size-3.5 shrink-0" : "size-4.5 shrink-0 sm:size-4"}
         onError={() => setFailedIconUrls((prev) => new Set(prev).add(iconUrl))}
         src={iconUrl}
       />
     );
   }
 
-  return (
-    <MapPinIcon
-      className="size-4.5 shrink-0 opacity-80 sm:size-4"
-      aria-hidden="true"
-    />
-  );
+  return <MapPinIcon aria-hidden="true" className={symbolClassName} />;
 }
 
 export function LocationRow({ label, provider }: EventTypeLocationOption) {
@@ -218,7 +220,10 @@ export function Location({ locations, labels }: LocationProps) {
         openOnHover
         delay={0}
       >
-        <MapPinIcon className="h-lh w-4.5 shrink-0 opacity-80 sm:w-4" />
+        <MapPinIcon
+          aria-hidden="true"
+          className="h-lh w-4.5 shrink-0 opacity-80 sm:w-4"
+        />
         <span>{labels.locationOptions(locations.length)}</span>
       </PopoverTrigger>
       <PopoverPopup align="start" side="top" className="*:p-3">
@@ -231,7 +236,7 @@ export function Location({ locations, labels }: LocationProps) {
               className="flex items-center gap-2 font-medium text-xs"
               key={`${location.label}-${location.provider}-${index}`}
             >
-              <LocationIcon provider={location.provider} />
+              <LocationIcon provider={location.provider} small />
               <span>{location.label}</span>
             </li>
           ))}

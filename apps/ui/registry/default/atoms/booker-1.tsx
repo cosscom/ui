@@ -1,6 +1,5 @@
 "use client";
 
-import { CalendarIcon, Clock3Icon } from "lucide-react";
 import { cn } from "@/registry/default/lib/utils";
 import { Card } from "@/registry/default/ui/card";
 import { Skeleton } from "@/registry/default/ui/skeleton";
@@ -12,17 +11,19 @@ import { type BookerLabels, getBookerLabels } from "./booker/booker-labels";
 import { BookerSteps } from "./booker/booker-steps";
 import { DurationPicker } from "./booker/duration-picker";
 import { EventDescription } from "./booker/event-description";
+import {
+  EventTitle,
+  FixedDuration,
+  HostIdentity,
+  SelectedTime,
+} from "./booker/event-meta";
 import { HeaderBanner } from "./booker/header-banner";
 import { Location } from "./booker/location";
 import { TimePicker } from "./booker/time-picker";
 import { TimezoneDisplay, TimezonePicker } from "./booker/timezone-picker";
 import type { BookerTarget } from "@/lib/booker/target";
 import { type BookerInitialData, useBooker } from "@/lib/booker/use-booker";
-import {
-  formatConfirmDateDetail,
-  formatConfirmTimeRange,
-  formatSelectedWeekday,
-} from "@/lib/booker/utils";
+import { buildBookingStartIso, toCalendarDateKey } from "@/lib/booker/utils";
 
 type BookerProps = {
   target: BookerTarget;
@@ -78,29 +79,32 @@ export function Booker({
           <div
             className={cn(
               "flex flex-col gap-6 @5xl:p-6 p-4",
-              displayMeta?.eventTypeImageUrl && "relative -mt-11 @5xl:-mt-13",
+              // As the design system: the body overlaps the banner only when
+              // an avatar sits on it, less for a stack.
+              displayMeta?.eventTypeImageUrl &&
+                (displayMeta.hostAvatars?.length ?? 1) === 1 &&
+                "relative -mt-11 @5xl:-mt-13",
+              displayMeta?.eventTypeImageUrl &&
+                (displayMeta.hostAvatars?.length ?? 1) > 1 &&
+                "relative -mt-8 @5xl:-mt-10",
             )}
           >
             <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-2">
-                <BookerAvatars
-                  avatars={displayMeta?.hostAvatars}
-                  fallbackName={displayMeta?.hostName}
+              {displayMeta ? (
+                <HostIdentity
+                  avatars={displayMeta.hostAvatars}
+                  name={displayMeta.hostName}
                 />
-                {displayMeta ? (
-                  <p className="font-medium text-muted-foreground sm:text-sm">
-                    {displayMeta.hostName}
-                  </p>
-                ) : (
+              ) : (
+                <div className="flex flex-col gap-2">
+                  <BookerAvatars />
                   <Skeleton className="my-0.5 h-5 w-24 sm:h-4" />
-                )}
-              </div>
+                </div>
+              )}
               <div className="flex flex-col gap-1">
                 {displayMeta ? (
                   <>
-                    <h1 className="font-bold font-heading @3xl:@max-5xl:text-lg text-xl">
-                      {displayMeta.eventTypeTitle}
-                    </h1>
+                    <EventTitle>{displayMeta.eventTypeTitle}</EventTitle>
                     <EventDescription
                       description={displayMeta.eventTypeDescription}
                     />
@@ -118,50 +122,41 @@ export function Booker({
             {displayMeta ? (
               <div className="flex flex-col gap-3 sm:text-sm">
                 {showSelectedSlot ? (
-                  <div className="flex gap-2">
-                    <CalendarIcon
-                      className="h-lh w-4.5 shrink-0 opacity-80 sm:w-4"
-                      aria-hidden="true"
-                    />
-                    <span>
-                      {formatSelectedWeekday(
-                        selectedDate,
-                        booker.calendarProps.locale,
-                      )}{" "}
-                      {formatConfirmDateDetail(
-                        selectedDate,
-                        booker.calendarProps.locale,
-                      )}{" "}
-                      {formatConfirmTimeRange(
-                        selectedTime,
-                        booker.durationProps.value,
-                        !booker.timePickerProps.is24Hour,
-                        booker.calendarProps.locale,
-                      )}
-                    </span>
-                  </div>
+                  <SelectedTime
+                    durationMinutes={booker.durationProps.value}
+                    is24Hour={booker.timePickerProps.is24Hour}
+                    locale={booker.calendarProps.locale}
+                    start={
+                      new Date(
+                        buildBookingStartIso(
+                          toCalendarDateKey(selectedDate),
+                          selectedTime,
+                          booker.timezoneProps.value,
+                        ),
+                      )
+                    }
+                    timeZone={booker.timezoneProps.value}
+                  />
                 ) : null}
-                {displayMeta.eventTypeDurationOptions ? (
+                {/* As the design system: the duration can be changed while
+                    picking a time, and is static during the booking step. */}
+                {displayMeta.eventTypeDurationOptions &&
+                booker.step === "select" ? (
                   <DurationPicker
                     formatLabel={t.durationMinutes}
                     options={displayMeta.eventTypeDurationOptions}
                     {...booker.durationProps}
                   />
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <Clock3Icon
-                      className="h-lh w-4.5 shrink-0 opacity-80 sm:w-4"
-                      aria-hidden="true"
-                    />
-                    <span>
-                      {displayMeta.eventTypeDurationMinutes
-                        ? t.durationMinutes(
-                            displayMeta.eventTypeDurationMinutes,
-                          )
-                        : t.durationUnknown}
-                    </span>
-                  </div>
-                )}
+                ) : booker.durationProps.value ||
+                  displayMeta.eventTypeDurationMinutes ? (
+                  <FixedDuration
+                    label={t.durationMinutes(
+                      booker.durationProps.value ||
+                        displayMeta.eventTypeDurationMinutes ||
+                        0,
+                    )}
+                  />
+                ) : null}
                 <Location
                   labels={{
                     locationOptions: t.locationOptions,

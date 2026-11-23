@@ -9,7 +9,7 @@ export function HeaderBanner({ alt, src }: HeaderBannerProps) {
   }
 
   return (
-    <div className="rounded-ss-xl px-1 pt-1">
+    <div className="rounded-t-xl @3xl:rounded-se-none px-1 pt-1">
       <div className="relative aspect-4/1 overflow-hidden">
         <img
           alt={alt}

@@ -312,6 +312,22 @@ export function extractHostAvatars(
   );
 }
 
+/**
+ * The design system's host identity label: one name, or the first and how
+ * many others ("Alex Rivera and 5 others").
+ */
+export function getHostIdentityLabel(names: string[], fallback: string) {
+  const first = names[0];
+  if (!first) {
+    return fallback;
+  }
+  if (names.length === 1) {
+    return first;
+  }
+  const rest = names.length - 1;
+  return `${first} and ${rest} ${rest === 1 ? "other" : "others"}`;
+}
+
 export function extractHostDisplayName(
   eventTypePayload: unknown,
   hostPayload: unknown,
@@ -338,13 +354,18 @@ export function extractHostDisplayName(
     .filter((name) => name !== "Unknown user");
 
   if (options.dynamic) {
-    return (
-      profileName ??
-      (userNames.length > 0 ? userNames.join(", ") : host.hostName)
-    );
+    return profileName ?? getHostIdentityLabel(userNames, host.hostName);
   }
 
   if (schedulingType === "ROUND_ROBIN") {
+    // The design system hides the name with the avatar.
+    const metadata = toRecord(eventType.metadata);
+    if (
+      getBooleanValue(eventType.roundRobinHideOrgAndTeam) ||
+      getBooleanValue(metadata?.roundRobinHideOrgAndTeam)
+    ) {
+      return "";
+    }
     return profileName ?? host.hostName;
   }
 
@@ -354,7 +375,7 @@ export function extractHostDisplayName(
       return profileName;
     }
 
-    return userNames.length > 0 ? userNames.join(", ") : host.hostName;
+    return getHostIdentityLabel(userNames, host.hostName);
   }
 
   return host.hostName;
@@ -413,7 +434,8 @@ function extractLocations(
     return [{ label: prettifyLocation(record.location), provider: "" }];
   }
 
-  return [{ label: "Unknown", provider: "" }];
+  // As the design system: no locations, no location row.
+  return [];
 }
 
 export function extractEventTypeInfo(payload: unknown): EventTypeInfo {
@@ -423,7 +445,7 @@ export function extractEventTypeInfo(payload: unknown): EventTypeInfo {
       eventTypeDescription: "",
       eventTypeDurationMinutes: null,
       eventTypeDurationOptions: null,
-      eventTypeLocations: [{ label: "Unknown", provider: "" }],
+      eventTypeLocations: [],
       eventTypeImageUrl: "",
       disableGuests: false,
     };
