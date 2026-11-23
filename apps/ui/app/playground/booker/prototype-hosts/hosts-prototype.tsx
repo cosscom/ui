@@ -163,7 +163,6 @@ export function HostsPrototype({
     time,
     times,
     values,
-    variant,
   };
 
   return (

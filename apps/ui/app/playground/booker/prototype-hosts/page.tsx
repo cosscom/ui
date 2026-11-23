@@ -1,9 +1,9 @@
 // PROTOTYPE ONLY. Throwaway route for the wayfinder ticket "The host picker
 // on a collective event" (.scratch/booker/issues/22-host-picker.md).
 //
-// Choosing which hosts of a collective event attend. Two variants of the
-// picker, switchable with `variant`; the event and the API's answers are
-// picked by `scenario`; `stage` opens partway through. Nothing is sent.
+// Choosing which hosts of a collective event attend, in a multiple Select.
+// The event and the API's answers are picked by `scenario`; `stage` opens
+// partway through. Nothing is sent.
 
 import type { Metadata } from "next";
 import {
