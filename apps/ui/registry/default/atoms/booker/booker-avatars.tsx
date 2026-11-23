@@ -4,8 +4,14 @@ import {
   Avatar,
   AvatarFallback,
   AvatarGroup,
+  AvatarGroupCount,
   AvatarImage,
 } from "@/registry/default/ui/avatar";
+import {
+  Popover,
+  PopoverPopup,
+  PopoverTrigger,
+} from "@/registry/default/ui/popover";
 import { Skeleton } from "@/registry/default/ui/skeleton";
 import {
   Tooltip,
@@ -14,6 +20,8 @@ import {
   TooltipTrigger,
 } from "@/registry/default/ui/tooltip";
 import { type BookerAvatar, getInitials } from "@/lib/booker/utils";
+
+const maxVisibleAvatars = 4;
 
 type BookerAvatarsProps = {
   avatars?: BookerAvatar[];
@@ -60,18 +68,26 @@ export function BookerAvatars({ avatars, fallbackName }: BookerAvatarsProps) {
     );
   }
 
-  // Each avatar is the link itself, so AvatarGroup's overlap and cut-outs
-  // apply to it directly.
+  // As the design system's HostAvatars: at most four avatars, then a count
+  // that lists the rest. Each avatar is the link itself, so AvatarGroup's
+  // overlap and cut-outs apply to it directly.
+  const shownAvatars = visibleAvatars.slice(0, maxVisibleAvatars);
+  const hiddenAvatars = visibleAvatars.slice(maxVisibleAvatars);
+  const hiddenLabel =
+    hiddenAvatars.length === 1
+      ? "1 more host"
+      : `${hiddenAvatars.length} more hosts`;
+
   return (
-    <TooltipProvider>
-      <AvatarGroup>
-        {visibleAvatars.map((avatar, index) => (
+    <TooltipProvider delay={0}>
+      <AvatarGroup topmost="last">
+        {shownAvatars.map((avatar, index) => (
           <Tooltip key={`${avatar.name}-${avatar.avatarUrl}-${index}`}>
             <TooltipTrigger
               render={
                 <Avatar
                   aria-label={avatar.name}
-                  className="outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+                  className="outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-card"
                   render={
                     // biome-ignore lint/a11y/useAnchorContent: the avatar is the content
                     <a
@@ -91,6 +107,37 @@ export function BookerAvatars({ avatars, fallbackName }: BookerAvatarsProps) {
             <TooltipPopup>{avatar.name}</TooltipPopup>
           </Tooltip>
         ))}
+        {hiddenAvatars.length > 0 ? (
+          <Popover>
+            <PopoverTrigger
+              aria-label={hiddenLabel}
+              className="outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-card"
+              delay={0}
+              nativeButton={false}
+              openOnHover
+              render={<AvatarGroupCount />}
+            >
+              +{hiddenAvatars.length}
+            </PopoverTrigger>
+            <PopoverPopup
+              align="start"
+              aria-label="Additional hosts"
+              side="top"
+              tooltipStyle
+            >
+              <ul className="flex flex-col gap-1">
+                {hiddenAvatars.map((avatar, index) => (
+                  <li
+                    className="font-medium text-xs"
+                    key={`${avatar.name}-${index}`}
+                  >
+                    {avatar.name}
+                  </li>
+                ))}
+              </ul>
+            </PopoverPopup>
+          </Popover>
+        ) : null}
       </AvatarGroup>
     </TooltipProvider>
   );
