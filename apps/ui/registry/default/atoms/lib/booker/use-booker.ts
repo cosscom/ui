@@ -8,6 +8,14 @@ import {
   useRef,
   useState,
 } from "react";
+import type { BookerCalendarProps } from "@/registry/default/atoms/booker/booker-calendar";
+import {
+  type CalendarDayState,
+  calendarGrid,
+  localDate,
+  localDateKey,
+  resolveSelection,
+} from "@/registry/default/atoms/booker/booker-calendar-model";
 import type {
   TimePickerEmpty,
   TimeSlot,
@@ -33,14 +41,13 @@ import {
   extractHostDisplayName,
   extractMinimumBookingNotice,
   extractSlotsByDate,
+  extractWeekStart,
   filterBookableSlots,
   findNextAvailableDate,
   getMinimumNavigableMonth,
   getTodayInTimeZone,
-  getWeekStartsOn,
   hasAvailabilityInVisibleGrid,
   isCalendarMonthBefore,
-  pickDefaultSelectedDate,
   prefers24Hour,
   toCalendarDateKey,
   toTimeLabel,
@@ -150,6 +157,65 @@ function getSlotsCacheKey(
   return `${identity}|${timeZone}|${durationMinutes}`;
 }
 
+// The calendar's date bounds: today or the booking window's start, whichever
+// is later, through the window's end.
+type CalendarBounds = {
+  maxDate?: string;
+  minDate: string;
+  today: string;
+  weekStart: number;
+};
+
+function getCalendarBounds(
+  todayStart: Date,
+  meta: BookerMeta | null | undefined,
+): CalendarBounds {
+  const today = toCalendarDateKey(todayStart);
+  const windowStart = meta?.bookingWindowStart
+    ? toCalendarDateKey(meta.bookingWindowStart)
+    : undefined;
+  return {
+    maxDate: meta?.bookingWindowEnd
+      ? toCalendarDateKey(meta.bookingWindowEnd)
+      : undefined,
+    minDate: windowStart && windowStart > today ? windowStart : today,
+    today,
+    weekStart: meta?.weekStart ?? 0,
+  };
+}
+
+function getLoadedDayState(
+  key: string,
+  slotsByDate: Record<string, string[]>,
+  today: string,
+): CalendarDayState {
+  if (key < today) {
+    return { available: false };
+  }
+  return { available: (slotsByDate[key] ?? []).length > 0 };
+}
+
+// The selection once a month's availability is known, as the design system:
+// kept while it is still visible and selectable, else the first selectable
+// day in view.
+function resolveSelectedDate(
+  month: Date,
+  selected: Date | undefined,
+  slotsByDate: Record<string, string[]>,
+  bounds: CalendarBounds,
+): Date | undefined {
+  const selectedKey = selected ? toCalendarDateKey(selected) : undefined;
+  const key = resolveSelection(
+    selectedKey,
+    calendarGrid({ ...bounds, month: localDateKey(month).slice(0, 7) }),
+    (date) => getLoadedDayState(date, slotsByDate, bounds.today),
+  );
+  if (!key) {
+    return undefined;
+  }
+  return key === selectedKey ? selected : localDate(key);
+}
+
 function deriveBookerData(
   result: Extract<FetchRawBookerResult, { ok: true }>,
   target: BookerTarget,
@@ -206,6 +272,7 @@ function deriveBookerData(
         host.hostName === "Unknown user" && target.type === "user"
           ? target.username
           : result.raw.publicDisplayName || hostName,
+      weekStart: extractWeekStart(result.raw.selectedEventType),
     },
     minimumBookingNotice,
     selectedDurationMinutes,
@@ -321,19 +388,10 @@ type BookerDurationState = {
   value: number;
 };
 
-type BookerCalendarState = {
-  availabilityLoading: boolean;
-  disabled: (date: Date) => boolean;
-  endMonth?: Date;
-  initialLoading: boolean;
-  locale: string;
-  month: Date;
-  onMonthChange: (month: Date) => void;
-  onSelect: (nextDate: Date | undefined) => void;
-  selected: Date | undefined;
-  startMonth: Date;
-  today: Date;
-};
+type BookerCalendarState = Omit<
+  BookerCalendarProps,
+  "className" | "dir" | "labels" | "locale" | "shiftWeeks"
+> & { locale: string };
 
 // What the time list takes. This data layer keeps wall-clock "HH:mm" times
 // per day; the list takes the API's instants, so they are converted at this
@@ -415,24 +473,16 @@ export function useBooker({
       return undefined;
     }
 
-    return (
-      pickDefaultSelectedDate(
-        initialCurrentMonth,
-        hydratedData.slotsByDate,
-        initialSelectedTimeZone,
+    return resolveSelectedDate(
+      initialCurrentMonth,
+      undefined,
+      hydratedData.slotsByDate,
+      getCalendarBounds(
         getTodayInTimeZone(initialSelectedTimeZone),
-        {
-          endMonth: hydratedData.meta?.bookingWindowEnd ?? undefined,
-          shiftWeeks: true,
-          startMonth: getMinimumNavigableMonth(
-            initialSelectedTimeZone,
-            hydratedData.meta?.bookingWindowStart,
-          ),
-          weekStartsOn: getWeekStartsOn(locale),
-        },
-      ) ?? undefined
+        hydratedData.meta,
+      ),
     );
-  }, [hydratedData, initialCurrentMonth, initialSelectedTimeZone, locale]);
+  }, [hydratedData, initialCurrentMonth, initialSelectedTimeZone]);
   const [meta, setMeta] = useState<BookerMeta | null>(
     hydratedData?.meta ?? null,
   );
@@ -494,6 +544,9 @@ export function useBooker({
   );
   const selectedDateRef = useRef(selectedDate);
   selectedDateRef.current = selectedDate;
+  // The latest metadata, also while a load that just set it is still running.
+  const metaRef = useRef(meta);
+  metaRef.current = meta;
   const inFlightMonthsRef = useRef<Map<string, Promise<void>>>(new Map());
   const availabilityRequestVersionRef = useRef(0);
   const skipInitialWarmRef = useRef(
@@ -604,6 +657,7 @@ export function useBooker({
           const derived = deriveBookerData(result, target);
           minimumBookingNoticeRef.current = derived.minimumBookingNotice;
           hasMultiDurationOptionsRef.current = derived.hasMultiDurationOptions;
+          metaRef.current = metaRef.current ?? derived.meta;
           setMeta((prev) => prev ?? derived.meta);
 
           const defaultDuration = derived.selectedDurationMinutes ?? 30;
@@ -674,14 +728,38 @@ export function useBooker({
     () => getMinimumNavigableMonth(selectedTimeZone, meta?.bookingWindowStart),
     [meta?.bookingWindowStart, selectedTimeZone],
   );
+  const calendarBounds = useMemo(
+    () => getCalendarBounds(todayStart, meta),
+    [meta, todayStart],
+  );
   const calendarViewOptions = useMemo((): CalendarViewOptions => {
     return {
       endMonth: meta?.bookingWindowEnd ?? undefined,
       shiftWeeks: true,
       startMonth,
-      weekStartsOn: getWeekStartsOn(locale),
+      weekStartsOn: calendarBounds.weekStart,
     };
-  }, [locale, meta?.bookingWindowEnd, startMonth]);
+  }, [calendarBounds.weekStart, meta?.bookingWindowEnd, startMonth]);
+  // Revalidates the selection against a month's loaded availability.
+  const revalidateSelection = useCallback(
+    (month: Date) => {
+      const current = selectedDateRef.current;
+      const next = resolveSelectedDate(
+        month,
+        current,
+        slotsByDateRef.current,
+        getCalendarBounds(
+          getTodayInTimeZone(selectedTimeZone),
+          metaRef.current,
+        ),
+      );
+      if (next !== current) {
+        setSelectedDate(next);
+        setSelectedTime(null);
+      }
+    },
+    [selectedTimeZone],
+  );
 
   const hasAvailabilityInView = useMemo(
     () =>
@@ -790,26 +868,13 @@ export function useBooker({
         setIsPending(false);
       }
 
-      // Auto-select the first available day the first time this month's
-      // availability is known (on load and on month navigation).
+      // Revalidate the selection the first time this month's availability
+      // is known (on load, on month navigation and after a context change):
+      // keep it while still selectable, else the first selectable day.
       const monthKey = `${currentMonth.getFullYear()}-${currentMonth.getMonth()}`;
       if (!cancelled && autoSelectedMonthRef.current !== monthKey) {
-        const firstAvailable = pickDefaultSelectedDate(
-          currentMonth,
-          slotsByDateRef.current,
-          selectedTimeZone,
-          getTodayInTimeZone(selectedTimeZone),
-          calendarViewOptions,
-        );
-        if (firstAvailable) {
-          autoSelectedMonthRef.current = monthKey;
-          setSelectedDate(firstAvailable);
-          setSelectedTime(null);
-        } else {
-          autoSelectedMonthRef.current = monthKey;
-          setSelectedDate(undefined);
-          setSelectedTime(null);
-        }
+        autoSelectedMonthRef.current = monthKey;
+        revalidateSelection(currentMonth);
       }
 
       // Warm the next uncovered window boundary, not just the adjacent month.
@@ -841,7 +906,7 @@ export function useBooker({
     selectedDurationMinutes,
     selectedTimeZone,
     meta?.bookingWindowStart,
-    calendarViewOptions,
+    revalidateSelection,
     restoreSlotsFromCache,
     targetIdentity,
   ]);
@@ -875,22 +940,8 @@ export function useBooker({
 
         const monthKey = `${currentMonth.getFullYear()}-${currentMonth.getMonth()}`;
         if (autoSelectedMonthRef.current !== monthKey) {
-          const firstAvailable = pickDefaultSelectedDate(
-            currentMonth,
-            slotsByDateRef.current,
-            selectedTimeZone,
-            getTodayInTimeZone(selectedTimeZone),
-            calendarViewOptions,
-          );
-          if (firstAvailable) {
-            autoSelectedMonthRef.current = monthKey;
-            setSelectedDate(firstAvailable);
-            setSelectedTime(null);
-          } else {
-            autoSelectedMonthRef.current = monthKey;
-            setSelectedDate(undefined);
-            setSelectedTime(null);
-          }
+          autoSelectedMonthRef.current = monthKey;
+          revalidateSelection(currentMonth);
         }
       } catch (caught) {
         if (cancelled) return;
@@ -903,13 +954,7 @@ export function useBooker({
     return () => {
       cancelled = true;
     };
-  }, [
-    retryCounter,
-    fetchWindow,
-    currentMonth,
-    selectedTimeZone,
-    calendarViewOptions,
-  ]);
+  }, [retryCounter, fetchWindow, currentMonth, revalidateSelection]);
 
   useEffect(() => {
     if (!timezone) {
@@ -927,7 +972,10 @@ export function useBooker({
     todayStart,
   );
 
-  const handleMonthChange = (month: Date) => {
+  // `preserveSelection` comes from keyboard moves: focus changed month, the
+  // selection stays.
+  const handleMonthChange = (nextMonth: string, preserveSelection = false) => {
+    const month = localDate(`${nextMonth}-01`);
     const monthKey = `${month.getFullYear()}-${month.getMonth()}`;
     const monthCovered = coveredMonthsRef.current.has(buildKey(month));
     setCurrentMonth(month);
@@ -937,50 +985,36 @@ export function useBooker({
     if (!monthCovered) {
       setIsPending(true);
     }
-    // For an already-loaded month, select the first available day in the same
-    // update as the month change so the selection doesn't flicker.
-    const firstAvailable = pickDefaultSelectedDate(
-      month,
-      slotsByDateRef.current,
-      selectedTimeZone,
-      getTodayInTimeZone(selectedTimeZone),
-      calendarViewOptions,
-    );
-    if (firstAvailable) {
+    if (preserveSelection) {
       autoSelectedMonthRef.current = monthKey;
-      setSelectedDate(firstAvailable);
-      setSelectedTime(null);
-    } else {
-      if (monthCovered) {
-        autoSelectedMonthRef.current = monthKey;
-      }
-      setSelectedDate(undefined);
-      setSelectedTime(null);
-    }
-  };
-
-  const handleSelectDate = (nextDate: Date | undefined) => {
-    if (!nextDate) {
       return;
     }
-    setSelectedDate(nextDate);
     setSelectedTime(null);
-    autoSelectedMonthRef.current = `${nextDate.getFullYear()}-${nextDate.getMonth()}`;
-    const isDifferentMonth =
-      nextDate.getMonth() !== currentMonth.getMonth() ||
-      nextDate.getFullYear() !== currentMonth.getFullYear();
-    if (isDifferentMonth) {
-      setCurrentMonth(nextDate);
+    // For an already-loaded month, revalidate the selection in the same
+    // update as the month change so it doesn't flicker; otherwise once the
+    // month loads.
+    if (monthCovered) {
+      autoSelectedMonthRef.current = monthKey;
+      revalidateSelection(month);
     }
   };
 
-  const isDayDisabled = (date: Date) => {
-    const dayKey = toCalendarDateKey(date);
-    if (dayKey < toCalendarDateKey(todayStart)) {
-      return true;
-    }
+  // Selecting the selected day keeps it; an overflow day keeps the displayed
+  // month.
+  const handleSelectDate = (key: string) => {
+    setSelectedDate(localDate(key));
+    setSelectedTime(null);
+    autoSelectedMonthRef.current = `${currentMonth.getFullYear()}-${currentMonth.getMonth()}`;
+  };
 
-    return (slotsByDate[dayKey] ?? []).length === 0;
+  const getDay = (key: string): CalendarDayState => {
+    if (
+      key >= calendarBounds.today &&
+      !coveredMonthsRef.current.has(buildKey(localDate(key)))
+    ) {
+      return { available: "unknown" };
+    }
+    return getLoadedDayState(key, slotsByDate, calendarBounds.today);
   };
 
   const goToDate = (date: Date) => {
@@ -1033,17 +1067,21 @@ export function useBooker({
 
   return {
     calendarProps: {
-      availabilityLoading,
-      disabled: isDayDisabled,
-      endMonth: meta?.bookingWindowEnd ?? undefined,
-      initialLoading,
+      getDay,
+      loading: initialLoading
+        ? "initial"
+        : availabilityLoading
+          ? "availability"
+          : undefined,
       locale,
-      month: currentMonth,
+      maxDate: calendarBounds.maxDate,
+      minDate: calendarBounds.minDate,
+      month: localDateKey(currentMonth).slice(0, 7),
       onMonthChange: handleMonthChange,
       onSelect: handleSelectDate,
-      selected: selectedDate,
-      startMonth,
-      today: todayStart,
+      selected: selectedDate ? toCalendarDateKey(selectedDate) : undefined,
+      today: calendarBounds.today,
+      weekStart: calendarBounds.weekStart,
     },
     confirmFormProps,
     durationProps: {

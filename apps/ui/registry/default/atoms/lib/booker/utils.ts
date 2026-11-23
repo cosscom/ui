@@ -1,3 +1,5 @@
+import { toWeekStart } from "@/registry/default/atoms/booker/booker-calendar-model";
+
 export type EventTypeLocationOption = {
   label: string;
   provider: string;
@@ -22,6 +24,8 @@ export type BookerMeta = {
   disableGuests: boolean;
   bookingWindowStart: Date | null;
   bookingWindowEnd: Date | null;
+  /** First day of the week, 0 = Sunday … 6 = Saturday. */
+  weekStart: number;
 };
 
 export type EventTypeInfo = {
@@ -669,6 +673,23 @@ export function extractBookingWindowEnd(payload: unknown): Date | null {
   return null;
 }
 
+// The calendar's first day of the week: the event type's, falling back to
+// its first host's, Sunday when neither says.
+export function extractWeekStart(payload: unknown): number {
+  if (!payload || typeof payload !== "object") {
+    return 0;
+  }
+
+  const eventType = payload as Record<string, unknown>;
+  const owner = [eventType.users, eventType.hosts]
+    .flatMap((list) => (Array.isArray(list) ? list.slice(0, 1) : []))
+    .find((item): item is Record<string, unknown> =>
+      Boolean(item && typeof item === "object"),
+    );
+
+  return toWeekStart(eventType.weekStart) ?? toWeekStart(owner?.weekStart) ?? 0;
+}
+
 export function getInitials(name: string): string {
   const parts = name
     .split(" ")
@@ -1127,26 +1148,6 @@ export function findFirstAvailableDate(
 }
 
 // --- Calendar grid (mirrors booker-calendar.tsx) ---
-
-export function getWeekStartsOn(locale: string): number {
-  try {
-    const localeObj = new Intl.Locale(locale) as Intl.Locale & {
-      weekInfo?: { firstDay?: number };
-      getWeekInfo?: () => { firstDay?: number };
-    };
-    const info =
-      typeof localeObj.getWeekInfo === "function"
-        ? localeObj.getWeekInfo()
-        : localeObj.weekInfo;
-    const firstDay = info?.firstDay;
-    if (typeof firstDay === "number") {
-      return firstDay % 7;
-    }
-  } catch {
-    // Fall through to the Sunday default below.
-  }
-  return 0;
-}
 
 function calendarStartOfMonth(date: Date): Date {
   return new Date(date.getFullYear(), date.getMonth(), 1);

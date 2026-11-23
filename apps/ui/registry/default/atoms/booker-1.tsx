@@ -4,7 +4,7 @@ import { cn } from "@/registry/default/lib/utils";
 import { Card } from "@/registry/default/ui/card";
 import { Skeleton } from "@/registry/default/ui/skeleton";
 import { BookerAvatars } from "./booker/booker-avatars";
-import { BookerCalendar } from "./booker/booker-calendar";
+import { BookerCalendar, BookerCalendarPane } from "./booker/booker-calendar";
 import { BookerConfirmForm } from "./booker/booker-confirm-form";
 import { BookerErrorState } from "./booker/booker-error-state";
 import { type BookerLabels, getBookerLabels } from "./booker/booker-labels";
@@ -182,9 +182,9 @@ export function Booker({
         <BookerSteps step={booker.step}>
           {booker.step === "select" ? (
             <div className="flex w-full @3xl:flex-row flex-col">
-              <div className="flex @3xl:w-[min(28.75rem,100cqw-2*var(--booker-side))] w-full @3xl:shrink-0 flex-col items-center @3xl:@max-5xl:px-2 px-4 @3xl:@max-5xl:py-2 pt-3 pb-4">
+              <BookerCalendarPane>
                 <BookerCalendar {...booker.calendarProps} />
-              </div>
+              </BookerCalendarPane>
               <TimePicker labels={t} {...booker.timePickerProps} />
             </div>
           ) : (
