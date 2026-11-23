@@ -1,9 +1,9 @@
 // PROTOTYPE ONLY. Throwaway route for the wayfinder ticket "The instant
 // meeting flow" (.scratch/booker/issues/20-instant-meeting-flow.md).
 //
-// An instant meeting as a route through the Booker's steps. Three variants of
-// where "Meet now" is offered, switchable with `variant`; the API's answers
-// are picked by `scenario`; `stage` opens partway through. Nothing is sent.
+// An instant meeting as a route through the Booker's steps, with "Meet now"
+// in the event pane. The API's answers are picked by `scenario`; `stage`
+// opens partway through. Nothing is sent.
 
 import type { Metadata } from "next";
 import {

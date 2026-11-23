@@ -3,8 +3,6 @@
 
 export const variants = [
   { key: "A", label: "Meet now in the event pane" },
-  { key: "B", label: "Meet now above the calendar" },
-  { key: "C", label: "Meet now as a bar along the card’s bottom" },
 ] as const;
 
 export type VariantKey = (typeof variants)[number]["key"];

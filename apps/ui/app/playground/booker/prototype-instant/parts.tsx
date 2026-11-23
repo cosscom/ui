@@ -20,7 +20,6 @@ import { BookerCalendar } from "@/registry/default/atoms/booker/booker-calendar"
 import { getBookerLabels } from "@/registry/default/atoms/booker/booker-labels";
 import { BookerSteps } from "@/registry/default/atoms/booker/booker-steps";
 import { TimePicker } from "@/registry/default/atoms/booker/time-picker";
-import { cn } from "@/registry/default/lib/utils";
 import { Button } from "@/registry/default/ui/button";
 import { Card } from "@/registry/default/ui/card";
 import { FieldBlock, TermsNote } from "../prototype-form/field-block";
@@ -38,13 +37,12 @@ import {
   startOfMonth,
   today,
 } from "../prototype-manage/fixtures";
-import type { EndReason, Stage, VariantKey } from "./fixtures";
+import type { EndReason, Stage } from "./fixtures";
 import { displayTimeLabel } from "@/lib/booker/utils";
 
 export type Mode = "scheduled" | "instant";
 
 export type Flow = {
-  variant: VariantKey;
   stage: Stage;
   mode: Mode;
   offerInstant: boolean;
@@ -100,7 +98,7 @@ function getEmail(flow: Flow) {
   return typeof email === "string" ? email.trim() : "";
 }
 
-/** The "meet now" offer. Variant A puts it in the event pane. */
+/** The "meet now" offer, in the event pane under the event's details. */
 function MeetNowInPane({ flow }: StepProps) {
   return (
     <div className="flex flex-col items-start gap-3 rounded-lg border p-3">
@@ -111,41 +109,6 @@ function MeetNowInPane({ flow }: StepProps) {
         </p>
       </div>
       <Button onClick={flow.meetNow} size="sm" variant="outline">
-        <ZapIcon aria-hidden="true" />
-        Meet now
-      </Button>
-    </div>
-  );
-}
-
-/** Variant B puts it in a row above the calendar and the time list. */
-function MeetNowAboveCalendar({ flow }: StepProps) {
-  return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-b @5xl:px-6 px-4 py-3">
-      <p className="text-muted-foreground sm:text-sm">
-        <span className="font-medium text-foreground">Can’t wait?</span> Someone
-        from the team can join in a minute or two.
-      </p>
-      <Button onClick={flow.meetNow} size="sm" variant="outline">
-        <ZapIcon aria-hidden="true" />
-        Meet now
-      </Button>
-    </div>
-  );
-}
-
-/**
- * Variant C puts it in a bar along the bottom of the whole card, like Cal's
- * floating "Connect now" bar, but kept inside the card.
- */
-function MeetNowBar({ flow }: StepProps) {
-  return (
-    <div className="flex basis-full flex-wrap items-center justify-between gap-3 rounded-b-[calc(var(--radius-2xl)-1px)] border-t bg-muted/64 @5xl:px-6 px-4 py-3">
-      <p className="text-muted-foreground sm:text-sm">
-        <span className="font-medium text-foreground">Don’t want to wait?</span>{" "}
-        Someone from the team can join in a minute or two.
-      </p>
-      <Button onClick={flow.meetNow} size="sm">
         <ZapIcon aria-hidden="true" />
         Meet now
       </Button>
@@ -213,9 +176,7 @@ function EventPane({ flow }: StepProps) {
             <span>Europe/Rome</span>
           </div>
         </div>
-        {flow.variant === "A" &&
-        flow.offerInstant &&
-        flow.stage === "select" ? (
+        {flow.offerInstant && flow.stage === "select" ? (
           <MeetNowInPane flow={flow} />
         ) : null}
       </div>
@@ -223,7 +184,7 @@ function EventPane({ flow }: StepProps) {
   );
 }
 
-/** The Booker's select step, unchanged, with the offer above it in B. */
+/** The Booker's select step, unchanged. */
 function SelectStep({ flow }: StepProps) {
   const monthStart = startOfMonth(flow.month);
   const nextMonth = new Date(
@@ -237,9 +198,6 @@ function SelectStep({ flow }: StepProps) {
 
   return (
     <div className="flex w-full flex-col">
-      {flow.variant === "B" && flow.offerInstant ? (
-        <MeetNowAboveCalendar flow={flow} />
-      ) : null}
       <div className="flex w-full @3xl:flex-row flex-col">
         <div className="flex @3xl:w-[min(28.75rem,100cqw-2*var(--booker-side))] w-full @3xl:shrink-0 flex-col items-center @3xl:@max-5xl:px-2 px-4 @3xl:@max-5xl:py-2 pt-3 pb-4">
           <BookerCalendar
@@ -450,12 +408,9 @@ function BookedStep({ flow }: StepProps) {
 
 export function InstantBooker(props: StepProps) {
   const step = props.flow.stage;
-  const showBar =
-    props.flow.variant === "C" && props.flow.offerInstant && step === "select";
 
   return (
-    // The bar wraps onto its own line under the pane and the steps.
-    <Card className={cn(cardClassName, showBar && "flex-wrap")}>
+    <Card className={cardClassName}>
       <EventPane {...props} />
       <BookerSteps step={step}>
         {step === "select" ? <SelectStep {...props} /> : null}
@@ -465,7 +420,6 @@ export function InstantBooker(props: StepProps) {
         {step === "ended" ? <EndedStep {...props} /> : null}
         {step === "booked" ? <BookedStep {...props} /> : null}
       </BookerSteps>
-      {showBar ? <MeetNowBar {...props} /> : null}
     </Card>
   );
 }
