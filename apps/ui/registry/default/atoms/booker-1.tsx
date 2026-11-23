@@ -222,9 +222,12 @@ export function Booker({
           )}
         </BookerSteps>
       </Card>
+      {/* The brand role in the Cal Sans font guide: weight 700 and GEOM 50,
+          which draws the wordmark's single-story a. Optical size stays
+          automatic. */}
       <a
         href="https://cal.com"
-        className="font-bold font-heading text-xl"
+        className='font-bold font-heading text-xl [font-variation-settings:"GEOM"_50]'
         target="_blank"
         rel="noreferrer"
       >
