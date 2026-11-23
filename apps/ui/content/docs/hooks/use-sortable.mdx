@@ -1,0 +1,233 @@
+---
+title: useSortable
+description: Reorder items by drag or keyboard, within a list and between lists.
+---
+
+A React hook that adds drag and drop reordering to any list, or to several lists at once, such as the columns of a board. It works with mouse, touch and keyboard, announces every move to screen readers, and renders nothing itself: you spread its props on your own elements.
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTab value="cli">CLI</TabsTab>
+  <TabsTab value="manual">Manual</TabsTab>
+</TabsList>
+<TabsPanel value="cli">
+
+```bash
+npx shadcn@latest add @coss/use-sortable
+```
+
+</TabsPanel>
+
+<TabsPanel value="manual">
+
+<Steps>
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="use-sortable" title="hooks/use-sortable.ts" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsPanel>
+
+</CodeTabs>
+
+## Usage
+
+### Sortable list
+
+The value is an object of containers, each an ordered array of items. A single list is one container.
+
+```tsx
+import { useSortable } from "@/hooks/use-sortable";
+
+function Steps() {
+  const sortable = useSortable({
+    defaultValue: { steps: ["Draft", "Review", "Ship"] },
+  });
+
+  return (
+    <>
+      <div {...sortable.getContainerProps("steps")}>
+        {sortable.value.steps?.map((step) => (
+          <div key={step} {...sortable.getItemProps(step)}>
+            {step}
+          </div>
+        ))}
+      </div>
+      <div {...sortable.getAnnouncerProps()} />
+    </>
+  );
+}
+```
+
+Strings and numbers are their own ids. For objects, the hook reads `item.id`, or pass `getItemId`.
+
+### Board with columns
+
+Give each column its own container key. Items move within a column and between columns. Use `value` and `onValueChange` to control the state, and `canMove` to refuse a move, for example into a full column.
+
+```tsx
+const [board, setBoard] = useState({
+  todo: [{ id: "1", title: "Update pricing page" }],
+  doing: [],
+  done: [],
+});
+
+const sortable = useSortable({
+  value: board,
+  onValueChange: setBoard,
+  canMove: ({ from, to }) =>
+    from.container === to.container || board[to.container].length < 3,
+  getItemLabel: (task) => task.title,
+});
+
+return columns.map((column) => (
+  <div key={column.id} {...sortable.getContainerProps(column.id)}>
+    {sortable.value[column.id]?.map((task) => (
+      <Card key={task.id} {...sortable.getItemProps(task)}>
+        {task.title}
+      </Card>
+    ))}
+  </div>
+));
+```
+
+`onValueChange` runs once per move, on drop. While dragging, `sortable.value` already shows the item at its new place, so render from it rather than from your own state.
+
+### Drag overlay
+
+Render a copy of the dragged item with `getOverlayProps`. It follows the pointer above everything, so columns with their own scroll area do not clip it, and it is inert, so screen readers and the keyboard skip it. The item in the list stays as a placeholder and gets a `data-dragging` attribute.
+
+```tsx
+{sortable.active?.reason === "pointer" && (
+  <Card className="z-50 shadow-lg" {...sortable.getOverlayProps()}>
+    {sortable.active.item.title}
+  </Card>
+)}
+```
+
+Without an overlay, the item still moves through the list as you drag.
+
+### Drag handle
+
+Set `handle` to start drags and keyboard moves only from a handle. Use it when items hold their own buttons or links.
+
+```tsx
+const sortable = useSortable({ handle: true, value, onValueChange });
+
+<Card {...sortable.getItemProps(task)}>
+  <button aria-label={`Move ${task.title}`} {...sortable.getHandleProps(task)}>
+    <GripVerticalIcon aria-hidden="true" />
+  </button>
+  {task.title}
+</Card>;
+```
+
+Add `dragFromItem` to also drag from anywhere on the item with a mouse or finger, like Trello or Jira, while the keyboard keeps using the handle. A quick click still reaches the item's own buttons and links, so a card can open a dialog on click.
+
+```tsx
+const sortable = useSortable({ handle: true, dragFromItem: true, value, onValueChange });
+```
+
+Without a handle, presses on links, buttons and form fields inside an item do not start a drag. Add `data-sortable-ignore` to any other element that should not. With `dragFromItem`, only form fields and elements with `data-sortable-ignore` never start a drag.
+
+## Interaction
+
+| Input | Behavior |
+|-------|----------|
+| Mouse or pen | Drag starts after the pointer moves 5px, so clicks still work |
+| Touch | Press and hold for 250ms, then drag. A quick swipe scrolls as usual |
+| `Space` or `Enter` | Pick up the focused item, or drop it |
+| Arrow keys | Move the picked-up item within its container, or to the previous or next container on the page, skipping any that refuse it |
+| `Home` / `End` | Move to the start or end of the container |
+| `Escape` | Cancel and put the item back |
+
+When `canMove` refuses a move, the item stays where it was, the refusing container gets `data-drop-refused`, and screen readers hear why. The signal is yours to show or hide: nothing changes on screen unless you style `data-drop-refused`, and returning `undefined` from `getAnnouncement` for `refuse` events silences the message. Dragging near the edge of a scrollable container or of the page scrolls it. Set `autoScroll` to `false` to turn this off. Left and right arrows are mirrored in right-to-left layouts.
+
+## Accessibility
+
+Each item is focusable and described by the keyboard instructions. Every pick-up, move, drop, cancel and refused move is announced, for example "Moved Update pricing page to position 2 of 3 in In progress." Render `getAnnouncerProps` once, anywhere in the tree, so screen readers hear these messages.
+
+Name items and containers with `getItemLabel` and `getContainerLabel`, translate the instructions with `instructions`, and replace the messages with `getAnnouncement`.
+
+## API
+
+```tsx
+function useSortable<Item>(options: UseSortableOptions<Item>): UseSortableReturn<Item>;
+```
+
+### Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `value` | `Record<string, Item[]>` | | Items per container, in order. Controlled |
+| `defaultValue` | `Record<string, Item[]>` | `{}` | Initial items when uncontrolled |
+| `onValueChange` | `(value, details) => void` | | Called on drop when an item moved. `details` has `item`, `from`, `to` and `reason` |
+| `getItemId` | `(item) => string` | the item, or `item.id` | Unique id for an item |
+| `getItemLabel` | `(item) => string` | the id | Name of an item in announcements |
+| `getContainerLabel` | `(container) => string` | the key | Name of a container in announcements |
+| `canMove` | `({ item, from, to }) => boolean` | | Return `false` to refuse a move |
+| `orientation` | `"vertical" \| "horizontal"` | `"vertical"` | Direction items flow inside a container |
+| `handle` | `boolean` | `false` | Start moves only from `getHandleProps` |
+| `dragFromItem` | `boolean` | `false` | With `handle`, also drag from anywhere on the item with mouse or touch |
+| `disabled` | `boolean` | `false` | Turn off all moves |
+| `autoScroll` | `boolean` | `true` | Scroll near the edges while dragging |
+| `instructions` | `string` | English text | Keyboard instructions for screen readers |
+| `getAnnouncement` | `(event) => string \| undefined` | English messages | Custom announcements |
+
+### Return value
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `value` | `Record<string, Item[]>` | The value to render, with the dragged item at its current place |
+| `active` | `{ id, item, from, to, reason, refused } \| null` | The item being moved, if any |
+| `getContainerProps` | `(container) => props` | Spread on each container element |
+| `getItemProps` | `(item) => props` | Spread on each item element |
+| `getHandleProps` | `(item) => props` | Spread on the handle when `handle` is set |
+| `getOverlayProps` | `() => props` | Spread on the drag overlay |
+| `getAnnouncerProps` | `() => props` | Spread on one empty element for screen reader messages |
+
+A position is `{ container, index }`, where `index` is the item's place after the move.
+
+### Data attributes
+
+| Attribute | On | When |
+|-----------|----|------|
+| `data-dragging` | item | The item is being moved |
+| `data-drop-target` | container | The moving item is over this container |
+| `data-drop-refused` | container, item, overlay | The container under the item refused it through `canMove` |
+
+Style them with Tailwind, for example `data-dragging:opacity-50` or `data-drop-refused:bg-destructive/8`.
+
+### Helpers
+
+```tsx
+import {
+  getSortableKeyboardTarget,
+  moveSortableItem,
+} from "@/hooks/use-sortable";
+
+// Move an item in a value, for example to apply a change from the server
+const next = moveSortableItem(value, from, to);
+
+// Where a key press would move an item, or null
+const target = getSortableKeyboardTarget(value, position, "ArrowDown");
+```
+
+## Examples
+
+### List
+
+<SortableListDemo />
+
+### Board with a limit
+
+The In progress column accepts at most two tasks. Drag a third card over it to see it refuse.
+
+<SortableBoardDemo />

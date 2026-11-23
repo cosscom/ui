@@ -25,6 +25,10 @@ import { CodeTabs } from "@/components/code-tabs";
 import { ComponentPreview } from "@/components/component-preview";
 import { ComponentSource } from "@/components/component-source";
 import { MediaQueryDemo } from "@/components/media-query-demo";
+import {
+  SortableBoardDemo,
+  SortableListDemo,
+} from "@/components/sortable-demo";
 import { cn } from "@/lib/utils";
 
 export const mdxComponents = {
@@ -288,6 +292,8 @@ export const mdxComponents = {
       </ScrollArea>
     );
   },
+  SortableBoardDemo,
+  SortableListDemo,
   Step: ({ className, ...props }: React.ComponentProps<"h3">) => (
     <h3
       className={cn("mt-8 scroll-m-32 font-medium tracking-tight", className)}

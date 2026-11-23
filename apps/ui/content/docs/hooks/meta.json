@@ -1,4 +1,4 @@
 {
-  "pages": ["use-media-query", "use-copy-to-clipboard"],
+  "pages": ["use-media-query", "use-copy-to-clipboard", "use-sortable"],
   "title": "Hooks"
 }

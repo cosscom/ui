@@ -10941,4 +10941,22 @@ export const Index: Record<string, any> = {
     categories: undefined,
     meta: undefined,
   },
+  "use-sortable": {
+    name: "use-sortable",
+    description: "",
+    type: "registry:hook",
+    registryDependencies: undefined,
+    files: [{
+      path: "registry/default/hooks/use-sortable.ts",
+      type: "registry:hook",
+      target: ""
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/hooks/use-sortable.ts")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
   }
