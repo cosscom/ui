@@ -101,7 +101,7 @@ export function SortableBoardDemo() {
           const tasks = sortable.value[column.id] ?? [];
           return (
             <div
-              className="flex flex-col gap-2 rounded-xl bg-muted/72 p-2 transition-colors data-drop-refused:bg-destructive/8 data-drop-refused:ring-1 data-drop-refused:ring-destructive/48"
+              className="flex flex-col gap-2 rounded-xl bg-muted/72 p-2 transition-colors data-drop-refused:bg-destructive/8 data-drop-refused:ring-1 data-drop-refused:ring-destructive/48 data-drop-refused:ring-inset"
               key={column.id}
               {...sortable.getContainerProps(column.id)}
             >
