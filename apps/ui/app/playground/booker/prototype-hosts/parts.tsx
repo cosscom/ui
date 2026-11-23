@@ -4,9 +4,8 @@
 // of the Booker's select step: select → form → booked. The calendar and time
 // list are the Booker's real ones and reload when the choice changes.
 //
-// The design system has no host picker. What is copied from it: the host
-// identity (HostAvatars and its label) and, in A, the row and Select of its
-// reschedule host preference.
+// The design system has no host picker. The picker copies Cal's HostSelect
+// combobox; the host identity copies the design system's HostAvatars.
 
 import {
   CalendarIcon,
@@ -14,6 +13,7 @@ import {
   CircleCheckIcon,
   Clock3Icon,
   GlobeIcon,
+  SearchIcon,
   UserIcon,
   VideoIcon,
 } from "lucide-react";
@@ -25,16 +25,14 @@ import { TimePicker } from "@/registry/default/atoms/booker/time-picker";
 import { Avatar, AvatarFallback } from "@/registry/default/ui/avatar";
 import { Button } from "@/registry/default/ui/button";
 import { Card } from "@/registry/default/ui/card";
-import { Checkbox } from "@/registry/default/ui/checkbox";
-import { Label } from "@/registry/default/ui/label";
-import { ScrollArea } from "@/registry/default/ui/scroll-area";
 import {
-  Select,
-  SelectItem,
-  SelectPopup,
-  SelectTrigger,
-  SelectValue,
-} from "@/registry/default/ui/select";
+  Combobox,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+  ComboboxPopup,
+} from "@/registry/default/ui/combobox";
 import { FieldBlock, TermsNote } from "../prototype-form/field-block";
 import {
   type FieldValue,
@@ -44,6 +42,7 @@ import {
 } from "../prototype-form/fixtures";
 import { formatDate, startOfMonth, today } from "../prototype-manage/fixtures";
 import { type Host, type Stage, teamName, type VariantKey } from "./fixtures";
+import { SelectionList, SelectionListItem } from "./selection-list";
 import { displayTimeLabel, getInitials } from "@/lib/booker/utils";
 
 export type Flow = {
@@ -121,117 +120,101 @@ function formatNames(names: string[]) {
   return `${names.slice(0, -1).join(", ")} and ${names.at(-1)}`;
 }
 
-function HostAvatar({ name }: { name: string }) {
-  return (
-    <Avatar className="[--avatar-size:--spacing(5)]">
-      <AvatarFallback>{getInitials(name)}</AvatarFallback>
-    </Avatar>
-  );
-}
-
-/** The trigger's text: everyone, one name, or the first name and a count. */
-function renderChosen(flow: Flow) {
-  return (usernames: string[]) => {
-    if (usernames.length === flow.hosts.length) {
-      return "All hosts";
-    }
-    const first = flow.hosts.find((host) => host.username === usernames[0]);
-    const more = usernames.length > 1 ? ` (+${usernames.length - 1} more)` : "";
-    return <span className="truncate">{`${first?.name ?? ""}${more}`}</span>;
-  };
-}
-
 /**
- * A: the hosts in a multiple Select, in the row the design system gives the
- * reschedule host preference. The last chosen host cannot be removed.
+ * The hosts in a combobox, as Cal's HostSelect
+ * (`apps/web/modules/event-types/components/host-select.tsx`): a search
+ * field, the hosts in its popup, and the chosen ones listed under it with a
+ * remove button. The last chosen host has no remove button and cannot be
+ * unticked.
  */
-function HostSelect({ flow }: StepProps) {
-  const last = flow.chosen.length === 1 ? flow.chosen[0] : undefined;
-
-  return (
-    <div className="flex items-center gap-2 sm:text-sm">
-      <UserIcon
-        aria-hidden="true"
-        className="size-4.5 shrink-0 opacity-80 sm:size-4"
-      />
-      <Select
-        multiple
-        onValueChange={(next: string[]) => {
-          if (next.length > 0) {
-            flow.setChosen(next);
-          }
-        }}
-        value={flow.chosen}
-      >
-        <SelectTrigger
-          aria-label="Hosts who attend"
-          className="w-auto min-w-0 shrink font-normal"
-          size="sm"
-        >
-          <SelectValue>{renderChosen(flow)}</SelectValue>
-        </SelectTrigger>
-        <SelectPopup alignItemWithTrigger={false}>
-          {flow.hosts.map((host) => (
-            <SelectItem
-              disabled={host.username === last}
-              key={host.username}
-              value={host.username}
-            >
-              <span className="flex items-center gap-2">
-                <HostAvatar name={host.name} />
-                {host.name}
-              </span>
-            </SelectItem>
-          ))}
-        </SelectPopup>
-      </Select>
-    </div>
-  );
-}
-
-/** B: every host as a checkbox, scrolling once the list is long. */
-function HostList({ flow }: StepProps) {
-  const last = flow.chosen.length === 1 ? flow.chosen[0] : undefined;
-  const rows = (
-    <div className="flex flex-col gap-2">
-      {flow.hosts.map((host) => (
-        <Label className="font-normal" key={host.username}>
-          <Checkbox
-            checked={flow.chosen.includes(host.username)}
-            disabled={host.username === last}
-            onCheckedChange={(checked) =>
-              flow.setChosen(
-                checked
-                  ? flow.hosts
-                      .map((item) => item.username)
-                      .filter(
-                        (username) =>
-                          username === host.username ||
-                          flow.chosen.includes(username),
-                      )
-                  : flow.chosen.filter(
-                      (username) => username !== host.username,
-                    ),
-              )
-            }
-          />
-          <HostAvatar name={host.name} />
-          {host.name}
-        </Label>
-      ))}
-    </div>
-  );
+function HostCombobox({ flow }: StepProps) {
+  const chosen = getChosenHosts(flow);
+  const last = chosen.length === 1 ? chosen[0] : undefined;
 
   return (
     <div className="flex flex-col gap-3 sm:text-sm">
       <p className="font-medium">Who attends</p>
-      {flow.hosts.length > 6 ? (
-        <ScrollArea className="max-h-56" scrollFade>
-          {rows}
-        </ScrollArea>
-      ) : (
-        rows
-      )}
+      <div className="flex flex-col">
+        <Combobox<Host, true>
+          isItemEqualToValue={(itemValue, selectedValue) =>
+            itemValue.username === selectedValue.username
+          }
+          items={flow.hosts}
+          itemToStringLabel={(host) => host.name}
+          multiple
+          onValueChange={(next, eventDetails) => {
+            // As HostSelect: Escape only dismisses the search, and the list
+            // never empties.
+            if (eventDetails.reason === "escape-key" || next.length === 0) {
+              eventDetails.cancel();
+              return;
+            }
+            flow.setChosen(
+              flow.hosts
+                .filter((host) =>
+                  next.some((item) => item.username === host.username),
+                )
+                .map((host) => host.username),
+            );
+          }}
+          value={chosen}
+        >
+          <ComboboxInput
+            aria-label="Hosts who attend"
+            placeholder="Search hosts"
+            startAddon={<SearchIcon />}
+          />
+          <ComboboxPopup>
+            <ComboboxEmpty>No options available</ComboboxEmpty>
+            <ComboboxList>
+              {(host: Host) => (
+                <ComboboxItem
+                  disabled={host.username === last?.username}
+                  key={host.username}
+                  value={host}
+                >
+                  {host.name}
+                </ComboboxItem>
+              )}
+            </ComboboxList>
+          </ComboboxPopup>
+        </Combobox>
+        <div className="mt-3 mb-4">
+          <SelectionList>
+            {chosen.map((host) => {
+              const content = (
+                <>
+                  <Avatar className="[--avatar-size:--spacing(5)]">
+                    <AvatarFallback>{getInitials(host.name)}</AvatarFallback>
+                  </Avatar>
+                  <span className="min-w-0 flex-1 truncate font-medium">
+                    {host.name}
+                  </span>
+                </>
+              );
+              return last ? (
+                <SelectionListItem key={host.username}>
+                  {content}
+                </SelectionListItem>
+              ) : (
+                <SelectionListItem
+                  key={host.username}
+                  onRemove={() =>
+                    flow.setChosen(
+                      flow.chosen.filter(
+                        (username) => username !== host.username,
+                      ),
+                    )
+                  }
+                  removeAriaLabel={`Remove ${host.name}`}
+                >
+                  {content}
+                </SelectionListItem>
+              );
+            })}
+          </SelectionList>
+        </div>
+      </div>
     </div>
   );
 }
@@ -311,12 +294,11 @@ function EventPane({ flow }: StepProps) {
             <GlobeIcon aria-hidden="true" className={metaIconClassName} />
             <span>Europe/Rome</span>
           </div>
-          {picking && flow.variant === "A" ? <HostSelect flow={flow} /> : null}
           {flow.hostChoice && flow.stage !== "select" ? (
             <ChosenRow flow={flow} />
           ) : null}
         </div>
-        {picking && flow.variant === "B" ? <HostList flow={flow} /> : null}
+        {picking ? <HostCombobox flow={flow} /> : null}
       </div>
     </div>
   );

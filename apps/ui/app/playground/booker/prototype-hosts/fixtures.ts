@@ -3,9 +3,9 @@
 
 import { getDaySlots, today } from "../prototype-manage/fixtures";
 
+// One variant: a combobox, as Cal's web app picks people.
 export const variants = [
-  { key: "A", label: "Hosts in a select" },
-  { key: "B", label: "Hosts in a checkbox list" },
+  { key: "A", label: "Combobox, as in Cal’s HostSelect" },
 ] as const;
 
 export type VariantKey = (typeof variants)[number]["key"];
