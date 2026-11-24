@@ -1,19 +1,6 @@
-import {
-  AlertCircleIcon,
-  EyeOffIcon,
-  RefreshCwIcon,
-  SearchXIcon,
-} from "lucide-react";
 import { Button } from "@/registry/default/ui/button";
-import { Card } from "@/registry/default/ui/card";
-import {
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-} from "@/registry/default/ui/empty";
 import type { BookerLabels } from "./booker-labels";
+import { ResponseCard } from "./response-card";
 import type { BookerError } from "@/lib/booker/use-booker";
 
 type BookerErrorStateProps = {
@@ -22,50 +9,40 @@ type BookerErrorStateProps = {
   onRetry: () => void;
 };
 
+// The Booker couldn't load: Cal Video's error card (a ResponseCard with an
+// error StatusMark), with a retry when trying again can help.
 export function BookerErrorState({
   error,
   labels,
   onRetry,
 }: BookerErrorStateProps) {
   const isTerminal = error.kind === "not-found" || error.kind === "unpublished";
-  const Icon =
+  const [title, description] =
     error.kind === "unpublished"
-      ? EyeOffIcon
+      ? [labels.errorUnpublished, labels.errorUnpublishedDescription]
       : error.kind === "not-found"
-        ? SearchXIcon
-        : AlertCircleIcon;
-  const heading =
-    error.kind === "unpublished"
-      ? labels.errorUnpublished
-      : error.kind === "not-found"
-        ? labels.errorNotFound
+        ? [labels.errorNotFound, labels.errorNotFoundDescription]
         : error.kind === "network"
-          ? labels.errorNetwork
-          : labels.errorGeneric;
+          ? [labels.errorNetwork, labels.errorNetworkDescription]
+          : [labels.errorGeneric, labels.errorGenericDescription];
 
   return (
     <div
-      className="@container mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center gap-4"
+      className="flex w-full flex-1 items-center justify-center"
       role="alert"
     >
-      <Card className="w-full">
-        <Empty className="gap-4 py-10">
-          <EmptyHeader>
-            <EmptyMedia variant="icon" className="mb-1">
-              <Icon aria-hidden="true" />
-            </EmptyMedia>
-            <EmptyDescription>{heading}</EmptyDescription>
-          </EmptyHeader>
-          {!isTerminal && (
-            <EmptyContent>
-              <Button variant="outline" onClick={onRetry}>
-                <RefreshCwIcon aria-hidden="true" />
-                {labels.retry}
-              </Button>
-            </EmptyContent>
-          )}
-        </Empty>
-      </Card>
+      <ResponseCard
+        action={
+          isTerminal ? undefined : (
+            <Button onClick={onRetry} size="lg">
+              {labels.retry}
+            </Button>
+          )
+        }
+        description={description}
+        status="error"
+        title={title}
+      />
     </div>
   );
 }

@@ -1,8 +1,12 @@
 export type BookerLabels = {
   errorNotFound: string;
+  errorNotFoundDescription: string;
   errorUnpublished: string;
+  errorUnpublishedDescription: string;
   errorNetwork: string;
+  errorNetworkDescription: string;
   errorGeneric: string;
+  errorGenericDescription: string;
   retry: string;
   durationMinutes: (minutes: number) => string;
   availableTimes: string;
@@ -59,11 +63,17 @@ export type BookerLabels = {
 };
 
 const DEFAULT_BOOKER_LABELS: BookerLabels = {
-  errorNotFound: "This event type could not be found.",
-  errorUnpublished:
-    "This event type is not currently published and is not accepting bookings.",
-  errorNetwork: "Unable to connect. Please check your internet connection.",
-  errorGeneric: "Something went wrong loading the booker.",
+  // The error card's strings follow Cal Video's (no meeting found).
+  errorNotFound: "Link not found",
+  errorNotFoundDescription:
+    "This booking link doesn’t exist. Contact the host for an updated link.",
+  errorUnpublished: "Link not available",
+  errorUnpublishedDescription:
+    "This event isn’t published, so it can’t take bookings. Contact the host or ask them to publish it.",
+  errorNetwork: "Can’t reach Cal.com",
+  errorNetworkDescription: "Check your internet connection and try again.",
+  errorGeneric: "Something went wrong",
+  errorGenericDescription: "The booker couldn’t load. Try again in a moment.",
   retry: "Try again",
   durationMinutes: (minutes) => `${minutes} min`,
   // The time list's strings are the design system's (Booker time slots).
