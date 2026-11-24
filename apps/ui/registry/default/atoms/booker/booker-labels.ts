@@ -25,9 +25,6 @@ export type BookerLabels = {
   slotHostOverride: string;
   slotCalendarBusy: string;
   slotCalendarAvailable: string;
-  morning: string;
-  afternoon: string;
-  evening: string;
   headerImageAlt: (hostName: string, eventTitle: string) => string;
   locationOptions: (count: number) => string;
   locationSelectOnNextStep: string;
@@ -90,10 +87,6 @@ const DEFAULT_BOOKER_LABELS: BookerLabels = {
   slotHostOverride: "Available only with host override",
   slotCalendarBusy: "Busy in your calendar",
   slotCalendarAvailable: "Available in your calendar",
-  // The time list's groups (Pasquale, 2026-11-23; not in the design system).
-  morning: "Morning",
-  afternoon: "Afternoon",
-  evening: "Evening",
   headerImageAlt: (hostName, eventTitle) =>
     `Banner for ${eventTitle} with ${hostName}`,
   locationOptions: (count) => `${count} location options`,
