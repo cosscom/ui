@@ -1,13 +1,13 @@
 // PROTOTYPE ONLY. A synthetic booking to reschedule or cancel, and synthetic
 // availability for the Booker's real calendar and time list. No network.
 
-import type { BookerCalendarProps } from "@/registry/default/atoms/booker/booker-calendar";
+import type { BookerCalendarProps } from "@/registry/default/booker/booker-calendar";
 import {
   calendarGrid,
   localDate,
   localDateKey,
   resolveSelection,
-} from "@/registry/default/atoms/booker/booker-calendar-model";
+} from "@/registry/default/booker/booker-calendar-model";
 
 export type ReasonFieldConfig = {
   label: string;

@@ -20,25 +20,26 @@ import { useId, useState } from "react";
 import {
   BookerCalendar,
   BookerCalendarPane,
-} from "@/registry/default/atoms/booker/booker-calendar";
-import { getBookerLabels } from "@/registry/default/atoms/booker/booker-labels";
-import { BookerSteps } from "@/registry/default/atoms/booker/booker-steps";
-import { EventDescription } from "@/registry/default/atoms/booker/event-description";
+} from "@/registry/default/booker/booker-calendar";
+import { getBookerLabels } from "@/registry/default/booker/booker-labels";
+import { BookerSteps } from "@/registry/default/booker/booker-steps";
+import { EventDescription } from "@/registry/default/booker/event-description";
 import {
   EventTitle,
   FixedDuration,
   HostIdentity,
   SelectedTime,
-} from "@/registry/default/atoms/booker/event-meta";
-import { LocationRow } from "@/registry/default/atoms/booker/location";
+} from "@/registry/default/booker/event-meta";
+import { displayTimeLabel } from "@/registry/default/booker/lib/booker-utils";
+import { LocationRow } from "@/registry/default/booker/location";
 import {
   TimePicker,
   type TimeSlot,
-} from "@/registry/default/atoms/booker/time-picker";
+} from "@/registry/default/booker/time-picker";
 import {
   TimezoneDisplay,
   TimezonePicker,
-} from "@/registry/default/atoms/booker/timezone-picker";
+} from "@/registry/default/booker/timezone-picker";
 import { Badge } from "@/registry/default/ui/badge";
 import { Button } from "@/registry/default/ui/button";
 import { Card } from "@/registry/default/ui/card";
@@ -80,7 +81,6 @@ import {
   type Stage,
   seatsPerTimeSlot,
 } from "./fixtures";
-import { displayTimeLabel } from "@/lib/booker/utils";
 
 export type CreateError = "seatGone" | "alreadyIn";
 

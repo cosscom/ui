@@ -1171,6 +1171,152 @@ export const Index: Record<string, any> = {
     categories: undefined,
     meta: undefined,
   },
+  "booker": {
+    name: "booker",
+    description: "A Cal.com booking flow: pick a day and a time, fill in the form, and manage the booking.",
+    type: "registry:ui",
+    registryDependencies: ["@coss/avatar","@coss/badge","@coss/button","@coss/card","@coss/combobox","@coss/empty","@coss/field","@coss/form","@coss/group","@coss/input","@coss/popover","@coss/radio-group","@coss/scroll-area","@coss/segmented-control","@coss/select","@coss/skeleton","@coss/textarea","@coss/tooltip","@coss/utils"],
+    files: [{
+      path: "registry/default/booker/booker-avatars.tsx",
+      type: "registry:component",
+      target: "@components/booker/booker-avatars.tsx"
+    },{
+      path: "registry/default/booker/booker-calendar-model.ts",
+      type: "registry:component",
+      target: "@components/booker/booker-calendar-model.ts"
+    },{
+      path: "registry/default/booker/booker-calendar.tsx",
+      type: "registry:component",
+      target: "@components/booker/booker-calendar.tsx"
+    },{
+      path: "registry/default/booker/booker-confirm-form.tsx",
+      type: "registry:component",
+      target: "@components/booker/booker-confirm-form.tsx"
+    },{
+      path: "registry/default/booker/booker-confirmation.tsx",
+      type: "registry:component",
+      target: "@components/booker/booker-confirmation.tsx"
+    },{
+      path: "registry/default/booker/booker-error-state.tsx",
+      type: "registry:component",
+      target: "@components/booker/booker-error-state.tsx"
+    },{
+      path: "registry/default/booker/booker-heading.ts",
+      type: "registry:component",
+      target: "@components/booker/booker-heading.ts"
+    },{
+      path: "registry/default/booker/booker-labels.ts",
+      type: "registry:component",
+      target: "@components/booker/booker-labels.ts"
+    },{
+      path: "registry/default/booker/booker-steps.tsx",
+      type: "registry:component",
+      target: "@components/booker/booker-steps.tsx"
+    },{
+      path: "registry/default/booker/booker.tsx",
+      type: "registry:component",
+      target: "@components/booker/booker.tsx"
+    },{
+      path: "registry/default/booker/duration-picker.tsx",
+      type: "registry:component",
+      target: "@components/booker/duration-picker.tsx"
+    },{
+      path: "registry/default/booker/event-description.tsx",
+      type: "registry:component",
+      target: "@components/booker/event-description.tsx"
+    },{
+      path: "registry/default/booker/event-meta.tsx",
+      type: "registry:component",
+      target: "@components/booker/event-meta.tsx"
+    },{
+      path: "registry/default/booker/header-banner.tsx",
+      type: "registry:component",
+      target: "@components/booker/header-banner.tsx"
+    },{
+      path: "registry/default/booker/hooks/use-booker.ts",
+      type: "registry:component",
+      target: "@components/booker/hooks/use-booker.ts"
+    },{
+      path: "registry/default/booker/lib/actions.ts",
+      type: "registry:component",
+      target: "@components/booker/lib/actions.ts"
+    },{
+      path: "registry/default/booker/lib/booker-utils.ts",
+      type: "registry:component",
+      target: "@components/booker/lib/booker-utils.ts"
+    },{
+      path: "registry/default/booker/lib/booking-location.ts",
+      type: "registry:component",
+      target: "@components/booker/lib/booking-location.ts"
+    },{
+      path: "registry/default/booker/lib/cal-api/bookings.ts",
+      type: "registry:component",
+      target: "@components/booker/lib/cal-api/bookings.ts"
+    },{
+      path: "registry/default/booker/lib/cal-api/client.ts",
+      type: "registry:component",
+      target: "@components/booker/lib/cal-api/client.ts"
+    },{
+      path: "registry/default/booker/lib/cal-api/env.ts",
+      type: "registry:component",
+      target: "@components/booker/lib/cal-api/env.ts"
+    },{
+      path: "registry/default/booker/lib/cal-api/event-types.ts",
+      type: "registry:component",
+      target: "@components/booker/lib/cal-api/event-types.ts"
+    },{
+      path: "registry/default/booker/lib/cal-api/public-event.ts",
+      type: "registry:component",
+      target: "@components/booker/lib/cal-api/public-event.ts"
+    },{
+      path: "registry/default/booker/lib/cal-api/slots.ts",
+      type: "registry:component",
+      target: "@components/booker/lib/cal-api/slots.ts"
+    },{
+      path: "registry/default/booker/lib/cal-api/types.ts",
+      type: "registry:component",
+      target: "@components/booker/lib/cal-api/types.ts"
+    },{
+      path: "registry/default/booker/lib/target.ts",
+      type: "registry:component",
+      target: "@components/booker/lib/target.ts"
+    },{
+      path: "registry/default/booker/location.tsx",
+      type: "registry:component",
+      target: "@components/booker/location.tsx"
+    },{
+      path: "registry/default/booker/response-card.tsx",
+      type: "registry:component",
+      target: "@components/booker/response-card.tsx"
+    },{
+      path: "registry/default/booker/segmented-radio-group.tsx",
+      type: "registry:component",
+      target: "@components/booker/segmented-radio-group.tsx"
+    },{
+      path: "registry/default/booker/status-mark.tsx",
+      type: "registry:component",
+      target: "@components/booker/status-mark.tsx"
+    },{
+      path: "registry/default/booker/time-picker.tsx",
+      type: "registry:component",
+      target: "@components/booker/time-picker.tsx"
+    },{
+      path: "registry/default/booker/timezone-picker.tsx",
+      type: "registry:component",
+      target: "@components/booker/timezone-picker.tsx"
+    },{
+      path: "registry/default/booker/use-booker-calendar-focus.ts",
+      type: "registry:component",
+      target: "@components/booker/use-booker-calendar-focus.ts"
+    }],
+    component: React.lazy(async () => {
+      const mod = await import("@/registry/default/booker/booker-avatars.tsx")
+      const exportName = Object.keys(mod).find(key => typeof mod[key] === 'function' || typeof mod[key] === 'object') || item.name
+      return { default: mod.default || mod[exportName] }
+    }),
+    categories: undefined,
+    meta: undefined,
+  },
   "p-accordion-1": {
     name: "p-accordion-1",
     description: "Basic accordion",

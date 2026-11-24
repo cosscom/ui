@@ -1,7 +1,7 @@
 import { Button } from "@/registry/default/ui/button";
 import type { BookerLabels } from "./booker-labels";
+import type { BookerError } from "./hooks/use-booker";
 import { ResponseCard } from "./response-card";
-import type { BookerError } from "@/lib/booker/use-booker";
 
 type BookerErrorStateProps = {
   error: BookerError;

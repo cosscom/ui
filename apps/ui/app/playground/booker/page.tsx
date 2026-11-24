@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { Booker } from "@/registry/default/atoms/booker-1";
-import { fetchRawBookerDataAction } from "@/lib/booker/actions";
-import type { BookerTarget } from "@/lib/booker/target";
+import { Booker } from "@/registry/default/booker/booker";
+import { fetchRawBookerDataAction } from "@/registry/default/booker/lib/actions";
+import type { BookerTarget } from "@/registry/default/booker/lib/target";
 
 export const metadata: Metadata = {
   title: "Booker Playground - coss ui",

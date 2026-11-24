@@ -1,4 +1,4 @@
-import type { BookingLocationInput } from "@/lib/cal-api/types";
+import type { BookingLocationInput } from "./cal-api/types";
 
 const BOOKING_INTEGRATION_MAP: Record<string, string> = {
   "daily-video": "daily-video",

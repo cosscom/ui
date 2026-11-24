@@ -1,5 +1,6 @@
 import type { Registry } from "shadcn/schema";
 import { baseUi } from "@/registry/registry-base-ui";
+import { booker } from "@/registry/registry-booker";
 import { chat } from "@/registry/registry-chat";
 import { fonts } from "@/registry/registry-fonts";
 import { hooks } from "@/registry/registry-hooks";
@@ -13,6 +14,7 @@ export const registry = {
   items: [
     ...ui,
     ...chat,
+    ...booker,
     ...(particles as Registry["items"]),
     ...styles,
     ...fonts,

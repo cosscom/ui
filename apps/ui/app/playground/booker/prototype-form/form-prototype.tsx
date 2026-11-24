@@ -4,16 +4,16 @@
 // left and one form variant on the right, so each variant is judged in place.
 
 import { useEffect, useState } from "react";
-import { getBookerLabels } from "@/registry/default/atoms/booker/booker-labels";
-import { EventDescription } from "@/registry/default/atoms/booker/event-description";
+import { getBookerLabels } from "@/registry/default/booker/booker-labels";
+import { EventDescription } from "@/registry/default/booker/event-description";
 import {
   EventTitle,
   FixedDuration,
   HostIdentity,
   SelectedTime,
-} from "@/registry/default/atoms/booker/event-meta";
-import { Location } from "@/registry/default/atoms/booker/location";
-import { TimezoneDisplay } from "@/registry/default/atoms/booker/timezone-picker";
+} from "@/registry/default/booker/event-meta";
+import { Location } from "@/registry/default/booker/location";
+import { TimezoneDisplay } from "@/registry/default/booker/timezone-picker";
 import { Card } from "@/registry/default/ui/card";
 import { PrototypeSwitcher } from "../../prototype-switcher";
 import {

@@ -8,27 +8,18 @@ import {
   useRef,
   useState,
 } from "react";
-import type { BookerCalendarProps } from "@/registry/default/atoms/booker/booker-calendar";
+import type { BookerCalendarProps } from "../booker-calendar";
 import {
   type CalendarDayState,
   calendarGrid,
   localDate,
   localDateKey,
   resolveSelection,
-} from "@/registry/default/atoms/booker/booker-calendar-model";
-import type {
-  TimePickerEmpty,
-  TimeSlot,
-} from "@/registry/default/atoms/booker/time-picker";
+} from "../booker-calendar-model";
 import {
   type FetchRawBookerResult,
   fetchRawBookerDataAction,
-} from "@/lib/booker/actions";
-import {
-  type BookerTarget,
-  getDynamicContext,
-  getOrgSlugFromTarget,
-} from "@/lib/booker/target";
+} from "../lib/actions";
 import {
   type BookerMeta,
   buildBookingStartIso,
@@ -51,7 +42,13 @@ import {
   prefers24Hour,
   toCalendarDateKey,
   toTimeLabel,
-} from "@/lib/booker/utils";
+} from "../lib/booker-utils";
+import {
+  type BookerTarget,
+  getDynamicContext,
+  getOrgSlugFromTarget,
+} from "../lib/target";
+import type { TimePickerEmpty, TimeSlot } from "../time-picker";
 
 const WINDOW_MONTHS = 3;
 

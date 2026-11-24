@@ -15,7 +15,7 @@ import type { ReactNode } from "react";
 import { cn } from "@/registry/default/lib/utils";
 import { BookerAvatars } from "./booker-avatars";
 import { bookerHeadingClassName } from "./booker-heading";
-import type { BookerAvatar } from "@/lib/booker/utils";
+import type { BookerAvatar } from "./lib/booker-utils";
 
 /** "Tuesday, September 15, 2026", as the design system writes a date. */
 export function formatEventDate(date: Date, locale: string, timeZone?: string) {

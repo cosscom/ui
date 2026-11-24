@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/registry/default/ui/select";
-import type { EventTypeLocationOption } from "@/lib/booker/utils";
+import type { EventTypeLocationOption } from "./lib/booker-utils";
 
 type LocationLabels = {
   locationOptions: (count: number) => string;

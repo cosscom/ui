@@ -1,4 +1,4 @@
-import { toWeekStart } from "@/registry/default/atoms/booker/booker-calendar-model";
+import { toWeekStart } from "../booker-calendar-model";
 
 export type EventTypeLocationOption = {
   label: string;

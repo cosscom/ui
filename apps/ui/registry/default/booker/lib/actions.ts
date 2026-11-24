@@ -1,6 +1,19 @@
 "use server";
 
-import { toBookingLocation } from "@/lib/booker/booking-location";
+import { buildBookingStartIso } from "./booker-utils";
+import { toBookingLocation } from "./booking-location";
+import { createBooking } from "./cal-api/bookings";
+import { CalApiError } from "./cal-api/client";
+import {
+  getDynamicEventType,
+  getEventType,
+  getEventTypeById,
+  getTeamEventType,
+  getTeamSlugEventType,
+} from "./cal-api/event-types";
+import { getPublicEventInfo } from "./cal-api/public-event";
+import { getAvailableSlots } from "./cal-api/slots";
+import type { Booking, EventType } from "./cal-api/types";
 import {
   type BookerTarget,
   getCreateBookingParamsFromTarget,
@@ -9,20 +22,7 @@ import {
   getPublicEventBannerParamsFromTarget,
   getUserSlotParamsFromTarget,
   parseBookingUrlTarget,
-} from "@/lib/booker/target";
-import { buildBookingStartIso } from "@/lib/booker/utils";
-import { createBooking } from "@/lib/cal-api/bookings";
-import { CalApiError } from "@/lib/cal-api/client";
-import {
-  getDynamicEventType,
-  getEventType,
-  getEventTypeById,
-  getTeamEventType,
-  getTeamSlugEventType,
-} from "@/lib/cal-api/event-types";
-import { getPublicEventInfo } from "@/lib/cal-api/public-event";
-import { getAvailableSlots } from "@/lib/cal-api/slots";
-import type { Booking, EventType } from "@/lib/cal-api/types";
+} from "./target";
 
 export type FetchRawBookerInput = {
   monthIso: string;

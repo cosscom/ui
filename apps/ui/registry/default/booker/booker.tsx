@@ -3,27 +3,27 @@
 import { cn } from "@/registry/default/lib/utils";
 import { Card } from "@/registry/default/ui/card";
 import { Skeleton } from "@/registry/default/ui/skeleton";
-import { BookerAvatars } from "./booker/booker-avatars";
-import { BookerCalendar, BookerCalendarPane } from "./booker/booker-calendar";
-import { BookerConfirmForm } from "./booker/booker-confirm-form";
-import { BookerErrorState } from "./booker/booker-error-state";
-import { type BookerLabels, getBookerLabels } from "./booker/booker-labels";
-import { BookerSteps } from "./booker/booker-steps";
-import { DurationPicker } from "./booker/duration-picker";
-import { EventDescription } from "./booker/event-description";
+import { BookerAvatars } from "./booker-avatars";
+import { BookerCalendar, BookerCalendarPane } from "./booker-calendar";
+import { BookerConfirmForm } from "./booker-confirm-form";
+import { BookerErrorState } from "./booker-error-state";
+import { type BookerLabels, getBookerLabels } from "./booker-labels";
+import { BookerSteps } from "./booker-steps";
+import { DurationPicker } from "./duration-picker";
+import { EventDescription } from "./event-description";
 import {
   EventTitle,
   FixedDuration,
   HostIdentity,
   SelectedTime,
-} from "./booker/event-meta";
-import { HeaderBanner } from "./booker/header-banner";
-import { Location } from "./booker/location";
-import { TimePicker } from "./booker/time-picker";
-import { TimezoneDisplay, TimezonePicker } from "./booker/timezone-picker";
-import type { BookerTarget } from "@/lib/booker/target";
-import { type BookerInitialData, useBooker } from "@/lib/booker/use-booker";
-import { buildBookingStartIso, toCalendarDateKey } from "@/lib/booker/utils";
+} from "./event-meta";
+import { HeaderBanner } from "./header-banner";
+import { type BookerInitialData, useBooker } from "./hooks/use-booker";
+import { buildBookingStartIso, toCalendarDateKey } from "./lib/booker-utils";
+import type { BookerTarget } from "./lib/target";
+import { Location } from "./location";
+import { TimePicker } from "./time-picker";
+import { TimezoneDisplay, TimezonePicker } from "./timezone-picker";
 
 type BookerProps = {
   target: BookerTarget;

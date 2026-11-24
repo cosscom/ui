@@ -19,7 +19,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/registry/default/ui/tooltip";
-import { type BookerAvatar, getInitials } from "@/lib/booker/utils";
+import { type BookerAvatar, getInitials } from "./lib/booker-utils";
 
 const maxVisibleAvatars = 4;
 

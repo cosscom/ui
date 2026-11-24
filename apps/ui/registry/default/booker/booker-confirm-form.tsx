@@ -14,11 +14,11 @@ import {
   type ConfirmedBooking,
 } from "./booker-confirmation";
 import type { BookerLabels } from "./booker-labels";
+import type { BookerConfirmFormContext } from "./hooks/use-booker";
+import { createBookingAction } from "./lib/actions";
+import { toCalendarDateKey } from "./lib/booker-utils";
+import type { Booking } from "./lib/cal-api/types";
 import { getLocationOptionValue, LocationPicker } from "./location";
-import { createBookingAction } from "@/lib/booker/actions";
-import type { BookerConfirmFormContext } from "@/lib/booker/use-booker";
-import { toCalendarDateKey } from "@/lib/booker/utils";
-import type { Booking } from "@/lib/cal-api/types";
 
 export type BookerConfirmFormProps = BookerConfirmFormContext & {
   defaultEmail?: string;

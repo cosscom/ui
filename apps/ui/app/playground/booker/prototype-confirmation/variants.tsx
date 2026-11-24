@@ -6,17 +6,17 @@
 
 import { CalendarPlusIcon, CircleCheckIcon, HourglassIcon } from "lucide-react";
 import type { ReactNode } from "react";
-import { getBookerLabels } from "@/registry/default/atoms/booker/booker-labels";
-import { EventDescription } from "@/registry/default/atoms/booker/event-description";
+import { getBookerLabels } from "@/registry/default/booker/booker-labels";
+import { EventDescription } from "@/registry/default/booker/event-description";
 import {
   EventTitle,
   FixedDuration,
   HostIdentity,
   RequiresConfirmation,
   SelectedTime,
-} from "@/registry/default/atoms/booker/event-meta";
-import { LocationRow } from "@/registry/default/atoms/booker/location";
-import { TimezoneDisplay } from "@/registry/default/atoms/booker/timezone-picker";
+} from "@/registry/default/booker/event-meta";
+import { LocationRow } from "@/registry/default/booker/location";
+import { TimezoneDisplay } from "@/registry/default/booker/timezone-picker";
 import { Button } from "@/registry/default/ui/button";
 import { Card } from "@/registry/default/ui/card";
 import {

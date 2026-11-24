@@ -17,22 +17,22 @@ import { useState } from "react";
 import {
   BookerCalendar,
   BookerCalendarPane,
-} from "@/registry/default/atoms/booker/booker-calendar";
-import { getBookerLabels } from "@/registry/default/atoms/booker/booker-labels";
-import { BookerSteps } from "@/registry/default/atoms/booker/booker-steps";
-import { EventDescription } from "@/registry/default/atoms/booker/event-description";
+} from "@/registry/default/booker/booker-calendar";
+import { getBookerLabels } from "@/registry/default/booker/booker-labels";
+import { BookerSteps } from "@/registry/default/booker/booker-steps";
+import { EventDescription } from "@/registry/default/booker/event-description";
 import {
   EventTitle,
   FixedDuration,
   HostIdentity,
   SelectedTime,
-} from "@/registry/default/atoms/booker/event-meta";
-import { LocationRow } from "@/registry/default/atoms/booker/location";
-import { TimePicker } from "@/registry/default/atoms/booker/time-picker";
+} from "@/registry/default/booker/event-meta";
+import { LocationRow } from "@/registry/default/booker/location";
+import { TimePicker } from "@/registry/default/booker/time-picker";
 import {
   TimezoneDisplay,
   TimezonePicker,
-} from "@/registry/default/atoms/booker/timezone-picker";
+} from "@/registry/default/booker/timezone-picker";
 import { Button } from "@/registry/default/ui/button";
 import { Card } from "@/registry/default/ui/card";
 import { FieldBlock, TermsNote } from "../prototype-form/field-block";
