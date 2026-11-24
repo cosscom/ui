@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Easings from "./easings";
 import PageHeader from "@/components/page-header";
+import { absoluteUrl } from "@/lib/canonical";
 
 export const metadata: Metadata = {
+  alternates: { canonical: absoluteUrl("/easings") },
   description:
     "A collection of easing utility classes to enhance your Tailwind CSS animations and transitions.",
   title: "Tailwind CSS Easing Classes - coss.com origin",

@@ -11,12 +11,15 @@ import { ParticlesDisplay } from "./particles-display";
 import SearchContainer from "./search-container";
 import { ParticlesBlueprint } from "@/components/particles-blueprint";
 import { ParticlesMotion } from "@/components/particles-motion";
+import { absoluteUrl } from "@/lib/canonical";
 
 const particleCount = particles.length;
 
 const description = `Explore ${particleCount} ready-to-use UI patterns built from coss ui components. Copy the code, customize the details, and make them part of your product.`;
 
 export const metadata: Metadata = {
+  // Filtered views (?tags=…) are the same page.
+  alternates: { canonical: absoluteUrl("/particles") },
   description,
   title: "Build more with Particles – coss ui",
 };

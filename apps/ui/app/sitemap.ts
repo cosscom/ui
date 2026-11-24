@@ -1,15 +1,16 @@
 import type { MetadataRoute } from "next";
+import { absoluteUrl } from "@/lib/canonical";
 import { source } from "@/lib/source";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const pages = source.getPages();
 
   return [
-    { url: "https://coss.com/ui" },
-    { url: "https://coss.com/ui/particles" },
-    { url: "https://coss.com/ui/chat" },
+    { url: absoluteUrl("/") },
+    { url: absoluteUrl("/particles") },
+    { url: absoluteUrl("/chat") },
     ...pages.map((page) => ({
-      url: `https://coss.com/ui${page.url}`,
+      url: absoluteUrl(page.url),
     })),
   ];
 }

@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import SearchButton from "@/components/search-button";
 import { SubscribeBottom } from "@/components/subscribe-form";
 import { categories } from "@/config/components";
+import { absoluteUrl } from "@/lib/canonical";
+
+export const metadata: Metadata = {
+  alternates: { canonical: absoluteUrl("/") },
+};
 
 export default function Page() {
   return (

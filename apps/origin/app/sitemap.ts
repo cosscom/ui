@@ -1,18 +1,19 @@
 import type { MetadataRoute } from "next";
 import { categories } from "@/config/components";
+import { absoluteUrl } from "@/lib/canonical";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const home = {
-    url: "https://coss.com/origin",
+    url: absoluteUrl("/"),
   };
   const search = {
-    url: "https://coss.com/origin/search",
+    url: absoluteUrl("/search"),
   };
   const easings = {
-    url: "https://coss.com/origin/easings",
+    url: absoluteUrl("/easings"),
   };
   const categoryPages = categories.map((category) => ({
-    url: `https://coss.com/origin/${category.slug}`,
+    url: absoluteUrl(`/${category.slug}`),
   }));
 
   return [home, ...categoryPages, search, easings];

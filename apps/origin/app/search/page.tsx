@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import ComponentsContainer from "./components-container";
 import PageHeader from "@/components/page-header";
+import { absoluteUrl } from "@/lib/canonical";
 
 export const metadata: Metadata = {
+  // Filtered views (?tags=…) are the same page.
+  alternates: { canonical: absoluteUrl("/search") },
   description: "Search for components in the UI library.",
   title: "Search a UI component",
 };

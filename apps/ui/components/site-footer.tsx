@@ -1,6 +1,9 @@
 export function SiteFooter() {
-  const gatewayOrigin = process.env.NEXT_PUBLIC_COSS_URL || "https://coss.com";
-  const gatewayHome = `${gatewayOrigin.replace(/\/$/, "")}/`;
+  const gatewayOrigin = (
+    process.env.NEXT_PUBLIC_COSS_URL || "https://coss.com"
+  ).replace(/\/$/, "");
+  const gatewayHome = `${gatewayOrigin}/`;
+  const linkClassName = "font-medium underline-offset-4 hover:underline";
 
   return (
     <footer className="flex flex-col gap-0.5">
@@ -15,7 +18,7 @@ export function SiteFooter() {
       <p className="text-muted-foreground text-sm">
         Built by and for the team of{" "}
         <a
-          className="font-medium underline-offset-4 hover:underline"
+          className={linkClassName}
           href="https://cal.com"
           rel="noopener noreferrer"
           target="_blank"
@@ -24,6 +27,32 @@ export function SiteFooter() {
         </a>
         , Inc. — the leading commercial open source company
         (&ldquo;coss&rdquo;).
+      </p>
+      <p className="text-muted-foreground text-sm">
+        The same team builds{" "}
+        <a className={linkClassName} href={gatewayHome}>
+          coss.com
+        </a>
+        : one API for{" "}
+        <a className={linkClassName} href={`${gatewayOrigin}/products/email`}>
+          email
+        </a>
+        ,{" "}
+        <a className={linkClassName} href={`${gatewayOrigin}/products/sms`}>
+          SMS
+        </a>
+        ,{" "}
+        <a
+          className={linkClassName}
+          href={`${gatewayOrigin}/products/scheduling`}
+        >
+          scheduling
+        </a>{" "}
+        and{" "}
+        <a className={linkClassName} href={`${gatewayOrigin}/products`}>
+          more
+        </a>
+        .
       </p>
     </footer>
   );
