@@ -1,61 +1,23 @@
 "use client";
 
-import DOMPurify from "isomorphic-dompurify";
-import { marked } from "marked";
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { ScrollArea } from "@/registry/default/ui/scroll-area";
+import { markdownToSafeHtml } from "./lib/markdown";
 
 type EventDescriptionProps = {
   description?: string | null;
 };
 
-const ALLOWED_TAGS = [
-  "a",
-  "blockquote",
-  "br",
-  "code",
-  "em",
-  "h1",
-  "h2",
-  "h3",
-  "h4",
-  "li",
-  "ol",
-  "p",
-  "pre",
-  "s",
-  "strong",
-  "u",
-  "ul",
-];
-
-const SAFE_URL_PATTERN =
-  /^(?:(?:https?|mailto|tel):|[^a-z]|[a-z+.-]+(?:[^a-z+.-:]|$))/i;
-
-function markdownToSafeHtml(description: string): string {
-  const html = marked.parse(description, {
-    async: false,
-    breaks: true,
-    gfm: true,
-  }) as string;
-
-  return DOMPurify.sanitize(html, {
-    ALLOWED_ATTR: ["href", "rel", "target", "title"],
-    ALLOWED_TAGS,
-    ALLOWED_URI_REGEXP: SAFE_URL_PATTERN,
-  });
-}
-
 export function EventDescription({ description }: EventDescriptionProps) {
-  const safeHtml = useMemo(() => {
-    if (!description?.trim()) {
-      return "";
-    }
-
-    return markdownToSafeHtml(description);
+  // Sanitizing needs a DOM, so the HTML is filled in after mount, as in Cal's
+  // own Booker. Doing it in an effect keeps the server and first client render
+  // identical, so hydration does not mismatch.
+  const [safeHtml, setSafeHtml] = useState("");
+  useEffect(() => {
+    setSafeHtml(markdownToSafeHtml(description?.trim() ? description : null));
   }, [description]);
 
-  if (!safeHtml) {
+  if (!description?.trim()) {
     return null;
   }
 

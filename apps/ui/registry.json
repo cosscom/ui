@@ -1218,8 +1218,11 @@
       "description": "A Cal.com booking flow: pick a day and a time, fill in the form, and manage the booking.",
       "dependencies": [
         "lucide-react",
-        "marked",
-        "isomorphic-dompurify"
+        "markdown-it",
+        "dompurify"
+      ],
+      "devDependencies": [
+        "@types/markdown-it"
       ],
       "registryDependencies": [
         "@coss/avatar",
@@ -1332,6 +1335,11 @@
           "path": "registry/default/booker/lib/booking-location.ts",
           "type": "registry:component",
           "target": "@components/booker/lib/booking-location.ts"
+        },
+        {
+          "path": "registry/default/booker/lib/markdown.ts",
+          "type": "registry:component",
+          "target": "@components/booker/lib/markdown.ts"
         },
         {
           "path": "registry/default/booker/lib/cal-api/bookings.ts",

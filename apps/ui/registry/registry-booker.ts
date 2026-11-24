@@ -6,7 +6,8 @@ export const booker: Registry["items"] = [
     type: "registry:ui",
     description:
       "A Cal.com booking flow: pick a day and a time, fill in the form, and manage the booking.",
-    dependencies: ["lucide-react", "marked", "isomorphic-dompurify"],
+    dependencies: ["lucide-react", "markdown-it", "dompurify"],
+    devDependencies: ["@types/markdown-it"],
     registryDependencies: [
       "@coss/avatar",
       "@coss/badge",
@@ -118,6 +119,11 @@ export const booker: Registry["items"] = [
         path: "booker/lib/booking-location.ts",
         type: "registry:component",
         target: "@components/booker/lib/booking-location.ts",
+      },
+      {
+        path: "booker/lib/markdown.ts",
+        type: "registry:component",
+        target: "@components/booker/lib/markdown.ts",
       },
       {
         path: "booker/lib/cal-api/bookings.ts",

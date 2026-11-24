@@ -1249,6 +1249,10 @@ export const Index: Record<string, any> = {
       type: "registry:component",
       target: "@components/booker/lib/booking-location.ts"
     },{
+      path: "registry/default/booker/lib/markdown.ts",
+      type: "registry:component",
+      target: "@components/booker/lib/markdown.ts"
+    },{
       path: "registry/default/booker/lib/cal-api/bookings.ts",
       type: "registry:component",
       target: "@components/booker/lib/cal-api/bookings.ts"
