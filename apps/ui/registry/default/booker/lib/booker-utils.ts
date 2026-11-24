@@ -5,6 +5,19 @@ export type EventTypeLocationOption = {
   provider: string;
 };
 
+/**
+ * The host's name question when it is split into first and last name
+ * (`type: "splitName"` in event types `2024-06-14`). Labels and placeholders
+ * are the host's own; empty means Cal's defaults.
+ */
+export type BookerSplitNameField = {
+  firstNameLabel?: string;
+  firstNamePlaceholder?: string;
+  lastNameLabel?: string;
+  lastNamePlaceholder?: string;
+  lastNameRequired: boolean;
+};
+
 export type BookerAvatar = {
   name: string;
   avatarUrl: string;
@@ -22,6 +35,7 @@ export type BookerMeta = {
   eventTypeLocations: EventTypeLocationOption[];
   eventTypeImageUrl: string;
   disableGuests: boolean;
+  splitNameField?: BookerSplitNameField;
   successRedirectUrl?: string;
   bookingWindowStart: Date | null;
   bookingWindowEnd: Date | null;
@@ -37,6 +51,7 @@ export type EventTypeInfo = {
   eventTypeLocations: EventTypeLocationOption[];
   eventTypeImageUrl: string;
   disableGuests?: boolean;
+  splitNameField?: BookerSplitNameField;
   /** The host's address to send the attendee to after a booking. */
   successRedirectUrl?: string;
 };
@@ -493,11 +508,39 @@ export function extractEventTypeInfo(payload: unknown): EventTypeInfo {
         record.coverImageUrl,
     ),
     disableGuests: record.disableGuests === true,
+    splitNameField: extractSplitNameField(record.bookingFields),
     successRedirectUrl:
       typeof record.successRedirectUrl === "string" &&
       record.successRedirectUrl.trim()
         ? record.successRedirectUrl.trim()
         : undefined,
+  };
+}
+
+function extractSplitNameField(
+  bookingFields: unknown,
+): BookerSplitNameField | undefined {
+  if (!Array.isArray(bookingFields)) {
+    return undefined;
+  }
+
+  const field = bookingFields.find(
+    (item): item is Record<string, unknown> =>
+      !!item &&
+      typeof item === "object" &&
+      (item as Record<string, unknown>).type === "splitName",
+  );
+  if (!field) {
+    return undefined;
+  }
+
+  return {
+    firstNameLabel: getStringValue(field.firstNameLabel) ?? undefined,
+    firstNamePlaceholder:
+      getStringValue(field.firstNamePlaceholder) ?? undefined,
+    lastNameLabel: getStringValue(field.lastNameLabel) ?? undefined,
+    lastNamePlaceholder: getStringValue(field.lastNamePlaceholder) ?? undefined,
+    lastNameRequired: field.lastNameRequired === true,
   };
 }
 

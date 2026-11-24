@@ -34,6 +34,16 @@ function RequiredMark() {
   return <span className="text-destructive-foreground">*</span>;
 }
 
+// Cal fills a split name from one string the same way: the first word is the
+// first name, the rest the last name.
+function splitDefaultName(name?: string): {
+  firstName: string;
+  lastName: string;
+} {
+  const [firstName = "", ...rest] = (name ?? "").trim().split(/\s+/);
+  return { firstName, lastName: rest.join(" ") };
+}
+
 function getDefaultLocationProvider(
   locations: BookerConfirmFormContext["locations"],
 ): string {
@@ -60,6 +70,7 @@ export function BookerConfirmForm({
   onSuccess,
   selectedDate,
   selectedTime,
+  splitNameField,
   target,
   timeZone,
 }: BookerConfirmFormProps) {
@@ -99,7 +110,14 @@ export function BookerConfirmForm({
     }
 
     const formData = new FormData(event.currentTarget);
-    const name = String(formData.get("name") ?? "").trim();
+    // API v2 takes the attendee's name as one string, so a split name is
+    // joined before it is sent.
+    const name = splitNameField
+      ? [formData.get("firstName"), formData.get("lastName")]
+          .map((value) => String(value ?? "").trim())
+          .filter(Boolean)
+          .join(" ")
+      : String(formData.get("name") ?? "").trim();
     const email = String(formData.get("email") ?? "").trim();
     const notes = String(formData.get("notes") ?? "").trim();
     const guests = formData
@@ -163,13 +181,52 @@ export function BookerConfirmForm({
   return (
     <div className="flex flex-col gap-4">
       <Form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-        <Field name="name">
-          <FieldLabel>
-            {labels.confirmYourName} <RequiredMark />
-          </FieldLabel>
-          <Input autoFocus defaultValue={defaultName} required type="text" />
-          <FieldError>{labels.confirmNameError}</FieldError>
-        </Field>
+        {splitNameField ? (
+          <div className="flex gap-4">
+            <Field className="min-w-0 flex-1" name="firstName">
+              <FieldLabel>
+                {splitNameField.firstNameLabel || labels.confirmFirstName}{" "}
+                <RequiredMark />
+              </FieldLabel>
+              <Input
+                autoComplete="given-name"
+                autoFocus
+                defaultValue={splitDefaultName(defaultName).firstName}
+                placeholder={splitNameField.firstNamePlaceholder}
+                required
+                type="text"
+              />
+              <FieldError>{labels.confirmFirstNameError}</FieldError>
+            </Field>
+            <Field className="min-w-0 flex-1" name="lastName">
+              <FieldLabel>
+                {splitNameField.lastNameLabel || labels.confirmLastName}
+                {splitNameField.lastNameRequired ? (
+                  <>
+                    {" "}
+                    <RequiredMark />
+                  </>
+                ) : null}
+              </FieldLabel>
+              <Input
+                autoComplete="family-name"
+                defaultValue={splitDefaultName(defaultName).lastName}
+                placeholder={splitNameField.lastNamePlaceholder}
+                required={splitNameField.lastNameRequired}
+                type="text"
+              />
+              <FieldError>{labels.confirmLastNameError}</FieldError>
+            </Field>
+          </div>
+        ) : (
+          <Field name="name">
+            <FieldLabel>
+              {labels.confirmYourName} <RequiredMark />
+            </FieldLabel>
+            <Input autoFocus defaultValue={defaultName} required type="text" />
+            <FieldError>{labels.confirmNameError}</FieldError>
+          </Field>
+        )}
 
         <Field name="email">
           <FieldLabel>

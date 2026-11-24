@@ -263,6 +263,7 @@ function deriveBookerData(
       eventTypeLocations: eventType.eventTypeLocations,
       eventTypeTitle: eventType.eventTypeTitle,
       disableGuests: eventType.disableGuests ?? false,
+      splitNameField: eventType.splitNameField,
       successRedirectUrl: eventType.successRedirectUrl,
       hostAvatarUrl: host.hostAvatarUrl,
       hostAvatars,
@@ -418,6 +419,7 @@ export type BookerConfirmFormContext = {
   locale: string;
   locations?: BookerMeta["eventTypeLocations"];
   onBack: () => void;
+  splitNameField?: BookerMeta["splitNameField"];
   selectedDate?: Date;
   selectedTime: string | null;
   target: BookerTarget;
@@ -1047,6 +1049,7 @@ export function useBooker({
       onBack: handleBack,
       selectedDate,
       selectedTime: _selectedTime,
+      splitNameField: meta?.splitNameField,
       target,
       timeZone: selectedTimeZone,
     };
@@ -1056,6 +1059,7 @@ export function useBooker({
     meta?.disableGuests,
     meta?.eventTypeDurationOptions,
     meta?.eventTypeLocations,
+    meta?.splitNameField,
     selectedDate,
     selectedDurationMinutes,
     selectedTimeZone,

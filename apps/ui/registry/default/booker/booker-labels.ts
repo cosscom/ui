@@ -33,8 +33,12 @@ export type BookerLabels = {
   locationOptions: (count: number) => string;
   locationSelectOnNextStep: string;
   confirmYourName: string;
+  confirmFirstName: string;
+  confirmLastName: string;
   confirmEmail: string;
   confirmNameError: string;
+  confirmFirstNameError: string;
+  confirmLastNameError: string;
   confirmEmailError: string;
   confirmNotes: string;
   confirmNotesPlaceholder: string;
@@ -102,8 +106,12 @@ const DEFAULT_BOOKER_LABELS: BookerLabels = {
   locationOptions: (count) => `${count} location options`,
   locationSelectOnNextStep: "Select on the next step",
   confirmYourName: "Your name",
+  confirmFirstName: "First name",
+  confirmLastName: "Last name",
   confirmEmail: "Email address",
   confirmNameError: "Please enter your name.",
+  confirmFirstNameError: "Please enter your first name.",
+  confirmLastNameError: "Please enter your last name.",
   confirmEmailError: "Please enter a valid email address.",
   confirmNotes: "Additional notes",
   confirmNotesPlaceholder:
