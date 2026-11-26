@@ -15,6 +15,7 @@ const buttonClassNames =
 export function Calendar({
   className,
   classNames,
+  fixedWeeks = true,
   showOutsideDays = true,
   components: userComponents,
   mode = "single",
@@ -122,6 +123,7 @@ export function Calendar({
     classNames: mergedClassNames,
     components: mergedComponents,
     "data-slot": "calendar",
+    fixedWeeks,
     formatters: {
       formatMonthDropdown: (month: Date, dateLib: DateLib) =>
         dateLib.format(month, "LLL"),
