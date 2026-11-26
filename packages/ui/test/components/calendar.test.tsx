@@ -17,3 +17,19 @@ test("allows a caller to opt out of fixed weeks", () => {
     countWeeks(<Calendar fixedWeeks={false} month={new Date(2024, 1, 1)} />),
   ).toBe(5);
 });
+
+test("supports native month and year dropdowns with fixed weeks", () => {
+  const calendar = (
+    <Calendar
+      captionLayout="dropdown"
+      defaultMonth={new Date(2024, 1, 1)}
+      endMonth={new Date(2026, 11)}
+      startMonth={new Date(2022, 0)}
+    />
+  );
+  const markup = renderToStaticMarkup(calendar);
+
+  expect(markup).toContain('aria-label="Choose the Month"');
+  expect(markup).toContain('aria-label="Choose the Year"');
+  expect(countWeeks(calendar)).toBe(6);
+});
