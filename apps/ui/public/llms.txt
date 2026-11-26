@@ -76,3 +76,4 @@
 
 - [useMediaQuery](https://coss.com/ui/docs/hooks/use-media-query.md): Reactive media query hook with Tailwind-like syntax for conditional rendering based on breakpoints, pointer type, or any CSS media query.
 - [useCopyToClipboard](https://coss.com/ui/docs/hooks/use-copy-to-clipboard.md): Copy text to clipboard with a temporary "copied" state and optional callback.
+- [useSortable](https://coss.com/ui/docs/hooks/use-sortable.md): Reorder items by drag or keyboard, within a list and between lists, with screen reader announcements.
